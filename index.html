@@ -1050,6 +1050,7 @@ function exerciseProgress(slug){
    Freischalten geht nur, indem das Flag im Code geändert und neu veröffentlicht wird. */
 function isLocked(set, slug){
   if (!set) return false;
+  if (hasPreviewAccess()) return false;
   if (slug && remoteLocksCache && Object.prototype.hasOwnProperty.call(remoteLocksCache, slug)){
     return !!remoteLocksCache[slug];
   }
@@ -1846,6 +1847,11 @@ function route(){
    sie nicht mehr einfach über "Seitenquelltext anzeigen" auslesbar. */
 const GATE_KEY = "lernportal:unlocked";
 const CODE_KEY = "lernportal:code";
+/* "Testzugang": ein einzelner, geheimer Code (z.B. der des Lehrers), der serverseitig
+   in der Codes-Tabelle mit "Testzugang" = WAHR markiert ist. Damit kann diese Übung
+   auf diesem Gerät angesehen/geübt werden, auch wenn sie für die Klasse noch gesperrt
+   ist - Schülercodes ohne diese Markierung bleiben ganz normal ausgesperrt. */
+const PREVIEW_KEY = "lernportal:preview";
 function isUnlocked(){
   try { return localStorage.getItem(GATE_KEY) === "yes"; }
   catch(e){ return false; }
@@ -1859,6 +1865,14 @@ function setUnlocked(code){
 function getMyCode(){
   try { return localStorage.getItem(CODE_KEY) || ""; }
   catch(e){ return ""; }
+}
+function hasPreviewAccess(){
+  try { return localStorage.getItem(PREVIEW_KEY) === "yes"; }
+  catch(e){ return false; }
+}
+function setPreviewAccess(on){
+  try { localStorage.setItem(PREVIEW_KEY, on ? "yes" : "no"); }
+  catch(e){ /* ignorieren */ }
 }
 function normalizeCode(s){ return String(s || "").trim().toUpperCase().replace(/\s+/g,""); }
 
@@ -1950,7 +1964,7 @@ function applyRemoteProgress(progressByExercise){
    cb(true) = gültig, cb(false) = ungültig, cb(null) = Anfrage fehlgeschlagen/Zeitüberschreitung
    (z.B. keine Internetverbindung) - dann bewusst NICHT freischalten. */
 function checkCodeRemote(code, cb){
-  if (!APPS_SCRIPT_URL){ cb(false); return; }
+  if (!APPS_SCRIPT_URL){ cb(false, false); return; }
   const cbName = "__codeCb" + Date.now();
   let done = false;
   const script = document.createElement("script");
@@ -1959,12 +1973,12 @@ function checkCodeRemote(code, cb){
     if (done) return;
     done = true;
     cleanup();
-    cb(!!(data && data.valid));
+    cb(!!(data && data.valid), !!(data && data.preview));
   };
   script.src = APPS_SCRIPT_URL + "?action=checkcode&code=" + encodeURIComponent(code) + "&callback=" + cbName;
-  script.onerror = function(){ if (done) return; done = true; cleanup(); cb(null); };
+  script.onerror = function(){ if (done) return; done = true; cleanup(); cb(null, false); };
   document.body.appendChild(script);
-  setTimeout(function(){ if (!done){ done = true; cleanup(); cb(null); } }, 6000);
+  setTimeout(function(){ if (!done){ done = true; cleanup(); cb(null, false); } }, 6000);
 }
 
 /* Meldet eine beantwortete Aufgabe (fire-and-forget: Antwort wird bewusst
@@ -2018,11 +2032,12 @@ function initGate(){
     error.classList.remove("show");
     submitBtn.disabled = true;
     submitBtn.textContent = "Wird geprüft…";
-    checkCodeRemote(code, (valid)=>{
+    checkCodeRemote(code, (valid, preview)=>{
       submitBtn.disabled = false;
       submitBtn.textContent = "Bestätigen";
       if (valid === true){
         setUnlocked(code);
+        setPreviewAccess(preview);
         showApp();
       } else if (valid === false){
         error.textContent = "Code nicht erkannt. Bitte nochmal prüfen.";
