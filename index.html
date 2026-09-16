@@ -307,6 +307,23 @@
   .shade-cell.on{background:var(--accent); border-color:var(--accent);}
   .shade-cell.target{box-shadow:inset 0 0 0 2px var(--success);}
   .shade-count{text-align:center; font-size:14px; color:var(--ink-soft); margin-bottom:6px;}
+  .gap-sentence{
+    font-size:17px; line-height:2.3; padding:18px 16px; border-radius:var(--radius-md);
+    background:var(--surface-2); margin-bottom:10px;
+  }
+  .gap-word{white-space:nowrap;}
+  .gap-slot{
+    display:inline-flex; align-items:center; justify-content:center; width:18px; height:26px;
+    margin:0 1px; border:none; background:transparent; cursor:pointer; padding:0; vertical-align:middle;
+    border-bottom:2px dashed var(--ink-faint);
+  }
+  .gap-slot .gap-comma{color:transparent; font-weight:800; font-size:19px;}
+  .gap-slot.active{border-bottom:none;}
+  .gap-slot.active .gap-comma{color:var(--accent);}
+  .gap-slot.target:not(.active){border-bottom:2px dashed var(--success);}
+  .gap-slot.target.active .gap-comma{color:var(--success);}
+  .gap-slot:disabled{cursor:default;}
+  .gap-hint{font-size:13px; color:var(--ink-faint); margin:0 0 12px;}
   .skip-btn{
     margin-right:auto; background:transparent; border:1.5px solid var(--border); color:var(--ink-soft);
     border-radius:999px; padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
@@ -463,6 +480,20 @@ const chapters = [
   { slug:"zufallsexperimente", nr:7, title:"Zufallsexperimente", pages:"S. 145–162", status:"geplant" },
   { slug:"berufswelt", nr:8, title:"Bist du bereit für die Berufswelt?", pages:"S. 163–172", status:"geplant" },
 ];
+
+const deutschChapters = [
+  { slug:"grammatik", nr:1, title:"Grammatik", status:"aktuell" },
+  { slug:"rechtschreibung", nr:2, title:"Rechtschreibung", status:"geplant" },
+];
+
+const deutschGrammatikTopics = [
+  { tag:"lernen", label:"Wiederholung: Kommasetzung", practice:"deutsch-wiederholen-kommasetzung" },
+];
+
+const SUBJECT_META = {
+  mathe:   { label:"Mathematik", homeHref:"#/mathe",   chapters: chapters },
+  deutsch: { label:"Deutsch",    homeHref:"#/deutsch",  chapters: deutschChapters },
+};
 
 const prozentTopics = [
   { tag:"lernen", label:"Noch fit?", page:8, practice:"noch-fit-prozentrechnung" },
@@ -689,6 +720,184 @@ const exerciseSets = {
         text: "Wie viele Kinder haben „Sonstiges“ angegeben (20 %)?",
         accept: ["6"], explain: "20 % von 30 = 6 Kinder."
       }
+    ]
+  },
+  "deutsch-wiederholen-kommasetzung": {
+    title: "Wiederholung: Kommasetzung",
+    subject: "deutsch",
+    chapterSlug: "grammatik",
+    duration: "ca. 35–40 Minuten",
+    locked: false,
+    questions: [
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "Welcher Satz ist richtig durch Kommas gegliedert?",
+        options: ["Paul kauft Brot, Butter und Marmelade.","Paul kauft Brot Butter, und Marmelade.","Paul kauft, Brot Butter und Marmelade.","Paul kauft Brot, Butter, und, Marmelade."],
+        correct: 0,
+        explain: "Kommas stehen zwischen den aufgezählten Teilen – aber nicht vor „und“ am Ende der Aufzählung." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Wir wollten grillen, doch es fing an zu regnen.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Vor „doch“ steht bei der Verbindung zweier Hauptsätze immer ein Komma." },
+      { section:"Kommasetzung in Aufzählungen", kind:"click-gap",
+        text: "Setze die fehlenden Kommas in diesem Satz:",
+        tokens: ["Lisa","mag","Äpfel","Birnen","und","Kirschen."], gaps: [2],
+        explain: "Das Komma steht zwischen den aufgezählten Wörtern – aber nicht vor „und“ am Schluss." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Welcher Satz ist richtig?",
+        options: ["Der Zug hatte Verspätung, deshalb kamen wir zu spät.","Der Zug hatte Verspätung deshalb, kamen wir zu spät.","Der Zug, hatte Verspätung deshalb kamen wir zu spät.","Der Zug hatte, Verspätung deshalb kamen wir zu spät."],
+        correct: 0,
+        explain: "Zwei Hauptsätze, die ohne Konjunktion aufeinanderfolgen, werden durch ein Komma getrennt – direkt nach dem ersten vollständigen Hauptsatz." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Am Samstag gehen wir schwimmen, radeln und grillen.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Ja: Komma zwischen den ersten beiden aufgezählten Tätigkeiten, kein Komma vor „und“ am Schluss." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Endlich","sitzen","alle","Kinder","im","Auto","die","Fahrt","kann","beginnen."], gaps: [5],
+        explain: "Zwei Hauptsätze ohne verbindendes Wort werden durch ein Komma getrennt." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "In einer Aufzählung von mindestens drei Dingen: Steht vor „und“ oder „oder“ am Schluss ein Komma?",
+        options: ["Ja, immer Pflicht","Nein, das Komma entfällt hier","Nur bei „oder“","Nur wenn mehr als vier Dinge aufgezählt werden"],
+        correct: 1,
+        explain: "Werden die letzten beiden Teile einer Aufzählung durch „und“ oder „oder“ verbunden, entfällt das Komma davor." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Wir","wollten","baden","gehen","doch","das","Wasser","war","eiskalt."], gaps: [3],
+        explain: "Vor „doch“ steht bei der Verbindung zweier Hauptsätze immer ein Komma." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Behauptung: Eine Satzreihe besteht aus mindestens zwei Hauptsätzen. Richtig oder falsch?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Genau das ist die Definition einer Satzreihe." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "Vor welchem Wort steht in einer Aufzählung IMMER ein Komma – auch wenn nur zwei Teile verbunden werden?",
+        options: ["und","oder","aber","sowie"], correct: 2,
+        explain: "Vor „aber“, „jedoch“, „sondern“ und „doch“ steht immer ein Komma, auch wenn nur zwei Wörter oder Satzteile verbunden werden." },
+      { section:"Kommasetzung in Aufzählungen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Am","Morgen","frühstückt","Mia","Brötchen","Marmelade","und","Kakao."], gaps: [4],
+        explain: "Das Komma steht zwischen den ersten beiden aufgezählten Teilen – nicht vor „und“ am Schluss." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Wir wollten grillen doch, es fing an zu regnen.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Das Komma gehört vor „doch“, nicht danach." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Die Glocke läutet laut alle Schüler rennen zum Bus.“ – Nach welchem Wort muss hier ein Komma stehen?",
+        options: ["Glocke","läutet","laut","Schüler"], correct: 2,
+        explain: "Hier folgen zwei Hauptsätze ohne Konjunktion aufeinander – das Komma steht direkt nach dem Ende des ersten Hauptsatzes, also nach „laut“." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Tim","wollte","früh","ins","Bett","gehen","aber","seine","Schwester","feierte","noch","laut","Geburtstag."], gaps: [5],
+        explain: "Vor „aber“ steht immer ein Komma, auch wenn nur zwei Hauptsätze verbunden werden." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Er mag Fußball, und Handball.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Werden nur zwei Dinge durch „und“ verbunden, steht davor gar kein Komma." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "Welcher Satz ist richtig durch Kommas gegliedert?",
+        options: ["Im Rucksack sind ein Buch, ein Apfel, eine Flasche und ein Regenschirm.","Im Rucksack sind ein Buch ein Apfel, eine Flasche und ein Regenschirm.","Im Rucksack sind ein Buch, ein Apfel eine Flasche, und ein Regenschirm.","Im Rucksack sind ein Buch, ein Apfel, eine Flasche, und ein Regenschirm."],
+        correct: 0,
+        explain: "Zwischen jedem aufgezählten Teil steht ein Komma – außer vor „und“ am Schluss der Aufzählung." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Er","rief","laut","doch","niemand","hörte","ihn."], gaps: [2],
+        explain: "Vor „doch“ steht immer ein Komma, wenn es zwei Hauptsätze verbindet." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Vor „und“ muss in einer Satzreihe immer ein Komma stehen. Richtig oder falsch?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Vor „und“ (und „oder“) ist das Komma in einer Satzreihe optional, nicht Pflicht." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Welcher Satz ist richtig?",
+        options: ["Der Wecker klingelte, Felix drehte sich nochmal um.","Der Wecker klingelte Felix, drehte sich nochmal um.","Der Wecker, klingelte Felix drehte sich nochmal um.","Der Wecker klingelte Felix drehte sich, nochmal um."],
+        correct: 0,
+        explain: "Zwei Hauptsätze ohne verbindendes Wort werden durch ein Komma getrennt – direkt nach dem ersten Hauptsatz." },
+      { section:"Kommasetzung in Aufzählungen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Der","Lehrer","packt","Kreide","Schwamm","und","Tafelstifte","ein."], gaps: [3],
+        explain: "Das Komma steht zwischen den ersten beiden aufgezählten Teilen – nicht vor „und“ am Schluss." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Sie packte Zelt, Schlafsack, Kocher und Taschenlampe ein.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Komma zwischen den ersten drei Teilen, kein Komma vor „und“ am Schluss." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Er übte jeden Tag Klavier doch der Auftritt ging trotzdem schief.“ – Nach welchem Wort muss hier ein Komma stehen?",
+        options: ["Er","Tag","Klavier","doch"], correct: 2,
+        explain: "Vor „doch“ steht immer ein Komma, wenn es zwei Hauptsätze verbindet – also direkt nach „Klavier“." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Wir","konnten","nicht","campen","sondern","mussten","ins","Hotel."], gaps: [3],
+        explain: "Vor „sondern“ steht immer ein Komma." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Sie packte Zelt Schlafsack, Kocher und Taschenlampe ein.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Zwischen „Zelt“ und „Schlafsack“ fehlt ein Komma." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Der Zirkus zeigt Löwen Clowns und Akrobaten.“ – Nach welchem Wort muss hier ein Komma stehen?",
+        options: ["Zirkus","Löwen","Clowns","Akrobaten"], correct: 1,
+        explain: "In der Aufzählung „Löwen, Clowns und Akrobaten“ steht das Komma zwischen den ersten beiden Teilen – vor „und“ am Schluss steht dagegen keins." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Die","Mannschaft","trainierte","hart","doch","sie","verlor","das","Spiel."], gaps: [3],
+        explain: "Vor „doch“ steht immer ein Komma, wenn es zwei Hauptsätze verbindet." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Die Glocke läutete, die Pause begann.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Zwei Hauptsätze ohne Konjunktion werden durch ein Komma getrennt." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Steht vor „und“ oder „oder“, wenn sie zwei Hauptsätze in einer Satzreihe verbinden, ein Komma?",
+        options: ["Ja, immer Pflicht","Nein, nie erlaubt","Beides ist richtig – das Komma ist optional","Nur bei „oder“, nicht bei „und“"],
+        correct: 2,
+        explain: "Vor „und“ und „oder“ ist das Komma in einer Satzreihe optional – mit und ohne Komma ist richtig." },
+      { section:"Kommasetzung in Aufzählungen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Er","übt","nicht","Fußball","sondern","Handball."], gaps: [3],
+        explain: "Vor „sondern“ steht immer ein Komma – auch wenn nur zwei kurze Satzteile miteinander verglichen werden." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "Vor „aber“ steht in einer Aufzählung oder Satzreihe nie ein Komma. Richtig oder falsch?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Vor „aber“ steht immer ein Komma – das gehört zu den Wörtern, vor denen das Komma Pflicht ist." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Welcher Satz ist richtig durch Kommas gegliedert?",
+        options: ["Anna wollte schwimmen gehen, aber das Freibad hatte schon geschlossen.","Anna wollte schwimmen gehen aber, das Freibad hatte schon geschlossen.","Anna, wollte schwimmen gehen aber das Freibad hatte schon geschlossen.","Anna wollte schwimmen gehen aber das Freibad, hatte schon geschlossen."],
+        correct: 0,
+        explain: "Das Komma steht direkt vor „aber“ – nicht danach und nicht an einer beliebigen anderen Stelle im Satz." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Die","Ferien","beginnen","morgen","ich","freue","mich","riesig."], gaps: [3],
+        explain: "Zwei Hauptsätze ohne verbindendes Wort werden durch ein Komma getrennt." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Er wollte noch länger bleiben aber der Bus fuhr schon los.“ – Nach welchem Wort muss hier ein Komma stehen?",
+        options: ["Er","bleiben","aber","Bus"], correct: 1,
+        explain: "Vor „aber“ steht immer ein Komma – also direkt nach „bleiben“." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Der","Himmel","verdunkelte","sich","denn","ein","Gewitter","zog","auf."], gaps: [3],
+        explain: "Vor „denn“ steht bei der Verbindung zweier Hauptsätze immer ein Komma." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Die Glocke läutete die Pause begann.“ Ist dieser Satz richtig durch Kommas gegliedert?",
+        options: ["Richtig","Falsch"], correct: 1,
+        explain: "Falsch: Zwischen den beiden Hauptsätzen fehlt das Komma." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "„Sie packte Zelt, Schlafsack, Kocher und Taschenlampe ein.“ – Welche Regel erklärt, warum vor „und“ kein Komma steht?",
+        options: ["Vor „und“ am Ende einer Aufzählung entfällt das Komma","Vor „und“ steht nie ein Komma, egal wo","Nach jedem Wort in einer Aufzählung fehlt automatisch ein Komma","Kommas stehen nur zwischen Zahlen"],
+        correct: 0,
+        explain: "Werden die letzten beiden Teile einer Aufzählung durch „und“ verbunden, entfällt das Komma davor." },
+      { section:"Kommasetzung in Satzreihen", kind:"click-gap",
+        text: "Setze das fehlende Komma in diesem Satz:",
+        tokens: ["Die","Sonne","schien","den","ganzen","Tag","trotzdem","blieben","wir","drinnen."], gaps: [5],
+        explain: "Zwei Hauptsätze ohne verbindendes Wort werden durch ein Komma getrennt." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "„Jedoch“, „sondern“ und „doch“ verlangen vor sich immer ein Komma – auch wenn nur zwei Wörter verbunden werden. Richtig oder falsch?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Das sind genau die Wörter, vor denen das Komma nie entfällt." },
+      { section:"Kommasetzung in Aufzählungen", kind:"mc",
+        text: "In einer Aufzählung von drei oder mehr Dingen steht zwischen jedem Teil ein Komma, außer vor „und“ oder „oder“ am Schluss. Richtig oder falsch?",
+        options: ["Richtig","Falsch"], correct: 0,
+        explain: "Richtig: Genau das ist die Regel zur Kommasetzung in Aufzählungen." },
+      { section:"Kommasetzung in Satzreihen", kind:"mc",
+        text: "Was ist eine Satzreihe?",
+        options: ["Mindestens zwei aneinandergereihte Hauptsätze","Ein Hauptsatz mit einem Nebensatz","Eine Aufzählung von Nomen","Ein einzelnes, sehr langes Wort"],
+        correct: 0,
+        explain: "Eine Satzreihe besteht aus mindestens zwei gleichrangigen Hauptsätzen, die aneinandergereiht oder durch eine Konjunktion verbunden werden." }
     ]
   }
 };
@@ -981,14 +1190,13 @@ function viewHome(){
           <span class="subject-sub">Lernstufen Mathematik · Bayern Mittelschule M8</span>
         </span>
       </a>
-      <div class="subject-card card disabled">
+      <a class="subject-card card active" href="#/deutsch">
         <span class="subject-icon">✎</span>
         <span>
-          <span class="subject-title">Weitere Fächer</span><br>
-          <span class="subject-sub">Folgen, sobald sie startklar sind</span>
+          <span class="subject-title">Deutsch</span><br>
+          <span class="subject-sub">Grammatik &amp; Rechtschreibung · Klasse 8</span>
         </span>
-        <span class="pill pill-soon">bald</span>
-      </div>
+      </a>
     </div>
   `;
 }
@@ -1079,15 +1287,95 @@ function viewChapter(slug){
   `;
 }
 
+function viewDeutsch(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Deutsch", href:"#/deutsch"}]);
+  const rows = deutschChapters.map(c => `
+    <a class="chapter-row linkable" href="#/deutsch/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Deutsch</span>
+      <h1>Grammatik &amp; Rechtschreibung.</h1>
+      <p>Wiederholungen und Übungen zu den Themen aus dem Unterricht. Weitere Bereiche folgen nach und nach.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewDeutschChapter(slug){
+  const c = deutschChapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Deutsch", href:"#/deutsch"}, {label:c.title, href:"#/deutsch/"+slug}]);
+
+  if (slug === "grammatik"){
+    const rows = deutschGrammatikTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (set && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      }
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/deutsch">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">${esc(c.title)}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Weitere Themen (z. B. Satzglieder, Wortarten, Satzgefüge) folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Bereich</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/deutsch">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">${esc(c.title)}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieser Bereich ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
+
 function viewExercise(slug){
   const set = exerciseSets[slug];
   if (!set) return viewNotFound();
-  const chap = chapters.find(c => c.slug === set.chapterSlug);
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+chap.slug}, {label:"Übung", href:"#/uebung/"+slug}]);
+  const subj = SUBJECT_META[set.subject || "mathe"];
+  const chap = subj.chapters.find(c => c.slug === set.chapterSlug);
+  setCrumbs([{label:"Start", href:"#/"}, {label:subj.label, href:subj.homeHref}, {label:chap.title, href:subj.homeHref+"/"+chap.slug}, {label:"Übung", href:"#/uebung/"+slug}]);
 
   if (isLocked(set, slug)){
     return h`
-      <a class="backlink" href="#/mathe/${set.chapterSlug}">← Zurück zum Kapitel</a>
+      <a class="backlink" href="${subj.homeHref}/${set.chapterSlug}">← Zurück zum Kapitel</a>
       <div class="hero" style="padding-top:0;">
         <span class="eyebrow">Übung</span>
         <h1>${esc(set.title)}</h1>
@@ -1097,7 +1385,7 @@ function viewExercise(slug){
   }
 
   return h`
-    <a class="backlink" href="#/mathe/${set.chapterSlug}">← Zurück zum Kapitel</a>
+    <a class="backlink" href="${subj.homeHref}/${set.chapterSlug}">← Zurück zum Kapitel</a>
     <div class="hero" style="padding-top:0;">
       <span class="eyebrow">Übung</span>
       <h1>${esc(set.title)}</h1>
@@ -1279,6 +1567,19 @@ window.__startExercise = function(slug){
         <div class="shade-count">Gefärbt: <span class="num" id="shadeCount">0</span> / ${q.rows*q.cols} Kästchen</div>
         <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
       `;
+    } else if (q.kind === "click-gap"){
+      const wordsHtml = q.tokens.map((w,idx) => {
+        let out = `<span class="gap-word">${esc(w)}</span>`;
+        if (idx < q.tokens.length - 1){
+          out += `<button type="button" class="gap-slot" data-g="${idx}"><span class="gap-comma">,</span></button>`;
+        }
+        return out + " ";
+      }).join("");
+      body = `
+        <div class="gap-sentence" id="gapSentence">${wordsHtml}</div>
+        <p class="gap-hint">Tippe zwischen zwei Wörter, um dort ein Komma zu setzen. Nochmal tippen entfernt es wieder.</p>
+        <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
+      `;
     } else {
       body = `
         <div class="options" id="opts">
@@ -1389,6 +1690,39 @@ window.__startExercise = function(slug){
         grid.querySelectorAll(".shade-cell").forEach((cell,idx)=>{ if (idx < target) cell.classList.add("target"); });
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
+    } else if (q.kind === "click-gap"){
+      const sentence = document.getElementById("gapSentence");
+      const active = new Set();
+      const correctSet = new Set(q.gaps.map(String));
+      sentence.querySelectorAll(".gap-slot").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          if (solved) return;
+          const g = btn.dataset.g;
+          if (active.has(g)){ active.delete(g); btn.classList.remove("active"); }
+          else { active.add(g); btn.classList.add("active"); }
+        });
+      });
+      document.getElementById("checkBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        attempts++;
+        const ok = active.size === correctSet.size && [...active].every(g => correctSet.has(g));
+        if (ok){
+          document.getElementById("checkBtn").disabled = true;
+          sentence.querySelectorAll(".gap-slot").forEach(b=>{ b.disabled = true; });
+          lockQuestion("correct", q.explain, "correct");
+        } else {
+          tryAgainFeedback();
+        }
+      });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        document.getElementById("checkBtn").disabled = true;
+        sentence.querySelectorAll(".gap-slot").forEach(b=>{
+          b.disabled = true;
+          if (correctSet.has(b.dataset.g)) b.classList.add("target","active");
+        });
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
     } else {
       document.getElementById("opts").querySelectorAll(".option").forEach(btn=>{
         btn.addEventListener("click", ()=>{
@@ -1477,6 +1811,10 @@ function route(){
     html = viewMathe();
   } else if (parts[0] === "mathe" && parts.length === 2){
     html = viewChapter(parts[1]);
+  } else if (parts[0] === "deutsch" && parts.length === 1){
+    html = viewDeutsch();
+  } else if (parts[0] === "deutsch" && parts.length === 2){
+    html = viewDeutschChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "arbeitsblatt" && parts.length === 2){
@@ -1638,7 +1976,7 @@ function reportResult(exerciseSlug, questionIndex, status, attempts){
     fetch(APPS_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
-            keepalive: true,
+      keepalive: true, /* Anfrage läuft auch weiter, wenn direkt danach die Seite gewechselt wird */
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({
         type: "result",
