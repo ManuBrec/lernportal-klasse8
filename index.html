@@ -518,16 +518,17 @@ const deutschGrammatikTopics = [
   { tag:"lernen", label:"Wiederholung: Kommasetzung", practice:"deutsch-wiederholen-kommasetzung" },
 ];
 
-/* Geschichte: nur die Kapitelübersicht aus dem Schulbuch-Inhaltsverzeichnis (Menschen-Zeiten-Räume,
-   Mittelschule Bayern, 8. Jgst.) - noch keine eigenen Übungen dazu programmiert. */
+/* Geschichte, Politik, Geographie (GPG): ein Fach mit zwei Bereichen ("Ordnern") - Geschichte und
+   Geographie. Die Kapitel darin sind nur die Übersicht aus dem Schulbuch-Inhaltsverzeichnis
+   (Menschen-Zeiten-Räume, Mittelschule Bayern, 8. Jgst.). "Die Weimarer Republik" lässt Manuel
+   bewusst noch weg, bis das im Unterricht dran ist. */
 const geschichteChapters = [
-  { slug:"weimarer-republik", nr:1, title:"Die Weimarer Republik", pages:"S. 34–65", status:"geplant" },
-  { slug:"ns-zeit-weltkrieg", nr:2, title:"Nationalsozialismus und Zweiter Weltkrieg", pages:"S. 66–113", status:"geplant" },
-  { slug:"nachkriegszeit", nr:3, title:"Die Nachkriegszeit", pages:"S. 114–139", status:"geplant" },
-  { slug:"demokratie-heute", nr:4, title:"Demokratie heute", pages:"S. 140–169", status:"geplant" },
+  { slug:"ns-zeit-weltkrieg", nr:1, title:"Nationalsozialismus und Zweiter Weltkrieg", pages:"S. 66–113", status:"geplant" },
+  { slug:"nachkriegszeit", nr:2, title:"Die Nachkriegszeit", pages:"S. 114–139", status:"geplant" },
+  { slug:"demokratie-heute", nr:3, title:"Demokratie heute", pages:"S. 140–169", status:"geplant" },
 ];
 
-const landwirtschaftChapters = [
+const geographieChapters = [
   { slug:"landwirtschaft-bayern", nr:1, title:"Landwirtschaft in Bayern", pages:"S. 194–219", status:"aktuell" },
 ];
 
@@ -537,11 +538,15 @@ const landwirtschaftTopics = [
   { tag:"lernen", label:"Auf dem Bauernhof – wichtige Dinge zuordnen", practice:"bauernhof-elemente" },
 ];
 
+const gpgFolders = [
+  { slug:"geschichte", title:"Geschichte", chapters: geschichteChapters },
+  { slug:"geographie", title:"Geographie", chapters: geographieChapters },
+];
+
 const SUBJECT_META = {
-  mathe:          { label:"Mathematik",              homeHref:"#/mathe",          chapters: chapters },
-  deutsch:        { label:"Deutsch",                 homeHref:"#/deutsch",        chapters: deutschChapters },
-  geschichte:     { label:"Geschichte",               homeHref:"#/geschichte",     chapters: geschichteChapters },
-  landwirtschaft: { label:"Landwirtschaft in Bayern",  homeHref:"#/landwirtschaft", chapters: landwirtschaftChapters },
+  mathe:   { label:"Mathematik",                       homeHref:"#/mathe",   chapters: chapters },
+  deutsch: { label:"Deutsch",                          homeHref:"#/deutsch", chapters: deutschChapters },
+  gpg:     { label:"Geschichte, Politik, Geographie",  homeHref:"#/gpg",     folders: gpgFolders },
 };
 
 const prozentTopics = [
@@ -999,7 +1004,8 @@ const exerciseSets = {
   },
   "bundeslaender-orientierung": {
     title: "Wo liegt Bayern? – Die Bundesländer",
-    subject: "landwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 15 Minuten",
     locked: true,
@@ -1020,7 +1026,8 @@ const exerciseSets = {
   },
   "nachbarlaender-zuordnen": {
     title: "Deutschlands Nachbarländer",
-    subject: "landwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 10 Minuten",
     locked: true,
@@ -1036,7 +1043,8 @@ const exerciseSets = {
   },
   "bauernhof-elemente": {
     title: "Auf dem Bauernhof – wichtige Dinge zuordnen",
-    subject: "landwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 10 Minuten",
     locked: true,
@@ -1372,17 +1380,10 @@ function viewHome(){
           <span class="subject-sub">Grammatik &amp; Rechtschreibung · Klasse 8</span>
         </span>
       </a>
-      <a class="subject-card card active" href="#/geschichte">
+      <a class="subject-card card active" href="#/gpg">
         <span class="subject-icon">🏛️</span>
         <span>
-          <span class="subject-title">Geschichte</span><br>
-          <span class="subject-sub">Weimarer Republik bis heute · Klasse 8</span>
-        </span>
-      </a>
-      <a class="subject-card card active" href="#/landwirtschaft">
-        <span class="subject-icon">🌾</span>
-        <span>
-          <span class="subject-title">Landwirtschaft in Bayern</span><br>
+          <span class="subject-title">Geschichte, Politik, Geographie</span><br>
           <span class="subject-sub">GPG · Klasse 8</span>
         </span>
       </a>
@@ -1555,10 +1556,33 @@ function viewDeutschChapter(slug){
   `;
 }
 
-function viewGeschichte(){
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Geschichte", href:"#/geschichte"}]);
-  const rows = geschichteChapters.map(c => `
-    <a class="chapter-row linkable" href="#/geschichte/${c.slug}">
+function viewGpg(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Geschichte, Politik, Geographie", href:"#/gpg"}]);
+  const rows = gpgFolders.map(f => `
+    <a class="chapter-row linkable" href="#/gpg/${f.slug}">
+      <span class="chapter-nr num">📁</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(f.title)}</span>
+        <div class="chapter-meta">${f.chapters.length} Kapitel</div>
+      </span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Geschichte, Politik, Geographie</span>
+      <h1>Zwei Bereiche: Geschichte und Geographie.</h1>
+      <p>Wähle einen Bereich, um die Kapitel darin zu sehen.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewGpgFolder(folderSlug){
+  const folder = gpgFolders.find(f => f.slug === folderSlug);
+  if (!folder) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Geschichte, Politik, Geographie", href:"#/gpg"}, {label:folder.title, href:"#/gpg/"+folderSlug}]);
+  const rows = folder.chapters.map(c => `
+    <a class="chapter-row linkable" href="#/gpg/${folderSlug}/${c.slug}">
       <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
       <span class="chapter-main">
         <span class="chapter-title">${esc(c.title)}</span>
@@ -1567,58 +1591,33 @@ function viewGeschichte(){
       <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
     </a>
   `).join("");
+  const introText = folderSlug === "geographie"
+    ? "Erst eine kleine geografische Auffrischung (Bundesländer, Nachbarländer), dann geht's um die Landwirtschaft selbst."
+    : "Kapitel wie im Schulbuch. Die Übungen dazu folgen nach und nach, sobald wir im Unterricht so weit sind.";
   return h`
-    <div class="hero" style="padding-top:28px;">
-      <span class="eyebrow">Geschichte</span>
-      <h1>Von der Weimarer Republik bis heute.</h1>
-      <p>Kapitel wie im Schulbuch. Die Übungen dazu folgen nach und nach, sobald wir im Unterricht so weit sind.</p>
-    </div>
-    <div class="chapter-list">${rows}</div>
-  `;
-}
-
-function viewGeschichteChapter(slug){
-  const c = geschichteChapters.find(x => x.slug === slug);
-  if (!c) return viewNotFound();
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Geschichte", href:"#/geschichte"}, {label:c.title, href:"#/geschichte/"+slug}]);
-  return h`
-    <a class="backlink" href="#/geschichte">← Zur Übersicht</a>
+    <a class="backlink" href="#/gpg">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
-      <span class="eyebrow">Kapitel ${c.nr} · ${c.pages}</span>
-      <h1>${esc(c.title)}</h1>
-      <p>Dieses Kapitel ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
-    </div>
-  `;
-}
-
-function viewLandwirtschaft(){
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Landwirtschaft in Bayern", href:"#/landwirtschaft"}]);
-  const rows = landwirtschaftChapters.map(c => `
-    <a class="chapter-row linkable" href="#/landwirtschaft/${c.slug}">
-      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
-      <span class="chapter-main">
-        <span class="chapter-title">${esc(c.title)}</span>
-        <div class="chapter-meta">${esc(c.pages)}</div>
-      </span>
-      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
-    </a>
-  `).join("");
-  return h`
-    <div class="hero" style="padding-top:28px;">
-      <span class="eyebrow">Landwirtschaft in Bayern</span>
-      <h1>Vom Gäuboden bis ins Allgäu.</h1>
-      <p>Erst eine kleine geografische Auffrischung (Bundesländer, Nachbarländer), dann geht's um die Landwirtschaft selbst.</p>
+      <span class="eyebrow">Geschichte, Politik, Geographie</span>
+      <h1>${esc(folder.title)}</h1>
+      <p>${introText}</p>
     </div>
     <div class="chapter-list">${rows}</div>
   `;
 }
 
-function viewLandwirtschaftChapter(slug){
-  const c = landwirtschaftChapters.find(x => x.slug === slug);
+function viewGpgChapter(folderSlug, slug){
+  const folder = gpgFolders.find(f => f.slug === folderSlug);
+  if (!folder) return viewNotFound();
+  const c = folder.chapters.find(x => x.slug === slug);
   if (!c) return viewNotFound();
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Landwirtschaft in Bayern", href:"#/landwirtschaft"}, {label:c.title, href:"#/landwirtschaft/"+slug}]);
+  setCrumbs([
+    {label:"Start", href:"#/"},
+    {label:"Geschichte, Politik, Geographie", href:"#/gpg"},
+    {label:folder.title, href:"#/gpg/"+folderSlug},
+    {label:c.title, href:"#/gpg/"+folderSlug+"/"+slug}
+  ]);
 
-  if (slug === "landwirtschaft-bayern"){
+  if (folderSlug === "geographie" && slug === "landwirtschaft-bayern"){
     const rows = landwirtschaftTopics.map(t => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
@@ -1650,7 +1649,7 @@ function viewLandwirtschaftChapter(slug){
       `;
     }).join("");
     return h`
-      <a class="backlink" href="#/landwirtschaft">← Zur Übersicht</a>
+      <a class="backlink" href="#/gpg/${folderSlug}">← Zur Übersicht</a>
       <div class="hero" style="padding-top:0;">
         <span class="eyebrow">Kapitel ${c.nr} · ${c.pages}</span>
         <h1>${esc(c.title)}</h1>
@@ -1662,7 +1661,7 @@ function viewLandwirtschaftChapter(slug){
   }
 
   return h`
-    <a class="backlink" href="#/landwirtschaft">← Zur Übersicht</a>
+    <a class="backlink" href="#/gpg/${folderSlug}">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
       <span class="eyebrow">Kapitel ${c.nr} · ${c.pages}</span>
       <h1>${esc(c.title)}</h1>
@@ -1675,12 +1674,34 @@ function viewExercise(slug){
   const set = exerciseSets[slug];
   if (!set) return viewNotFound();
   const subj = SUBJECT_META[set.subject || "mathe"];
-  const chap = subj.chapters.find(c => c.slug === set.chapterSlug);
-  setCrumbs([{label:"Start", href:"#/"}, {label:subj.label, href:subj.homeHref}, {label:chap.title, href:subj.homeHref+"/"+chap.slug}, {label:"Übung", href:"#/uebung/"+slug}]);
+
+  let chap, chapterHref, crumbs;
+  if (subj.folders){
+    const folder = subj.folders.find(f => f.slug === set.folderSlug);
+    chap = folder.chapters.find(c => c.slug === set.chapterSlug);
+    chapterHref = subj.homeHref + "/" + folder.slug + "/" + chap.slug;
+    crumbs = [
+      {label:"Start", href:"#/"},
+      {label:subj.label, href:subj.homeHref},
+      {label:folder.title, href:subj.homeHref+"/"+folder.slug},
+      {label:chap.title, href:chapterHref},
+      {label:"Übung", href:"#/uebung/"+slug}
+    ];
+  } else {
+    chap = subj.chapters.find(c => c.slug === set.chapterSlug);
+    chapterHref = subj.homeHref + "/" + chap.slug;
+    crumbs = [
+      {label:"Start", href:"#/"},
+      {label:subj.label, href:subj.homeHref},
+      {label:chap.title, href:chapterHref},
+      {label:"Übung", href:"#/uebung/"+slug}
+    ];
+  }
+  setCrumbs(crumbs);
 
   if (isLocked(set, slug)){
     return h`
-      <a class="backlink" href="${subj.homeHref}/${set.chapterSlug}">← Zurück zum Kapitel</a>
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
       <div class="hero" style="padding-top:0;">
         <span class="eyebrow">Übung</span>
         <h1>${esc(set.title)}</h1>
@@ -1690,7 +1711,7 @@ function viewExercise(slug){
   }
 
   return h`
-    <a class="backlink" href="${subj.homeHref}/${set.chapterSlug}">← Zurück zum Kapitel</a>
+    <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
     <div class="hero" style="padding-top:0;">
       <span class="eyebrow">Übung</span>
       <h1>${esc(set.title)}</h1>
@@ -2222,14 +2243,12 @@ function route(){
     html = viewDeutsch();
   } else if (parts[0] === "deutsch" && parts.length === 2){
     html = viewDeutschChapter(parts[1]);
-  } else if (parts[0] === "geschichte" && parts.length === 1){
-    html = viewGeschichte();
-  } else if (parts[0] === "geschichte" && parts.length === 2){
-    html = viewGeschichteChapter(parts[1]);
-  } else if (parts[0] === "landwirtschaft" && parts.length === 1){
-    html = viewLandwirtschaft();
-  } else if (parts[0] === "landwirtschaft" && parts.length === 2){
-    html = viewLandwirtschaftChapter(parts[1]);
+  } else if (parts[0] === "gpg" && parts.length === 1){
+    html = viewGpg();
+  } else if (parts[0] === "gpg" && parts.length === 2){
+    html = viewGpgFolder(parts[1]);
+  } else if (parts[0] === "gpg" && parts.length === 3){
+    html = viewGpgChapter(parts[1], parts[2]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "arbeitsblatt" && parts.length === 2){
