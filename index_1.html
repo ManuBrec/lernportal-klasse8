@@ -1,0 +1,1700 @@
+<title>Lernportal Klasse 8</title>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<!-- "Zum Home-Bildschirm hinzufügen" (iPad/iPhone) + allgemeines Web-App-Manifest: macht aus dem Link ein App-Symbol -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lernportal">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#3454D1">
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<style>
+  :root{
+    --bg: #EEF3F6;
+    --bg-soft: #E4EBEF;
+    --surface: #FFFFFF;
+    --surface-2: #F5F8FA;
+    --border: #D3DEE4;
+    --ink: #1B2A33;
+    --ink-soft: #4C616C;
+    --ink-faint: #7C909A;
+    --accent: #3454D1;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #E6EAFB;
+    --warm: #C97A2B;
+    --warm-soft: #FBEBD9;
+    --success: #237A4B;
+    --success-soft: #DFF3E6;
+    --danger: #B8402D;
+    --danger-soft: #FBE4DF;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    --shadow: 0 1px 2px rgba(27,42,51,0.06), 0 8px 24px -12px rgba(27,42,51,0.18);
+    --font-display: "Baloo 2", "Segoe UI Rounded", system-ui, sans-serif;
+    --font-body: "Karla", "Segoe UI", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #101820;
+      --bg-soft: #0B1218;
+      --surface: #182129;
+      --surface-2: #1D2830;
+      --border: #2B3944;
+      --ink: #E9EEF1;
+      --ink-soft: #AEBFC8;
+      --ink-faint: #7E939D;
+      --accent: #7C93F0;
+      --accent-ink: #101820;
+      --accent-soft: #26304A;
+      --warm: #E3A45E;
+      --warm-soft: #3A2C19;
+      --success: #5FC48A;
+      --success-soft: #1B3327;
+      --danger: #E68A78;
+      --danger-soft: #3B231F;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px -12px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #101820;
+    --bg-soft: #0B1218;
+    --surface: #182129;
+    --surface-2: #1D2830;
+    --border: #2B3944;
+    --ink: #E9EEF1;
+    --ink-soft: #AEBFC8;
+    --ink-faint: #7E939D;
+    --accent: #7C93F0;
+    --accent-ink: #101820;
+    --accent-soft: #26304A;
+    --warm: #E3A45E;
+    --warm-soft: #3A2C19;
+    --success: #5FC48A;
+    --success-soft: #1B3327;
+    --danger: #E68A78;
+    --danger-soft: #3B231F;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px -12px rgba(0,0,0,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:-1;
+    background:
+      linear-gradient(var(--bg-soft) 1px, transparent 1px) 0 0/100% 42px,
+      var(--bg);
+    opacity:0.5;
+  }
+  h1,h2,h3{font-family:var(--font-display); font-weight:700; text-wrap:balance; margin:0;}
+  a{color:var(--accent);}
+  button{font-family:inherit;}
+  .num{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
+
+  .shell{max-width:760px; margin:0 auto; padding:0 20px 64px;}
+  .topbar{
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:18px 20px; max-width:760px; margin:0 auto;
+    position:sticky; top:0; z-index:5;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--ink);}
+  .brand-mark{
+    width:36px; height:36px; border-radius:10px; flex:none;
+    background:var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:18px;
+  }
+  .brand-name{font-family:var(--font-display); font-weight:700; font-size:17px;}
+  .crumbs{margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; font-size:14px; color:var(--ink-soft);}
+  .crumbs a{color:var(--ink-soft); text-decoration:none;}
+  .crumbs a:hover{color:var(--accent);}
+  .backlink{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--ink-soft); text-decoration:none; font-size:14px; font-weight:600;
+    margin-bottom:18px;
+  }
+  .backlink:hover{color:var(--accent);}
+
+  .hero{padding:36px 0 8px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent); background:var(--accent-soft);
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
+  }
+  .hero h1{font-size:clamp(28px,5vw,38px); margin-bottom:10px;}
+  .hero p{color:var(--ink-soft); font-size:16.5px; max-width:52ch;}
+
+  .grid{display:grid; gap:14px; margin-top:22px;}
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+  }
+  .subject-card{
+    display:flex; align-items:center; gap:16px; padding:20px; text-decoration:none; color:var(--ink);
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .subject-card.active:hover{transform:translateY(-2px); border-color:var(--accent);}
+  .subject-card.disabled{opacity:.55; cursor:default;}
+  .subject-icon{
+    width:52px; height:52px; border-radius:14px; flex:none;
+    display:flex; align-items:center; justify-content:center; font-size:24px;
+    background:var(--accent-soft);
+  }
+  .subject-card.disabled .subject-icon{background:var(--surface-2);}
+  .subject-title{font-family:var(--font-display); font-weight:700; font-size:18px; margin-bottom:2px;}
+  .subject-sub{font-size:14px; color:var(--ink-soft);}
+  .pill{
+    margin-left:auto; font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px;
+    white-space:nowrap;
+  }
+  .pill-soon{background:var(--surface-2); color:var(--ink-faint);}
+
+  .chapter-list{display:flex; flex-direction:column; gap:10px; margin-top:22px;}
+  .chapter-row{
+    display:flex; align-items:center; gap:16px; padding:16px 18px;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
+    text-decoration:none; color:var(--ink);
+  }
+  .chapter-row.linkable:hover{border-color:var(--accent);}
+  .chapter-nr{
+    font-family:var(--font-mono); font-weight:600; font-size:13px; color:var(--ink-faint);
+    width:26px; flex:none;
+  }
+  .chapter-main{flex:1; min-width:0;}
+  .chapter-title{font-weight:700; font-size:15.5px;}
+  .chapter-meta{font-size:13px; color:var(--ink-faint); margin-top:2px;}
+  .status{
+    flex:none; font-size:12px; font-weight:700; padding:5px 11px; border-radius:999px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .status::before{content:""; width:7px; height:7px; border-radius:50%;}
+  .status-aktuell{background:var(--warm-soft); color:var(--warm);}
+  .status-aktuell::before{background:var(--warm);}
+  .status-geplant{background:var(--surface-2); color:var(--ink-faint);}
+  .status-geplant::before{background:var(--ink-faint);}
+  .status-fertig{background:var(--success-soft); color:var(--success);}
+  .status-fertig::before{background:var(--success);}
+
+  .section-label{
+    font-size:12.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--ink-faint); margin:30px 0 12px;
+  }
+  .topic-group{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;}
+  .topic-row{
+    display:flex; align-items:center; gap:12px; padding:13px 16px;
+    border-bottom:1px solid var(--border); font-size:14.5px;
+  }
+  .topic-row:last-child{border-bottom:none;}
+  .topic-tag{
+    font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:.03em;
+    padding:3px 7px; border-radius:6px; flex:none; text-transform:uppercase;
+  }
+  .tag-lernen{background:var(--accent-soft); color:var(--accent);}
+  .tag-strategie{background:var(--warm-soft); color:var(--warm);}
+  .tag-werkzeug{background:var(--surface-2); color:var(--ink-soft);}
+  .tag-abschluss{background:var(--success-soft); color:var(--success);}
+  .topic-name{flex:1;}
+  .topic-page{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);}
+  .practice-btn{
+    flex:none; font-size:13px; font-weight:700; color:var(--accent-ink); background:var(--accent);
+    border:none; border-radius:999px; padding:7px 14px; text-decoration:none; cursor:pointer;
+  }
+  .topic-progress{display:flex; align-items:center; gap:7px; flex:none;}
+  .topic-progress-bar{width:52px; height:6px; border-radius:999px; background:var(--surface-2); overflow:hidden; flex:none;}
+  .topic-progress-fill{display:block; height:100%; border-radius:999px; transition:width .2s ease;}
+  .topic-progress-fill.green{background:var(--success);}
+  .topic-progress-fill.orange{background:var(--warm);}
+  .topic-progress-pct{font-size:12px; color:var(--ink-faint); width:32px; text-align:right; flex:none;}
+
+  .callout{
+    margin-top:26px; padding:16px 18px; border-radius:var(--radius-md);
+    background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    font-size:14.5px; color:var(--ink);
+  }
+  .callout strong{color:var(--accent);}
+  .worksheet-link{
+    display:inline-flex; align-items:center; gap:8px; margin-top:14px;
+    font-weight:700; font-size:14.5px; text-decoration:none; color:var(--accent);
+  }
+
+  /* Exercise */
+  .progress-track{height:6px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin:20px 0 26px;}
+  .progress-fill{height:100%; background:var(--accent); border-radius:999px; transition:width .25s ease;}
+  .qnav{display:flex; flex-wrap:wrap; gap:6px; margin:18px 0 6px;}
+  .qnav-btn{
+    width:30px; height:30px; border-radius:50%; border:1.5px solid var(--border); background:var(--surface-2);
+    color:var(--ink-soft); font-family:var(--font-mono); font-size:12.5px; font-weight:700; cursor:pointer; padding:0;
+  }
+  .qnav-btn:hover{border-color:var(--accent);}
+  .qnav-btn.current{border-color:var(--accent); color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft);}
+  .qnav-btn.correct{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .qnav-btn.skipped{background:var(--danger-soft); border-color:var(--danger); color:var(--danger);}
+  .qnav-hint{font-size:12.5px; color:var(--ink-faint); margin:0 0 4px;}
+  .qcard{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow);}
+  .qmeta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
+  .qtext{font-size:19px; font-weight:600; margin-bottom:20px; text-wrap:balance;}
+  .options{display:grid; gap:10px;}
+  .option{
+    text-align:left; padding:14px 16px; border-radius:var(--radius-md);
+    border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink);
+    font-size:15.5px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .option:hover{border-color:var(--accent);}
+  .option:focus-visible{outline:3px solid var(--accent); outline-offset:2px;}
+  .option.correct{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .option.wrong{background:var(--danger-soft); border-color:var(--danger); color:var(--danger);}
+  .option.disabled{cursor:default;}
+  .feedback{margin-top:18px; padding:14px 16px; border-radius:var(--radius-md); font-size:14.5px; display:none;}
+  .feedback.show{display:block;}
+  .feedback.correct{background:var(--success-soft); color:var(--success);}
+  .feedback.wrong{background:var(--danger-soft); color:var(--danger);}
+  .qactions{display:flex; justify-content:flex-end; margin-top:20px;}
+  .next-btn{
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
+    padding:11px 22px; font-weight:700; font-size:14.5px; cursor:pointer; display:none;
+  }
+  .next-btn.show{display:inline-flex;}
+  .shape-block{display:flex; justify-content:center; margin-bottom:20px;}
+  .shape-block svg{max-width:160px; height:auto;}
+  .chart-block{display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:20px;}
+  .chart-block svg{flex:none;}
+  .legend{display:flex; flex-direction:column; gap:6px;}
+  .legend-caption{font-size:12.5px; color:var(--ink-faint); margin-bottom:4px; max-width:24ch;}
+  .legend-row{display:flex; align-items:center; gap:8px; font-size:14.5px;}
+  .legend-dot{width:11px; height:11px; border-radius:3px; flex:none;}
+  .legend-pct{margin-left:auto; color:var(--ink-soft); padding-left:14px;}
+  .numeric-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .numeric-row.correct .numeric-input{border-color:var(--success); background:var(--success-soft); color:var(--success);}
+  .numeric-row.wrong .numeric-input{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .numeric-input{
+    flex:1; min-width:140px; padding:13px 16px; border-radius:var(--radius-md);
+    border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink);
+    font-size:16px; font-family:var(--font-mono);
+  }
+  .numeric-input:focus-visible{outline:3px solid var(--accent); outline-offset:1px;}
+  .check-btn{
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
+    padding:12px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
+  }
+  .check-btn:disabled{opacity:.6; cursor:default;}
+  .shade-grid{
+    display:grid; gap:3px; max-width:320px; aspect-ratio:1; margin:0 auto 14px;
+    touch-action:none; user-select:none; -webkit-user-select:none;
+  }
+  .shade-cell{
+    aspect-ratio:1; border-radius:3px; border:1px solid var(--border); background:var(--surface-2);
+    padding:0; cursor:pointer; touch-action:none;
+  }
+  .shade-cell.on{background:var(--accent); border-color:var(--accent);}
+  .shade-cell.target{box-shadow:inset 0 0 0 2px var(--success);}
+  .shade-count{text-align:center; font-size:14px; color:var(--ink-soft); margin-bottom:6px;}
+  .skip-btn{
+    margin-right:auto; background:transparent; border:1.5px solid var(--border); color:var(--ink-soft);
+    border-radius:999px; padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .skip-btn:hover{border-color:var(--danger); color:var(--danger);}
+  .result{text-align:center; padding:20px 0 6px;}
+  .result .score{font-family:var(--font-mono); font-size:52px; font-weight:600; color:var(--accent);}
+  .result p{color:var(--ink-soft); margin-top:6px;}
+  .result-table{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
+    overflow:hidden; margin-bottom:22px;
+  }
+  .result-row{
+    display:flex; align-items:center; gap:12px; padding:12px 16px;
+    border-bottom:1px solid var(--border); font-size:14px;
+    cursor:pointer; background:transparent; width:100%; text-align:left; border-left:none; border-right:none; border-top:none;
+    color:inherit; font-family:inherit;
+  }
+  .result-row:last-child{border-bottom:none;}
+  .result-row:hover{background:var(--surface-2);}
+  .result-hint{font-size:13px; color:var(--ink-faint); margin:-10px 0 18px; text-align:center;}
+  .result-num{color:var(--ink-faint); width:20px; flex:none;}
+  .result-label{flex:1; min-width:0; font-weight:600;}
+  .result-attempts{color:var(--ink-soft); flex:none;}
+  .result-status{flex:none; font-weight:700; font-size:13px; padding:3px 10px; border-radius:999px;}
+  .result-status.ok{background:var(--success-soft); color:var(--success);}
+  .result-status.bad{background:var(--danger-soft); color:var(--danger);}
+  .restart-btn{
+    background:var(--surface-2); border:1px solid var(--border); color:var(--ink);
+    border-radius:999px; padding:10px 20px; font-weight:700; font-size:14px; cursor:pointer;
+  }
+  @media (max-width:480px){
+    .result-row{flex-wrap:wrap;}
+    .result-label{order:1; width:100%; margin-top:2px;}
+  }
+
+  /* Worksheet / solution */
+  .doc-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:30px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  }
+  .doc-card::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:6px;
+    background:repeating-linear-gradient(90deg, var(--accent) 0 14px, transparent 14px 22px);
+    opacity:.5;
+  }
+  .doc-head{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:22px;}
+  .doc-head h2{font-size:21px;}
+  .doc-head .doc-sub{font-size:13.5px; color:var(--ink-faint); margin-top:4px;}
+  .badge-demo{
+    flex:none; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    background:var(--warm-soft); color:var(--warm); padding:5px 10px; border-radius:999px;
+  }
+  .task{padding:16px 0; border-top:1px dashed var(--border);}
+  .task:first-of-type{border-top:none;}
+  .task-num{font-family:var(--font-mono); font-weight:700; color:var(--accent); margin-right:8px;}
+  .task-solution{
+    margin-top:8px; padding:10px 14px; background:var(--success-soft); color:var(--success);
+    border-radius:var(--radius-sm); font-size:14.5px; display:none;
+  }
+  .task-table-wrap{overflow-x:auto; margin-top:12px;}
+  .task-table{border-collapse:collapse; width:100%; min-width:420px; font-size:14px;}
+  .task-table th, .task-table td{border:1px solid var(--border); padding:8px 10px; text-align:center;}
+  .task-table thead th{background:var(--surface-2); color:var(--ink-soft); font-weight:700; font-size:12.5px;}
+  .task-table .tt-rowlabel{background:var(--surface-2); text-align:left; font-weight:700; white-space:nowrap;}
+  .task-table td{font-family:var(--font-mono); min-width:56px;}
+  .task-table td.tt-solved{color:var(--success); font-weight:700; background:var(--success-soft);}
+  .qr-block{
+    margin-top:26px; padding-top:22px; border-top:1px solid var(--border);
+    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  .qr-block svg{width:112px; height:112px; border-radius:8px; background:#fff; padding:8px; flex:none;}
+  .qr-caption{font-size:13.5px; color:var(--ink-soft); max-width:38ch;}
+  .qr-caption code{background:var(--surface-2); padding:1px 6px; border-radius:5px; font-family:var(--font-mono); font-size:12px;}
+
+  @media print{
+    .topbar, .backlink, .no-print{display:none !important;}
+    body::before{display:none;}
+    body{background:#fff;}
+    .shell{max-width:none; padding:0;}
+    .doc-card{box-shadow:none; border:none;}
+  }
+  @media (max-width:480px){
+    .chapter-row{flex-wrap:wrap;}
+    .status{order:3; width:100%; justify-content:center; margin-top:4px;}
+    .doc-head{flex-direction:column;}
+    .topic-row{flex-wrap:wrap;}
+    .topic-name{width:100%; order:1; margin-top:2px;}
+    .topic-progress{order:2;}
+    .topic-page{order:3; margin-left:auto;}
+  }
+
+  /* Zugangscode-Sperre: kein echter Login, nur eine Hürde gegen Zufallsbesucher mit dem Link */
+  .gate-overlay{
+    position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); padding:24px;
+  }
+  .gate-overlay[hidden]{display:none;}
+  .gate-card{
+    max-width:360px; width:100%; text-align:center; background:var(--surface);
+    border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow);
+    padding:32px 28px;
+  }
+  .gate-card h2{font-size:20px; margin-bottom:6px;}
+  .gate-card p{color:var(--ink-soft); font-size:14.5px; margin:0 0 18px;}
+  .gate-input{
+    width:100%; padding:13px 14px; border-radius:var(--radius-md); border:1.5px solid var(--border);
+    background:var(--surface-2); color:var(--ink); font-size:17px; font-family:var(--font-mono);
+    text-align:center; letter-spacing:.08em; text-transform:uppercase; margin-bottom:12px;
+  }
+  .gate-input:focus-visible{outline:3px solid var(--accent); outline-offset:1px;}
+  .gate-btn{
+    width:100%; background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
+    padding:12px 20px; font-weight:700; font-size:14.5px; cursor:pointer;
+  }
+  .gate-error{color:var(--danger); font-size:13.5px; margin-top:12px; display:none;}
+  .gate-error.show{display:block;}
+  .gate-hint{font-size:12.5px !important; color:var(--ink-faint) !important; margin-top:18px !important;}
+</style>
+
+<div class="topbar no-print" id="topbar">
+  <a class="brand" href="#/">
+    <span class="brand-mark">%</span>
+    <span class="brand-name">Lernportal Klasse 8</span>
+  </a>
+  <div class="crumbs" id="crumbs"></div>
+</div>
+
+<div class="shell" id="app"></div>
+
+<div class="gate-overlay" id="gateOverlay" hidden>
+  <div class="gate-card">
+    <span class="brand-mark" style="margin:0 auto 14px;">%</span>
+    <h2>Lernportal Klasse 8</h2>
+    <p>Bitte gib deinen persönlichen Zugangscode ein.</p>
+    <form id="gateForm" autocomplete="off">
+      <input type="text" id="gateInput" class="gate-input" placeholder="Zugangscode" autocapitalize="characters" autocomplete="off" spellcheck="false">
+      <button type="submit" class="gate-btn" id="gateSubmitBtn">Bestätigen</button>
+    </form>
+    <div class="gate-error" id="gateError">Code nicht erkannt. Bitte nochmal prüfen.</div>
+    <p class="gate-hint">Dieser Zugangscode ist nur einmal gültig. Danach benötigst du bei Bedarf einen neuen Code von deiner Lehrkraft.</p>
+  </div>
+</div>
+
+<script>
+/* ---------- Inhalt (nur Titel/Struktur aus dem Schulbuch-Inhaltsverzeichnis, keine Aufgaben/Texte übernommen) ---------- */
+const chapters = [
+  { slug:"prozentrechnung", nr:1, title:"Prozentrechnung", pages:"S. 7–38", status:"aktuell" },
+  { slug:"kreise", nr:2, title:"Kreise zeichnen und Kreisumfänge berechnen", pages:"S. 39–56", status:"geplant" },
+  { slug:"quadratzahlen", nr:3, title:"Quadratzahlen, Quadratwurzeln und Flächeninhalte von Kreisen", pages:"S. 57–74", status:"geplant" },
+  { slug:"terme-gleichungen", nr:4, title:"Terme und Gleichungen", pages:"S. 75–96", status:"geplant" },
+  { slug:"zylinder", nr:5, title:"Oberflächeninhalt und Rauminhalt von Zylindern", pages:"S. 97–122", status:"geplant" },
+  { slug:"zuordnungen-funktionen", nr:6, title:"Zuordnungen und Funktionen", pages:"S. 123–144", status:"geplant" },
+  { slug:"zufallsexperimente", nr:7, title:"Zufallsexperimente", pages:"S. 145–162", status:"geplant" },
+  { slug:"berufswelt", nr:8, title:"Bist du bereit für die Berufswelt?", pages:"S. 163–172", status:"geplant" },
+];
+
+const prozentTopics = [
+  { tag:"lernen", label:"Noch fit?", page:8, practice:"noch-fit-prozentrechnung" },
+  { tag:"lernen", label:"Grundaufgaben der Prozentrechnung", page:9, practice:"prozentrechnung-grundaufgaben" },
+  { tag:"lernen", label:"Die Prozentrechnung anwenden", page:13 },
+  { tag:"lernen", label:"Mit Wachstumsfaktoren rechnen", page:17 },
+  { tag:"lernen", label:"Weitere Anwendungen von Wachstumsfaktoren", page:20 },
+  { tag:"strategie", label:"Strategie: Preise kalkulieren", page:22 },
+  { tag:"werkzeug", label:"Werkzeug: Säulendiagramme mit Prozentangaben", page:24 },
+  { tag:"werkzeug", label:"Werkzeug: Streifendiagramme zeichnen", page:25 },
+  { tag:"werkzeug", label:"Werkzeug: Kreisdiagramme zeichnen", page:26 },
+  { tag:"werkzeug", label:"Werkzeug: Diagramme mit dem Computer erstellen", page:28 },
+  { tag:"lernen", label:"Promille", page:29 },
+  { tag:"abschluss", label:"Klar so weit?", page:32 },
+  { tag:"abschluss", label:"Vermischte Übungen", page:34 },
+  { tag:"abschluss", label:"Teste dich!", page:37 },
+  { tag:"abschluss", label:"Zusammenfassung", page:38 },
+];
+
+/* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
+/* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
+   so lassen sich neue Übungen erst freischalten, wenn im Unterricht so weit ist. */
+const exerciseSets = {
+  "prozentrechnung-grundaufgaben": {
+    title: "Grundaufgaben der Prozentrechnung",
+    chapterSlug: "prozentrechnung",
+    locked: true,
+    questions: [
+      /* --- Begriffe zuordnen: Grundwert (G), Prozentsatz (p%), Prozentwert (W) --- */
+      {
+        section: "Begriffe zuordnen", kind:"mc",
+        text: "Ein Fahrrad kostet ursprünglich 320 €. Du bekommst 15 % Rabatt. Gesucht: Wie viel Euro sparst du. Was für eine Größe ist das?",
+        options: ["Grundwert","Prozentsatz","Prozentwert"], correct:2,
+        explain: "Der Rabattbetrag in € ist der Anteilswert – das ist der Prozentwert (W). Grundwert (320 €) und Prozentsatz (15 %) sind schon bekannt."
+      },
+      {
+        section: "Begriffe zuordnen", kind:"mc",
+        text: "Ein Pullover kostete 40 €, jetzt nur noch 30 €. Gesucht: Wie viel Prozent Rabatt wurden gewährt. Was für eine Größe ist das?",
+        options: ["Grundwert","Prozentsatz","Prozentwert"], correct:1,
+        explain: "Gefragt ist ein Anteil in Prozent – das ist der Prozentsatz (p %). Grundwert (40 €) und Prozentwert (10 € Rabatt) kann man aus dem Text berechnen bzw. ablesen."
+      },
+      {
+        section: "Begriffe zuordnen", kind:"mc",
+        text: "35 Kinder sind 70 % einer Gruppe. Gesucht: Wie viele Kinder hat die Gruppe insgesamt. Was für eine Größe ist das?",
+        options: ["Grundwert","Prozentsatz","Prozentwert"], correct:0,
+        explain: "Die Gesamtmenge (100 %) ist gesucht – das ist der Grundwert (G). Prozentsatz (70 %) und Prozentwert (35) sind gegeben."
+      },
+      {
+        section: "Begriffe zuordnen", kind:"mc",
+        text: "Eine Klasse hat 28 Kinder, davon sind 60 % Mädchen. Gesucht: Wie viele Mädchen sind das. Was für eine Größe ist das?",
+        options: ["Grundwert","Prozentsatz","Prozentwert"], correct:2,
+        explain: "Die gesuchte Anzahl Mädchen ist ein Anteilswert – das ist der Prozentwert (W). Grundwert (28) und Prozentsatz (60 %) sind gegeben."
+      },
+      {
+        section: "Begriffe zuordnen", kind:"mc",
+        text: "Ein Konto hatte 500 € Guthaben. Am Jahresende kommen 25 € Zinsen dazu. Gesucht: Wie viel Prozent Zinsen sind das. Was für eine Größe ist das?",
+        options: ["Grundwert","Prozentsatz","Prozentwert"], correct:1,
+        explain: "Gefragt ist wieder ein Anteil in Prozent – das ist der Prozentsatz (p %). Grundwert (500 €) und Prozentwert (25 €) sind gegeben."
+      },
+
+      /* --- Berechnen --- */
+      {
+        section: "Berechnen", kind:"mc",
+        text: "Ein Fahrrad kostet 320 €. Beim Sommerschlussverkauf gibt es 15 % Rabatt. Wie viel Euro spart man?",
+        options: ["32 €", "48 €", "54 €", "60 €"],
+        correct: 1,
+        explain: "15 % von 320 € = 0,15 · 320 € = 48 €."
+      },
+      {
+        section: "Berechnen", kind:"mc",
+        text: "In einer Klasse mit 25 Kindern sind 40 % Mädchen. Wie viele Mädchen sind das?",
+        options: ["8", "9", "10", "12"],
+        correct: 2,
+        explain: "40 % von 25 = 0,4 · 25 = 10 Mädchen."
+      },
+      {
+        section: "Berechnen", kind:"mc",
+        text: "Ein Pullover kostete 40 €, im Angebot noch 30 €. Wie viel Prozent Rabatt wurden gewährt?",
+        options: ["15 %", "20 %", "25 %", "30 %"],
+        correct: 2,
+        explain: "Rabatt = 10 €. p = 10 € / 40 € · 100 % = 25 %."
+      },
+      {
+        section: "Berechnen", kind:"mc",
+        text: "35 Kinder sind 70 % aller Kinder einer Schulklasse-Kohorte. Wie viele Kinder sind es insgesamt?",
+        options: ["42", "45", "50", "56"],
+        correct: 2,
+        explain: "Grundwert = Prozentwert / Prozentsatz · 100 = 35 / 70 · 100 = 50."
+      },
+      {
+        section: "Berechnen", kind:"mc",
+        text: "Ein Werkzeugkasten kostet neu 60 €. Im Angebot zahlst du 45 €. Wie viel Prozent des Neupreises zahlst du?",
+        options: ["60 %", "70 %", "75 %", "80 %"],
+        correct: 2,
+        explain: "p = 45 € / 60 € · 100 % = 75 % (also 25 % Rabatt)."
+      }
+    ]
+  },
+  "noch-fit-prozentrechnung": {
+    title: "Noch fit? – Einstiegscheck Prozentrechnung",
+    chapterSlug: "prozentrechnung",
+    duration: "ca. 30 Minuten",
+    locked: false,
+    questions: [
+      /* --- Teil 1: Flächenanteile ablesen --- */
+      {
+        section: "Flächenanteile ablesen", kind:"mc",
+        shape: { type:"circle", total:4, shaded:1 },
+        text: "Wie viel Prozent des Kreises sind gefärbt?",
+        options: ["20 %","25 %","30 %","40 %"], correct:1,
+        explain: "1 von 4 gleich großen Teilen ist gefärbt: 1/4 = 25 %."
+      },
+      {
+        section: "Flächenanteile ablesen", kind:"mc",
+        shape: { type:"stripes", total:5, shaded:2 },
+        text: "Wie viel Prozent des Rechtecks sind gefärbt?",
+        options: ["20 %","30 %","40 %","50 %"], correct:2,
+        explain: "2 von 5 Streifen sind gefärbt: 2/5 = 40 %."
+      },
+      {
+        section: "Flächenanteile ablesen", kind:"mc",
+        shape: { type:"grid", rows:4, cols:5, shaded:15 },
+        text: "Wie viel Prozent der Fläche sind gefärbt?",
+        options: ["60 %","70 %","75 %","80 %"], correct:2,
+        explain: "15 von 20 Kästchen sind gefärbt: 15/20 = 75 %."
+      },
+
+      /* --- Teil 2: Schreibweisen wechseln --- */
+      {
+        section: "Schreibweisen wechseln", kind:"numeric",
+        text: "Wandle 0,35 in Prozent um. (Antwort in %)",
+        accept: ["35","35%","35 %"], explain: "0,35 = 35/100 = 35 %."
+      },
+      {
+        section: "Schreibweisen wechseln", kind:"numeric",
+        text: "Wandle 3/4 in Prozent um. (Antwort in %)",
+        accept: ["75","75%","75 %"], explain: "3/4 = 75/100 = 75 %."
+      },
+      {
+        section: "Schreibweisen wechseln", kind:"numeric",
+        text: "18 von 40 sind wie viel Prozent?",
+        accept: ["45","45%","45 %"], explain: "18/40 = 0,45 = 45 %."
+      },
+      {
+        section: "Schreibweisen wechseln", kind:"numeric",
+        text: "60 % als vollständig gekürzter Bruch – wie lautet er? (Form a/b)",
+        accept: ["3/5"], explain: "60/100 = 3/5 (Zähler und Nenner durch 20 geteilt)."
+      },
+
+      /* --- Teil 3: Flächenanteile einfärben --- */
+      {
+        section: "Flächenanteile einfärben", kind:"grid-shade",
+        rows:10, cols:10, targetPercent:30,
+        text: "Färbe 30 % des Rasters (antippen oder mit dem Finger/Stift darüberziehen), dann prüfe.",
+        explain: "30 % von 100 Kästchen sind 30 Kästchen."
+      },
+      {
+        section: "Flächenanteile einfärben", kind:"grid-shade",
+        rows:10, cols:10, targetPercent:45,
+        text: "Färbe 45 % des Rasters (antippen oder mit dem Finger/Stift darüberziehen), dann prüfe.",
+        explain: "45 % von 100 Kästchen sind 45 Kästchen."
+      },
+      {
+        section: "Flächenanteile einfärben", kind:"mc",
+        shape: { type:"grid", rows:4, cols:5, shaded:6 },
+        text: "Wie viel Prozent dieser Fläche sind gefärbt?",
+        options: ["20 %","25 %","30 %","35 %"], correct:2,
+        explain: "6 von 20 Kästchen sind gefärbt: 6/20 = 30 %."
+      },
+      {
+        section: "Flächenanteile einfärben", kind:"mc",
+        shape: { type:"grid", rows:4, cols:5, shaded:18 },
+        text: "Wie viel Prozent dieser Fläche sind gefärbt?",
+        options: ["80 %","85 %","90 %","95 %"], correct:2,
+        explain: "18 von 20 Kästchen sind gefärbt: 18/20 = 90 %."
+      },
+
+      /* --- Teil 4: Anteile in Prozent angeben --- */
+      {
+        section: "Anteile in Prozent angeben", kind:"numeric",
+        text: "12 von 60 sind wie viel Prozent?",
+        accept: ["20","20%","20 %"], explain: "12/60 = 0,20 = 20 %."
+      },
+      {
+        section: "Anteile in Prozent angeben", kind:"numeric",
+        text: "27 von 45 sind wie viel Prozent?",
+        accept: ["60","60%","60 %"], explain: "27/45 = 0,60 = 60 %."
+      },
+      {
+        section: "Anteile in Prozent angeben", kind:"numeric",
+        text: "9 von 12 sind wie viel Prozent?",
+        accept: ["75","75%","75 %"], explain: "9/12 = 0,75 = 75 %."
+      },
+
+      /* --- Teil 5: Kreisdiagramme lesen --- */
+      {
+        section: "Kreisdiagramme lesen", kind:"mc",
+        chart: { caption:"Lieblingssportart einer 8. Klasse (30 Kinder)", segments:[
+          {label:"Fußball", value:50, color:"var(--accent)"},
+          {label:"Schwimmen", value:30, color:"var(--warm)"},
+          {label:"Sonstiges", value:20, color:"var(--success)"}
+        ]},
+        text: "Welchen Anteil hat „Schwimmen“?",
+        options: ["20 %","25 %","30 %","35 %"], correct:2,
+        explain: "Im Diagramm ist „Schwimmen“ mit 30 % angegeben."
+      },
+      {
+        section: "Kreisdiagramme lesen", kind:"numeric",
+        chart: { caption:"Lieblingssportart einer 8. Klasse (30 Kinder)", segments:[
+          {label:"Fußball", value:50, color:"var(--accent)"},
+          {label:"Schwimmen", value:30, color:"var(--warm)"},
+          {label:"Sonstiges", value:20, color:"var(--success)"}
+        ]},
+        text: "Wie viele der 30 Kinder mögen am liebsten Fußball (50 %)?",
+        accept: ["15"], explain: "50 % von 30 = 15 Kinder."
+      },
+      {
+        section: "Kreisdiagramme lesen", kind:"numeric",
+        chart: { caption:"Lieblingssportart einer 8. Klasse (30 Kinder)", segments:[
+          {label:"Fußball", value:50, color:"var(--accent)"},
+          {label:"Schwimmen", value:30, color:"var(--warm)"},
+          {label:"Sonstiges", value:20, color:"var(--success)"}
+        ]},
+        text: "Wie viele Kinder haben „Sonstiges“ angegeben (20 %)?",
+        accept: ["6"], explain: "20 % von 30 = 6 Kinder."
+      }
+    ]
+  }
+};
+
+/* Arbeitsblätter mit Tabellen-Aufgaben: "given" = leeres Feld auf dem Arbeitsblatt ("" = auszufüllen),
+   "solved" = vollständige Lösung (auf der Lösungsseite werden die vorher leeren Felder hervorgehoben). */
+const worksheets = {
+  "ab-prozent-grundwerte-niveau1": {
+    title: "Grundwerte, Prozentsätze und Prozentwerte berechnen (Niveau 1)",
+    chapterSlug: "prozentrechnung",
+    solutionSlug: "ab-prozent-grundwerte-niveau1",
+    tables: [
+      {
+        intro: "Berechne die fehlenden Werte.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["180 m","","60 l","400 km","150 h",""],           solved:["180 m","260 kg","60 l","400 km","150 h","70 t"] },
+          { label:"Prozentsatz", given:["10 %","50 %","","40 %","","30 %"],                solved:["10 %","50 %","20 %","40 %","60 %","30 %"] },
+          { label:"Prozentwert", given:["","130 kg","12 l","","90 h","21 t"],              solved:["18 m","130 kg","12 l","160 km","90 h","21 t"] }
+        ]
+      },
+      {
+        intro: "Vervollständige die Tabelle.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["","120 €","80 l","","600 m","100 km"],  solved:["200 kg","120 €","80 l","25 t","600 m","100 km"] },
+          { label:"Prozentsatz", given:["12 %","","5 %","20 %","","45 %"],       solved:["12 %","30 %","5 %","20 %","70 %","45 %"] },
+          { label:"Prozentwert", given:["24 kg","36 €","","5 t","420 m",""],     solved:["24 kg","36 €","4 l","5 t","420 m","45 km"] }
+        ]
+      },
+      {
+        intro: "Ergänze die fehlenden Werte.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["300 €","5800 g","","750 m","625 €","675 kg"], solved:["300 €","5800 g","600 kg","750 m","625 €","675 kg"] },
+          { label:"Prozentsatz", given:["25 %","","20 %","30 %","","40 %"],            solved:["25 %","41 %","20 %","30 %","4 %","40 %"] },
+          { label:"Prozentwert", given:["","2378 g","120 kg","","25 €",""],            solved:["75 €","2378 g","120 kg","225 m","25 €","270 kg"] }
+        ]
+      },
+      {
+        intro: "Während einer Rabattaktion senkt das Kaufhaus „Schön und Billig“ den Preis aller Hemden um 20 %. Um wie viel Euro wurden die Hemden jeweils heruntergesetzt?",
+        columns: ["a","b","c","d"],
+        rows: [
+          { label:"alter Preis",  given:["18 €","54 €","35 €","40,60 €"], solved:["18 €","54 €","35 €","40,60 €"] },
+          { label:"Prozentwert",  given:["","","",""],                    solved:["3,6 €","10,8 €","7 €","8,12 €"] }
+        ]
+      },
+      {
+        intro: "Der Modeladen „Hübsch und Preiswert“ gibt auf sämtliche Hosen 10 € Rabatt. Um wie viel Prozent wurden die einzelnen Hosen runtergesetzt?",
+        columns: ["a","b","c","d"],
+        rows: [
+          { label:"alter Preis",  given:["50 €","100 €","20 €","40 €"], solved:["50 €","100 €","20 €","40 €"] },
+          { label:"Prozentsatz",  given:["","","",""],                  solved:["20 %","10 %","50 %","25 %"] }
+        ]
+      }
+    ]
+  },
+  "ab-prozent-grundwerte-niveau2": {
+    title: "Grundwerte, Prozentsätze und Prozentwerte berechnen (Niveau 2)",
+    chapterSlug: "prozentrechnung",
+    solutionSlug: "ab-prozent-grundwerte-niveau2",
+    tables: [
+      {
+        intro: "Berechne die fehlenden Werte.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["2400 m","","128 l","120,8 km","1 h",""],        solved:["2400 m","153,3 kg","128 l","120,8 km","1 h","1,17 t"] },
+          { label:"Prozentsatz", given:["23 %","15 %","","42 %","","64 %"],              solved:["23 %","15 %","19,14 %","42 %","58,33 %","64 %"] },
+          { label:"Prozentwert", given:["","23 kg","24,5 l","","35 min","0,75 t"],       solved:["552 m","23 kg","24,5 l","50,74 km","35 min","0,75 t"] }
+        ]
+      },
+      {
+        intro: "Vervollständige die Tabelle.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["","90 €","400 l","","500 m","50 km"],  solved:["1333 kg","90 €","400 l","5000 t","500 m","50 km"] },
+          { label:"Prozentsatz", given:["1,5 %","","8 %","8 %","","12 %"],       solved:["1,5 %","11,11 %","8 %","8 %","80 %","12 %"] },
+          { label:"Prozentwert", given:["20 kg","10 €","","400 t","400 m",""],   solved:["20 kg","10 €","32 l","400 t","400 m","6 km"] }
+        ]
+      },
+      {
+        intro: "Ergänze die fehlenden Werte.",
+        columns: ["a","b","c","d","e","f"],
+        rows: [
+          { label:"Grundwert",   given:["12 ml","0,5 cm","","9,5 m","1,2 kg",""],  solved:["12 ml","0,5 cm","200 €","9,5 m","1,2 kg","33,33 €"] },
+          { label:"Prozentsatz", given:["12 %","","1,5 %","0,25 %","","3,6 %"],    solved:["12 %","10 %","1,5 %","0,25 %","50 %","3,6 %"] },
+          { label:"Prozentwert", given:["","0,05 cm","3 €","","0,6 kg","1,2 €"],   solved:["1,44 ml","0,05 cm","3 €","2,38 cm","0,6 kg","1,2 €"] }
+        ]
+      },
+      {
+        intro: "Während einer Rabattaktion senkt das Kaufhaus „Schön und Billig“ den Preis aller Hemden um 35 %. Um wie viel Euro wurden die Hemden jeweils heruntergesetzt?",
+        columns: ["a","b","c","d"],
+        rows: [
+          { label:"alter Preis",  given:["40 €","68 €","52 €","19,80 €"], solved:["40 €","68 €","52 €","19,80 €"] },
+          { label:"Prozentwert",  given:["","","",""],                    solved:["14 €","23,8 €","18,2 €","6,93 €"] }
+        ]
+      },
+      {
+        intro: "Der Modeladen „Hübsch und Preiswert“ gibt auf sämtliche Hosen 15 € Rabatt. Um wie viel Prozent wurden die einzelnen Hosen runtergesetzt?",
+        columns: ["a","b","c","d"],
+        rows: [
+          { label:"alter Preis",  given:["25 €","80 €","37,50 €","62,50 €"], solved:["25 €","80 €","37,50 €","62,50 €"] },
+          { label:"Prozentsatz",  given:["","","",""],                       solved:["60 %","18,75 %","40 %","24 %"] }
+        ]
+      }
+    ]
+  }
+};
+
+/* ---------- Hilfsfunktionen ---------- */
+function h(strings, ...vals){ return strings.reduce((a,s,i)=>a+s+(vals[i]??""),""); }
+function esc(s){ return String(s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function statusLabel(s){ return s==="aktuell" ? "In Bearbeitung" : s==="fertig" ? "Abgeschlossen" : "Geplant"; }
+function statusClass(s){ return s==="aktuell" ? "status-aktuell" : s==="fertig" ? "status-fertig" : "status-geplant"; }
+function tagLabel(t){ return {lernen:"Lernen", strategie:"Strategie", werkzeug:"Werkzeug", abschluss:"Abschluss"}[t] || t; }
+
+/* Lernstand pro Übung – lokal im Browser des Schülers gespeichert (kein Server, kein Login).
+   Pro Aufgabe wird Status ("open"/"correct"/"skipped") + Versuche gespeichert, damit man
+   a) den Fortschritt schon während der Übung sieht, b) beim Wiederkommen dort weitermacht,
+   wo man aufgehört hat, und c) gezielt einzelne Aufgaben nochmal aufrufen kann. */
+function exerciseStateKey(slug){ return "lernportal:state:" + slug; }
+function freshExerciseState(total){
+  return { q: Array.from({length: total}, () => ({status:"open", attempts:0})) };
+}
+function loadExerciseState(slug, total){
+  try {
+    const raw = localStorage.getItem(exerciseStateKey(slug));
+    if (raw){
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.q) && parsed.q.length === total) return parsed;
+    }
+  } catch(e){ /* localStorage nicht verfügbar (z.B. privater Modus) - einfach ignorieren */ }
+  return freshExerciseState(total);
+}
+function saveExerciseState(slug, state){
+  try { localStorage.setItem(exerciseStateKey(slug), JSON.stringify(state)); }
+  catch(e){ /* ignorieren, z.B. privater Modus */ }
+}
+/* Für die Fortschrittsanzeige im Kapitel (S.8/S.9 usw.) */
+function exerciseProgress(slug){
+  const set = exerciseSets[slug];
+  if (!set) return null;
+  const state = loadExerciseState(slug, set.questions.length);
+  const total = state.q.length;
+  const correct = state.q.filter(x => x.status === "correct").length;
+  return { correct, total };
+}
+
+/* Gesperrte Übungen ("locked:true") sind für alle gleich gesperrt - auch für Manuel selbst.
+   Freischalten geht nur, indem das Flag im Code geändert und neu veröffentlicht wird. */
+function isLocked(set, slug){
+  if (!set) return false;
+  if (slug && remoteLocksCache && Object.prototype.hasOwnProperty.call(remoteLocksCache, slug)){
+    return !!remoteLocksCache[slug];
+  }
+  return !!set.locked;
+}
+
+/* Rendert eine Tabellen-Aufgabe eines Arbeitsblatts. showSolved=false -> leere Felder ("given"),
+   showSolved=true -> vollständige Lösung, dabei die vorher leeren Felder farblich hervorgehoben. */
+function tableTaskHtml(t, num, showSolved){
+  const headCells = t.columns.map(c => `<th>${esc(c)}</th>`).join("");
+  const bodyRows = t.rows.map(r => {
+    const cells = r.given.map((giv, i) => {
+      const val = showSolved ? r.solved[i] : giv;
+      const cls = (showSolved && giv === "") ? ' class="tt-solved"' : "";
+      return `<td${cls}>${val ? esc(val) : ""}</td>`;
+    }).join("");
+    return `<tr><th class="tt-rowlabel">${esc(r.label)}</th>${cells}</tr>`;
+  }).join("");
+  return `
+    <div class="task">
+      <div><span class="task-num num">${num}.</span>${esc(t.intro)}</div>
+      <div class="task-table-wrap"><table class="task-table">
+        <thead><tr><th></th>${headCells}</tr></thead>
+        <tbody>${bodyRows}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+function qrSvg(text, size){
+  const qr = window.qrcode(0, "M");
+  qr.addData(text);
+  qr.make();
+  const n = qr.getModuleCount();
+  const cell = size / n;
+  let rects = "";
+  for (let r=0; r<n; r++){
+    for (let c=0; c<n; c++){
+      if (qr.isDark(r,c)){
+        rects += `<rect x="${(c*cell).toFixed(2)}" y="${(r*cell).toFixed(2)}" width="${(cell+0.5).toFixed(2)}" height="${(cell+0.5).toFixed(2)}" fill="#12181d"/>`;
+      }
+    }
+  }
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR-Code">${rects}</svg>`;
+}
+
+function polarPoint(cx,cy,r,angleDeg){
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+}
+
+/* Statische Anschauungs-Grafiken für "Flächenanteile ablesen" (eigene Formen, keine Buchgrafiken) */
+function shapeSvg(shape, size){
+  size = size || 160;
+  const cx = size/2, cy = size/2, r = size/2 - 4;
+  if (shape.type === "circle"){
+    let html = "";
+    for (let i=0;i<shape.total;i++){
+      const a0 = i * 360/shape.total, a1 = (i+1) * 360/shape.total;
+      const p0 = polarPoint(cx,cy,r,a0), p1 = polarPoint(cx,cy,r,a1);
+      const large = (a1-a0) > 180 ? 1 : 0;
+      const fill = i < shape.shaded ? "var(--accent)" : "var(--surface-2)";
+      html += `<path d="M ${cx},${cy} L ${p0.x.toFixed(2)},${p0.y.toFixed(2)} A ${r},${r} 0 ${large} 1 ${p1.x.toFixed(2)},${p1.y.toFixed(2)} Z" fill="${fill}" stroke="var(--surface)" stroke-width="2"/>`;
+    }
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Kreisdiagramm">${html}</svg>`;
+  }
+  if (shape.type === "stripes"){
+    const w = size/shape.total;
+    let html = "";
+    for (let i=0;i<shape.total;i++){
+      const fill = i < shape.shaded ? "var(--accent)" : "var(--surface-2)";
+      html += `<rect x="${(i*w).toFixed(2)}" y="0" width="${(w-2).toFixed(2)}" height="${size}" fill="${fill}"/>`;
+    }
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Streifendiagramm">${html}</svg>`;
+  }
+  if (shape.type === "grid"){
+    const w = size/shape.cols, hgt = size/shape.rows;
+    let html = "", n=0;
+    for (let r0=0;r0<shape.rows;r0++){
+      for (let c0=0;c0<shape.cols;c0++){
+        const fill = n < shape.shaded ? "var(--accent)" : "var(--surface-2)";
+        html += `<rect x="${(c0*w).toFixed(2)}" y="${(r0*hgt).toFixed(2)}" width="${(w-2).toFixed(2)}" height="${(hgt-2).toFixed(2)}" fill="${fill}"/>`;
+        n++;
+      }
+    }
+    return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="Rasterdiagramm">${html}</svg>`;
+  }
+  return "";
+}
+
+/* Kreisdiagramm mit Legende für "Kreisdiagramme lesen" */
+function pieChartHtml(chart, size){
+  size = size || 150;
+  const cx = size/2, cy = size/2, r = size/2 - 4;
+  let cumulative = 0, paths = "";
+  chart.segments.forEach(seg=>{
+    const a0 = cumulative*3.6, a1 = (cumulative+seg.value)*3.6;
+    const p0 = polarPoint(cx,cy,r,a0), p1 = polarPoint(cx,cy,r,a1);
+    const large = (a1-a0) > 180 ? 1 : 0;
+    paths += `<path d="M ${cx},${cy} L ${p0.x.toFixed(2)},${p0.y.toFixed(2)} A ${r},${r} 0 ${large} 1 ${p1.x.toFixed(2)},${p1.y.toFixed(2)} Z" fill="${seg.color}" stroke="var(--surface)" stroke-width="2"/>`;
+    cumulative += seg.value;
+  });
+  const legend = chart.segments.map(seg=>`
+    <div class="legend-row"><span class="legend-dot" style="background:${seg.color}"></span>${esc(seg.label)} <span class="num legend-pct">${seg.value} %</span></div>
+  `).join("");
+  return `
+    <div class="chart-block">
+      <svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" role="img" aria-label="${esc(chart.caption)}">${paths}</svg>
+      <div class="legend">
+        <div class="legend-caption">${esc(chart.caption)}</div>
+        ${legend}
+      </div>
+    </div>
+  `;
+}
+
+function setCrumbs(items){
+  document.getElementById("crumbs").innerHTML = items.map((it,i)=>{
+    const isLast = i===items.length-1;
+    return isLast ? `<span>${esc(it.label)}</span>` : `<a href="${it.href}">${esc(it.label)}</a><span>›</span>`;
+  }).join(" ");
+}
+
+/* ---------- Views ---------- */
+function viewHome(){
+  setCrumbs([{label:"Start", href:"#/"}]);
+  return h`
+    <div class="hero">
+      <span class="eyebrow">Klasse 8 · M-Zug</span>
+      <h1>Willkommen im Lernportal.</h1>
+      <p>Wähle ein Fach, um Aufgaben zu üben, deinen Lernstand zu sehen oder die Lösung zu einem Arbeitsblatt aufzurufen.</p>
+    </div>
+    <div class="grid">
+      <a class="subject-card card active" href="#/mathe">
+        <span class="subject-icon">📐</span>
+        <span>
+          <span class="subject-title">Mathematik</span><br>
+          <span class="subject-sub">Lernstufen Mathematik · Bayern Mittelschule M8</span>
+        </span>
+      </a>
+      <div class="subject-card card disabled">
+        <span class="subject-icon">✎</span>
+        <span>
+          <span class="subject-title">Weitere Fächer</span><br>
+          <span class="subject-sub">Folgen, sobald sie startklar sind</span>
+        </span>
+        <span class="pill pill-soon">bald</span>
+      </div>
+    </div>
+  `;
+}
+
+function viewMathe(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}]);
+  const rows = chapters.map(c => `
+    <a class="chapter-row linkable" href="#/mathe/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+        <div class="chapter-meta">${esc(c.pages)}</div>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Mathematik</span>
+      <h1>Wo wir gerade stehen.</h1>
+      <p>Acht Kapitel, wie im Schulbuch. Kapitel 1 ist gerade dran – der Rest folgt im Laufe des Schuljahrs.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewChapter(slug){
+  const c = chapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:c.title, href:"#/mathe/"+slug}]);
+
+  if (slug === "prozentrechnung"){
+    const rows = prozentTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (set && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      }
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          <span class="topic-page num">S. ${t.page}</span>
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/mathe">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr} · ${c.pages}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Rabatt, Zinsen, Wachstum: In diesem Kapitel rechnest du mit Anteilen und lernst, Prozentangaben in Diagrammen darzustellen.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+      <div class="callout">
+        <strong>Arbeitsblatt bekommen?</strong> Die Lösung findest du nicht hier im Menü, sondern nur, wenn du den QR-Code auf deinem Blatt scannst.
+        <br><a class="worksheet-link" href="#/arbeitsblatt/ab-prozent-grundwerte-niveau1">📄 Arbeitsblatt Niveau 1 ansehen (zum Ausdrucken)</a>
+        <br><a class="worksheet-link" href="#/arbeitsblatt/ab-prozent-grundwerte-niveau2">📄 Arbeitsblatt Niveau 2 ansehen (zum Ausdrucken)</a>
+      </div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/mathe">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">Kapitel ${c.nr} · ${c.pages}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieses Kapitel ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
+
+function viewExercise(slug){
+  const set = exerciseSets[slug];
+  if (!set) return viewNotFound();
+  const chap = chapters.find(c => c.slug === set.chapterSlug);
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+chap.slug}, {label:"Übung", href:"#/uebung/"+slug}]);
+
+  if (isLocked(set, slug)){
+    return h`
+      <a class="backlink" href="#/mathe/${set.chapterSlug}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>Diese Übung ist noch nicht freigeschaltet. Sie wird verfügbar, sobald wir im Unterricht so weit sind.</p>
+      </div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/mathe/${set.chapterSlug}">← Zurück zum Kapitel</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">Übung</span>
+      <h1>${esc(set.title)}</h1>
+      <p>${set.questions.length} Aufgaben${set.duration ? " · " + esc(set.duration) : ""}, sofortige Rückmeldung. Dein Fortschritt wird in diesem Browser gespeichert – du kannst jederzeit aufhören und später hier weitermachen.</p>
+    </div>
+    <p class="qnav-hint">Tippe auf eine Nummer, um direkt zu dieser Aufgabe zu springen:</p>
+    <div class="qnav" id="qnav"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div id="exerciseHost"></div>
+  `;
+}
+
+function viewWorksheet(slug){
+  const ws = worksheets[slug];
+  if (!ws) return viewNotFound();
+  const chap = chapters.find(c => c.slug === ws.chapterSlug);
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+chap.slug}, {label:"Arbeitsblatt", href:"#/arbeitsblatt/"+slug}]);
+
+  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, false)).join("");
+
+  return h`
+    <a class="backlink no-print" href="#/mathe/${ws.chapterSlug}">← Zurück zum Kapitel</a>
+    <div class="doc-card">
+      <div class="doc-head">
+        <div>
+          <h2>${esc(ws.title)}</h2>
+          <div class="doc-sub">Name: ____________________  ·  Klasse 8</div>
+        </div>
+      </div>
+      ${tasks}
+      <div class="qr-block">
+        <div id="qrHost"></div>
+        <div class="qr-caption">Lösung per Scan: QR-Code mit dem Tablet oder Handy scannen. Der Code führt direkt zur Lösungsseite – ohne Umweg über das Menü.</div>
+      </div>
+    </div>
+  `;
+}
+
+function viewSolution(slug){
+  const ws = Object.values(worksheets).find(w => w.solutionSlug === slug);
+  if (!ws) return viewNotFound();
+  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, true)).join("");
+  return h`
+    <div class="doc-card">
+      <div class="doc-head">
+        <div>
+          <h2>Lösung · ${esc(ws.title)}</h2>
+          <div class="doc-sub">Nur über den QR-Code auf dem Arbeitsblatt erreichbar</div>
+        </div>
+      </div>
+      ${tasks}
+    </div>
+  `;
+}
+
+function viewNotFound(){
+  setCrumbs([{label:"Start", href:"#/"}]);
+  return h`
+    <div class="hero">
+      <h1>Seite nicht gefunden.</h1>
+      <p>Diese Adresse gibt es (noch) nicht. <a href="#/">Zurück zum Start</a></p>
+    </div>
+  `;
+}
+
+/* ---------- Übungs-Logik ---------- */
+function normalizeAnswer(s){
+  return String(s).trim().toLowerCase().replace(/\s+/g,"").replace(",",".").replace("%","");
+}
+
+window.__startExercise = function(slug){
+  const set = exerciseSets[slug];
+  if (!set) return;
+  const total = set.questions.length;
+  const state = loadExerciseState(slug, total);
+  let i = state.q.findIndex(x => x.status === "open");
+  if (i === -1) i = 0;
+  let attempts = 0, solved = false;
+  const host = document.getElementById("exerciseHost");
+  const fill = document.getElementById("progressFill");
+  const navHost = document.getElementById("qnav");
+
+  function persist(){ saveExerciseState(slug, state); renderNav(); }
+
+  function renderNav(){
+    if (!navHost) return;
+    navHost.innerHTML = state.q.map((qs, idx) => {
+      let cls = "qnav-btn";
+      if (idx === i) cls += " current";
+      if (qs.status === "correct") cls += " correct";
+      else if (qs.status === "skipped") cls += " skipped";
+      const titleBit = qs.status === "correct" ? " – richtig gelöst" : qs.status === "skipped" ? " – noch nicht verstanden" : "";
+      return `<button type="button" class="${cls}" data-idx="${idx}" title="Aufgabe ${idx+1}${titleBit}">${idx+1}</button>`;
+    }).join("");
+    navHost.querySelectorAll(".qnav-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        i = Number(btn.dataset.idx);
+        renderQuestion();
+      });
+    });
+  }
+
+  function head(q){
+    const meta = q.section ? `${q.section} · Frage ${i+1} von ${total}` : `Frage ${i+1} von ${total}`;
+    const visual = q.shape ? `<div class="shape-block">${shapeSvg(q.shape)}</div>` : (q.chart ? pieChartHtml(q.chart) : "");
+    return `<div class="qmeta">${esc(meta)}</div>${visual}<div class="qtext">${esc(q.text)}</div>`;
+  }
+
+  function tryAgainFeedback(msg){
+    const fb = document.getElementById("fb");
+    fb.textContent = msg || "Leider falsch – versuch's nochmal.";
+    fb.className = "feedback show wrong";
+  }
+
+  function goNext(){
+    i++;
+    if (i < total) renderQuestion(); else renderResult();
+  }
+
+  function lockQuestion(status, feedbackText, feedbackClass){
+    solved = true;
+    state.q[i] = { status, attempts: (state.q[i].attempts || 0) + attempts };
+    persist();
+    reportResult(slug, i, status, state.q[i].attempts);
+    const fb = document.getElementById("fb");
+    fb.textContent = feedbackText;
+    fb.className = "feedback show " + feedbackClass;
+    document.getElementById("nextBtn").classList.add("show");
+    const skipBtn = document.getElementById("skipBtn");
+    if (skipBtn) skipBtn.style.display = "none";
+  }
+
+  function renderReviewCard(q, qState){
+    const ok = qState.status === "correct";
+    const triesText = qState.attempts ? ` (${qState.attempts} ${qState.attempts===1 ? "Versuch" : "Versuche"})` : "";
+    host.innerHTML = `
+      <div class="qcard">
+        ${head(q)}
+        <div class="feedback show ${ok ? "correct" : "wrong"}">${ok ? "✓ Schon richtig gelöst" : "Noch nicht verstanden"}${triesText}. ${esc(q.explain)}</div>
+        <div class="qactions">
+          <button class="skip-btn" id="retryBtn">Nochmal versuchen</button>
+          <button class="next-btn show" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("retryBtn").addEventListener("click", ()=>{
+      state.q[i] = { status:"open", attempts:0 };
+      persist();
+      renderQuestion();
+    });
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+  }
+
+  function renderQuestion(){
+    fill.style.width = Math.round((i / total) * 100) + "%";
+    renderNav();
+    const q = set.questions[i];
+    const qState = state.q[i];
+    if (qState.status !== "open"){
+      renderReviewCard(q, qState);
+      return;
+    }
+    attempts = 0;
+    solved = false;
+
+    let body = "";
+    if (q.kind === "numeric"){
+      body = `
+        <div class="numeric-row">
+          <input type="text" inputmode="decimal" class="numeric-input" id="numInput" placeholder="Antwort" autocomplete="off">
+          <button class="check-btn" id="checkBtn">Prüfen</button>
+        </div>
+      `;
+    } else if (q.kind === "grid-shade"){
+      let cells = "";
+      for (let c=0;c<q.rows*q.cols;c++){ cells += `<button class="shade-cell" data-i="${c}"></button>`; }
+      body = `
+        <div class="shade-grid" id="shadeGrid" style="grid-template-columns:repeat(${q.cols},1fr);">${cells}</div>
+        <div class="shade-count">Gefärbt: <span class="num" id="shadeCount">0</span> / ${q.rows*q.cols} Kästchen</div>
+        <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
+      `;
+    } else {
+      body = `
+        <div class="options" id="opts">
+          ${q.options.map((o,idx)=>`<button class="option" data-idx="${idx}">${esc(o)}</button>`).join("")}
+        </div>
+      `;
+    }
+
+    host.innerHTML = `
+      <div class="qcard">
+        ${head(q)}
+        ${body}
+        <div class="feedback" id="fb"></div>
+        <div class="qactions">
+          <button class="skip-btn" id="skipBtn">Überspringen</button>
+          <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+        </div>
+      </div>
+    `;
+
+    if (q.kind === "numeric"){
+      const input = document.getElementById("numInput");
+      const check = ()=>{
+        if (solved) return;
+        attempts++;
+        const val = normalizeAnswer(input.value);
+        const ok = q.accept.some(a => normalizeAnswer(a) === val) && val !== "";
+        if (ok){
+          input.disabled = true;
+          document.getElementById("checkBtn").disabled = true;
+          input.parentElement.classList.add("correct");
+          lockQuestion("correct", q.explain, "correct");
+        } else {
+          tryAgainFeedback();
+          input.select();
+        }
+      };
+      document.getElementById("checkBtn").addEventListener("click", check);
+      input.addEventListener("keydown", e=>{ if (e.key === "Enter") check(); });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        input.disabled = true;
+        document.getElementById("checkBtn").disabled = true;
+        input.value = q.accept[0];
+        input.parentElement.classList.add("wrong");
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
+    } else if (q.kind === "grid-shade"){
+      const grid = document.getElementById("shadeGrid");
+      const countEl = document.getElementById("shadeCount");
+      const target = Math.round(q.rows*q.cols*q.targetPercent/100);
+      let shaded = new Set();
+
+      /* Zum Ausmalen: mit dem Finger/Stift über mehrere Kästchen ziehen statt
+         jedes einzeln antippen zu müssen. Die erste berührte Zelle bestimmt den
+         Modus (Farbe an- oder ausschalten); beim Ziehen darüber wird derselbe
+         Modus auf jede neu erreichte Zelle angewendet. */
+      let painting = false;
+      let paintOn = true;
+
+      function paintCell(cell, on){
+        if (!cell || solved) return;
+        const idx = cell.dataset.i;
+        if (on && !shaded.has(idx)){ shaded.add(idx); cell.classList.add("on"); }
+        else if (!on && shaded.has(idx)){ shaded.delete(idx); cell.classList.remove("on"); }
+        countEl.textContent = shaded.size;
+      }
+
+      function cellAt(clientX, clientY){
+        const el = document.elementFromPoint(clientX, clientY);
+        const cell = el && el.closest(".shade-cell");
+        return (cell && grid.contains(cell)) ? cell : null;
+      }
+
+      grid.addEventListener("pointerdown", (e)=>{
+        if (solved) return;
+        const cell = e.target.closest(".shade-cell");
+        if (!cell) return;
+        e.preventDefault();
+        painting = true;
+        paintOn = !shaded.has(cell.dataset.i);
+        paintCell(cell, paintOn);
+      });
+      grid.addEventListener("pointermove", (e)=>{
+        if (!painting) return;
+        e.preventDefault();
+        paintCell(cellAt(e.clientX, e.clientY), paintOn);
+      });
+      const stopPainting = ()=>{ painting = false; };
+      window.addEventListener("pointerup", stopPainting);
+      window.addEventListener("pointercancel", stopPainting);
+
+      document.getElementById("checkBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        attempts++;
+        const ok = shaded.size === target;
+        if (ok){
+          document.getElementById("checkBtn").disabled = true;
+          lockQuestion("correct", q.explain, "correct");
+        } else {
+          tryAgainFeedback(`Leider falsch (du hast ${shaded.size} statt ${target} Kästchen gefärbt) – versuch's nochmal.`);
+        }
+      });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        document.getElementById("checkBtn").disabled = true;
+        grid.querySelectorAll(".shade-cell").forEach(c=>c.style.pointerEvents="none");
+        grid.querySelectorAll(".shade-cell").forEach((cell,idx)=>{ if (idx < target) cell.classList.add("target"); });
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
+    } else {
+      document.getElementById("opts").querySelectorAll(".option").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          if (solved || btn.classList.contains("disabled")) return;
+          attempts++;
+          const idx = Number(btn.dataset.idx);
+          if (idx === q.correct){
+            btn.classList.add("correct");
+            document.querySelectorAll("#opts .option").forEach(o=>o.classList.add("disabled"));
+            lockQuestion("correct", q.explain, "correct");
+          } else {
+            btn.classList.add("wrong","disabled");
+            tryAgainFeedback();
+          }
+        });
+      });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        const opts = document.querySelectorAll("#opts .option");
+        opts.forEach(o=>o.classList.add("disabled"));
+        opts[q.correct].classList.add("correct");
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+  }
+
+  function renderResult(){
+    fill.style.width = "100%";
+    renderNav();
+    const correctCount = state.q.filter(r => r.status === "correct").length;
+    const rows = set.questions.map((q,idx)=>{
+      const r = state.q[idx] || { attempts:0, status:"open" };
+      const ok = r.status === "correct";
+      return `
+        <button type="button" class="result-row" data-idx="${idx}">
+          <span class="result-num num">${idx+1}</span>
+          <span class="result-label">${esc(q.section || ("Aufgabe " + (idx+1)))}</span>
+          <span class="result-attempts num">${r.attempts||0} ${r.attempts===1 ? "Versuch" : "Versuche"}</span>
+          <span class="result-status ${ok ? "ok" : "bad"}">${ok ? "✓ Richtig" : "Nicht gelöst"}</span>
+        </button>
+      `;
+    }).join("");
+    host.innerHTML = `
+      <div class="qcard result">
+        <div class="score num">${correctCount}/${total}</div>
+        <p>richtig gelöst</p>
+      </div>
+      <div class="result-table" id="resultTable">${rows}</div>
+      <p class="result-hint">Tippe auf eine Aufgabe, um sie dir nochmal anzusehen oder erneut zu versuchen.</p>
+      <div style="text-align:center;"><button class="restart-btn" id="restartBtn">Alles zurücksetzen &amp; nochmal üben</button></div>
+    `;
+    document.getElementById("resultTable").querySelectorAll(".result-row").forEach(row=>{
+      row.addEventListener("click", ()=>{
+        i = Number(row.dataset.idx);
+        renderQuestion();
+      });
+    });
+    document.getElementById("restartBtn").addEventListener("click", ()=>{
+      i = 0;
+      state.q = freshExerciseState(total).q;
+      persist();
+      renderQuestion();
+    });
+  }
+
+  if (state.q.every(x => x.status !== "open")) renderResult(); else renderQuestion();
+};
+
+window.__renderQr = function(text){
+  const host = document.getElementById("qrHost");
+  if (!host || !window.qrcode) return;
+  host.innerHTML = qrSvg(text, 200);
+};
+
+/* ---------- Router ---------- */
+function route(){
+  const hash = location.hash.replace(/^#/, "") || "/";
+  const parts = hash.split("/").filter(Boolean);
+  const app = document.getElementById("app");
+  let html;
+  if (parts.length === 0){
+    html = viewHome();
+  } else if (parts[0] === "mathe" && parts.length === 1){
+    html = viewMathe();
+  } else if (parts[0] === "mathe" && parts.length === 2){
+    html = viewChapter(parts[1]);
+  } else if (parts[0] === "uebung" && parts.length === 2){
+    html = viewExercise(parts[1]);
+  } else if (parts[0] === "arbeitsblatt" && parts.length === 2){
+    html = viewWorksheet(parts[1]);
+  } else if (parts[0] === "loesung" && parts.length === 2){
+    html = viewSolution(parts[1]);
+  } else {
+    html = viewNotFound();
+  }
+  app.innerHTML = html;
+  window.scrollTo(0,0);
+
+  if (parts[0] === "uebung" && parts.length === 2 && exerciseSets[parts[1]] && !isLocked(exerciseSets[parts[1]], parts[1])){
+    window.__startExercise(parts[1]);
+  }
+  if (parts[0] === "arbeitsblatt" && parts.length === 2 && worksheets[parts[1]]){
+    const ws = worksheets[parts[1]];
+    const solutionUrl = location.href.split("#")[0] + "#/loesung/" + ws.solutionSlug;
+    window.__renderQr(solutionUrl);
+  }
+}
+/* ---------- Zugangscode-Sperre ----------
+   Kein echter Login (technisch nicht möglich, ohne dass jeder Schüler ein eigenes
+   Claude-Konto braucht) - nur eine Hürde gegen Zufallsbesucher, die den Link
+   irgendwoher haben. Jeder Code funktioniert unbegrenzt oft; das Gerät merkt sich
+   nach der ersten erfolgreichen Eingabe, dass es freigeschaltet ist.
+   Die gültigen Codes liegen NICHT mehr hier im Quelltext, sondern werden bei der
+   Eingabe per Anfrage beim Google-Skript geprüft (Tabellenblatt "Codes") - so sind
+   sie nicht mehr einfach über "Seitenquelltext anzeigen" auslesbar. */
+const GATE_KEY = "lernportal:unlocked";
+const CODE_KEY = "lernportal:code";
+function isUnlocked(){
+  try { return localStorage.getItem(GATE_KEY) === "yes"; }
+  catch(e){ return false; }
+}
+function setUnlocked(code){
+  try {
+    localStorage.setItem(GATE_KEY, "yes");
+    localStorage.setItem(CODE_KEY, code);
+  } catch(e){ /* ignorieren */ }
+}
+function getMyCode(){
+  try { return localStorage.getItem(CODE_KEY) || ""; }
+  catch(e){ return ""; }
+}
+function normalizeCode(s){ return String(s || "").trim().toUpperCase().replace(/\s+/g,""); }
+
+/* ---------- Anbindung an Google-Auswertung/Freischaltung (optional) ----------
+   Solange APPS_SCRIPT_URL leer ist, passiert hier gar nichts - das Lernportal
+   funktioniert exakt wie zuvor (Freischaltung nur über das fest im Code
+   hinterlegte "locked"-Flag). Erst wenn eine echte Web-App-Adresse eingetragen
+   ist, werden Ergebnisse gemeldet und Freischaltungen von dort abgefragt. */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyFxZtY6ojF8zAvrBwuuPBA2Q6sWtbEIARR5YqJj-g1PGjcX_gFfJYDbO01AOnPSJFj/exec";
+let remoteLocksCache = null;
+const REMOTE_LOCKS_CACHE_KEY = "lernportal:remoteLocks";
+(function loadCachedRemoteLocks(){
+  try {
+    const raw = localStorage.getItem(REMOTE_LOCKS_CACHE_KEY);
+    if (raw) remoteLocksCache = JSON.parse(raw).data || null;
+  } catch(e){ /* ignorieren */ }
+})();
+
+function fetchRemoteLocks(){
+  if (!APPS_SCRIPT_URL) return;
+  const cbName = "__locksCb" + Date.now();
+  let done = false;
+  const script = document.createElement("script");
+  function cleanup(){ try { delete window[cbName]; } catch(e){} if (script.parentNode) script.parentNode.removeChild(script); }
+  window[cbName] = function(data){
+    if (done) return;
+    done = true;
+    remoteLocksCache = data;
+    try { localStorage.setItem(REMOTE_LOCKS_CACHE_KEY, JSON.stringify({ at: Date.now(), data })); } catch(e){ /* ignorieren */ }
+    cleanup();
+  };
+  script.src = APPS_SCRIPT_URL + "?action=locks&callback=" + cbName;
+  script.onerror = function(){ done = true; cleanup(); };
+  document.body.appendChild(script);
+  setTimeout(function(){ if (!done){ done = true; cleanup(); } }, 4000);
+}
+
+/* Holt den serverseitig gespeicherten Fortschritt zu einem Code und ergänzt damit
+   Lücken im lokal gespeicherten Fortschritt (state im localStorage). So geht der
+   Fortschritt nicht verloren, wenn der Browser/das Gerät seinen lokalen Speicher
+   vergisst (kommt z.B. bei manchen mobilen Browsern oder "Zum Home-Bildschirm
+   hinzufügen"-Apps vor) - nach erneuter Code-Eingabe wird der letzte bekannte
+   Stand pro Aufgabe automatisch wiederhergestellt. */
+function fetchRemoteProgress(code, cb){
+  if (!APPS_SCRIPT_URL || !code) return;
+  const cbName = "__progressCb" + Date.now();
+  let done = false;
+  const script = document.createElement("script");
+  function cleanup(){ try { delete window[cbName]; } catch(e){} if (script.parentNode) script.parentNode.removeChild(script); }
+  window[cbName] = function(data){
+    if (done) return;
+    done = true;
+    cleanup();
+    cb(data || {});
+  };
+  script.src = APPS_SCRIPT_URL + "?action=progress&code=" + encodeURIComponent(code) + "&callback=" + cbName;
+  script.onerror = function(){ if (done) return; done = true; cleanup(); };
+  document.body.appendChild(script);
+  setTimeout(function(){ if (!done){ done = true; cleanup(); } }, 6000);
+}
+
+/* Überträgt vom Server geholten Fortschritt in den lokalen Speicher. Überschreibt
+   NIE bereits vorhandenen lokalen Fortschritt (der lokale Stand hat immer Vorrang),
+   sondern füllt nur noch offene ("open") Aufgaben auf. Gibt true zurück, wenn sich
+   dadurch etwas geändert hat (dann lohnt sich ein Neu-Rendern der aktuellen Seite). */
+function applyRemoteProgress(progressByExercise){
+  let geaendert = false;
+  Object.keys(progressByExercise || {}).forEach(function(slug){
+    const set = exerciseSets[slug];
+    if (!set) return;
+    const total = set.questions.length;
+    const state = loadExerciseState(slug, total);
+    let stateGeaendert = false;
+    Object.keys(progressByExercise[slug]).forEach(function(frageStr){
+      const idx = Number(frageStr) - 1;
+      if (idx < 0 || idx >= total) return;
+      if (state.q[idx] && state.q[idx].status !== "open") return; // lokaler Stand hat Vorrang
+      const eintrag = progressByExercise[slug][frageStr];
+      if (!eintrag || (eintrag.status !== "correct" && eintrag.status !== "skipped")) return;
+      state.q[idx] = { status: eintrag.status, attempts: eintrag.attempts || 0 };
+      stateGeaendert = true;
+    });
+    if (stateGeaendert){ saveExerciseState(slug, state); geaendert = true; }
+  });
+  return geaendert;
+}
+
+/* Prüft einen eingegebenen Zugangscode beim Google-Skript (Tabellenblatt "Codes").
+   cb(true) = gültig, cb(false) = ungültig, cb(null) = Anfrage fehlgeschlagen/Zeitüberschreitung
+   (z.B. keine Internetverbindung) - dann bewusst NICHT freischalten. */
+function checkCodeRemote(code, cb){
+  if (!APPS_SCRIPT_URL){ cb(false); return; }
+  const cbName = "__codeCb" + Date.now();
+  let done = false;
+  const script = document.createElement("script");
+  function cleanup(){ try { delete window[cbName]; } catch(e){} if (script.parentNode) script.parentNode.removeChild(script); }
+  window[cbName] = function(data){
+    if (done) return;
+    done = true;
+    cleanup();
+    cb(!!(data && data.valid));
+  };
+  script.src = APPS_SCRIPT_URL + "?action=checkcode&code=" + encodeURIComponent(code) + "&callback=" + cbName;
+  script.onerror = function(){ if (done) return; done = true; cleanup(); cb(null); };
+  document.body.appendChild(script);
+  setTimeout(function(){ if (!done){ done = true; cleanup(); cb(null); } }, 6000);
+}
+
+/* Meldet eine beantwortete Aufgabe (fire-and-forget: Antwort wird bewusst
+   nicht gelesen, damit ein langsames/nicht erreichbares Google-Skript die
+   Seite für Schüler nie ausbremst oder blockiert). */
+function reportResult(exerciseSlug, questionIndex, status, attempts){
+  if (!APPS_SCRIPT_URL) return;
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        type: "result",
+        code: getMyCode(),
+        exercise: exerciseSlug,
+        question: questionIndex,
+        status: status,
+        attempts: attempts
+      })
+    }).catch(function(){ /* ignorieren - darf Schüler nie stören */ });
+  } catch(e){ /* ignorieren */ }
+}
+
+function showApp(){
+  document.getElementById("gateOverlay").hidden = true;
+  document.getElementById("topbar").style.visibility = "visible";
+  fetchRemoteLocks();
+  fetchRemoteProgress(getMyCode(), function(data){
+    if (applyRemoteProgress(data)) route();
+  });
+  window.addEventListener("hashchange", route);
+  window.addEventListener("DOMContentLoaded", route);
+  if (document.readyState !== "loading") route();
+}
+
+function initGate(){
+  if (isUnlocked()){ showApp(); return; }
+  const overlay = document.getElementById("gateOverlay");
+  const form = document.getElementById("gateForm");
+  const input = document.getElementById("gateInput");
+  const error = document.getElementById("gateError");
+  const submitBtn = document.getElementById("gateSubmitBtn");
+  overlay.hidden = false;
+  document.getElementById("topbar").style.visibility = "hidden";
+  form.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const code = normalizeCode(input.value);
+    if (!code || submitBtn.disabled) return;
+    error.classList.remove("show");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Wird geprüft…";
+    checkCodeRemote(code, (valid)=>{
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Bestätigen";
+      if (valid === true){
+        setUnlocked(code);
+        showApp();
+      } else if (valid === false){
+        error.textContent = "Code nicht erkannt. Bitte nochmal prüfen.";
+        error.classList.add("show");
+        input.select();
+      } else {
+        error.textContent = "Verbindung nicht möglich. Bitte Internetverbindung prüfen und nochmal versuchen.";
+        error.classList.add("show");
+      }
+    });
+  });
+}
+initGate();
+</script>
