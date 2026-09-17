@@ -366,9 +366,8 @@
   .de-label{
     font-size:11px; font-weight:700; fill:var(--ink); color:var(--ink); text-anchor:middle;
     paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round;
-    opacity:0; transition:opacity .15s ease; pointer-events:none;
+    pointer-events:none;
   }
-  .de-tile.correct .de-label{opacity:1;}
   .skip-btn{
     margin-right:auto; background:transparent; border:1.5px solid var(--border); color:var(--ink-soft);
     border-radius:999px; padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
@@ -1359,12 +1358,29 @@ function mmBoardHtml(q, revealAll){
 /* Rendert die echte Deutschlandkarte (16 Bundesländer, aus DE_STATES) als anklickbare/
    bedroppbare SVG-Flächen. Jedes Bundesland ist eine <g class="de-tile">, kann also wie eine
    .mm-tile behandelt werden (data-id/data-target), nur mit <polygon> statt Kachel-Rechteck. */
+/* WICHTIG: Der Name eines Bundeslandes darf vor einer richtigen Antwort NICHT im DOM stehen -
+   sonst könnte man ihn z.B. über "Seite durchsuchen" (Strg+F) oder "Alles auswählen" auslesen,
+   auch wenn er per CSS unsichtbar wäre. Darum wird hier nur die Fläche (ohne <text>) gerendert;
+   das Beschriftungs-<text> fügt revealTileLabel() erst bei einer richtigen Antwort per JS ein. */
 function deMapHtml(){
   const groups = DE_STATES.map(s => {
     const polys = s.parts.map(p => `<polygon points="${p}"></polygon>`).join("");
-    return `<g class="de-tile" data-id="${esc(s.id)}" data-label="${esc(s.label)}" data-target="1">${polys}<text class="de-label" x="${s.cx}" y="${s.cy}">${esc(s.label)}</text></g>`;
+    return `<g class="de-tile" data-id="${esc(s.id)}" data-label="${esc(s.label)}" data-cx="${s.cx}" data-cy="${s.cy}" data-target="1">${polys}</g>`;
   }).join("");
   return `<svg class="de-map" id="deMap" viewBox="${DE_MAP_VIEWBOX}" xmlns="http://www.w3.org/2000/svg">${groups}</svg>`;
+}
+
+/* Fügt das Namens-<text> für ein Bundesland erst jetzt ins SVG ein (siehe Hinweis oben) - wird nur
+   beim Aufdecken (richtige Antwort oder "Überspringen") aufgerufen, nie beim ersten Rendern. */
+function revealTileLabel(tile){
+  if (tile.querySelector(".de-label")) return;
+  const ns = "http://www.w3.org/2000/svg";
+  const text = document.createElementNS(ns, "text");
+  text.setAttribute("class", "de-label");
+  text.setAttribute("x", tile.dataset.cx);
+  text.setAttribute("y", tile.dataset.cy);
+  text.textContent = tile.dataset.label;
+  tile.appendChild(text);
 }
 
 /* Mischt ein Array zufällig (Fisher-Yates) - für die Reihenfolge der Wörter/Kärtchen. */
@@ -2103,6 +2119,7 @@ window.__startExercise = function(slug){
           attempts++;
           if (tile.dataset.id === q.correctId){
             tile.classList.add("correct");
+            revealTileLabel(tile);
             lockQuestion("correct", q.explain, "correct");
           } else {
             tile.classList.add("wrong-flash");
@@ -2115,7 +2132,10 @@ window.__startExercise = function(slug){
         if (solved) return;
         map.querySelectorAll(".de-tile[data-target]").forEach(t=>{ t.style.pointerEvents = "none"; });
         const correctTile = map.querySelector('.de-tile[data-id="'+q.correctId+'"]');
-        if (correctTile) correctTile.classList.add("correct");
+        if (correctTile){
+          correctTile.classList.add("correct");
+          revealTileLabel(correctTile);
+        }
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
     } else if (q.kind === "map-select"){
@@ -2191,6 +2211,7 @@ window.__startExercise = function(slug){
         attempts++;
         if (tile.dataset.id === chip.dataset.value){
           tile.classList.add("correct");
+          revealTileLabel(tile);
           chip.classList.add("used");
           checkComplete();
         } else {
@@ -2201,7 +2222,7 @@ window.__startExercise = function(slug){
       });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
-        map.querySelectorAll('.de-tile[data-target]').forEach(tile=>{ tile.classList.add("correct"); });
+        map.querySelectorAll('.de-tile[data-target]').forEach(tile=>{ tile.classList.add("correct"); revealTileLabel(tile); });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
