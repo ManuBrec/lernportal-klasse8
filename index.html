@@ -257,6 +257,9 @@
     color:#fff; font-weight:800; font-size:11px; letter-spacing:0; box-shadow:0 1px 2px rgba(0,0,0,.18);
   }
   .strategy-badge svg{width:14px; height:14px;}
+  .big-badge-row{display:flex; justify-content:center; margin:2px 0 18px;}
+  .strategy-badge-big{width:68px; height:68px; font-size:28px;}
+  .strategy-badge-big svg{width:36px; height:36px;}
   .qmeta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
   .qtext{font-size:19px; font-weight:600; margin-bottom:20px; text-wrap:balance;}
   .options{display:grid; gap:10px;}
@@ -342,6 +345,7 @@
   }
   .mm-tile .mm-icon{font-size:24px; line-height:1;}
   .mm-tile .mm-label{font-size:11px; font-weight:700; line-height:1.15;}
+  .mm-tile .mm-label b{color:var(--accent); font-weight:800;}
   .mm-tile.fixed{border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
   .mm-tile[data-target]{cursor:pointer;}
   .mm-tile.correct{border-style:solid; border-color:var(--success); background:var(--success-soft); color:var(--success);}
@@ -371,6 +375,33 @@
     color:#fff; font-weight:800; font-size:13px;
   }
   .mm-chip-ghost.mm-chip-ghost-badge svg{width:18px; height:18px;}
+
+  /* "Wörter in Kreise sortieren" (circle-sort): 5 feste, immer sichtbare Strategie-Kreise im
+     Hintergrund, ein Wort nach dem anderen wird nacheinander in den passenden Kreis gezogen. */
+  .cs-wrap{display:flex; flex-direction:column; align-items:center; gap:20px; padding:6px 0 2px;}
+  .cs-progress{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase;}
+  .cs-word-row{min-height:58px; display:flex; align-items:center; justify-content:center;}
+  .cs-word{
+    padding:14px 26px; border-radius:999px; background:var(--surface); border:2px solid var(--border);
+    font-size:20px; font-weight:700; cursor:grab; box-shadow:0 1px 3px rgba(0,0,0,.14); touch-action:none; text-align:center;
+  }
+  .cs-word.dragging{opacity:.35;}
+  .cs-word b{color:var(--accent); font-weight:800;}
+  .cs-circles{display:flex; flex-wrap:wrap; justify-content:center; gap:16px;}
+  .cs-circle{
+    width:104px; height:104px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px; color:#fff; text-align:center; padding:6px; box-shadow:0 1px 2px rgba(0,0,0,.18); border:3px solid transparent;
+  }
+  .cs-circle-icon{font-size:20px; font-weight:800; line-height:1;}
+  .cs-circle-icon svg{width:22px; height:22px;}
+  .cs-circle-label{font-size:11px; font-weight:700; line-height:1.15;}
+  .cs-circle.correct-flash{border-color:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.55);}
+  .cs-circle.wrong-flash{border-color:var(--danger);}
+  .cs-word-ghost{
+    position:fixed; z-index:999; pointer-events:none; padding:14px 26px; border-radius:999px; background:var(--surface);
+    border:2px solid var(--border); font-size:20px; font-weight:700; transform:translate(-50%,-50%); box-shadow:0 4px 10px rgba(0,0,0,.25);
+  }
+  .cs-word-ghost b{color:var(--accent); font-weight:800;}
 
   /* Echte Deutschlandkarte (Bundesländer) für "Wo liegt Bayern?" - Umrisse aus einer
      d-maps.com-Vorlage, jedes Bundesland eine eigene anklickbare/bedroppbare Fläche. */
@@ -1053,18 +1084,18 @@ const exerciseSets = {
     questions: [
       { section:"Verlängerungsstrategie", strategy:"verlaengern", kind:"mc",
         text: "Wobei hilft dir die Verlängerungsstrategie?",
-        options: ["Zu entscheiden, ob ein Wort mit b/p, d/t oder g/k geschrieben wird","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird","Ein Wort in Silben zu trennen","Ein verwandtes Wort aus der gleichen Wortfamilie zu finden"],
-        correct: 0,
+        options: ["Ein Wort in Silben zu trennen","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird","Ein verwandtes Wort aus der gleichen Wortfamilie zu finden","Zu entscheiden, ob ein Wort mit b/p, d/t oder g/k geschrieben wird"],
+        correct: 3,
         explain: "Am Wortende hörst du oft nur den harten Laut (p, t, k) – erst eine längere Form zeigt dir, ob wirklich b, d oder g geschrieben wird." },
       { section:"Verlängerungsstrategie", strategy:"verlaengern", kind:"mc",
         text: "Wie findest du bei „der Freund“ heraus, ob er mit d oder t endet?",
-        options: ["Mehrzahl bilden: die Freunde","Grundform bilden: freunden","Wort steigern: freunder","In Silben sprechen: Freund"],
-        correct: 0,
+        options: ["Grundform bilden: freunden","Mehrzahl bilden: die Freunde","Wort steigern: freunder","In Silben sprechen: Freund"],
+        correct: 1,
         explain: "Bei einem Nomen bildest du die Mehrzahl – „die Freunde“ zeigt deutlich das d." },
       { section:"Verlängerungsstrategie", strategy:"verlaengern", kind:"mc",
         text: "Wie findest du bei „er lobt“ heraus, ob es mit b oder p geschrieben wird?",
-        options: ["Grundform bilden: loben","Mehrzahl bilden: die Lobte","Wort steigern: löbter","Reimwort suchen: Trab"],
-        correct: 0,
+        options: ["Reimwort suchen: Trab","Wort steigern: löbter","Grundform bilden: loben","Mehrzahl bilden: die Lobte"],
+        correct: 2,
         explain: "Bei einem Verb bildest du die Grundform – „loben“ zeigt deutlich das b." },
       { section:"Verlängerungsstrategie", strategy:"verlaengern", kind:"mc",
         text: "Wie findest du bei „gelb“ heraus, ob es mit b oder p endet?",
@@ -1073,28 +1104,28 @@ const exerciseSets = {
         explain: "Bei einem Adjektiv steigerst du das Wort – „gelber“ zeigt deutlich das b." },
       { section:"Ableitungsstrategie", strategy:"ableiten", kind:"mc",
         text: "Wobei hilft dir die Ableitungsstrategie besonders?",
-        options: ["Zu entscheiden, ob ein Wort mit ä oder e bzw. äu oder eu geschrieben wird","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird","Ein fehlendes Komma zu finden","Ein Wort richtig in Silben zu trennen"],
-        correct: 0,
+        options: ["Ein fehlendes Komma zu finden","Zu entscheiden, ob ein Wort mit ä oder e bzw. äu oder eu geschrieben wird","Ein Wort richtig in Silben zu trennen","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird"],
+        correct: 1,
         explain: "Du suchst ein verwandtes Wort aus der gleichen Wortfamilie, in dem du den Laut deutlich hörst." },
       { section:"Ableitungsstrategie", strategy:"ableiten", kind:"mc",
         text: "Welches verwandte Wort zeigt dir, dass „die Wände“ mit ä geschrieben wird?",
-        options: ["die Wand","wenden","die Wendung","der Wein"],
-        correct: 0,
+        options: ["wenden","die Wand","die Wendung","der Wein"],
+        correct: 1,
         explain: "„die Wand“ enthält ein a – der Umlaut davon ist ä." },
       { section:"Ableitungsstrategie", strategy:"ableiten", kind:"mc",
         text: "Welches verwandte Wort zeigt dir, dass „die Bäume“ mit äu geschrieben wird?",
-        options: ["der Baum","der Bach","die Bahn","der Berg"],
-        correct: 0,
+        options: ["der Bach","der Berg","die Bahn","der Baum"],
+        correct: 3,
         explain: "„der Baum“ enthält au – der Umlaut davon ist äu." },
       { section:"Ableitungsstrategie", strategy:"ableiten", kind:"mc",
         text: "Welches Wort gehört zur gleichen Wortfamilie wie „backen“?",
-        options: ["der Bäcker","der Bach","die Bank","der Berg"],
-        correct: 0,
+        options: ["die Bank","der Berg","der Bäcker","der Bach"],
+        correct: 2,
         explain: "„der Bäcker“ hat denselben Wortstamm „back“ wie „backen“." },
       { section:"Silbenstrategie", strategy:"schwingen", kind:"mc",
         text: "Was machst du bei der Silbenstrategie?",
-        options: ["Du trennst das Wort in Silben und hörst, ob der Vokal davor kurz oder lang klingt","Du suchst ein Wort aus der gleichen Wortfamilie","Du bildest die Mehrzahl des Wortes","Du setzt einen Artikel vor das Wort"],
-        correct: 0,
+        options: ["Du setzt einen Artikel vor das Wort","Du suchst ein Wort aus der gleichen Wortfamilie","Du trennst das Wort in Silben und hörst, ob der Vokal davor kurz oder lang klingt","Du bildest die Mehrzahl des Wortes"],
+        correct: 2,
         explain: "Klingt der Vokal kurz, brauchst du meist einen doppelten Mitlaut (oder ck/tz)." },
       { section:"Silbenstrategie", strategy:"schwingen", kind:"mc",
         text: "Wie trennt man „Teller“ richtig in Silben?",
@@ -1103,28 +1134,28 @@ const exerciseSets = {
         explain: "Der Vokal „e“ klingt kurz, deshalb brauchst du den doppelten Mitlaut „ll“." },
       { section:"Silbenstrategie", strategy:"schwingen", kind:"mc",
         text: "Welches Wort ist richtig geschrieben?",
-        options: ["die Mütze","die Mütz","die Müze","die Müsse"],
-        correct: 0,
+        options: ["die Müsse","die Mütze","die Müze","die Mütz"],
+        correct: 1,
         explain: "Nach dem kurzen „ü“ steht „tz“ (das z wird verdoppelt)." },
       { section:"Silbenstrategie", strategy:"schwingen", kind:"mc",
         text: "Bei welchem Wort ist der Vokal davor LANG, sodass kein doppelter Mitlaut nötig ist?",
-        options: ["die Blume","die Glocke","rennen","die Mütze"],
-        correct: 0,
+        options: ["die Glocke","die Mütze","die Blume","rennen"],
+        correct: 2,
         explain: "Das „u“ in „Blume“ wird lang gesprochen – deshalb reicht ein einfaches „m“." },
       { section:"Dehnungs- und Silbentrennungsstrategie", strategy:"merken", kind:"mc",
         text: "Wobei hilft dir die Dehnungs- und Silbentrennungsstrategie?",
-        options: ["Zu entscheiden, ob ein „h“ im Wort stehen muss","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird","Ein Wort zu verlängern","Ein Wort zu steigern"],
-        correct: 0,
+        options: ["Ein Wort zu steigern","Zu entscheiden, ob ein „h“ im Wort stehen muss","Ein Wort zu verlängern","Zu entscheiden, ob ein Wort groß- oder kleingeschrieben wird"],
+        correct: 1,
         explain: "Ein „h“ im Wortinneren hörst du oft nicht – hier musst du die beiden Fälle (Dehnungs-h und silbentrennendes h) kennen." },
       { section:"Dehnungs- und Silbentrennungsstrategie", strategy:"merken", kind:"mc",
         text: "Welches Wort enthält ein Dehnungs-h, das den Vokal davor verlängert (h vor l, m, n oder r)?",
-        options: ["wohnen","kochen","backen","rennen"],
-        correct: 0,
+        options: ["backen","kochen","rennen","wohnen"],
+        correct: 3,
         explain: "In „wohnen“ dehnt das h das „o“ vor dem n – gesprochen wird ein langes o." },
       { section:"Dehnungs- und Silbentrennungsstrategie", strategy:"merken", kind:"mc",
         text: "Wie trennt man „blühen“ richtig in Silben?",
-        options: ["blü-hen","blüh-en","bl-ühen","blühe-n"],
-        correct: 0,
+        options: ["blühe-n","blüh-en","blü-hen","bl-ühen"],
+        correct: 2,
         explain: "Das h trennt hier zwei Vokale voneinander – das nennt man silbentrennendes h." },
       { section:"Dehnungs- und Silbentrennungsstrategie", strategy:"merken", kind:"mc",
         text: "Ein Dehnungs-h steht nur vor l, m, n oder r und macht den Vokal davor lang. Richtig oder falsch?",
@@ -1153,8 +1184,8 @@ const exerciseSets = {
         explain: "Hier steht „das“ als Artikel vor dem Nomen „Wetter“ – ersetzbar durch „dieses Wetter“." },
       { section:"Signalwörter-Strategie", strategy:"grossklein", kind:"mc",
         text: "Welche drei Arten von Signalwörtern zeigen dir, dass ein großgeschriebenes Wort folgt?",
-        options: ["Begleiter/Verhältniswörter, bestimmte Endungen, Mengenangaben","Adjektive, Verben, Präpositionen","Silben, Vokale, Konsonanten","Kommas, Punkte, Ausrufezeichen"],
-        correct: 0,
+        options: ["Adjektive, Verben, Präpositionen","Silben, Vokale, Konsonanten","Kommas, Punkte, Ausrufezeichen","Begleiter/Verhältniswörter, bestimmte Endungen, Mengenangaben"],
+        correct: 3,
         explain: "Zum Beispiel: „beim Malen“ (Verhältniswort), „die Freiheit“ (Endung -heit), „etwas Neues“ (Mengenangabe)." },
       { section:"Signalwörter-Strategie", strategy:"grossklein", kind:"mc",
         text: "„Wir sitzen beim ______ zusammen.“ Was ist richtig – essen oder Essen?",
@@ -1177,25 +1208,70 @@ const exerciseSets = {
     title: "Wörter den Strategien zuordnen",
     subject: "deutsch",
     chapterSlug: "rechtschreibung",
-    duration: "ca. 10 Minuten",
+    duration: "ca. 18–22 Minuten",
     locked: true,
     questions: [
+      { kind:"text", bigBadge:"ableiten", strict:true,
+        text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
+        accept: ["Ableiten"],
+        explain: "Richtig – das ist die Ableitungsstrategie: ein verwandtes Wort aus der gleichen Wortfamilie finden." },
+      { kind:"text", bigBadge:"schwingen", strict:true,
+        text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
+        accept: ["Schwingen"],
+        explain: "Richtig – das ist die Schwing- bzw. Silbenstrategie: das Wort in Silben klatschen/schwingen." },
+      { kind:"text", bigBadge:"merken", strict:true,
+        text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
+        accept: ["Merken"],
+        explain: "Richtig – das ist die Merkstrategie: manche Wörter musst du dir einfach einprägen." },
+      { kind:"text", bigBadge:"grossklein", strict:true,
+        text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
+        accept: ["Groß- oder Kleinschreibung"],
+        explain: "Richtig – hier geht es um die Groß- oder Kleinschreibung." },
+      { kind:"text", bigBadge:"verlaengern", strict:true,
+        text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
+        accept: ["Verlängern"],
+        explain: "Richtig – das ist die Verlängerungsstrategie: das Wort verlängern, um den Endlaut sicher zu hören." },
       { kind:"map-match", chipStyle:"strategy",
-        text: "Ziehe jedes Symbol auf das Wort, zu dem die passende Strategie gehört.",
+        text: "Ziehe jedes Symbol auf das Wort, zu dem die passende Strategie gehört. Fett markiert ist die Stelle im Wort, um die es geht.",
         cols: 2, rows: 5,
         tiles: [
-          { id:"ableiten",    label:"die Kälte",       col:1, row:1, alwaysLabel:true },
-          { id:"schwingen",   label:"der Hammer",      col:2, row:1, alwaysLabel:true },
-          { id:"grossklein",  label:"beim Lesen",      col:1, row:2, alwaysLabel:true },
-          { id:"merken",      label:"vielleicht",      col:2, row:2, alwaysLabel:true },
-          { id:"verlaengern", label:"das Rad",         col:1, row:3, alwaysLabel:true },
-          { id:"ableiten",    label:"träumen",         col:2, row:3, alwaysLabel:true },
-          { id:"grossklein",  label:"die Möglichkeit", col:1, row:4, alwaysLabel:true },
-          { id:"verlaengern", label:"der Mund",        col:2, row:4, alwaysLabel:true },
-          { id:"schwingen",   label:"die Falle",       col:1, row:5, alwaysLabel:true },
-          { id:"merken",      label:"eigentlich",      col:2, row:5, alwaysLabel:true }
+          { id:"ableiten",    label:"die Kälte",       mark:"ä",    col:1, row:1, alwaysLabel:true },
+          { id:"schwingen",   label:"der Hammer",      mark:"mm",   col:2, row:1, alwaysLabel:true },
+          { id:"grossklein",  label:"beim Lesen",      mark:"L",    col:1, row:2, alwaysLabel:true },
+          { id:"merken",      label:"vielleicht",      mark:"ll",   col:2, row:2, alwaysLabel:true },
+          { id:"verlaengern", label:"das Rad",         mark:"ad",   col:1, row:3, alwaysLabel:true },
+          { id:"ableiten",    label:"träumen",         mark:"äu",   col:2, row:3, alwaysLabel:true },
+          { id:"grossklein",  label:"die Möglichkeit", mark:"M",    col:1, row:4, alwaysLabel:true },
+          { id:"verlaengern", label:"der Mund",        mark:"nd",   col:2, row:4, alwaysLabel:true },
+          { id:"schwingen",   label:"die Falle",       mark:"ll",   col:1, row:5, alwaysLabel:true },
+          { id:"merken",      label:"eigentlich",      mark:"t",    col:2, row:5, alwaysLabel:true }
         ],
-        explain: "Super – alle 10 Wörter sind der richtigen Strategie zugeordnet!" }
+        explain: "Super – alle 10 Wörter sind der richtigen Strategie zugeordnet!" },
+      { kind:"circle-sort",
+        text: "Jetzt kommen 20 neue Wörter, eines nach dem anderen. Ziehe jedes Wort in den Kreis der passenden Strategie – manche sind kniffliger als vorher!",
+        items: [
+          { id:"ableiten",    label:"die Bäume",       mark:"äu" },
+          { id:"verlaengern", label:"er packt",        mark:"ck" },
+          { id:"schwingen",   label:"der Teller",      mark:"ll" },
+          { id:"grossklein",  label:"beim Schwimmen",  mark:"S" },
+          { id:"merken",      label:"das Mehl",        mark:"eh" },
+          { id:"schwingen",   label:"die Mappe",       mark:"pp" },
+          { id:"ableiten",    label:"die Wärme",       mark:"ä" },
+          { id:"grossklein",  label:"beim Rechnen",    mark:"R" },
+          { id:"verlaengern", label:"der Zwerg",       mark:"g" },
+          { id:"merken",      label:"die Höhle",       mark:"öh" },
+          { id:"verlaengern", label:"gelb",            mark:"b" },
+          { id:"merken",      label:"die Fahrt",       mark:"ah" },
+          { id:"ableiten",    label:"die Säure",       mark:"äu" },
+          { id:"schwingen",   label:"der Schlitten",   mark:"tt" },
+          { id:"grossklein",  label:"etwas Neues",     mark:"N" },
+          { id:"merken",      label:"der Stiel",       mark:"ie" },
+          { id:"grossklein",  label:"das Beste",       mark:"B" },
+          { id:"ableiten",    label:"kräftig",         mark:"ä" },
+          { id:"verlaengern", label:"der Wald",        mark:"ald" },
+          { id:"schwingen",   label:"die Kasse",       mark:"ss" }
+        ],
+        explain: "Super – alle 20 Wörter richtig zugeordnet!" }
     ]
   },
   "deutsch-strategien-korrigieren": {
@@ -1211,11 +1287,11 @@ const exerciseSets = {
         correct: 0,
         explain: "„die Kälte“ – dabei hilft dir das Ableiten." },
       { section:"die Kälte", strategy:"ableiten", kind:"text",
-        text: "Schreibe „die Kelte“ richtig:", placeholder: "die Kälte",
+        text: "Schreibe „die Kelte“ richtig:", placeholder: "Wort eintippen",
         accept: ["die kälte","kälte"],
         explain: "Richtig ist „die Kälte“ – mit ä." },
       { section:"die Kälte", strategy:"ableiten", kind:"text",
-        text: "Von welchem Wort kannst du „die Kälte“ ableiten (gleiche Wortfamilie)?", placeholder: "kalt",
+        text: "Von welchem Wort kannst du „die Kälte“ ableiten (gleiche Wortfamilie)?", placeholder: "Ableitung eintippen",
         accept: ["kalt"],
         explain: "„kalt“ enthält ein a – der Umlaut davon ist ä, deshalb „Kälte“." },
 
@@ -1225,11 +1301,11 @@ const exerciseSets = {
         correct: 0,
         explain: "„träumen“ – dabei hilft dir das Ableiten." },
       { section:"träumen", strategy:"ableiten", kind:"text",
-        text: "Schreibe „treumen“ richtig:", placeholder: "träumen",
+        text: "Schreibe „treumen“ richtig:", placeholder: "Wort eintippen",
         accept: ["träumen"],
         explain: "Richtig ist „träumen“ – mit äu." },
       { section:"träumen", strategy:"ableiten", kind:"text",
-        text: "Von welchem Wort kannst du „träumen“ ableiten?", placeholder: "der Traum",
+        text: "Von welchem Wort kannst du „träumen“ ableiten?", placeholder: "Ableitung eintippen",
         accept: ["der traum","traum"],
         explain: "„der Traum“ enthält au – der Umlaut davon ist äu." },
 
@@ -1239,11 +1315,11 @@ const exerciseSets = {
         correct: 1,
         explain: "„die Falle“ – dabei hilft dir das Schwingen (Silbenstrategie)." },
       { section:"die Falle", strategy:"schwingen", kind:"text",
-        text: "Schreibe „die Fale“ richtig:", placeholder: "die Falle",
+        text: "Schreibe „die Fale“ richtig:", placeholder: "Wort eintippen",
         accept: ["die falle","falle"],
         explain: "Richtig ist „die Falle“ – mit doppeltem l." },
       { section:"die Falle", strategy:"schwingen", kind:"text",
-        text: "Trenne „die Falle“ richtig in Silben (mit Bindestrich):", placeholder: "Fal-le",
+        text: "Trenne „die Falle“ richtig in Silben (mit Bindestrich):", placeholder: "z. B. Bei-spiel",
         accept: ["fal-le"],
         explain: "Der Vokal „a“ klingt kurz, deshalb „Fal-le“ mit doppeltem l." },
 
@@ -1253,11 +1329,11 @@ const exerciseSets = {
         correct: 1,
         explain: "„der Hammer“ – dabei hilft dir das Schwingen (Silbenstrategie)." },
       { section:"der Hammer", strategy:"schwingen", kind:"text",
-        text: "Schreibe „der Hamer“ richtig:", placeholder: "der Hammer",
+        text: "Schreibe „der Hamer“ richtig:", placeholder: "Wort eintippen",
         accept: ["der hammer","hammer"],
         explain: "Richtig ist „der Hammer“ – mit doppeltem m." },
       { section:"der Hammer", strategy:"schwingen", kind:"text",
-        text: "Trenne „der Hammer“ richtig in Silben:", placeholder: "Ham-mer",
+        text: "Trenne „der Hammer“ richtig in Silben:", placeholder: "z. B. Bei-spiel",
         accept: ["ham-mer"],
         explain: "Der Vokal „a“ klingt kurz, deshalb „Ham-mer“ mit doppeltem m." },
 
@@ -1267,7 +1343,7 @@ const exerciseSets = {
         correct: 2,
         explain: "„vielleicht“ ist ein Merkwort – keine Strategie hilft hier direkt." },
       { section:"vielleicht", strategy:"merken", kind:"text",
-        text: "Schreibe „viellicht“ richtig:", placeholder: "vielleicht",
+        text: "Schreibe „viellicht“ richtig:", placeholder: "Wort eintippen",
         accept: ["vielleicht"],
         explain: "„vielleicht“ ist ein Merkwort – du musst dir die Schreibweise einfach einprägen." },
 
@@ -1277,7 +1353,7 @@ const exerciseSets = {
         correct: 2,
         explain: "„eigentlich“ ist ein Merkwort – keine Strategie hilft hier direkt." },
       { section:"eigentlich", strategy:"merken", kind:"text",
-        text: "Schreibe „eigendlich“ richtig:", placeholder: "eigentlich",
+        text: "Schreibe „eigendlich“ richtig:", placeholder: "Wort eintippen",
         accept: ["eigentlich"],
         explain: "„eigentlich“ wird mit t geschrieben, auch wenn man oft ein d hört – ein klassisches Merkwort." },
 
@@ -1287,11 +1363,11 @@ const exerciseSets = {
         correct: 3,
         explain: "„beim Lesen“ – dabei hilft dir die Signalwörter-Strategie (Groß- oder Kleinschreibung)." },
       { section:"beim Lesen", strategy:"grossklein", kind:"text",
-        text: "Schreibe „beim lesen“ richtig:", placeholder: "beim Lesen",
+        text: "Schreibe „beim lesen“ richtig:", placeholder: "Wort eintippen",
         accept: ["beim lesen"],
         explain: "Nach dem Verhältniswort „beim“ folgt ein Nomen – „Lesen“ großschreiben." },
       { section:"beim Lesen", strategy:"grossklein", kind:"text",
-        text: "Welches Signalwort zeigt dir hier die Großschreibung?", placeholder: "beim",
+        text: "Welches Signalwort zeigt dir hier die Großschreibung?", placeholder: "Signalwort eintippen",
         accept: ["beim"],
         explain: "„beim“ (= bei dem) ist ein Verhältniswort – danach folgt ein großgeschriebenes Nomen." },
 
@@ -1301,11 +1377,11 @@ const exerciseSets = {
         correct: 3,
         explain: "„die Möglichkeit“ – dabei hilft dir die Signalwörter-Strategie." },
       { section:"die Möglichkeit", strategy:"grossklein", kind:"text",
-        text: "Schreibe „die möglichkeit“ richtig:", placeholder: "die Möglichkeit",
+        text: "Schreibe „die möglichkeit“ richtig:", placeholder: "Wort eintippen",
         accept: ["die möglichkeit","möglichkeit"],
         explain: "„Möglichkeit“ ist ein Nomen und wird großgeschrieben." },
       { section:"die Möglichkeit", strategy:"grossklein", kind:"text",
-        text: "Welches Merkmal zeigt dir hier die Großschreibung?", placeholder: "-keit",
+        text: "Welches Merkmal zeigt dir hier die Großschreibung?", placeholder: "Endung eintippen",
         accept: ["die endung -keit","endung -keit","-keit","keit"],
         explain: "Wörter mit der Endung „-keit“ sind Nomen und werden großgeschrieben." },
 
@@ -1315,11 +1391,11 @@ const exerciseSets = {
         correct: 4,
         explain: "„der Mund“ – dabei hilft dir das Verlängern." },
       { section:"der Mund", strategy:"verlaengern", kind:"text",
-        text: "Schreibe „der Munt“ richtig:", placeholder: "der Mund",
+        text: "Schreibe „der Munt“ richtig:", placeholder: "Wort eintippen",
         accept: ["der mund","mund"],
         explain: "Richtig ist „der Mund“ – mit d." },
       { section:"der Mund", strategy:"verlaengern", kind:"text",
-        text: "Bilde den Plural von „der Mund“:", placeholder: "die Münder",
+        text: "Bilde den Plural von „der Mund“:", placeholder: "Pluralform eintippen",
         accept: ["die münder","münder"],
         explain: "„die Münder“ zeigt deutlich das d." },
 
@@ -1329,11 +1405,11 @@ const exerciseSets = {
         correct: 4,
         explain: "„das Rad“ – dabei hilft dir das Verlängern." },
       { section:"das Rad", strategy:"verlaengern", kind:"text",
-        text: "Schreibe „das Rat“ richtig:", placeholder: "das Rad",
+        text: "Schreibe „das Rat“ richtig:", placeholder: "Wort eintippen",
         accept: ["das rad","rad"],
         explain: "Richtig ist „das Rad“ – mit d. (Nicht zu verwechseln mit „der Rat“ = Tipp/Empfehlung!)" },
       { section:"das Rad", strategy:"verlaengern", kind:"text",
-        text: "Bilde den Plural von „das Rad“:", placeholder: "die Räder",
+        text: "Bilde den Plural von „das Rad“:", placeholder: "Pluralform eintippen",
         accept: ["die räder","räder"],
         explain: "„die Räder“ zeigt deutlich das d." }
     ]
@@ -1519,11 +1595,15 @@ const STRATEGY_ICON_SVG = {
   ableiten:    `<svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg>`,
   schwingen:   `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13c2-6 4-6 6 0s4 6 6 0 4-6 6 0"/></svg>`,
 };
-function strategyBadgeHtml(key){
+function strategyBadgeHtml(key, big){
   const meta = STRATEGY_META[key];
   if (!meta) return "";
   const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
-  return `<span class="strategy-badge" style="background:${meta.color}" title="${esc(meta.label)}">${inner}</span>`;
+  const cls = "strategy-badge" + (big ? " strategy-badge-big" : "");
+  /* Beim großen Badge (Abfrage "welche Strategie ist das?") darf KEIN title-Tooltip den Namen
+     verraten - deshalb hier bewusst ohne title-Attribut. */
+  const titleAttr = big ? "" : ` title="${esc(meta.label)}"`;
+  return `<span class="${cls}" style="background:${meta.color}"${titleAttr}>${inner}</span>`;
 }
 function statusLabel(s){ return s==="aktuell" ? "In Bearbeitung" : s==="fertig" ? "Abgeschlossen" : "Geplant"; }
 function statusClass(s){ return s==="aktuell" ? "status-aktuell" : s==="fertig" ? "status-fertig" : "status-geplant"; }
@@ -1684,6 +1764,18 @@ function pieChartHtml(chart, size){
 
 /* Kachelraster für die Karten-/Bild-Zuordnungsübungen (Bundesländer, Nachbarländer, Bauernhof).
    revealAll=true zeigt alle Beschriftungen (nach "Überspringen"); sonst nur fixe Kacheln (z.B. "Deutschland"). */
+/* Markiert die entscheidende Buchstabenfolge in einem Wort fett (z.B. "äu" in "träumen"), damit
+   sichtbar wird, WARUM ein Wort zu einer bestimmten Strategie gehört - ohne diese Markierung ist
+   nicht erkennbar, welche Rechtschreib-Problemstellung das Wort überhaupt zeigt. */
+function highlightLabel(label, mark){
+  if (!mark) return esc(label);
+  const idx = label.indexOf(mark);
+  if (idx === -1) return esc(label);
+  const before = label.slice(0, idx);
+  const match = label.slice(idx, idx + mark.length);
+  const after = label.slice(idx + mark.length);
+  return `${esc(before)}<b>${esc(match)}</b>${esc(after)}`;
+}
 function mmBoardHtml(q, revealAll){
   const cells = q.tiles.map(t => {
     let cls = "mm-tile";
@@ -1692,9 +1784,9 @@ function mmBoardHtml(q, revealAll){
        bleibt trotzdem ein normales Drop-Ziel - anders als "fixed" (das ist nur Dekoration, kein Ziel). */
     const showLabel = t.fixed || t.alwaysLabel || revealAll;
     const iconHtml = t.icon ? `<span class="mm-icon">${t.icon}</span>` : "";
-    const labelHtml = showLabel ? `<span class="mm-label">${esc(t.label)}</span>` : "";
+    const labelHtml = showLabel ? `<span class="mm-label">${highlightLabel(t.label, t.mark)}</span>` : "";
     const targetAttr = t.fixed ? "" : ` data-target="1"`;
-    return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
+    return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-mark="${t.mark ? esc(t.mark) : ""}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
   }).join("");
   return `<div class="mm-board" id="mmBoard" style="grid-template-columns:repeat(${q.cols},1fr); grid-template-rows:repeat(${q.rows},minmax(48px,1fr));">${cells}</div>`;
 }
@@ -2248,8 +2340,12 @@ window.__startExercise = function(slug){
   function head(q){
     const meta = q.section ? `${q.section} · Frage ${i+1} von ${total}` : `Frage ${i+1} von ${total}`;
     const badge = q.strategy ? strategyBadgeHtml(q.strategy) : "";
+    /* q.bigBadge: großes Symbol als eigentliche Frage-Stellung ("welche Strategie zeigt dieses
+       Symbol?") - bewusst getrennt von q.strategy (kleiner, dekorativer Hinweis-Badge), damit hier
+       nie versehentlich der Name der Strategie mit verraten wird. */
+    const bigBadge = q.bigBadge ? `<div class="big-badge-row">${strategyBadgeHtml(q.bigBadge, true)}</div>` : "";
     const visual = q.shape ? `<div class="shape-block">${shapeSvg(q.shape)}</div>` : (q.chart ? pieChartHtml(q.chart) : "");
-    return `<div class="qmeta-row">${badge}<div class="qmeta">${esc(meta)}</div></div>${visual}<div class="qtext">${esc(q.text)}</div>`;
+    return `<div class="qmeta-row">${badge}<div class="qmeta">${esc(meta)}</div></div>${bigBadge}${visual}<div class="qtext">${esc(q.text)}</div>`;
   }
 
   function tryAgainFeedback(msg){
@@ -2375,6 +2471,26 @@ window.__startExercise = function(slug){
           <button class="check-btn" id="checkBtn">Prüfen</button>
         </div>
       `;
+    } else if (q.kind === "circle-sort"){
+      /* 5 immer sichtbare Strategie-Kreise; die Wörter aus q.items erscheinen eines nach dem
+         anderen und werden auf den passenden Kreis gezogen - siehe Event-Wiring unten. */
+      const circleOrder = ["ableiten","schwingen","merken","grossklein","verlaengern"];
+      const circlesHtml = circleOrder.map(key => {
+        const meta = STRATEGY_META[key];
+        const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
+        return `<div class="cs-circle" data-id="${key}" style="background:${meta.color}">
+          <span class="cs-circle-icon">${inner}</span>
+          <span class="cs-circle-label">${esc(meta.label)}</span>
+        </div>`;
+      }).join("");
+      body = `
+        <div class="cs-wrap">
+          <div class="cs-progress" id="csProgress">Wort 1 von ${q.items.length}</div>
+          <div class="cs-word-row"><div class="cs-word" id="csWord"></div></div>
+          <p class="gap-hint">Tippe das Wort an, halte es gedrückt und ziehe es in den passenden Kreis.</p>
+          <div class="cs-circles" id="csCircles">${circlesHtml}</div>
+        </div>
+      `;
     } else {
       body = `
         <div class="options" id="opts">
@@ -2424,7 +2540,13 @@ window.__startExercise = function(slug){
       });
     } else if (q.kind === "text"){
       const input = document.getElementById("textInput");
-      const normalizeText = s => String(s).trim().toLowerCase().replace(/\s+/g," ");
+      /* q.strict: bei manchen Fragen (z.B. "wie heißt diese Strategie?") soll die Schreibweise
+         wirklich zählen - dann NICHT klein schreiben, nur Leerzeichen am Rand/doppelte Leerzeichen
+         tolerieren. Ohne q.strict bleibt es wie bisher groß-/kleinschreibungs-unabhängig. */
+      const normalizeText = s => {
+        const t = String(s).trim().replace(/\s+/g," ");
+        return q.strict ? t : t.toLowerCase();
+      };
       const check = ()=>{
         if (solved) return;
         attempts++;
@@ -2709,7 +2831,7 @@ window.__startExercise = function(slug){
         attempts++;
         if (tile.dataset.id === chip.dataset.value){
           tile.classList.add("correct");
-          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
+          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
           chip.classList.add("used");
           checkComplete();
         } else {
@@ -2722,9 +2844,71 @@ window.__startExercise = function(slug){
         if (solved) return;
         board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
           tile.classList.add("correct");
-          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
+          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
         });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
+    } else if (q.kind === "circle-sort"){
+      const wordEl = document.getElementById("csWord");
+      const progressEl = document.getElementById("csProgress");
+      const itemsTotal = q.items.length;
+      let pos = 0;
+      let dragging = false, ghost = null;
+
+      function renderWord(){
+        const item = q.items[pos];
+        wordEl.dataset.id = item.id;
+        wordEl.innerHTML = highlightLabel(item.label, item.mark);
+        progressEl.textContent = `Wort ${pos+1} von ${itemsTotal}`;
+      }
+      renderWord();
+
+      function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
+      function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+
+      wordEl.addEventListener("pointerdown", (e)=>{
+        if (solved) return;
+        e.preventDefault();
+        dragging = true;
+        wordEl.classList.add("dragging");
+        ghost = document.createElement("div");
+        ghost.className = "cs-word-ghost";
+        ghost.innerHTML = wordEl.innerHTML;
+        document.body.appendChild(ghost);
+        moveGhost(e.clientX, e.clientY);
+        try { wordEl.setPointerCapture(e.pointerId); } catch(err){ /* ignorieren */ }
+      });
+      window.addEventListener("pointermove", (e)=>{
+        if (dragging) moveGhost(e.clientX, e.clientY);
+      });
+      window.addEventListener("pointerup", (e)=>{
+        if (!dragging) return;
+        dragging = false;
+        endGhost();
+        wordEl.classList.remove("dragging");
+        if (solved) return;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const circle = el && el.closest ? el.closest(".cs-circle") : null;
+        if (!circle) return;
+        attempts++;
+        if (circle.dataset.id === wordEl.dataset.id){
+          circle.classList.add("correct-flash");
+          setTimeout(()=>circle.classList.remove("correct-flash"), 400);
+          pos++;
+          if (pos >= itemsTotal){
+            lockQuestion("correct", q.explain, "correct");
+          } else {
+            renderWord();
+          }
+        } else {
+          circle.classList.add("wrong-flash");
+          setTimeout(()=>circle.classList.remove("wrong-flash"), 450);
+          tryAgainFeedback();
+        }
+      });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
     } else {
