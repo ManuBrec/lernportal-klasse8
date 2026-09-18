@@ -32,6 +32,8 @@
     --success-soft: #DFF3E6;
     --danger: #B8402D;
     --danger-soft: #FBE4DF;
+    --mark: #C2410C;
+    --mark-soft: #FDE3D3;
     --radius-lg: 20px;
     --radius-md: 14px;
     --radius-sm: 9px;
@@ -59,6 +61,8 @@
       --success-soft: #1B3327;
       --danger: #E68A78;
       --danger-soft: #3B231F;
+      --mark: #FF9D5C;
+      --mark-soft: #3A2013;
       --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px -12px rgba(0,0,0,0.55);
     }
   }
@@ -80,6 +84,8 @@
     --success-soft: #1B3327;
     --danger: #E68A78;
     --danger-soft: #3B231F;
+    --mark: #FF9D5C;
+    --mark-soft: #3A2013;
     --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 28px -12px rgba(0,0,0,0.55);
   }
 
@@ -256,10 +262,21 @@
     flex:none; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     color:#fff; font-weight:800; font-size:11px; letter-spacing:0; box-shadow:0 1px 2px rgba(0,0,0,.18);
   }
-  .strategy-badge svg{width:14px; height:14px;}
+  .strategy-badge .icon-plate{width:19px; height:19px; border-width:1.3px;}
+  .strategy-badge .icon-plate svg{width:11px; height:11px;}
+  .strategy-badge .icon-plate{font-size:10px;}
   .big-badge-row{display:flex; justify-content:center; margin:2px 0 18px;}
-  .strategy-badge-big{width:68px; height:68px; font-size:28px;}
-  .strategy-badge-big svg{width:36px; height:36px;}
+  .strategy-badge-big{width:68px; height:68px;}
+  .strategy-badge-big .icon-plate{width:50px; height:50px; border-width:2.5px;}
+  .strategy-badge-big .icon-plate svg{width:27px; height:27px;}
+  .strategy-badge-big .icon-plate{font-size:22px;}
+  /* Weißes Plättchen mit schwarzem Rand, das Blitz/Welle/Pfeil/M/Aa trägt - liegt zentriert auf
+     dem farbigen Strategie-Kreis/Feld. Die konkrete Größe kommt von den Regeln oben/unten je
+     nach Kontext (kleines Badge, großes Badge, Zuordnen-Chip, Kreis-Sortieren). */
+  .icon-plate{
+    background:#fff; border:2px solid #1B2A33; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; color:#1B2A33; font-weight:800; line-height:1; flex:none;
+  }
   .qmeta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
   .qtext{font-size:19px; font-weight:600; margin-bottom:20px; text-wrap:balance;}
   .options{display:grid; gap:10px;}
@@ -345,7 +362,7 @@
   }
   .mm-tile .mm-icon{font-size:24px; line-height:1;}
   .mm-tile .mm-label{font-size:11px; font-weight:700; line-height:1.15;}
-  .mm-tile .mm-label b{color:var(--accent); font-weight:800;}
+  .mm-tile .mm-label b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:3px; padding:0 1px;}
   .mm-tile.fixed{border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
   .mm-tile[data-target]{cursor:pointer;}
   .mm-tile.correct{border-style:solid; border-color:var(--success); background:var(--success-soft); color:var(--success);}
@@ -369,7 +386,8 @@
     font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center;
     box-shadow:0 1px 3px rgba(0,0,0,.2);
   }
-  .mm-chip.mm-chip-badge svg{width:18px; height:18px;}
+  .mm-chip.mm-chip-badge .icon-plate, .mm-chip-ghost.mm-chip-ghost-badge .icon-plate{width:27px; height:27px; border-width:1.8px; font-size:14px;}
+  .mm-chip.mm-chip-badge .icon-plate svg, .mm-chip-ghost.mm-chip-ghost-badge .icon-plate svg{width:15px; height:15px;}
   .mm-chip-ghost.mm-chip-ghost-badge{
     padding:0; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     color:#fff; font-weight:800; font-size:13px;
@@ -378,23 +396,35 @@
 
   /* "Wörter in Kreise sortieren" (circle-sort): 5 feste, immer sichtbare Strategie-Kreise im
      Hintergrund, ein Wort nach dem anderen wird nacheinander in den passenden Kreis gezogen. */
-  .cs-wrap{display:flex; flex-direction:column; align-items:center; gap:20px; padding:6px 0 2px;}
-  .cs-progress{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase;}
-  .cs-word-row{min-height:58px; display:flex; align-items:center; justify-content:center;}
+  /* "Wörter in Kreise sortieren" (Aufgabe: circle-sort) läuft im Vollbild: die Übung legt sich
+     über die ganze Seite (Kopfbereich/Fortschrittsleiste werden dabei überdeckt), das Wort steht
+     fest in der Mitte, die 5 Strategie-Kreise stehen ringsherum darum verteilt. */
+  .cs-fullscreen{
+    position:fixed; inset:0; z-index:500; background:var(--bg);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+    padding:22px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+    overflow:auto;
+  }
+  .cs-fs-top{text-align:center; max-width:440px;}
+  .cs-progress{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:6px;}
+  .cs-fs-hint{margin:0; font-size:13.5px; color:var(--ink-soft);}
+  .cs-fs-stage{position:relative; width:min(90vw,440px); height:min(90vw,440px); flex:none;}
   .cs-word{
-    padding:14px 26px; border-radius:999px; background:var(--surface); border:2px solid var(--border);
-    font-size:20px; font-weight:700; cursor:grab; box-shadow:0 1px 3px rgba(0,0,0,.14); touch-action:none; text-align:center;
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2;
+    padding:14px 22px; border-radius:999px; background:var(--surface); border:2px solid var(--border);
+    font-size:19px; font-weight:700; cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.16); touch-action:none;
+    text-align:center; max-width:78%; white-space:nowrap;
   }
   .cs-word.dragging{opacity:.35;}
-  .cs-word b{color:var(--accent); font-weight:800;}
-  .cs-circles{display:flex; flex-wrap:wrap; justify-content:center; gap:16px;}
+  .cs-word b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
   .cs-circle{
-    position:relative; width:104px; height:104px; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    position:absolute; transform:translate(-50%,-50%); width:92px; height:92px; margin:0;
+    border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:4px; color:#fff; text-align:center; padding:6px; box-shadow:0 1px 2px rgba(0,0,0,.18); border:3px solid transparent;
   }
-  .cs-circle-icon{font-size:20px; font-weight:800; line-height:1;}
-  .cs-circle-icon svg{width:22px; height:22px;}
-  .cs-circle-label{font-size:11px; font-weight:700; line-height:1.15;}
+  .cs-circle .icon-plate{width:54px; height:54px; border-width:3px; font-size:24px;}
+  .cs-circle .icon-plate svg{width:29px; height:29px;}
+  .cs-circle-label{font-size:10px; font-weight:700; line-height:1.1;}
   .cs-circle.correct-flash{border-color:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.55);}
   .cs-circle.wrong-flash{border-color:var(--danger);}
   /* Kurzes Daumen-hoch/Smiley-Pop-up bei richtiger Zuordnung - erscheint kurz und verschwindet
@@ -415,7 +445,7 @@
     position:fixed; z-index:999; pointer-events:none; padding:14px 26px; border-radius:999px; background:var(--surface);
     border:2px solid var(--border); font-size:20px; font-weight:700; transform:translate(-50%,-50%); box-shadow:0 4px 10px rgba(0,0,0,.25);
   }
-  .cs-word-ghost b{color:var(--accent); font-weight:800;}
+  .cs-word-ghost b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
 
   /* Echte Deutschlandkarte (Bundesländer) für "Wo liegt Bayern?" - Umrisse aus einer
      d-maps.com-Vorlage, jedes Bundesland eine eigene anklickbare/bedroppbare Fläche. */
@@ -1604,20 +1634,29 @@ const STRATEGY_META = {
   merken:      { label:"Merken",                  color:"#BD6E5C" },
   grossklein:  { label:"Groß- oder Kleinschreibung", color:"#C08A4E" },
 };
+/* Schwarze Strichzeichnungen (eigene, einfache Symbole - keine Übernahme einer fremden Grafik),
+   die auf einem weißen "Plättchen" sitzen (siehe strategyIconPlateHtml/.icon-plate) - das
+   Plättchen liegt jeweils auf dem farbigen Strategie-Kreis/Feld. */
 const STRATEGY_ICON_SVG = {
-  verlaengern: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v6a4 4 0 0 0 4 4h12"/><path d="M16 11l4 4-4 4"/></svg>`,
-  ableiten:    `<svg viewBox="0 0 24 24" fill="#fff" stroke="none"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg>`,
-  schwingen:   `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13c2-6 4-6 6 0s4 6 6 0 4-6 6 0"/></svg>`,
+  verlaengern: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5v6a4.3 4.3 0 0 0 4.3 4.3h6.7"/><path d="M14.3 10.3 20.5 15.3 14.3 20.3Z" fill="#1B2A33"/></svg>`,
+  ableiten:    `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg>`,
+  schwingen:   `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5c0 3.6 2.2 6.5 5 6.5s5-2.9 5-6.5m-10 0c0 3.6 2.2 6.5 5 6.5m0-6.5c0 3.6 2.2 6.5 5 6.5s5-2.9 5-6.5"/></svg>`,
 };
+/* Weißes Plättchen mit schwarzem Rand, das das eigentliche Symbol (Blitz/Welle/Pfeil/M/Aa) trägt -
+   liegt zentriert auf dem farbigen Strategie-Kreis/Feld. Größe wird über die umgebende CSS-Klasse
+   gesteuert (z.B. .strategy-badge .icon-plate, .cs-circle .icon-plate, ...). */
+function strategyIconPlateHtml(key){
+  const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
+  return `<span class="icon-plate">${inner}</span>`;
+}
 function strategyBadgeHtml(key, big){
   const meta = STRATEGY_META[key];
   if (!meta) return "";
-  const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
   const cls = "strategy-badge" + (big ? " strategy-badge-big" : "");
   /* Beim großen Badge (Abfrage "welche Strategie ist das?") darf KEIN title-Tooltip den Namen
      verraten - deshalb hier bewusst ohne title-Attribut. */
   const titleAttr = big ? "" : ` title="${esc(meta.label)}"`;
-  return `<span class="${cls}" style="background:${meta.color}"${titleAttr}>${inner}</span>`;
+  return `<span class="${cls}" style="background:${meta.color}"${titleAttr}>${strategyIconPlateHtml(key)}</span>`;
 }
 function statusLabel(s){ return s==="aktuell" ? "In Bearbeitung" : s==="fertig" ? "Abgeschlossen" : "Geplant"; }
 function statusClass(s){ return s==="aktuell" ? "status-aktuell" : s==="fertig" ? "status-fertig" : "status-geplant"; }
@@ -2466,8 +2505,7 @@ window.__startExercise = function(slug){
       const chipsHtml = chipList.map((chip,idx) => {
         if (q.chipStyle === "strategy"){
           const meta = STRATEGY_META[chip.value];
-          const inner = STRATEGY_ICON_SVG[chip.value] || (chip.value === "merken" ? "M" : chip.value === "grossklein" ? "Aa" : "");
-          return `<button type="button" class="mm-chip mm-chip-badge" style="background:${meta ? meta.color : "#999"}" data-value="${esc(chip.value)}" id="chip_${idx}" title="${meta ? esc(meta.label) : ""}">${inner}</button>`;
+          return `<button type="button" class="mm-chip mm-chip-badge" style="background:${meta ? meta.color : "#999"}" data-value="${esc(chip.value)}" id="chip_${idx}" title="${meta ? esc(meta.label) : ""}">${strategyIconPlateHtml(chip.value)}</button>`;
         }
         return `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`;
       }).join("");
@@ -2486,23 +2524,28 @@ window.__startExercise = function(slug){
         </div>
       `;
     } else if (q.kind === "circle-sort"){
-      /* 5 immer sichtbare Strategie-Kreise; die Wörter aus q.items erscheinen eines nach dem
-         anderen und werden auf den passenden Kreis gezogen - siehe Event-Wiring unten. */
+      /* 5 immer sichtbare Strategie-Kreise, kreisförmig (Fünfeck) um das Wort in der Mitte
+         verteilt; die Wörter aus q.items erscheinen eines nach dem anderen und werden in die Mitte
+         gezogen - siehe Event-Wiring unten. Läuft komplett im Vollbild (siehe host.innerHTML unten). */
       const circleOrder = ["ableiten","schwingen","merken","grossklein","verlaengern"];
-      const circlesHtml = circleOrder.map(key => {
+      /* Auf dem kleinen Kreis selbst steht eine kurze Beschriftung (Platzgrund) - der volle Name
+         ("Groß- oder Kleinschreibung") bleibt überall sonst in der App unverändert. */
+      const circleShortLabel = { grossklein: "Groß-/Klein" };
+      const circlesHtml = circleOrder.map((key, idx) => {
         const meta = STRATEGY_META[key];
-        const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
-        return `<div class="cs-circle" data-id="${key}" style="background:${meta.color}">
-          <span class="cs-circle-icon">${inner}</span>
-          <span class="cs-circle-label">${esc(meta.label)}</span>
+        /* Fünfeck: erster Kreis oben (12 Uhr), dann im Uhrzeigersinn alle 72°. */
+        const angle = (-90 + idx * 72) * Math.PI / 180;
+        const leftPct = (50 + 40 * Math.cos(angle)).toFixed(2);
+        const topPct = (50 + 40 * Math.sin(angle)).toFixed(2);
+        return `<div class="cs-circle" data-id="${key}" style="background:${meta.color}; left:${leftPct}%; top:${topPct}%;">
+          ${strategyIconPlateHtml(key)}
+          <span class="cs-circle-label">${esc(circleShortLabel[key] || meta.label)}</span>
         </div>`;
       }).join("");
       body = `
-        <div class="cs-wrap">
-          <div class="cs-progress" id="csProgress">Wort 1 von ${q.items.length}</div>
-          <div class="cs-word-row"><div class="cs-word" id="csWord"></div></div>
-          <p class="gap-hint">Tippe das Wort an, halte es gedrückt und ziehe es in den passenden Kreis.</p>
-          <div class="cs-circles" id="csCircles">${circlesHtml}</div>
+        <div class="cs-fs-stage">
+          <div id="csCircles">${circlesHtml}</div>
+          <div class="cs-word" id="csWord"></div>
         </div>
       `;
     } else {
@@ -2513,17 +2556,37 @@ window.__startExercise = function(slug){
       `;
     }
 
-    host.innerHTML = `
-      <div class="qcard">
-        ${head(q)}
-        ${body}
-        <div class="feedback" id="fb"></div>
-        <div class="qactions">
-          <button class="skip-btn" id="skipBtn">Überspringen</button>
-          <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+    if (q.kind === "circle-sort"){
+      /* Eigenes Vollbild-Layout statt der normalen .qcard: legt sich über die gesamte Seite
+         (Kopf/Fortschrittsleiste werden dabei überdeckt), Fortschritt+Hinweis oben, Bühne mit
+         Wort+Kreisen in der Mitte, Feedback/Buttons unten - alles in einem festen Rahmen. */
+      host.innerHTML = `
+        <div class="cs-fullscreen">
+          <div class="cs-fs-top">
+            <div class="cs-progress" id="csProgress">Wort 1 von ${q.items.length}</div>
+            <p class="cs-fs-hint">${esc(q.text)}</p>
+          </div>
+          ${body}
+          <div class="feedback" id="fb"></div>
+          <div class="qactions">
+            <button class="skip-btn" id="skipBtn">Überspringen</button>
+            <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      host.innerHTML = `
+        <div class="qcard">
+          ${head(q)}
+          ${body}
+          <div class="feedback" id="fb"></div>
+          <div class="qactions">
+            <button class="skip-btn" id="skipBtn">Überspringen</button>
+            <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+          </div>
+        </div>
+      `;
+    }
 
     if (q.kind === "numeric"){
       const input = document.getElementById("numInput");
