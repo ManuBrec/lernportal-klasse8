@@ -262,20 +262,20 @@
     flex:none; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     color:#fff; font-weight:800; font-size:11px; letter-spacing:0; box-shadow:0 1px 2px rgba(0,0,0,.18);
   }
-  .strategy-badge .icon-plate{width:19px; height:19px; border-width:1.3px;}
-  .strategy-badge .icon-plate svg{width:11px; height:11px;}
-  .strategy-badge .icon-plate{font-size:10px;}
+  .strategy-badge .icon-glyph{width:16px; height:16px;}
+  .strategy-badge .icon-glyph svg{width:16px; height:16px;}
+  .strategy-badge .icon-glyph{font-size:13px;}
   .big-badge-row{display:flex; justify-content:center; margin:2px 0 18px;}
   .strategy-badge-big{width:68px; height:68px;}
-  .strategy-badge-big .icon-plate{width:50px; height:50px; border-width:2.5px;}
-  .strategy-badge-big .icon-plate svg{width:27px; height:27px;}
-  .strategy-badge-big .icon-plate{font-size:22px;}
-  /* Weißes Plättchen mit schwarzem Rand, das Blitz/Welle/Pfeil/M/Aa trägt - liegt zentriert auf
-     dem farbigen Strategie-Kreis/Feld. Die konkrete Größe kommt von den Regeln oben/unten je
-     nach Kontext (kleines Badge, großes Badge, Zuordnen-Chip, Kreis-Sortieren). */
-  .icon-plate{
-    background:#fff; border:2px solid #1B2A33; border-radius:50%; display:flex; align-items:center;
-    justify-content:center; color:#1B2A33; font-weight:800; line-height:1; flex:none;
+  .strategy-badge-big .icon-glyph{width:40px; height:40px;}
+  .strategy-badge-big .icon-glyph svg{width:40px; height:40px;}
+  .strategy-badge-big .icon-glyph{font-size:30px;}
+  /* Symbol (Blitz/Welle/Pfeil/M/Aa) liegt direkt, in Weiß, auf dem farbigen Strategie-Kreis/Feld.
+     Die konkrete Größe kommt von den Regeln oben/unten je nach Kontext (kleines Badge, großes
+     Badge, Zuordnen-Chip, Kreis-Sortieren). */
+  .icon-glyph{
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800;
+    line-height:1; flex:none;
   }
   .qmeta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
   .qtext{font-size:19px; font-weight:600; margin-bottom:20px; text-wrap:balance;}
@@ -386,8 +386,8 @@
     font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center;
     box-shadow:0 1px 3px rgba(0,0,0,.2);
   }
-  .mm-chip.mm-chip-badge .icon-plate, .mm-chip-ghost.mm-chip-ghost-badge .icon-plate{width:27px; height:27px; border-width:1.8px; font-size:14px;}
-  .mm-chip.mm-chip-badge .icon-plate svg, .mm-chip-ghost.mm-chip-ghost-badge .icon-plate svg{width:15px; height:15px;}
+  .mm-chip.mm-chip-badge .icon-glyph, .mm-chip-ghost.mm-chip-ghost-badge .icon-glyph{width:22px; height:22px; font-size:17px;}
+  .mm-chip.mm-chip-badge .icon-glyph svg, .mm-chip-ghost.mm-chip-ghost-badge .icon-glyph svg{width:22px; height:22px;}
   .mm-chip-ghost.mm-chip-ghost-badge{
     padding:0; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     color:#fff; font-weight:800; font-size:13px;
@@ -422,8 +422,8 @@
     border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:4px; color:#fff; text-align:center; padding:6px; box-shadow:0 1px 2px rgba(0,0,0,.18); border:3px solid transparent;
   }
-  .cs-circle .icon-plate{width:54px; height:54px; border-width:3px; font-size:24px;}
-  .cs-circle .icon-plate svg{width:29px; height:29px;}
+  .cs-circle .icon-glyph{width:44px; height:44px; font-size:32px;}
+  .cs-circle .icon-glyph svg{width:44px; height:44px;}
   .cs-circle-label{font-size:10px; font-weight:700; line-height:1.1;}
   .cs-circle.correct-flash{border-color:#fff; box-shadow:0 0 0 4px rgba(255,255,255,.55);}
   .cs-circle.wrong-flash{border-color:var(--danger);}
@@ -1634,20 +1634,20 @@ const STRATEGY_META = {
   merken:      { label:"Merken",                  color:"#BD6E5C" },
   grossklein:  { label:"Groß- oder Kleinschreibung", color:"#C08A4E" },
 };
-/* Schwarze Strichzeichnungen (eigene, einfache Symbole - keine Übernahme einer fremden Grafik),
-   die auf einem weißen "Plättchen" sitzen (siehe strategyIconPlateHtml/.icon-plate) - das
-   Plättchen liegt jeweils auf dem farbigen Strategie-Kreis/Feld. */
+/* Weiße Strichzeichnungen (eigene, einfache Symbole - keine Übernahme einer fremden Grafik),
+   die direkt auf dem farbigen Strategie-Kreis/Feld liegen (siehe strategyIconPlateHtml/.icon-glyph).
+   Schwingen: zwei Bögen (= zwei Silben), die aneinanderhängen statt sich zu überschneiden. */
 const STRATEGY_ICON_SVG = {
-  verlaengern: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5v6a4.3 4.3 0 0 0 4.3 4.3h6.7"/><path d="M14.3 10.3 20.5 15.3 14.3 20.3Z" fill="#1B2A33"/></svg>`,
-  ableiten:    `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg>`,
-  schwingen:   `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.5c0 3.6 2.2 6.5 5 6.5s5-2.9 5-6.5m-10 0c0 3.6 2.2 6.5 5 6.5m0-6.5c0 3.6 2.2 6.5 5 6.5s5-2.9 5-6.5"/></svg>`,
+  verlaengern: `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5v6a4.3 4.3 0 0 0 4.3 4.3h6.7"/><path d="M14.3 10.3 20.5 15.3 14.3 20.3Z" fill="#fff"/></svg>`,
+  ableiten:    `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></svg>`,
+  schwingen:   `<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9 Q7 17 12 9 Q17 17 22 9"/></svg>`,
 };
-/* Weißes Plättchen mit schwarzem Rand, das das eigentliche Symbol (Blitz/Welle/Pfeil/M/Aa) trägt -
-   liegt zentriert auf dem farbigen Strategie-Kreis/Feld. Größe wird über die umgebende CSS-Klasse
-   gesteuert (z.B. .strategy-badge .icon-plate, .cs-circle .icon-plate, ...). */
+/* Trägt das eigentliche Symbol (Blitz/Welle/Pfeil/M/Aa), in Weiß, direkt auf dem farbigen
+   Strategie-Kreis/Feld. Größe wird über die umgebende CSS-Klasse gesteuert
+   (z.B. .strategy-badge .icon-glyph, .cs-circle .icon-glyph, ...). */
 function strategyIconPlateHtml(key){
   const inner = STRATEGY_ICON_SVG[key] || (key === "merken" ? "M" : key === "grossklein" ? "Aa" : "");
-  return `<span class="icon-plate">${inner}</span>`;
+  return `<span class="icon-glyph">${inner}</span>`;
 }
 function strategyBadgeHtml(key, big){
   const meta = STRATEGY_META[key];
