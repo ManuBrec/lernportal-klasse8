@@ -354,6 +354,26 @@
 
   /* Karten-/Bild-Zuordnung per Drag & Drop (Bundesländer, Nachbarländer, Bauernhof) */
   .mm-board{display:grid; gap:6px; margin:4px 0 16px;}
+  /* Buchstabengitter (Suchsel): jede Zelle ein anklickbarer Buchstabe. Erste und letzte Zelle
+     eines Begriffs antippen (waagrecht oder senkrecht) - siehe Event-Wiring q.kind==="wordsearch". */
+  .ws-board{
+    display:grid; gap:2px; margin:4px auto 14px; max-width:420px;
+  }
+  .ws-cell{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:12.5px; font-family:inherit; color:var(--ink);
+    border:1px solid var(--border); border-radius:4px; background:var(--surface-2);
+    cursor:pointer; padding:0; line-height:1;
+  }
+  .ws-cell.selected{background:var(--accent-soft); border-color:var(--accent); color:var(--accent);}
+  .ws-cell.found{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .ws-cell.wrong-flash{background:var(--danger-soft); border-color:var(--danger); color:var(--danger);}
+  .ws-progress{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.03em; margin:6px 0 8px;}
+  .ws-found{display:flex; flex-wrap:wrap; gap:6px;}
+  .ws-found-chip{
+    font-size:12px; font-weight:700; padding:4px 10px; border-radius:999px;
+    background:var(--success-soft); color:var(--success);
+  }
   .mm-tile{
     position:relative; min-height:48px; border-radius:10px; border:1.5px dashed var(--border);
     background:var(--surface-2); display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -670,6 +690,7 @@ const naturtechnikChapters = [
 
 const naturtechnikMikroorganismenTopics = [
   { tag:"lernen", label:"Vielfältige Mikroorganismen", practice:"nt-mikroorganismen-vielfalt" },
+  { tag:"lernen", label:"Die Bedeutung der Mikroorganismen", practice:"nt-mikroorganismen-bedeutung" },
 ];
 
 const SUBJECT_META = {
@@ -773,6 +794,59 @@ const MIKRO_MERKMAL_TILES = [
   { id:"einzeller",  label:"bis zu 100-mal größer als Bakterien",         col:2, row:2, alwaysLabel:true },
 ];
 const MIKRO_GRUPPEN_LABELS = { bakterien:"Bakterien", pilze:"Pilze", algen:"Algen", einzeller:"Einzeller" };
+
+/* Buchstabengitter zu "Die Bedeutung der Mikroorganismen" - selbst erzeugtes Gitter (nicht vom
+   Arbeitsblatt abgetippt) mit denselben 7 Begriffen, waagrecht/senkrecht platziert, teils mit
+   Überschneidungen. cells sind [zeile, spalte], 0-indiziert, in Leserichtung des Wortes. */
+const MIKRO_WORDSEARCH = {
+  rows: 12, cols: 12,
+  grid: [
+    "FEKLÄRANLAGE",
+    "TDUOBADHEISW",
+    "ATHZMTSOBIPU",
+    "ARZNEIAJEAGO",
+    "LDESTRUENTEN",
+    "BIOGASEJSFHL",
+    "EDNELMRMMWJB",
+    "PTENLDSTIKZW",
+    "MUHDEBTITKDI",
+    "ENJPZMOGTMMH",
+    "JZDWZGFTEIGP",
+    "NJZTILFBLIBL",
+  ],
+  words: [
+    { word:"LEBENSMITTEL", cells:[[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,8],[7,8],[8,8],[9,8],[10,8],[11,8]] },
+    { word:"DESTRUENTEN",  cells:[[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11]] },
+    { word:"KLÄRANLAGE",   cells:[[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[0,11]] },
+    { word:"SAUERSTOFF",   cells:[[2,6],[3,6],[4,6],[5,6],[6,6],[7,6],[8,6],[9,6],[10,6],[11,6]] },
+    { word:"METALLE",      cells:[[2,4],[3,4],[4,4],[5,4],[6,4],[7,4],[8,4]] },
+    { word:"ARZNEI",       cells:[[3,0],[3,1],[3,2],[3,3],[3,4],[3,5]] },
+    { word:"BIOGAS",       cells:[[5,0],[5,1],[5,2],[5,3],[5,4],[5,5]] },
+  ],
+};
+
+/* Tabelle "Bedeutung der Mikroorganismen": Spalten Natur/Mensch/Technik als feste Überschriften
+   (fixed), darunter leere Zielfelder je Bereich - die Begriffe kommen als Chips von unten. Jede
+   Kachel hat eine EIGENE eindeutige id (nicht die Spalte), damit beim Lösen genau der gezogene
+   Begriff (nicht ein beliebiger aus der Spalte) in der Zelle erscheint. */
+const MIKRO_TABELLE_TILES = [
+  { id:"h-natur",   label:"Natur",   col:1, row:1, fixed:true },
+  { id:"h-mensch",  label:"Mensch",  col:2, row:1, fixed:true },
+  { id:"h-technik", label:"Technik", col:3, row:1, fixed:true },
+
+  { id:"natur-sauerstoff",  label:"Erzeugung von Sauerstoff", col:1, row:2 },
+  { id:"natur-zersetzung",  label:"Zersetzung im Boden",      col:1, row:3 },
+
+  { id:"mensch-erreger",     label:"Krankheitserreger",                                  col:2, row:2 },
+  { id:"mensch-schutz",      label:"Schutzbarriere auf der Haut und den Schleimhäuten",  col:2, row:3 },
+  { id:"mensch-verdauung",   label:"Verdauung im Darm",                                  col:2, row:4 },
+
+  { id:"technik-lebensmittel", label:"Lebensmittelproduktion", col:3, row:2 },
+  { id:"technik-arznei",       label:"Arzneimittelproduktion", col:3, row:3 },
+  { id:"technik-abwasser",     label:"Abwasserreinigung",      col:3, row:4 },
+  { id:"technik-biogas",       label:"Biogas",                 col:3, row:5 },
+  { id:"technik-bergbau",      label:"Bergbau",                col:3, row:6 },
+];
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
 /* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
@@ -1614,6 +1688,23 @@ const exerciseSets = {
         text: "Ordne jeder Gruppe das passende Merkmal zu.",
         cols: 2, rows: 2, tiles: MIKRO_MERKMAL_TILES,
         explain: "Bakterien sind die größte Gruppe unter den Lebewesen, Pilze eine vielseitige Gruppe, Algen die ältesten Organismen der Welt – und Einzeller haben einen Zellkern und sind bis zu 100-mal größer als Bakterien." }
+    ]
+  },
+  "nt-mikroorganismen-bedeutung": {
+    title: "Die Bedeutung der Mikroorganismen",
+    subject: "naturtechnik",
+    chapterSlug: "mikroorganismen",
+    duration: "ca. 10–14 Minuten",
+    locked: true,
+    questions: [
+      { kind:"wordsearch",
+        text: "Markiere die sieben Begriffe, die etwas mit der Bedeutung der Mikroorganismen zu tun haben – waagrecht oder senkrecht.",
+        rows: MIKRO_WORDSEARCH.rows, cols: MIKRO_WORDSEARCH.cols, grid: MIKRO_WORDSEARCH.grid, words: MIKRO_WORDSEARCH.words,
+        explain: "Kläranlage, Lebensmittel, Sauerstoff, Arznei, Biogas, Metalle und Destruenten – all das hat mit der Bedeutung der Mikroorganismen für Natur, Körper und Technik zu tun." },
+      { kind:"map-match",
+        text: "Ordne die Begriffe der passenden Spalte zu: Natur, Mensch oder Technik.",
+        cols: 3, rows: 6, tiles: MIKRO_TABELLE_TILES,
+        explain: "Gut gemacht! Übertrage die vollständige Tabelle mit der richtigen Lösung jetzt in dein Heft." }
     ]
   }
 };
@@ -2743,6 +2834,20 @@ window.__startExercise = function(slug){
           <div class="cs-word" id="csWord"></div>
         </div>
       `;
+    } else if (q.kind === "wordsearch"){
+      /* Buchstabengitter: Zellen anklicken (erste Zelle, dann letzte Zelle eines Wortes -
+         waagrecht oder senkrecht). Die gesuchten Begriffe werden NICHT vorab genannt (wie im
+         Original-Arbeitsblatt) - die Schüler müssen selbst erkennen, welche Begriffe zum Thema
+         passen. Gefundene Wörter erscheinen erst danach in der Liste unten. */
+      const cellsHtml = q.grid.map((rowStr, r) => rowStr.split("").map((ch, c) =>
+        `<button type="button" class="ws-cell" data-r="${r}" data-c="${c}">${esc(ch)}</button>`
+      ).join("")).join("");
+      body = `
+        <div class="ws-board" id="wsBoard" style="grid-template-columns:repeat(${q.cols},1fr);">${cellsHtml}</div>
+        <p class="gap-hint">Tippe den ersten und dann den letzten Buchstaben eines Begriffs an (waagrecht oder senkrecht).</p>
+        <div class="ws-progress" id="wsProgress">0 von ${q.words.length} Begriffen gefunden</div>
+        <div class="ws-found" id="wsFound"></div>
+      `;
     } else {
       body = `
         <div class="options" id="opts">
@@ -3186,6 +3291,108 @@ window.__startExercise = function(slug){
       });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+      });
+    } else if (q.kind === "wordsearch"){
+      const board = document.getElementById("wsBoard");
+      const progressEl = document.getElementById("wsProgress");
+      const foundEl = document.getElementById("wsFound");
+      const total2 = q.words.length;
+      let found = 0;
+      let start = null; // {r,c,btn}
+
+      function cellKey(r,c){ return r + "_" + c; }
+      function cellBtn(r,c){ return board.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`); }
+      function pathBetween(r1,c1,r2,c2){
+        if (r1 === r2){
+          const lo = Math.min(c1,c2), hi = Math.max(c1,c2);
+          const cells = [];
+          for (let c=lo;c<=hi;c++) cells.push([r1,c]);
+          return cells;
+        }
+        if (c1 === c2){
+          const lo = Math.min(r1,r2), hi = Math.max(r1,r2);
+          const cells = [];
+          for (let r=lo;r<=hi;r++) cells.push([r,c1]);
+          return cells;
+        }
+        return null;
+      }
+      function sameCells(a, b){
+        if (a.length !== b.length) return false;
+        const setA = new Set(a.map(([r,c])=>cellKey(r,c)));
+        return b.every(([r,c])=>setA.has(cellKey(r,c)));
+      }
+      function updateProgress(){
+        progressEl.textContent = `${found} von ${total2} Begriffen gefunden`;
+      }
+      function markWordFound(wordDef){
+        wordDef.cells.forEach(([r,c])=>{
+          const btn = cellBtn(r,c);
+          if (btn){ btn.classList.remove("selected"); btn.classList.add("found"); }
+        });
+        found++;
+        updateProgress();
+        const chip = document.createElement("span");
+        chip.className = "ws-found-chip";
+        chip.textContent = wordDef.word;
+        foundEl.appendChild(chip);
+        if (found >= total2){
+          lockQuestion("correct", q.explain, "correct");
+        }
+      }
+      board.querySelectorAll(".ws-cell").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          if (solved || btn.classList.contains("found")) return;
+          const r = Number(btn.dataset.r), c = Number(btn.dataset.c);
+          if (!start){
+            start = { r, c, btn };
+            btn.classList.add("selected");
+            return;
+          }
+          if (start.r === r && start.c === c){
+            btn.classList.remove("selected");
+            start = null;
+            return;
+          }
+          const path = pathBetween(start.r, start.c, r, c);
+          const startBtn = start.btn;
+          start = null;
+          if (!path){
+            startBtn.classList.remove("selected");
+            tryAgainFeedback("Das ist nicht waagrecht oder senkrecht.");
+            return;
+          }
+          attempts++;
+          const match = q.words.find(w => !w.__found && sameCells(w.cells, path));
+          if (match){
+            match.__found = true;
+            markWordFound(match);
+            startBtn.classList.remove("selected");
+          } else {
+            const flashBtns = path.map(([rr,cc])=>cellBtn(rr,cc));
+            flashBtns.forEach(b=>b && b.classList.add("wrong-flash"));
+            startBtn.classList.remove("selected");
+            tryAgainFeedback();
+            setTimeout(()=>flashBtns.forEach(b=>b && b.classList.remove("wrong-flash")), 450);
+          }
+        });
+      });
+      document.getElementById("skipBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        q.words.forEach(w=>{
+          if (!w.__found){
+            w.__found = true;
+            w.cells.forEach(([r,c])=>{
+              const btn = cellBtn(r,c);
+              if (btn) btn.classList.add("found");
+            });
+            const chip = document.createElement("span");
+            chip.className = "ws-found-chip";
+            chip.textContent = w.word;
+            foundEl.appendChild(chip);
+          }
+        });
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
     } else {
