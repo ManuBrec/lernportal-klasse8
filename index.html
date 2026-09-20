@@ -361,6 +361,7 @@
     transition:background .15s ease, border-color .15s ease;
   }
   .mm-tile .mm-icon{font-size:24px; line-height:1;}
+  .mm-tile .mm-icon svg{width:34px; height:34px; display:block;}
   .mm-tile .mm-label{font-size:11px; font-weight:700; line-height:1.15;}
   .mm-tile .mm-label b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:3px; padding:0 1px;}
   .mm-tile.fixed{border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
@@ -659,10 +660,23 @@ const gpgFolders = [
   { slug:"geographie", title:"Geographie", chapters: geographieChapters },
 ];
 
+/* Natur und Technik: neues Fach, Kapitel wie im Schulbuch-Inhaltsverzeichnis. Kapitel 1
+   "Mikroorganismen" ist gerade dran; das Thema "Vielfältige Mikroorganismen" ist bewusst noch
+   ohne "practice"-Verknüpfung angelegt, bis die eigentliche Übung (Fragen/Inhalte) feststeht -
+   erscheint bis dahin als Themenpunkt ohne "Jetzt üben"-Knopf. */
+const naturtechnikChapters = [
+  { slug:"mikroorganismen", nr:1, title:"Mikroorganismen", status:"aktuell" },
+];
+
+const naturtechnikMikroorganismenTopics = [
+  { tag:"lernen", label:"Vielfältige Mikroorganismen", practice:"nt-mikroorganismen-vielfalt" },
+];
+
 const SUBJECT_META = {
-  mathe:   { label:"Mathematik",                       homeHref:"#/mathe",   chapters: chapters },
-  deutsch: { label:"Deutsch",                          homeHref:"#/deutsch", chapters: deutschChapters },
-  gpg:     { label:"Geschichte, Politik, Geographie",  homeHref:"#/gpg",     folders: gpgFolders },
+  mathe:        { label:"Mathematik",                       homeHref:"#/mathe",        chapters: chapters },
+  deutsch:      { label:"Deutsch",                          homeHref:"#/deutsch",      chapters: deutschChapters },
+  gpg:          { label:"Geschichte, Politik, Geographie",  homeHref:"#/gpg",          folders: gpgFolders },
+  naturtechnik: { label:"Natur und Technik",                homeHref:"#/naturtechnik", chapters: naturtechnikChapters },
 };
 
 const prozentTopics = [
@@ -731,6 +745,34 @@ const FARM_TILES = [
   { id:"weidezaun",      label:"Weidezaun",     icon:"🚧", col:4, row:2 },
   { id:"anhaenger",      label:"Anhänger",      icon:"🚚", col:5, row:2 },
 ];
+
+/* Eigene, einfache Strichzeichnungen der vier Mikroorganismen-Beispiele (keine Übernahme der
+   Schulbuch-/Arbeitsblatt-Illustrationen) - schematisch wie ein Biologie-Piktogramm:
+   Bakterium = Stäbchenform, Pantoffeltierchen = Wimpern-Einzeller, Schimmelpilz = verzweigtes
+   Hyphengeflecht mit Sporenköpfchen, Alge = perlschnurartiger Zellfaden. */
+const MIKRO_ICON_SVG = {
+  bakterium: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="6" rx="3"/><path d="M2 10.5 4 12 2 13.5M22 10.5 20 12 22 13.5"/></svg>`,
+  pantoffeltierchen: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c0-4.5 4-7.5 9-7.5s9 3 9 7.5-4 7.5-9 7.5-9-3-9-7.5Z"/><ellipse cx="13" cy="12" rx="2.8" ry="1.8" stroke-width="1.1"/><path d="M5 7 3.8 5.6M5 17 3.8 18.4M11 4.7 10.6 3M11 19.3 10.6 21M17 5.4 18 4M17 18.6 18 20" stroke-width="1.1"/></svg>`,
+  schimmelpilz: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 15 7 10M12 13 17 8M12 17 5.5 14M12 11 18.5 10"/><circle cx="7" cy="10" r="1.6" fill="#1B2A33" stroke="none"/><circle cx="17" cy="8" r="1.6" fill="#1B2A33" stroke="none"/><circle cx="5.5" cy="14" r="1.4" fill="#1B2A33" stroke="none"/><circle cx="18.5" cy="10" r="1.4" fill="#1B2A33" stroke="none"/><circle cx="12" cy="7" r="1.8" fill="#1B2A33" stroke="none"/></svg>`,
+  alge: `<svg viewBox="0 0 24 24" fill="none" stroke="#1B2A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21 9 17 14 13 9 9 14 5"/><circle cx="12" cy="21" r="2" fill="#1B2A33" stroke="none"/><circle cx="9" cy="17" r="2" fill="#1B2A33" stroke="none"/><circle cx="14" cy="13" r="2" fill="#1B2A33" stroke="none"/><circle cx="9" cy="9" r="2" fill="#1B2A33" stroke="none"/><circle cx="14" cy="5" r="2" fill="#1B2A33" stroke="none"/></svg>`,
+};
+
+const MIKRO_TILES = [
+  { id:"bakterium",         label:"Bakterium",         icon: MIKRO_ICON_SVG.bakterium,         col:1, row:1 },
+  { id:"pantoffeltierchen", label:"Pantoffeltierchen", icon: MIKRO_ICON_SVG.pantoffeltierchen, col:2, row:1 },
+  { id:"schimmelpilz",      label:"Schimmelpilz",      icon: MIKRO_ICON_SVG.schimmelpilz,      col:1, row:2 },
+  { id:"alge",              label:"Alge",              icon: MIKRO_ICON_SVG.alge,              col:2, row:2 },
+];
+
+/* Merkmal (auf der Kachel sichtbar) <-> Gruppe (Chip-Text via chipLabels) - digitale Variante der
+   Mindmap-Hilfe aus dem Arbeitsblatt. */
+const MIKRO_MERKMAL_TILES = [
+  { id:"bakterien",  label:"größte Gruppe unter den Lebewesen",           col:1, row:1, alwaysLabel:true },
+  { id:"pilze",      label:"vielseitige Gruppe von Lebewesen",            col:2, row:1, alwaysLabel:true },
+  { id:"algen",      label:"älteste Organismen der Welt",                 col:1, row:2, alwaysLabel:true },
+  { id:"einzeller",  label:"bis zu 100-mal größer als Bakterien",         col:2, row:2, alwaysLabel:true },
+];
+const MIKRO_GRUPPEN_LABELS = { bakterien:"Bakterien", pilze:"Pilze", algen:"Algen", einzeller:"Einzeller" };
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
 /* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
@@ -1511,6 +1553,68 @@ const exerciseSets = {
         explain: "Das sind wichtige Dinge, die auf einem bayerischen Bauernhof vorkommen."
       }
     ]
+  },
+  "nt-mikroorganismen-vielfalt": {
+    title: "Vielfältige Mikroorganismen",
+    subject: "naturtechnik",
+    chapterSlug: "mikroorganismen",
+    duration: "ca. 10–14 Minuten",
+    locked: true,
+    questions: [
+      { kind:"mc",
+        text: "Was versteht man unter Mikroorganismen?",
+        options: [
+          "Mikroskopisch kleine Lebewesen, die man nicht mit bloßem Auge erkennen kann",
+          "Nur Bakterien, die Krankheiten auslösen",
+          "Lebewesen, die ausschließlich im Wasser leben",
+          "Besonders große, gut sichtbare Pilze"
+        ], correct:0,
+        explain: "Richtig – Mikroorganismen sind mikroskopisch kleine Lebewesen. Man findet sie überall: in und auf unserem Körper und überall sonst um uns herum." },
+      { kind:"map-match",
+        text: "Ordne jedem Symbol den passenden Begriff zu.",
+        cols: 2, rows: 2, tiles: MIKRO_TILES,
+        explain: "Bakterium, Pantoffeltierchen, Schimmelpilz und Alge – vier ganz unterschiedliche Beispiele für Mikroorganismen." },
+      { kind:"mc",
+        text: "Welche vier Gruppen zählt man zu den Mikroorganismen?",
+        options: [
+          "Bakterien, Pilze, Algen, Einzeller",
+          "Bakterien, Viren, Pilze, Insekten",
+          "Algen, Fische, Bakterien, Pilze",
+          "Einzeller, Viren, Algen, Käfer"
+        ], correct:0,
+        explain: "Richtig – zu den Mikroorganismen zählen Bakterien, ein- und wenigzellige Pilze, mikroskopische Algen und Einzeller." },
+      { kind:"mc",
+        text: "Was ist der wichtigste Unterschied zwischen Bakterien und den höheren Einzellern?",
+        options: [
+          "Bakterien haben keinen Zellkern, Einzeller schon",
+          "Bakterien sind größer als Einzeller",
+          "Nur Einzeller sind Lebewesen",
+          "Bakterien betreiben Fotosynthese, Einzeller nicht"
+        ], correct:0,
+        explain: "Richtig – Bakterien sind einzellige Lebewesen ohne Zellkern. Die höheren Einzeller haben einen Zellkern und sind bis zu 100-mal größer als Bakterien." },
+      { kind:"text",
+        text: "Wie heißt der Einzeller, den ihr im Unterricht schon kennengelernt habt?",
+        placeholder: "Name eintippen",
+        accept: ["Pantoffeltierchen"],
+        explain: "Richtig – das Pantoffeltierchen ist ein bekannter, höherer Einzeller mit Zellkern." },
+      { kind:"mc",
+        text: "Ungefähr wie viele Bakterien befinden sich in unserem Körper – im Vergleich zu unseren eigenen Körperzellen?",
+        options: [
+          "Etwa gleich viele",
+          "10-mal mehr Bakterien",
+          "100-mal weniger Bakterien",
+          "In uns gibt es praktisch keine Bakterien"
+        ], correct:1,
+        explain: "Richtig – allein in unserem Körper befinden sich etwa 10-mal mehr Bakterien als menschliche Körperzellen." },
+      { kind:"mc",
+        text: "Welche Gruppe der Mikroorganismen betreibt Fotosynthese und gehört zu den ältesten Organismen der Welt?",
+        options: ["Bakterien", "Pilze", "Algen", "Einzeller"], correct:2,
+        explain: "Richtig – Algen gehören zu den ältesten Organismen der Welt und betreiben Fotosynthese. Manche vielzelligen Arten werden viele Meter lang." },
+      { kind:"map-match", chipLabels: MIKRO_GRUPPEN_LABELS,
+        text: "Ordne jeder Gruppe das passende Merkmal zu.",
+        cols: 2, rows: 2, tiles: MIKRO_MERKMAL_TILES,
+        explain: "Bakterien sind die größte Gruppe unter den Lebewesen, Pilze eine vielseitige Gruppe, Algen die ältesten Organismen der Welt – und Einzeller haben einen Zellkern und sind bis zu 100-mal größer als Bakterien." }
+    ]
   }
 };
 
@@ -1621,7 +1725,7 @@ const worksheets = {
 
 /* ---------- Hilfsfunktionen ---------- */
 function h(strings, ...vals){ return strings.reduce((a,s,i)=>a+s+(vals[i]??""),""); }
-function esc(s){ return String(s).replace(/[&<>]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
 /* Symbole & Farben für die 5 Rechtschreibstrategie-Karten, die Manuel im Klassenzimmer verwendet
    (eigene, einfache Strich-Icons - keine Übernahme einer fremden Grafik). "merken" deckt hier auch
@@ -1920,6 +2024,13 @@ function viewHome(){
           <span class="subject-sub">GPG · Klasse 8</span>
         </span>
       </a>
+      <a class="subject-card card active" href="#/naturtechnik">
+        <span class="subject-icon">🔬</span>
+        <span>
+          <span class="subject-title">Natur und Technik</span><br>
+          <span class="subject-sub">NT · Klasse 8</span>
+        </span>
+      </a>
     </div>
   `;
 }
@@ -2124,6 +2235,87 @@ function viewDeutschChapter(slug){
 
   return h`
     <a class="backlink" href="#/deutsch">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">${esc(c.title)}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieser Bereich ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
+
+function viewNaturtechnik(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Natur und Technik", href:"#/naturtechnik"}]);
+  const rows = naturtechnikChapters.map(c => `
+    <a class="chapter-row linkable" href="#/naturtechnik/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Natur und Technik</span>
+      <h1>Mikroorganismen &amp; mehr.</h1>
+      <p>Übungen zu den Themen aus dem Unterricht. Weitere Kapitel folgen nach und nach.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewNaturtechnikChapter(slug){
+  const c = naturtechnikChapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Natur und Technik", href:"#/naturtechnik"}, {label:c.title, href:"#/naturtechnik/"+slug}]);
+
+  if (slug === "mikroorganismen"){
+    const rows = naturtechnikMikroorganismenTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/naturtechnik">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">${esc(c.title)}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Wie vielfältig Mikroorganismen sind – als Übung zum gezielten Anwenden. Weitere Themen folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Bereich</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/naturtechnik">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
       <span class="eyebrow">${esc(c.title)}</span>
       <h1>${esc(c.title)}</h1>
@@ -2502,12 +2694,15 @@ window.__startExercise = function(slug){
       const chipList = shuffled(realChips.concat(distractorChipsList));
       /* chipStyle "strategy": statt eines Text-Chips (Wort) wird ein runder Farbkreis mit dem
          Strategie-Symbol angezeigt - das Wort selbst steht ja schon (alwaysLabel) auf der Kachel. */
+      /* q.chipLabels: optionale Zuordnung value -> Chip-Text, falls der Chip etwas ANDERES zeigen
+         soll als die Kachel selbst (z.B. Kachel zeigt ein Merkmal, Chip zeigt den Gruppennamen). */
       const chipsHtml = chipList.map((chip,idx) => {
         if (q.chipStyle === "strategy"){
           const meta = STRATEGY_META[chip.value];
           return `<button type="button" class="mm-chip mm-chip-badge" style="background:${meta ? meta.color : "#999"}" data-value="${esc(chip.value)}" id="chip_${idx}" title="${meta ? esc(meta.label) : ""}">${strategyIconPlateHtml(chip.value)}</button>`;
         }
-        return `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`;
+        const chipLabel = (q.chipLabels && q.chipLabels[chip.value]) || chip.label;
+        return `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chipLabel)}</button>`;
       }).join("");
       const hint = q.chipStyle === "strategy"
         ? "Tippe ein Symbol an, halte es gedrückt und ziehe es auf das passende Wort."
@@ -3091,6 +3286,10 @@ function route(){
     html = viewGpgFolder(parts[1]);
   } else if (parts[0] === "gpg" && parts.length === 3){
     html = viewGpgChapter(parts[1], parts[2]);
+  } else if (parts[0] === "naturtechnik" && parts.length === 1){
+    html = viewNaturtechnik();
+  } else if (parts[0] === "naturtechnik" && parts.length === 2){
+    html = viewNaturtechnikChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "arbeitsblatt" && parts.length === 2){
