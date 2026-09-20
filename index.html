@@ -356,6 +356,12 @@
   .mm-board{display:grid; gap:6px; margin:4px 0 16px;}
   /* Buchstabengitter (Suchsel): jede Zelle ein anklickbarer Buchstabe. Erste und letzte Zelle
      eines Begriffs antippen (waagrecht oder senkrecht) - siehe Event-Wiring q.kind==="wordsearch". */
+  .ws-instruction{
+    margin:0 0 14px; padding:10px 14px; border-radius:var(--radius-md);
+    background:var(--accent-soft); border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+    font-size:13.5px; font-weight:600; color:var(--ink); line-height:1.4;
+  }
+  .ws-instruction strong{color:var(--accent);}
   .ws-board{
     display:grid; gap:2px; margin:4px auto 14px; max-width:420px;
   }
@@ -467,6 +473,25 @@
     border:2px solid var(--border); font-size:20px; font-weight:700; transform:translate(-50%,-50%); box-shadow:0 4px 10px rgba(0,0,0,.25);
   }
   .cs-word-ghost b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
+
+  /* Kartenaufgaben mit Ziehzielen (Bundesländer/Nachbarländer) laufen ebenfalls im Vollbild wie
+     circle-sort: auf kleinen/niedrigen Bildschirmen (Handy quer/hoch) waren Karte + Chip-Leiste
+     zusammen sonst höher als der sichtbare Bereich - während des Ziehens kann man aber nicht
+     scrollen, ein Chip außerhalb des sichtbaren Bereichs war dann gar nicht erreichbar. Im Vollbild
+     bekommt die Karte per flex:1 + min-height:0 nur noch so viel Platz wie nach Hinweistext und
+     Chip-Leiste übrig bleibt und schrumpft (unter Beibehaltung ihres Seitenverhältnisses) automatisch
+     mit - Karte UND alle Chips sind dadurch immer gleichzeitig sichtbar und erreichbar. */
+  .mm-fullscreen{
+    position:fixed; inset:0; z-index:500; background:var(--bg);
+    display:flex; flex-direction:column; align-items:stretch; gap:10px;
+    padding:16px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    overflow:auto;
+  }
+  .mm-fs-top{flex:none; text-align:center;}
+  .mm-fs-hint{margin:0; font-size:14.5px; font-weight:700; color:var(--ink);}
+  .mm-fs-stage{flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center;}
+  .mm-fs-stage .de-map{width:auto; max-width:100%; height:auto; max-height:100%; margin:0;}
+  .mm-fullscreen .chip-tray{flex:none; justify-content:center;}
 
   /* Echte Deutschlandkarte (Bundesländer) für "Wo liegt Bayern?" - Umrisse aus einer
      d-maps.com-Vorlage, jedes Bundesland eine eigene anklickbare/bedroppbare Fläche. */
@@ -835,25 +860,27 @@ const MIKRO_WORDSEARCH = {
 
 /* Tabelle "Bedeutung der Mikroorganismen": Spalten Natur/Mensch/Technik als feste Überschriften
    (fixed), darunter leere Zielfelder je Bereich - die Begriffe kommen als Chips von unten. Jede
-   Kachel hat eine EIGENE eindeutige id (nicht die Spalte), damit beim Lösen genau der gezogene
-   Begriff (nicht ein beliebiger aus der Spalte) in der Zelle erscheint. */
+   Kachel hat weiterhin eine EIGENE eindeutige id (damit pro Begriff ein eigener, korrekt
+   beschrifteter Chip entsteht), zusätzlich aber ein "group"-Feld (Spalte). Bei
+   matchBy:"group" (siehe exerciseSets) zählt beim Lösen nur noch die Spalte, NICHT die genaue
+   Zeile - ein Begriff darf also in jedes freie Feld seiner eigenen Spalte gezogen werden. */
 const MIKRO_TABELLE_TILES = [
   { id:"h-natur",   label:"Natur",   col:1, row:1, fixed:true },
   { id:"h-mensch",  label:"Mensch",  col:2, row:1, fixed:true },
   { id:"h-technik", label:"Technik", col:3, row:1, fixed:true },
 
-  { id:"natur-sauerstoff",  label:"Erzeugung von Sauerstoff", col:1, row:2 },
-  { id:"natur-zersetzung",  label:"Zersetzung im Boden",      col:1, row:3 },
+  { id:"natur-sauerstoff",  label:"Erzeugung von Sauerstoff", group:"natur",   col:1, row:2 },
+  { id:"natur-zersetzung",  label:"Zersetzung im Boden",      group:"natur",   col:1, row:3 },
 
-  { id:"mensch-erreger",     label:"Krankheitserreger",                                  col:2, row:2 },
-  { id:"mensch-schutz",      label:"Schutzbarriere auf der Haut und den Schleimhäuten",  col:2, row:3 },
-  { id:"mensch-verdauung",   label:"Verdauung im Darm",                                  col:2, row:4 },
+  { id:"mensch-erreger",     label:"Krankheitserreger",                                  group:"mensch",  col:2, row:2 },
+  { id:"mensch-schutz",      label:"Schutzbarriere auf der Haut und den Schleimhäuten",  group:"mensch",  col:2, row:3 },
+  { id:"mensch-verdauung",   label:"Verdauung im Darm",                                  group:"mensch",  col:2, row:4 },
 
-  { id:"technik-lebensmittel", label:"Lebensmittelproduktion", col:3, row:2 },
-  { id:"technik-arznei",       label:"Arzneimittelproduktion", col:3, row:3 },
-  { id:"technik-abwasser",     label:"Abwasserreinigung",      col:3, row:4 },
-  { id:"technik-biogas",       label:"Biogas",                 col:3, row:5 },
-  { id:"technik-bergbau",      label:"Bergbau",                col:3, row:6 },
+  { id:"technik-lebensmittel", label:"Lebensmittelproduktion", group:"technik", col:3, row:2 },
+  { id:"technik-arznei",       label:"Arzneimittelproduktion", group:"technik", col:3, row:3 },
+  { id:"technik-abwasser",     label:"Abwasserreinigung",      group:"technik", col:3, row:4 },
+  { id:"technik-biogas",       label:"Biogas",                 group:"technik", col:3, row:5 },
+  { id:"technik-bergbau",      label:"Bergbau",                group:"technik", col:3, row:6 },
 ];
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
@@ -1707,8 +1734,8 @@ const exerciseSets = {
         text: "Markiere die sieben Begriffe, die etwas mit der Bedeutung der Mikroorganismen zu tun haben – waagrecht oder senkrecht.",
         rows: MIKRO_WORDSEARCH.rows, cols: MIKRO_WORDSEARCH.cols, grid: MIKRO_WORDSEARCH.grid, words: MIKRO_WORDSEARCH.words,
         explain: "Kläranlage, Lebensmittel, Sauerstoff, Arznei, Biogas, Metalle und Destruenten – all das hat mit der Bedeutung der Mikroorganismen für Natur, Körper und Technik zu tun." },
-      { kind:"map-match",
-        text: "Ordne die Begriffe der passenden Spalte zu: Natur, Mensch oder Technik.",
+      { kind:"map-match", matchBy: "group",
+        text: "Ordne die Begriffe der passenden Spalte zu: Natur, Mensch oder Technik. Die Reihenfolge innerhalb einer Spalte spielt keine Rolle.",
         cols: 3, rows: 6, tiles: MIKRO_TABELLE_TILES,
         explain: "Gut gemacht! Übertrage die vollständige Tabelle mit der richtigen Lösung jetzt in dein Heft." }
     ]
@@ -2040,7 +2067,8 @@ function mmBoardHtml(q, revealAll){
     const iconHtml = t.icon ? `<span class="mm-icon">${t.icon}</span>` : "";
     const labelHtml = showLabel ? `<span class="mm-label">${highlightLabel(t.label, t.mark)}</span>` : "";
     const targetAttr = t.fixed ? "" : ` data-target="1"`;
-    return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-mark="${t.mark ? esc(t.mark) : ""}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
+    const groupAttr = t.group ? ` data-group="${esc(t.group)}"` : "";
+    return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-mark="${t.mark ? esc(t.mark) : ""}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr}${groupAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
   }).join("");
   return `<div class="mm-board" id="mmBoard" style="grid-template-columns:repeat(${q.cols},1fr); grid-template-rows:repeat(${q.rows},minmax(48px,1fr));">${cells}</div>`;
 }
@@ -2763,6 +2791,10 @@ window.__startExercise = function(slug){
     solved = false;
 
     let body = "";
+    /* Für die Vollbild-Kartenaufgaben (map-match, mapType de-states/de-nachbarn): body enthält
+       hier NUR die Karte, der Hinweistext + die Chip-Leiste kommen separat in mmTrayHtml - siehe
+       die host.innerHTML-Weiche weiter unten (.mm-fullscreen). */
+    let mmTrayHtml = "";
     if (q.kind === "numeric"){
       body = `
         <div class="numeric-row">
@@ -2796,14 +2828,16 @@ window.__startExercise = function(slug){
     } else if (q.kind === "map-match" && q.mapType === "de-states"){
       const chipList = shuffled(DE_STATES.map(s => ({ value:s.id, label:s.label })));
       const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
-      body = deMapHtml() + `
+      body = deMapHtml();
+      mmTrayHtml = `
         <p class="gap-hint">Tippe einen Bundesland-Namen an, halte ihn gedrückt und ziehe ihn auf die passende Fläche auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
     } else if (q.kind === "map-match" && q.mapType === "de-nachbarn"){
       const chipList = shuffled(NACHBAR_STATES.map(s => ({ value:s.id, label:s.label })));
       const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
-      body = nachbarnMapHtml() + `
+      body = nachbarnMapHtml();
+      mmTrayHtml = `
         <p class="gap-hint">Tippe einen Ländernamen an, halte ihn gedrückt und ziehe ihn auf die passende Fläche auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
@@ -2871,8 +2905,8 @@ window.__startExercise = function(slug){
         `<button type="button" class="ws-cell" data-r="${r}" data-c="${c}">${esc(ch)}</button>`
       ).join("")).join("");
       body = `
+        <p class="ws-instruction">👉 So geht's: Tippe den <strong>ersten</strong> und danach den <strong>letzten</strong> Buchstaben eines Begriffs an (waagrecht oder senkrecht) – dazwischen wird automatisch markiert.</p>
         <div class="ws-board" id="wsBoard" style="grid-template-columns:repeat(${q.cols},1fr);">${cellsHtml}</div>
-        <p class="gap-hint">Tippe den ersten und dann den letzten Buchstaben eines Begriffs an (waagrecht oder senkrecht).</p>
         <div class="ws-progress" id="wsProgress">0 von ${q.words.length} Begriffen gefunden</div>
         <div class="ws-found" id="wsFound"></div>
       `;
@@ -2895,6 +2929,26 @@ window.__startExercise = function(slug){
             <p class="cs-fs-hint">${esc(q.text)}</p>
           </div>
           ${body}
+          <div class="feedback" id="fb"></div>
+          <div class="qactions">
+            <button class="skip-btn" id="skipBtn">Überspringen</button>
+            <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+          </div>
+        </div>
+      `;
+    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn")){
+      /* Ebenfalls Vollbild (siehe .mm-fullscreen oben): die Karte bekommt per flex:1+min-height:0
+         nur den Platz, der nach Hinweistext und Chip-Leiste übrig bleibt, und schrumpft darin -
+         so bleiben Karte UND alle Chips immer gleichzeitig sichtbar, auch auf kleinen/niedrigen
+         Bildschirmen, wo das vorher nicht der Fall war (Chips konnten unerreichbar außerhalb des
+         sichtbaren Bereichs landen, weil man während des Ziehens nicht scrollen kann). */
+      host.innerHTML = `
+        <div class="mm-fullscreen">
+          <div class="mm-fs-top">
+            <p class="mm-fs-hint">${esc(q.text)}</p>
+          </div>
+          <div class="mm-fs-stage">${body}</div>
+          ${mmTrayHtml}
           <div class="feedback" id="fb"></div>
           <div class="qactions">
             <button class="skip-btn" id="skipBtn">Überspringen</button>
@@ -3195,6 +3249,16 @@ window.__startExercise = function(slug){
       const tray = document.getElementById("chipTray");
       let draggedChip = null, ghost = null;
 
+      /* matchBy:"group": Reihenfolge innerhalb einer Spalte/Gruppe spielt keine Rolle - ein Chip
+         darf auf JEDES freie Feld seiner eigenen Gruppe gezogen werden, nicht nur auf das eine,
+         vorher fest zugeordnete Feld. originGroupById übersetzt den Chip-Wert (= id der Kachel,
+         von der der Chip-Text stammt) in deren Gruppe, damit sich das mit der Zielkachel
+         vergleichen lässt. */
+      const originGroupById = {};
+      if (q.matchBy === "group"){
+        q.tiles.forEach(t => { if (t.group) originGroupById[t.id] = t.group; });
+      }
+
       function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
       function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
 
@@ -3236,9 +3300,18 @@ window.__startExercise = function(slug){
         const tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
         if (!tile || tile.classList.contains("correct")) return;
         attempts++;
-        if (tile.dataset.id === chip.dataset.value){
+        const isMatch = q.matchBy === "group"
+          ? !!tile.dataset.group && tile.dataset.group === originGroupById[chip.dataset.value]
+          : tile.dataset.id === chip.dataset.value;
+        if (isMatch){
           tile.classList.add("correct");
-          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
+          /* Bei Gruppen-Zuordnung landet der Chip evtl. auf einer ANDEREN Kachel als ursprünglich
+             vorgesehen - deshalb hier genau den gezogenen Chip-Text anzeigen, nicht die
+             vorbelegte dataset.label der Kachel. */
+          const labelHtml = q.matchBy === "group"
+            ? esc(chip.textContent)
+            : highlightLabel(tile.dataset.label, tile.dataset.mark);
+          tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${labelHtml}</span>`;
           chip.classList.add("used");
           checkComplete();
         } else {
