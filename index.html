@@ -132,6 +132,13 @@
   .crumbs{margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; font-size:14px; color:var(--ink-soft);}
   .crumbs a{color:var(--ink-soft); text-decoration:none;}
   .crumbs a:hover{color:var(--accent);}
+  .teacher-link{
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    background:var(--surface-2); color:var(--ink-soft); border:1px solid var(--border);
+    border-radius:999px; padding:6px 12px; font-size:13px; font-weight:700; flex:none;
+  }
+  .teacher-link[hidden]{display:none;}
+  .teacher-link:hover{color:var(--accent); border-color:var(--accent);}
   .backlink{
     display:inline-flex; align-items:center; gap:6px;
     color:var(--ink-soft); text-decoration:none; font-size:14px; font-weight:600;
@@ -636,6 +643,7 @@
     <span class="brand-name">Lernportal Klasse 8</span>
   </a>
   <div class="crumbs" id="crumbs"></div>
+  <a class="teacher-link no-print" id="teacherLink" href="https://claude.ai/artifact/3oa5eHWvp9zo88Rpf2VFdh" target="_blank" rel="noopener" hidden title="Nur für dich sichtbar – öffnet in neuem Tab">📋 Strichliste</a>
 </div>
 
 <div class="shell" id="app"></div>
@@ -650,7 +658,7 @@
       <button type="submit" class="gate-btn" id="gateSubmitBtn">Bestätigen</button>
     </form>
     <div class="gate-error" id="gateError">Code nicht erkannt. Bitte nochmal prüfen.</div>
-    <p class="gate-hint">Dieser Zugangscode ist nur einmal gültig. Danach benötigst du bei Bedarf einen neuen Code von deiner Lehrkraft.</p>
+    <p class="gate-hint">Dieser Zugangscode kann beliebig oft verwendet werden – auch auf mehreren Geräten. Bei Fragen wende dich an deine Lehrkraft.</p>
   </div>
 </div>
 
@@ -1408,23 +1416,23 @@ const exerciseSets = {
     questions: [
       { kind:"text", bigBadge:"ableiten", strict:true,
         text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
-        accept: ["Ableiten"],
+        accept: ["Ableiten", "ableiten", "Ableitungsprobe", "Ableitungsstrategie"],
         explain: "Richtig – das ist die Ableitungsstrategie: ein verwandtes Wort aus der gleichen Wortfamilie finden." },
       { kind:"text", bigBadge:"schwingen", strict:true,
         text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
-        accept: ["Schwingen"],
+        accept: ["Schwingen", "Silbenstrategie", "Silbenprobe"],
         explain: "Richtig – das ist die Schwing- bzw. Silbenstrategie: das Wort in Silben klatschen/schwingen." },
       { kind:"text", bigBadge:"merken", strict:true,
         text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
-        accept: ["Merken"],
+        accept: ["Merken", "Merkenstrategie"],
         explain: "Richtig – das ist die Merkstrategie: manche Wörter musst du dir einfach einprägen." },
-      { kind:"text", bigBadge:"grossklein", strict:true,
+      { kind:"text", bigBadge:"grossklein",
         text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
-        accept: ["Groß- oder Kleinschreibung"],
+        accept: ["Groß- oder Kleinschreibung", "Groß-/Kleinschreibung", "Groß- und Kleinschreibung"],
         explain: "Richtig – hier geht es um die Groß- oder Kleinschreibung." },
       { kind:"text", bigBadge:"verlaengern", strict:true,
         text: "Welche Strategie zeigt dieses Symbol? Achte auf die richtige Schreibweise – nur eine korrekt geschriebene Antwort zählt.", placeholder: "Strategie eintippen",
-        accept: ["Verlängern"],
+        accept: ["Verlängern", "verlängern", "Verlängerungsstrategie", "Verlängerungsprobe"],
         explain: "Richtig – das ist die Verlängerungsstrategie: das Wort verlängern, um den Endlaut sicher zu hören." },
       { kind:"map-match", chipStyle:"strategy",
         text: "Ziehe jedes Symbol auf das Wort, zu dem die passende Strategie gehört. Fett markiert ist die Stelle im Wort, um die es geht.",
@@ -1666,7 +1674,7 @@ const exerciseSets = {
     subject: "naturtechnik",
     chapterSlug: "mikroorganismen",
     duration: "ca. 10–14 Minuten",
-    locked: true,
+    locked: false,
     questions: [
       { kind:"mc",
         text: "Was versteht man unter Mikroorganismen?",
@@ -1728,7 +1736,7 @@ const exerciseSets = {
     subject: "naturtechnik",
     chapterSlug: "mikroorganismen",
     duration: "ca. 10–14 Minuten",
-    locked: true,
+    locked: false,
     questions: [
       { kind:"wordsearch",
         text: "Markiere die sieben Begriffe, die etwas mit der Bedeutung der Mikroorganismen zu tun haben – waagrecht oder senkrecht.",
@@ -1927,6 +1935,7 @@ function exerciseProgress(slug){
 function isLocked(set, slug){
   if (!set) return false;
   if (hasPreviewAccess()) return false;
+  if (!set.locked) return false; /* im Code freigeschaltet -> immer frei, egal was ein (evtl. veralteter/nicht erreichbarer) Fernstatus zwischenspeichert */
   if (slug && remoteLocksCache && Object.prototype.hasOwnProperty.call(remoteLocksCache, slug)){
     return !!remoteLocksCache[slug];
   }
@@ -3446,7 +3455,7 @@ window.__startExercise = function(slug){
       }
       board.querySelectorAll(".ws-cell").forEach(btn=>{
         btn.addEventListener("click", ()=>{
-          if (solved || btn.classList.contains("found")) return;
+          if (solved) return;
           const r = Number(btn.dataset.r), c = Number(btn.dataset.c);
           if (!start){
             start = { r, c, btn };
@@ -3791,6 +3800,7 @@ function reportResult(exerciseSlug, questionIndex, status, attempts){
 function showApp(){
   document.getElementById("gateOverlay").hidden = true;
   document.getElementById("topbar").style.visibility = "visible";
+  document.getElementById("teacherLink").hidden = !hasPreviewAccess();
   fetchRemoteLocks();
   fetchRemoteProgress(getMyCode(), function(data){
     if (applyRemoteProgress(data)) route();
