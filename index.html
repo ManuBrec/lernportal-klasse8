@@ -12,7 +12,6 @@
 <meta name="apple-mobile-web-app-title" content="Lernportal">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#3454D1">
-<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <style>
   :root{
     --bg: #EEF3F6;
@@ -225,6 +224,7 @@
   .tag-strategie{background:var(--warm-soft); color:var(--warm);}
   .tag-werkzeug{background:var(--surface-2); color:var(--ink-soft);}
   .tag-abschluss{background:var(--success-soft); color:var(--success);}
+  .tag-loesung{background:var(--success-soft); color:var(--success);}
   .topic-name{flex:1;}
   .topic-page{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);}
   .practice-btn{
@@ -244,10 +244,6 @@
     font-size:14.5px; color:var(--ink);
   }
   .callout strong{color:var(--accent);}
-  .worksheet-link{
-    display:inline-flex; align-items:center; gap:8px; margin-top:14px;
-    font-weight:700; font-size:14.5px; text-decoration:none; color:var(--accent);
-  }
 
   /* Exercise */
   .progress-track{height:6px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin:20px 0 26px;}
@@ -607,13 +603,6 @@
   .task-table .tt-rowlabel{background:var(--surface-2); text-align:left; font-weight:700; white-space:nowrap;}
   .task-table td{font-family:var(--font-mono); min-width:56px;}
   .task-table td.tt-solved{color:var(--success); font-weight:700; background:var(--success-soft);}
-  .qr-block{
-    margin-top:26px; padding-top:22px; border-top:1px solid var(--border);
-    display:flex; align-items:center; gap:18px; flex-wrap:wrap;
-  }
-  .qr-block svg{width:112px; height:112px; border-radius:8px; background:#fff; padding:8px; flex:none;}
-  .qr-caption{font-size:13.5px; color:var(--ink-soft); max-width:38ch;}
-  .qr-caption code{background:var(--surface-2); padding:1px 6px; border-radius:5px; font-family:var(--font-mono); font-size:12px;}
 
   @media print{
     .topbar, .backlink, .no-print{display:none !important;}
@@ -1814,13 +1803,14 @@ const exerciseSets = {
   }
 };
 
-/* Arbeitsblätter mit Tabellen-Aufgaben: "given" = leeres Feld auf dem Arbeitsblatt ("" = auszufüllen),
-   "solved" = vollständige Lösung (auf der Lösungsseite werden die vorher leeren Felder hervorgehoben). */
-const worksheets = {
+/* Lösungen zur Selbstkontrolle (Papier-Arbeitsblatt "Grundwerte, Prozentsätze und Prozentwerte
+   berechnen", Niveau 1 + 2) - nur die fertige Lösung wird angezeigt, keine leere Arbeitsblatt-Seite
+   mehr. "given" = auf dem Papier-Arbeitsblatt leeres Feld ("" = dort auszufüllen), "solved" =
+   vollständige Lösung; die vorher leeren Felder werden auf der Lösungsseite farblich hervorgehoben. */
+const solutionSheets = {
   "ab-prozent-grundwerte-niveau1": {
     title: "Grundwerte, Prozentsätze und Prozentwerte berechnen (Niveau 1)",
     chapterSlug: "prozentrechnung",
-    solutionSlug: "ab-prozent-grundwerte-niveau1",
     tables: [
       {
         intro: "Berechne die fehlenden Werte.",
@@ -1870,7 +1860,6 @@ const worksheets = {
   "ab-prozent-grundwerte-niveau2": {
     title: "Grundwerte, Prozentsätze und Prozentwerte berechnen (Niveau 2)",
     chapterSlug: "prozentrechnung",
-    solutionSlug: "ab-prozent-grundwerte-niveau2",
     tables: [
       {
         intro: "Berechne die fehlenden Werte.",
@@ -2027,23 +2016,6 @@ function tableTaskHtml(t, num, showSolved){
       </table></div>
     </div>
   `;
-}
-
-function qrSvg(text, size){
-  const qr = window.qrcode(0, "M");
-  qr.addData(text);
-  qr.make();
-  const n = qr.getModuleCount();
-  const cell = size / n;
-  let rects = "";
-  for (let r=0; r<n; r++){
-    for (let c=0; c<n; c++){
-      if (qr.isDark(r,c)){
-        rects += `<rect x="${(c*cell).toFixed(2)}" y="${(r*cell).toFixed(2)}" width="${(cell+0.5).toFixed(2)}" height="${(cell+0.5).toFixed(2)}" fill="#12181d"/>`;
-      }
-    }
-  }
-  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR-Code">${rects}</svg>`;
 }
 
 function polarPoint(cx,cy,r,angleDeg){
@@ -2316,11 +2288,20 @@ function viewChapter(slug){
       </div>
       <div class="section-label">Themen in diesem Kapitel</div>
       <div class="topic-group">${rows}</div>
-      <div class="callout">
-        <strong>Arbeitsblatt bekommen?</strong> Die Lösung findest du nicht hier im Menü, sondern nur, wenn du den QR-Code auf deinem Blatt scannst.
-        <br><a class="worksheet-link" href="#/arbeitsblatt/ab-prozent-grundwerte-niveau1">📄 Arbeitsblatt Niveau 1 ansehen (zum Ausdrucken)</a>
-        <br><a class="worksheet-link" href="#/arbeitsblatt/ab-prozent-grundwerte-niveau2">📄 Arbeitsblatt Niveau 2 ansehen (zum Ausdrucken)</a>
+      <div class="section-label">📁 Ordner: Arbeitsblätter</div>
+      <div class="topic-group">
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Grundwerte, Prozentsätze und Prozentwerte berechnen – Niveau 1</span>
+          <a class="practice-btn" href="#/loesung/ab-prozent-grundwerte-niveau1">Ansehen</a>
+        </div>
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Grundwerte, Prozentsätze und Prozentwerte berechnen – Niveau 2</span>
+          <a class="practice-btn" href="#/loesung/ab-prozent-grundwerte-niveau2">Ansehen</a>
+        </div>
       </div>
+      <p class="result-hint" style="margin-top:10px;">Hier findest du direkt die Lösungen zu den beiden ausgeteilten Arbeitsblättern.</p>
     `;
   }
 
@@ -2705,42 +2686,19 @@ function viewExercise(slug){
   `;
 }
 
-function viewWorksheet(slug){
-  const ws = worksheets[slug];
+function viewSolution(slug){
+  const ws = solutionSheets[slug];
   if (!ws) return viewNotFound();
   const chap = chapters.find(c => c.slug === ws.chapterSlug);
-  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+chap.slug}, {label:"Arbeitsblatt", href:"#/arbeitsblatt/"+slug}]);
-
-  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, false)).join("");
-
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+ws.chapterSlug}, {label:"Lösung", href:"#/loesung/"+slug}]);
+  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, true)).join("");
   return h`
     <a class="backlink no-print" href="#/mathe/${ws.chapterSlug}">← Zurück zum Kapitel</a>
     <div class="doc-card">
       <div class="doc-head">
         <div>
-          <h2>${esc(ws.title)}</h2>
-          <div class="doc-sub">Name: ____________________  ·  Klasse 8</div>
-        </div>
-      </div>
-      ${tasks}
-      <div class="qr-block">
-        <div id="qrHost"></div>
-        <div class="qr-caption">Lösung per Scan: QR-Code mit dem Tablet oder Handy scannen. Der Code führt direkt zur Lösungsseite – ohne Umweg über das Menü.</div>
-      </div>
-    </div>
-  `;
-}
-
-function viewSolution(slug){
-  const ws = Object.values(worksheets).find(w => w.solutionSlug === slug);
-  if (!ws) return viewNotFound();
-  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, true)).join("");
-  return h`
-    <div class="doc-card">
-      <div class="doc-head">
-        <div>
           <h2>Lösung · ${esc(ws.title)}</h2>
-          <div class="doc-sub">Nur über den QR-Code auf dem Arbeitsblatt erreichbar</div>
+          <div class="doc-sub">Vergleiche deine Antworten mit dieser Lösung.</div>
         </div>
       </div>
       ${tasks}
@@ -3742,12 +3700,6 @@ window.__startExercise = function(slug){
   if (state.q.every(x => x.status !== "open")) renderResult(); else renderQuestion();
 };
 
-window.__renderQr = function(text){
-  const host = document.getElementById("qrHost");
-  if (!host || !window.qrcode) return;
-  host.innerHTML = qrSvg(text, 200);
-};
-
 /* ---------- Router ---------- */
 function route(){
   const hash = location.hash.replace(/^#/, "") || "/";
@@ -3776,8 +3728,6 @@ function route(){
     html = viewNaturtechnikChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
-  } else if (parts[0] === "arbeitsblatt" && parts.length === 2){
-    html = viewWorksheet(parts[1]);
   } else if (parts[0] === "loesung" && parts.length === 2){
     html = viewSolution(parts[1]);
   } else {
@@ -3788,11 +3738,6 @@ function route(){
 
   if (parts[0] === "uebung" && parts.length === 2 && exerciseSets[parts[1]] && !isLocked(exerciseSets[parts[1]], parts[1])){
     window.__startExercise(parts[1]);
-  }
-  if (parts[0] === "arbeitsblatt" && parts.length === 2 && worksheets[parts[1]]){
-    const ws = worksheets[parts[1]];
-    const solutionUrl = location.href.split("#")[0] + "#/loesung/" + ws.solutionSlug;
-    window.__renderQr(solutionUrl);
   }
 }
 /* ---------- Zugangscode-Sperre ----------
