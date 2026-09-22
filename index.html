@@ -310,8 +310,10 @@
   .legend{display:flex; flex-direction:column; gap:6px;}
   .legend-caption{font-size:12.5px; color:var(--ink-faint); margin-bottom:4px; max-width:24ch;}
   .legend-row{display:flex; align-items:center; gap:8px; font-size:14.5px;}
-  .legend-dot{width:11px; height:11px; border-radius:3px; flex:none;}
+  .legend-dot{width:11px; height:11px; border-radius:3px; flex:none; border:1px solid rgba(0,0,0,.15);}
   .legend-pct{margin-left:auto; color:var(--ink-soft); padding-left:14px;}
+  .legend-icon{width:18px; text-align:center; flex:none; font-size:15px;}
+  .legend-block{margin-bottom:20px;}
   .numeric-row{display:flex; gap:10px; flex-wrap:wrap;}
   .numeric-row.correct .numeric-input{border-color:var(--success); background:var(--success-soft); color:var(--success);}
   .numeric-row.wrong .numeric-input{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
@@ -719,8 +721,28 @@ const geographieChapters = [
 const landwirtschaftTopics = [
   { tag:"lernen", label:"Wo liegt Bayern? – Die Bundesländer", practice:"bundeslaender-orientierung" },
   { tag:"lernen", label:"Deutschlands Nachbarländer", practice:"nachbarlaender-zuordnen" },
+  { tag:"lernen", label:"Kartenlegende verstehen", page:198, practice:"gpg-landwirtschaft-kartenlegende" },
+  { tag:"lernen", label:"Regionen zuordnen", page:198, practice:"gpg-landwirtschaft-regionen" },
+  { tag:"abschluss", label:"Aufgabe 3: Böden im Vergleich", page:198, practice:"gpg-landwirtschaft-aufgabe3" },
   { tag:"lernen", label:"Begriffe vom Bauernhof – Suchsel", practice:"bauernhof-suchsel" },
   { tag:"lernen", label:"Wie sieht ein Arbeitstag auf dem Bauernhof aus? – Lückentext", practice:"bauernhof-luekentext" },
+  /* Vorstrukturierung der restlichen Buchkapitel-Themen (S. 200-219) - nur Titel/Seitenzahlen aus
+     dem Inhaltsverzeichnis bzw. dem "Wegweiser" auf S. 199 übernommen, noch OHNE eigene Übung
+     ("practice" bewusst weggelassen) - erscheinen bis dahin als reine Themenpunkte ohne
+     "Jetzt üben"-Knopf, genau wie z.B. "Die Prozentrechnung anwenden" bei Mathe. */
+  { tag:"lernen", label:"Grundlagen der Landwirtschaft", page:200 },
+  { tag:"lernen", label:"Der Gäuboden", page:202 },
+  { tag:"lernen", label:"Das Knoblauchsland", page:204 },
+  { tag:"lernen", label:"Konventionelle Landwirtschaft", page:206 },
+  { tag:"lernen", label:"Ökologische Landwirtschaft", page:208 },
+  { tag:"lernen", label:"Wahlseite: Landwirtschaftliche Maschinen", page:210 },
+  { tag:"lernen", label:"Wahlseite: Erntehelfer berichten", page:211 },
+  { tag:"lernen", label:"Wahlseite: Weinbau", page:212 },
+  { tag:"lernen", label:"Wahlseite: Verbraucherschutz", page:213 },
+  { tag:"strategie", label:"Methode: Erkundung", page:214 },
+  { tag:"lernen", label:"Brauchtum in Bayern", page:216 },
+  { tag:"abschluss", label:"GPG aktiv", page:218 },
+  { tag:"abschluss", label:"Teste dich!", page:219 },
 ];
 
 const gpgFolders = [
@@ -741,11 +763,37 @@ const naturtechnikMikroorganismenTopics = [
   { tag:"lernen", label:"Die Bedeutung der Mikroorganismen", practice:"nt-mikroorganismen-bedeutung" },
 ];
 
+/* Informatik: neues Fach, Kapitel wie im Inhaltsverzeichnis des Schulbuchs (Informatik Mittelschule
+   Bayern 8, C.C.Buchner). Kapitel 1 "Informationssysteme und Datenschutz" ist gerade dran, die
+   Unterkapitel 1.1-1.11 sind die Themenliste (nur Titel/Struktur aus dem Inhaltsverzeichnis, keine
+   Aufgaben/Texte übernommen). 1.1 "Vorwissen: Kommunikationssysteme" ist als erstes mit einer
+   eigenen Übung befüllt; die restlichen Unterkapitel erscheinen bis dahin ohne "Jetzt üben"-Knopf. */
+const informatikChapters = [
+  { slug:"informationssysteme-datenschutz", nr:1, title:"Informationssysteme und Datenschutz", status:"aktuell" },
+  { slug:"tabellenkalkulation", nr:2, title:"Tabellenkalkulation", status:"geplant" },
+  { slug:"programmieren", nr:3, title:"Programmieren", status:"geplant" },
+];
+
+const informatikInformationssystemeTopics = [
+  { tag:"lernen", label:"Vorwissen: Kommunikationssysteme", page:6, practice:"informatik-kommunikationssysteme" },
+  { tag:"lernen", label:"Aufbau digitaler Informationssysteme", page:8 },
+  { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10 },
+  { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12 },
+  { tag:"lernen", label:"Datenschutz", page:14 },
+  { tag:"lernen", label:"Big Data", page:16 },
+  { tag:"lernen", label:"Projekt: Eine Anleitung für mebis erstellen", page:18 },
+  { tag:"abschluss", label:"Üben und Vertiefen", page:20 },
+  { tag:"abschluss", label:"M-Seite: Informationssysteme und Datenschutz", page:23 },
+  { tag:"abschluss", label:"Am Ziel", page:25 },
+  { tag:"abschluss", label:"Alles im Blick" },
+];
+
 const SUBJECT_META = {
   mathe:        { label:"Mathematik",                       homeHref:"#/mathe",        chapters: chapters },
   deutsch:      { label:"Deutsch",                          homeHref:"#/deutsch",      chapters: deutschChapters },
   gpg:          { label:"Geschichte, Politik, Geographie",  homeHref:"#/gpg",          folders: gpgFolders },
   naturtechnik: { label:"Natur und Technik",                homeHref:"#/naturtechnik", chapters: naturtechnikChapters },
+  informatik:   { label:"Informatik",                       homeHref:"#/informatik",   chapters: informatikChapters },
 };
 
 const prozentTopics = [
@@ -807,6 +855,46 @@ const NACHBAR_STATES = [
 ];
 
 const NACHBAR_GERMANY = { label:"Deutschland", cx:303.1, cy:389.6, parts:["209.5,89.9 210.9,84.2 207.4,86.2 204.6,86.9 205.4,89.5", "192.4,75.2 190.8,71.3 188.9,74.4 191.1,78.8 193.1,78.0", "201.1,66.2 195.3,66.8 194.4,70.2 197.4,72.1 203.9,72.0 204.5,67.6", "187.9,65.6 189.1,50.3 193.9,38.5 195.2,38.0 194.0,39.2 195.6,41.1 191.7,45.5 192.1,51.3 194.3,53.5 205.9,53.8 195.1,56.4 189.8,54.5", "342.4,98.5 341.7,95.1 337.5,95.8 336.6,93.5 338.5,92.9 337.8,90.4 339.7,87.4 341.9,87.5 349.2,90.6 353.6,99.2 346.9,97.8 346.2,99.2", "466.9,78.3 469.6,73.0 458.3,76.5 461.3,77.0 460.1,82.7 461.9,83.7 465.8,79.7 466.9,83.0 470.5,85.0 473.4,83.4 468.2,82.1", "477.3,94.3 479.7,99.4 482.8,99.9 486.2,104.0 485.1,110.5 481.8,109.7 484.2,107.1 481.5,103.3 480.1,105.5 478.2,104.2 473.6,105.0 466.1,111.2 465.5,113.6 468.6,113.4 467.5,116.1 463.7,114.2 464.1,111.9 461.0,112.7 456.2,109.3 454.3,109.7 455.0,107.5 452.5,107.6 453.4,102.7 459.5,101.8 459.4,98.6 455.1,96.1 457.1,94.2 460.5,92.4 457.9,89.0 455.2,88.8 455.0,85.7 460.2,85.4 462.2,88.6 462.3,85.0 464.6,83.6 464.8,87.9 468.4,87.6 470.1,92.6 472.8,91.6 472.7,97.1 475.6,97.3 476.2,93.3 473.7,91.0 473.2,85.1 477.1,82.1 481.5,82.6 483.2,85.8 477.8,91.6", "493.4,132.5 488.1,135.1 490.1,129.2 487.3,122.0 489.5,121.2 492.9,126.6 499.0,131.4 495.8,131.6 495.8,134.9 493.0,137.2 494.7,132.2", "513.3,152.0 510.1,149.1 503.5,148.9 499.2,151.1 497.6,149.2 494.5,151.5 491.0,150.1 495.3,147.9 497.1,145.4 495.6,138.3 498.1,138.3 498.2,142.0 498.7,142.9 499.3,142.0 500.0,141.1 502.6,142.1 503.0,136.4 500.6,134.9 499.9,131.5 501.0,131.8 509.4,140.4 510.7,143.3 512.9,143.7 510.1,145.7 512.0,147.0", "206.8,51.1 212.9,52.8 214.1,51.2 217.1,51.1 219.0,52.9 222.0,51.8 236.4,55.3 239.7,57.0 242.6,61.4 246.0,61.4 249.2,57.9 250.7,62.3 259.7,55.1 259.7,58.0 269.9,62.0 273.7,65.4 276.7,65.0 276.5,62.2 277.7,61.8 282.4,71.3 278.8,73.4 276.5,77.8 267.0,86.4 257.6,88.5 258.1,90.5 261.8,88.9 266.0,90.3 268.0,86.3 276.2,79.4 279.6,74.0 282.4,73.7 283.5,82.6 282.5,86.8 276.1,92.4 270.4,92.1 275.8,94.4 285.6,91.4 291.1,92.5 292.3,94.6 290.6,96.9 292.2,98.8 289.6,103.2 290.7,106.3 294.1,99.6 299.4,95.9 314.9,103.1 321.8,108.0 325.0,107.8 331.6,102.4 343.1,100.6 340.3,104.6 341.6,118.7 330.1,128.9 326.1,127.1 323.4,132.5 323.7,135.2 328.8,141.2 339.7,136.5 345.5,136.0 350.0,138.5 352.1,143.6 355.2,141.3 361.5,145.9 364.4,136.6 369.8,130.3 370.1,126.4 373.9,123.4 385.1,124.0 385.4,122.8 393.8,120.5 395.7,121.4 396.6,126.2 400.0,116.9 409.6,109.0 419.1,91.9 423.5,95.0 441.4,96.3 434.8,98.1 430.3,96.9 427.5,98.4 425.5,97.6 422.3,100.6 414.8,102.2 411.3,108.8 412.4,113.2 416.1,114.0 414.3,111.4 418.2,105.9 428.2,99.2 429.5,98.8 431.3,101.6 434.1,101.7 436.4,104.2 438.7,103.3 441.7,98.1 447.0,96.8 447.1,100.1 450.4,102.1 448.7,109.7 446.6,110.4 447.2,112.5 452.2,110.5 457.0,114.1 461.3,115.0 463.8,121.5 467.4,121.6 467.0,123.2 472.3,129.3 473.9,125.6 484.4,121.7 489.4,128.6 487.2,135.8 491.4,138.6 495.2,143.9 490.4,149.0 490.5,151.8 499.1,158.5 506.4,161.3 511.1,161.4 514.3,159.5 515.9,160.7 513.4,164.9 515.4,165.0 523.1,202.8 525.2,204.8 520.6,211.5 521.4,216.4 519.7,223.7 508.9,232.5 509.2,239.0 507.4,243.4 520.3,252.0 526.0,259.6 532.5,263.6 535.4,267.3 533.8,271.2 534.3,275.8 530.8,280.1 529.9,283.6 532.2,293.1 539.5,297.5 537.6,308.5 541.7,313.5 538.8,326.5 533.2,334.5 541.4,348.9 542.4,353.5 539.5,357.0 540.4,359.5 552.0,365.4 553.4,367.9 553.6,376.1 557.3,384.5 554.1,399.3 544.1,421.9 540.1,421.8 534.5,418.6 535.7,412.4 531.0,413.1 532.8,407.9 528.6,404.9 528.1,402.8 527.2,404.4 523.4,404.7 520.8,402.9 515.8,402.4 515.1,407.3 518.5,408.0 517.5,410.0 522.3,411.6 522.0,415.0 514.8,415.9 505.1,423.0 499.3,422.7 498.1,424.7 495.5,424.8 495.1,428.6 492.2,430.2 486.8,429.7 484.0,431.2 481.8,430.1 480.2,431.7 476.8,431.9 474.3,437.6 471.0,440.8 466.2,437.1 466.4,439.8 463.6,440.9 463.1,443.1 459.3,442.5 457.0,449.4 453.1,448.8 447.7,451.4 447.4,454.8 444.4,457.4 436.1,453.9 429.9,457.9 419.1,459.6 418.1,462.8 413.5,465.3 413.3,467.7 410.3,469.8 408.9,477.7 407.0,477.3 405.8,471.1 402.5,469.6 401.0,465.9 397.8,466.2 398.7,469.4 396.4,471.0 402.0,476.2 402.8,483.4 414.9,493.1 417.0,493.1 418.4,495.2 417.3,497.4 421.1,499.7 418.4,505.8 417.3,505.7 416.6,510.4 413.1,513.8 415.7,517.6 419.9,519.5 420.0,524.4 422.7,527.3 423.6,531.6 426.2,532.7 427.5,541.1 431.9,543.1 434.3,548.0 439.3,549.4 440.0,547.6 444.1,548.7 455.1,562.9 455.2,565.1 457.5,567.0 461.6,567.0 467.1,572.7 468.0,578.3 473.3,581.9 473.9,579.5 478.0,579.8 482.7,586.6 486.3,586.7 490.1,594.6 492.0,595.6 489.5,600.3 491.0,602.3 490.8,608.8 489.8,612.5 486.7,613.4 486.9,615.6 485.1,617.1 480.3,613.3 476.5,613.1 473.5,611.0 470.7,614.4 468.8,628.1 462.9,634.0 449.1,637.3 444.2,641.8 440.0,642.7 434.1,649.3 432.9,648.8 432.2,652.6 437.8,658.3 439.1,662.4 442.6,664.6 446.1,671.1 441.0,681.7 442.4,683.1 448.4,683.1 451.5,688.6 448.3,693.9 448.0,701.3 446.2,702.3 443.2,701.3 434.5,694.6 435.4,690.1 433.3,686.4 428.6,685.2 423.9,686.5 422.2,689.2 419.1,689.7 415.2,684.0 405.0,685.5 405.3,680.7 400.2,684.1 402.1,688.1 401.7,691.9 391.7,690.3 383.2,691.9 381.9,693.3 370.3,692.9 367.5,699.2 361.4,698.8 358.3,700.9 357.7,702.0 359.7,704.4 355.2,703.7 351.0,706.6 348.2,705.1 340.4,708.4 335.5,707.8 332.8,701.7 329.2,701.0 329.5,699.3 331.6,698.5 330.7,697.5 321.3,699.3 320.3,696.5 315.9,694.8 312.4,697.1 307.7,696.3 307.6,693.2 305.7,693.0 305.3,699.1 307.3,705.1 300.6,715.2 293.0,718.3 291.1,717.4 294.3,709.9 291.8,709.2 287.2,711.0 285.7,706.9 286.8,703.9 281.4,700.8 280.0,696.5 273.6,696.8 271.7,695.7 271.3,692.6 266.3,698.1 259.9,698.3 242.2,687.4 235.7,687.4 230.5,685.0 221.1,687.4 219.2,685.9 219.6,683.0 217.1,681.8 215.4,682.3 216.1,685.5 212.4,684.2 211.4,680.9 212.2,678.0 208.2,678.7 204.9,675.3 202.5,677.7 198.9,678.7 195.5,686.0 196.5,687.8 200.8,688.2 206.0,686.4 205.4,691.9 200.8,689.3 198.1,691.9 199.0,693.3 191.7,694.6 183.9,690.3 177.1,695.1 168.5,696.2 166.8,693.4 164.5,693.1 160.4,695.7 153.6,696.7 152.3,695.8 154.2,693.6 154.0,691.5 150.2,693.2 150.0,690.6 146.0,684.6 147.0,675.4 151.4,661.3 149.2,656.1 149.5,650.2 155.8,634.7 158.3,632.4 157.5,628.1 161.5,617.4 161.7,610.9 163.5,607.0 169.2,601.7 170.4,597.6 177.2,593.7 180.6,584.5 184.3,580.0 176.7,577.5 169.4,572.7 166.5,573.6 161.5,571.9 153.4,572.6 151.3,570.3 147.7,569.5 145.0,564.0 141.2,561.6 133.7,566.6 128.8,567.0 123.0,564.4 121.3,567.4 117.0,560.4 109.9,558.6 109.3,564.3 105.5,564.9 103.1,562.9 102.5,559.2 100.5,558.5 98.9,553.3 95.6,551.0 93.7,547.2 95.6,547.5 95.9,546.3 92.3,540.6 87.5,538.0 83.1,538.0 83.1,529.1 86.7,524.2 86.8,520.8 91.9,516.4 91.6,509.4 86.2,508.5 82.5,505.6 81.0,506.5 80.5,504.0 77.3,502.8 71.9,494.7 69.6,486.0 73.7,470.9 78.2,469.9 80.9,465.3 84.8,465.2 81.8,459.9 83.5,455.1 81.8,451.1 75.4,450.1 72.9,445.6 77.9,439.5 72.4,438.7 72.4,436.0 69.5,431.1 65.0,430.9 63.7,425.2 61.7,423.4 64.6,419.9 67.9,418.7 66.8,413.0 64.0,411.9 63.3,407.6 58.1,407.9 55.7,402.3 58.2,400.9 60.7,402.8 62.8,399.2 72.5,393.2 71.1,391.4 72.5,389.5 68.0,391.7 66.8,387.8 72.7,377.3 75.1,375.4 75.9,371.9 74.6,371.6 75.1,365.0 73.8,360.5 68.4,353.3 69.5,349.2 65.0,347.5 65.4,343.7 61.0,341.6 62.1,338.2 60.3,334.4 66.9,331.0 71.6,332.1 71.5,330.3 68.7,327.9 70.3,326.8 85.0,334.2 85.6,330.1 89.8,331.4 99.5,326.8 103.4,327.8 108.6,320.9 100.8,314.4 101.0,312.2 104.7,308.0 109.9,307.5 117.6,298.1 121.0,297.6 119.4,293.8 121.5,283.9 117.5,277.7 116.6,277.2 114.8,279.7 104.4,277.5 101.2,275.4 100.7,269.4 104.1,268.6 102.3,265.7 101.9,260.2 120.2,261.8 121.9,245.4 129.0,230.5 127.6,215.8 129.7,211.4 128.9,206.2 132.8,199.7 130.4,198.5 119.8,197.9 118.0,196.5 120.0,183.6 125.2,180.1 123.5,175.4 129.7,169.1 134.9,166.6 143.8,167.6 165.6,163.4 173.4,163.8 174.5,169.3 177.1,169.8 180.9,177.7 180.0,181.5 175.3,183.1 175.4,184.7 177.8,188.0 180.9,188.0 185.6,192.2 188.6,189.7 189.8,185.5 189.7,181.3 184.8,180.3 187.7,172.7 189.5,172.3 196.7,177.8 201.7,178.8 202.8,180.3 202.0,181.4 203.3,180.3 199.4,165.3 204.0,151.8 208.3,147.2 213.5,151.4 218.6,152.7 229.4,153.1 231.8,150.2 242.3,150.2 249.5,161.3 253.8,164.8 255.2,170.1 258.2,174.1 265.3,178.1 276.4,180.9 275.8,178.8 266.1,177.2 260.4,173.8 255.2,162.9 250.5,159.7 247.0,151.8 244.0,148.9 238.5,147.0 228.7,146.0 226.4,146.9 222.1,142.4 218.2,133.6 227.1,134.6 227.3,127.6 225.5,123.7 219.7,125.2 217.1,119.2 218.6,113.2 223.0,111.8 225.1,107.3 221.6,109.7 219.3,108.2 216.7,110.0 210.8,109.8 210.0,112.0 206.5,109.5 205.2,105.5 209.7,103.0 209.7,102.0 205.9,102.3 207.4,100.8 215.8,97.7 220.9,98.4 228.5,91.8 226.1,87.6 222.2,93.3 217.1,92.9 218.6,88.7 226.0,87.0 222.0,84.0 220.8,80.0 218.3,80.3 216.2,72.8 214.2,72.9 213.9,70.8 211.0,68.4 211.2,65.4 206.3,56.8"] };
+
+/* Regionen-Karte für "Regionen zuordnen" (Landwirtschaft in Bayern): der Bayern-Umriss wird
+   1:1 aus DE_STATES ("bayern") wiederverwendet (dieselbe, schon vorhandene reale Umrisslinie),
+   darauf liegen sechs runde Markierungen an den ungefähren Lagen bekannter Städte/Gegenden -
+   keine exakten Wirtschaftsraum-Grenzen (die gibt es so auch im Schulbuch nicht), sondern eine
+   grobe Orientierung wie auf der Buchkarte S. 198. Die Namen/Zuordnungen sind eigene, überprüfte
+   geografische Fakten (nicht aus dem Buch übernommen). */
+const BAYERN_OUTLINE = DE_STATES.find(s => s.id === "bayern").parts;
+const BAYERN_MAP_VIEWBOX = "210 425 300 310";
+const BAYERN_REGIONEN = [
+  { id:"mainfranken",   label:"Mainfranken",   cx:279.9, cy:508.9 },
+  { id:"nuernberg",     label:"Nürnberg",      cx:342.4, cy:537.0 },
+  { id:"regensburg",    label:"Regensburg",    cx:415.0, cy:558.0 },
+  { id:"holledau",      label:"Holledau",      cx:362.0, cy:612.0 },
+  { id:"alpenvorland",  label:"Alpenvorland",  cx:399.6, cy:669.0 },
+  { id:"allgaeu",       label:"Allgäu",        cx:300.5, cy:679.6 },
+];
+/* Kleines n-Eck als Kreis-Annäherung, als <polygon> statt <circle> - so gelten dieselben
+   ".de-tile polygon"-CSS-Regeln (Füllfarbe/Rahmen bei richtig/falsch) ohne zusätzliches CSS. */
+function circlePolygon(cx, cy, r, sides){
+  sides = sides || 22;
+  const pts = [];
+  for (let k=0; k<sides; k++){
+    const angle = (k/sides) * 2 * Math.PI;
+    pts.push((cx + r*Math.cos(angle)).toFixed(1) + "," + (cy + r*Math.sin(angle)).toFixed(1));
+  }
+  return pts.join(" ");
+}
+/* Rendert die Bayern-Regionenkarte: derselbe #deMap/.de-tile-Aufbau wie deMapHtml()/
+   nachbarnMapHtml(), daher funktionieren Zuordnungs-Logik/CSS unverändert mit. Der Umriss selbst
+   ist "fixed" (kein Ziel, nur Orientierung), die sechs Regionen sind die eigentlichen Ziele. */
+function bayernMapHtml(){
+  const outlineParts = BAYERN_OUTLINE.map(p => `<polygon points="${p}"></polygon>`).join("");
+  const outlineGroup = `<g class="de-tile fixed" data-id="bayern-umriss">${outlineParts}</g>`;
+  const groups = BAYERN_REGIONEN.map(r => {
+    const poly = `<polygon points="${circlePolygon(r.cx, r.cy, 15)}"></polygon>`;
+    return `<g class="de-tile" data-id="${esc(r.id)}" data-label="${esc(r.label)}" data-cx="${r.cx}" data-cy="${(r.cy + 24).toFixed(1)}" data-target="1">${poly}</g>`;
+  }).join("");
+  return `<svg class="de-map" id="deMap" viewBox="${BAYERN_MAP_VIEWBOX}" xmlns="http://www.w3.org/2000/svg">${outlineGroup}${groups}</svg>`;
+}
 
 /* Eigene, einfache Strichzeichnungen der vier Mikroorganismen-Beispiele (keine Übernahme der
    Schulbuch-/Arbeitsblatt-Illustrationen) - schematisch wie ein Biologie-Piktogramm:
@@ -1694,6 +1782,149 @@ const exerciseSets = {
       }
     ]
   },
+  /* Zu Schulbuch-Seite 198 "Orientierung - Landwirtschaft in Bayern" (Menschen-Zeiten-Räume,
+     Cornelsen): nur Farben/Symbole der Legende und allgemeines geografisches Wissen genutzt,
+     keine Aufgaben/Texte aus dem Buch übernommen. Eigene Farbwerte/Icons, keine Bildübernahme. */
+  "gpg-landwirtschaft-kartenlegende": {
+    title: "Kartenlegende verstehen",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 8 Minuten",
+    locked: true,
+    questions: [
+      { kind:"mc", section:"Bodennutzung",
+        legend: { caption:"Legende: Bodennutzung", items:[
+          { color:"#3F7A4E", label:"Wald" },
+          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
+          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
+          { color:"#F0EAD6", label:"Heide und Odland" },
+          { color:"#E3AFA0", label:"Siedlungsgebiet" },
+        ]},
+        text: "Auf der Karte ist ein großes zusammenhängendes Waldgebiet eingezeichnet. Welche Farbe hat es laut Legende?",
+        options: ["Goldgelb", "Dunkelgrün", "Cremeweiß", "Altrosa"], correct:1,
+        explain: "Wald wird in der Legende dunkelgrün dargestellt." },
+      { kind:"mc", section:"Bodennutzung",
+        legend: { caption:"Legende: Bodennutzung", items:[
+          { color:"#3F7A4E", label:"Wald" },
+          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
+          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
+          { color:"#F0EAD6", label:"Heide und Odland" },
+          { color:"#E3AFA0", label:"Siedlungsgebiet" },
+        ]},
+        text: "Ein Landwirt sucht ein Feld mit besonders ertragreichen (guten) Böden. Welche Farbe muss die Fläche auf der Karte haben?",
+        options: ["Goldgelb", "Blassgelbgrün", "Altrosa", "Cremeweiß"], correct:0,
+        explain: "Goldgelb steht in der Legende für „Ackerland mit guten Böden“ – dort lohnt sich der Ackerbau besonders." },
+      { kind:"mc", section:"Bodennutzung",
+        legend: { caption:"Legende: Bodennutzung", items:[
+          { color:"#3F7A4E", label:"Wald" },
+          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
+          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
+          { color:"#F0EAD6", label:"Heide und Odland" },
+          { color:"#E3AFA0", label:"Siedlungsgebiet" },
+        ]},
+        text: "Eine Fläche ist blassgelbgrün gefärbt. Wofür steht diese Farbe in der Legende?",
+        options: ["Ackerland mit geringen Böden", "Siedlungsgebiet", "Heide und Odland", "Wald"], correct:0,
+        explain: "Blassgelbgrün steht für Ackerland mit geringen (weniger guten) Böden." },
+      { kind:"mc", section:"Bodennutzung",
+        legend: { caption:"Legende: Bodennutzung", items:[
+          { color:"#3F7A4E", label:"Wald" },
+          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
+          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
+          { color:"#F0EAD6", label:"Heide und Odland" },
+          { color:"#E3AFA0", label:"Siedlungsgebiet" },
+        ]},
+        text: "Welche Farbe zeigt in der Legende ein Siedlungsgebiet, also eine Stadt oder ein Dorf?",
+        options: ["Cremeweiß", "Altrosa", "Dunkelgrün", "Goldgelb"], correct:1,
+        explain: "Siedlungsgebiete sind in der Legende altrosa (rötlich) markiert." },
+      { kind:"mc", section:"Symbole",
+        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
+          { icon:"🍇", label:"Weinbau" },
+          { icon:"🐄", label:"Rinder" },
+          { icon:"🐖", label:"Schweine" },
+          { icon:"🐔", label:"Geflügel" },
+        ]},
+        text: "Zusätzlich zu den Farben gibt es auf der Karte kleine Symbole für einzelne Produkte. Welches Symbol steht für Weinbau?",
+        options: ["🍇", "🐄", "🥕", "🐔"], correct:0,
+        explain: "Die Trauben stehen für Weinbau." },
+      { kind:"mc", section:"Symbole",
+        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
+          { icon:"🍇", label:"Weinbau" },
+          { icon:"🐄", label:"Rinder" },
+          { icon:"🐖", label:"Schweine" },
+          { icon:"🐔", label:"Geflügel" },
+        ]},
+        text: "Du siehst auf der Karte bei einer Region das Symbol 🐄. Welche Landwirtschaft wird dort betrieben?",
+        options: ["Rinderhaltung", "Schweinehaltung", "Weinbau", "Hopfenanbau"], correct:0,
+        explain: "🐄 steht für Rinderhaltung (Milch- und Fleischrinder)." },
+      { kind:"mc", section:"Symbole",
+        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
+          { icon:"🌿", label:"Hopfen" },
+          { icon:"🍎", label:"Obst" },
+          { icon:"🥕", label:"Gemüse" },
+        ]},
+        text: "Ein Symbol auf der Karte zeigt 🌿. Hopfen ist wichtig für die Bierherstellung. Welches Produkt wird dort also angebaut?",
+        options: ["Hopfen", "Obst", "Gemüse", "Zuckerrüben"], correct:0,
+        explain: "🌿 steht in dieser Legende für Hopfen – wichtig für die Bierherstellung, besonders in der Holledau (Hallertau)." },
+      { kind:"text", section:"Fachbegriff",
+        text: "Wie nennt man die Übersicht am Kartenrand, die erklärt, was Farben und Symbole auf einer Karte bedeuten?",
+        placeholder:"Begriff eintippen", accept:["Legende","Kartenlegende","die Legende"],
+        explain: "Diese Übersicht heißt Legende (oder Kartenlegende) – ohne sie lässt sich eine thematische Karte nicht richtig lesen." }
+    ]
+  },
+  "gpg-landwirtschaft-regionen": {
+    title: "Regionen zuordnen",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 8 Minuten",
+    locked: true,
+    questions: [
+      {
+        section: "Landwirtschaftliche Regionen", kind: "map-match", mapType: "bayern-regionen",
+        text: "Bayern hat unterschiedliche landwirtschaftliche Regionen. Ziehe jeden Namen auf die ungefähre Lage auf der Karte. Du kannst dazu auch das Schulbuch (Karte S. 198) zur Hilfe nehmen.",
+        explain: "Mainfranken (Würzburg) ist bekannt für Weinbau, das Nürnberger Land für Gemüseanbau (Knoblauchsland), die Holledau (Hallertau) für Hopfen, das Regensburger Becken/der Gäuboden für besonders gute Ackerböden, und das Alpenvorland um Rosenheim sowie das Allgäu für Rinderhaltung und Grünland."
+      }
+    ]
+  },
+  "gpg-landwirtschaft-aufgabe3": {
+    title: "Aufgabe 3: Böden im Vergleich",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 10 Minuten",
+    locked: true,
+    questions: [
+      { kind:"mc", section:"Gute Böden",
+        text: "Wo in Bayern liegen laut Karte die Gebiete mit den BESTEN Ackerböden (goldgelb)?",
+        options: ["Vor allem im Gäuboden/Donautal bei Regensburg und in Teilen Mainfrankens", "Nur ganz im Süden in den Alpen", "Gleichmäßig über ganz Bayern verteilt", "Nur direkt in den großen Städten"], correct:0,
+        explain: "Besonders gute Böden gibt es im Gäuboden bei Regensburg/Straubing und im Donautal sowie in Teilen Mainfrankens – dort ist der Boden durch Löss und Flussablagerungen sehr fruchtbar." },
+      { kind:"mc", section:"Weniger gute Böden",
+        text: "Und wo liegen die Gebiete mit WENIGER guten Böden bzw. Heide und Odland?",
+        options: ["Vor allem im Bayerischen Wald, in der Rhön und in den Alpen", "Im Donautal", "Im Gäuboden", "Im Stadtgebiet von München"], correct:0,
+        explain: "In Mittelgebirgen wie dem Bayerischen Wald, der Rhön und im Hochgebirge sind die Böden flachgründiger und steiniger – dort wachsen eher Wald oder Grünland statt Ackerbau." },
+      { kind:"text", section:"Beispiel: gute Böden",
+        text: "Nenne eine bayerische Region, die für besonders gute Ackerböden bekannt ist.",
+        placeholder:"Region eintippen", accept:["Gäuboden","Regensburger Becken","Donautal","Mainfranken","Unterfranken"],
+        explain: "Zum Beispiel der Gäuboden bei Regensburg/Straubing, das Donautal oder Mainfranken – alles Gebiete mit sehr fruchtbaren Böden." },
+      { kind:"text", section:"Beispiel: geringwertige Böden",
+        text: "Nenne eine Region, in der wegen geringwertiger Böden vor allem Wald oder Grünland statt Ackerbau vorkommt.",
+        placeholder:"Region eintippen", accept:["Bayerischer Wald","Rhön","Allgäu","Alpen","Spessart"],
+        explain: "Zum Beispiel der Bayerische Wald, die Rhön, das Allgäu oder die Alpen – dort ist Ackerbau wegen Boden und Klima schwieriger." },
+      { kind:"mc", section:"Warum so fruchtbar?",
+        text: "Warum sind die Böden im Gäuboden/Donautal so fruchtbar?",
+        options: ["Weil Flüsse dort über lange Zeit feinen, nährstoffreichen Boden (Löss) abgelagert haben", "Weil dort besonders viel Regen fällt", "Weil das Gestein dort aus reinem Sand besteht", "Weil dort keine Landwirtschaft betrieben wird"], correct:0,
+        explain: "Löss- und Schwemmböden entlang der Flüsse sind sehr fein und nährstoffreich – ideal für Ackerbau." },
+      { kind:"mc", section:"Boden, Klima, Nutzung",
+        text: "In Mainfranken wird vor allem Weinbau betrieben. Was zeigt das über die Verbindung von Boden/Klima und Landnutzung?",
+        options: ["Die Landnutzung hängt stark von den natürlichen Bedingungen (Boden, Klima, Hanglage) einer Region ab", "Landwirte bauen überall in Bayern dasselbe an", "Die Landnutzung hat nichts mit dem Boden zu tun", "Weinbau ist in ganz Bayern gleich verbreitet"], correct:0,
+        explain: "Weinbau braucht warme, geschützte Hanglagen wie im Maintal – die Landnutzung passt sich also an Boden und Klima einer Region an." },
+      { kind:"text", section:"Allgäu",
+        text: "Welche Landnutzung passt zum Allgäu – eher Ackerbau (Getreide) oder eher Grünland/Rinderhaltung?",
+        placeholder:"Antwort eintippen", accept:["Grünland/Rinderhaltung","Grünland","Rinderhaltung","Viehzucht","Milchwirtschaft","Grünland und Rinderhaltung"],
+        explain: "Im Allgäu sorgen viel Niederschlag und saftige Wiesen für ideale Bedingungen für Grünland und Rinderhaltung (Milchwirtschaft) statt Ackerbau." }
+    ]
+  },
   "bauernhof-suchsel": {
     title: "Begriffe vom Bauernhof – Suchsel",
     subject: "gpg",
@@ -1799,6 +2030,78 @@ const exerciseSets = {
         text: "Ordne die Begriffe der passenden Spalte zu: Natur, Mensch oder Technik. Die Reihenfolge innerhalb einer Spalte spielt keine Rolle.",
         cols: 3, rows: 6, tiles: MIKRO_TABELLE_TILES,
         explain: "Gut gemacht! Übertrage die vollständige Tabelle mit der richtigen Lösung jetzt in dein Heft." }
+    ]
+  },
+  "informatik-kommunikationssysteme": {
+    title: "Vorwissen: Kommunikationssysteme",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { kind:"mc",
+        text: "Marek möchte sich bei einer Firma nach einem Praktikumsplatz erkundigen. Welcher Weg passt am besten?",
+        options: [
+          "Eine kurze SMS an die private Handynummer eines Mitarbeiters",
+          "Eine sachliche E-Mail an die offizielle Adresse der Firma",
+          "Ein Kommentar unter einem privaten Urlaubsfoto der Geschäftsführung",
+          "Eine anonyme Nachricht ohne Absenderangabe"
+        ], correct:1,
+        explain: "Für eine offizielle Anfrage wie eine Praktikumsbewerbung ist eine sachliche E-Mail an die offizielle Adresse der Firma der richtige Weg. Private Kanäle wirken unseriös und werden oft gar nicht erst gelesen." },
+      { kind:"mc",
+        text: "Was bedeutet die Abkürzung „CC\" bei einer E-Mail?",
+        options: [
+          "Die Kopie wird allen sichtbar mitgeschickt – jeder Empfänger sieht, wer im CC steht",
+          "Die Kopie wird versteckt mitgeschickt – niemand sieht, wer im CC steht",
+          "Die Mail wird automatisch gelöscht, sobald sie gelesen wurde",
+          "Der Anhang wird dadurch komprimiert verschickt"
+        ], correct:0,
+        explain: "CC steht für „Carbon Copy\": Die Person bekommt die Mail zur Information, und alle Empfänger sehen, wer im CC steht." },
+      { kind:"mc",
+        text: "Und was bedeutet „BCC\"?",
+        options: [
+          "Dasselbe wie CC, nur eine andere Abkürzung dafür",
+          "Eine Blindkopie – diese Empfänger sehen die anderen Empfänger nicht",
+          "Eine Kopie, die nur der Absender selbst sehen kann",
+          "Ein Kürzel für einen dringenden Betreff"
+        ], correct:1,
+        explain: "BCC steht für „Blind Carbon Copy\": Diese Empfänger bekommen die Mail zwar auch, aber weder sie noch die anderen Empfänger sehen, wer im BCC steht." },
+      { kind:"mc",
+        text: "Du bekommst eine E-Mail, die an dich und drei weitere Mitschüler gleichzeitig geschickt wurde. Was passiert, wenn du auf „Allen antworten\" statt nur „Antworten\" klickst?",
+        options: [
+          "Die Antwort geht nur an den Absender",
+          "Die Antwort geht an den Absender und an alle anderen Empfänger der ursprünglichen Mail",
+          "Die Antwort wird automatisch gelöscht",
+          "Es öffnet sich eine komplett neue, leere E-Mail"
+        ], correct:1,
+        explain: "„Antworten\" schickt deine Nachricht nur an den Absender zurück, „Allen antworten\" dagegen an den Absender und an alle, die die ursprüngliche Mail ebenfalls erhalten haben." },
+      { kind:"mc",
+        text: "Wodurch erkennt man eine typische Spam-Mail am ehesten?",
+        options: [
+          "Sie kommt von einem Mitschüler und enthält eine Hausaufgabe",
+          "Sie enthält unerwünschte Werbung oder Kaufangebote, oft massenhaft verschickt",
+          "Sie wurde von deiner Lehrkraft über mebis verschickt",
+          "Sie enthält ausschließlich Rechtschreibfehler"
+        ], correct:1,
+        explain: "Spam-Mails sind unerwünschte Massen-E-Mails, meist mit Werbe- oder Kaufangeboten. Viele werden automatisch aussortiert, manche landen aber trotzdem im Posteingang." },
+      { kind:"mc",
+        text: "Worin unterscheidet sich eine Phishing-Mail von einer gewöhnlichen Spam-Mail?",
+        options: [
+          "Phishing-Mails gibt es nur auf Englisch",
+          "Phishing-Mails wollen gezielt an persönliche Daten wie Passwörter oder Kontodaten gelangen",
+          "Phishing-Mails enthalten nie einen Link",
+          "Phishing-Mails kommen ausschließlich von Freunden"
+        ], correct:1,
+        explain: "Bei Phishing-Mails versuchen Betrüger bewusst, an persönliche Daten wie Passwörter oder Bankdaten zu gelangen – meist über gefälschte Links oder Formulare, die echten Seiten ähneln." },
+      { kind:"mc",
+        text: "Ein Mitschüler wird absichtlich aus der Klassen-Chatgruppe entfernt und bei Treffen konsequent ignoriert. Zu welcher Cyber-Mobbing-Kategorie passt das am besten?",
+        options: ["Bloßstellen", "Verleumden / Gerüchte verbreiten", "Ausgrenzen / Ignorieren", "Schikane"], correct:2,
+        explain: "Wer bewusst aus Gruppen ausgeschlossen und ignoriert wird, erlebt eine Form von Cyber-Mobbing, die man als „Ausgrenzen/Ignorieren\" bezeichnet – neben Schikane, Verleumden/Gerüchte verbreiten und Bloßstellen." },
+      { kind:"text",
+        text: "Wie nennt man die Regeln für einen respektvollen Umgang miteinander im Internet, z. B. in einem Klassenchat?",
+        placeholder: "Begriff eintippen",
+        accept: ["Netiquette"],
+        explain: "Richtig – die „Netiquette\" beschreibt Verhaltensregeln für einen respektvollen und wertschätzenden Umgang im Internet." }
     ]
   }
 };
@@ -2088,6 +2391,23 @@ function pieChartHtml(chart, size){
   `;
 }
 
+/* Zeigt einen kleinen Kartenlegende-Ausschnitt (Farbfläche und/oder Symbol + Bezeichnung) als
+   Merkhilfe bei Fragen zum Lesen einer Legende - nutzt dieselben CSS-Klassen wie die
+   Kreisdiagramm-Legende oben (nur ohne Prozentzahl). items: [{color?, icon?, label}]. */
+function legendKeyHtml(items, caption){
+  const rows = items.map(it => `
+    <div class="legend-row">${it.color ? `<span class="legend-dot" style="background:${it.color}"></span>` : ""}${it.icon ? `<span class="legend-icon">${it.icon}</span>` : ""}${esc(it.label)}</div>
+  `).join("");
+  return `
+    <div class="legend-block">
+      <div class="legend">
+        ${caption ? `<div class="legend-caption">${esc(caption)}</div>` : ""}
+        ${rows}
+      </div>
+    </div>
+  `;
+}
+
 /* Kachelraster für die Karten-/Bild-Zuordnungsübungen (Bundesländer, Nachbarländer, Bauernhof).
    revealAll=true zeigt alle Beschriftungen (nach "Überspringen"); sonst nur fixe Kacheln (z.B. "Deutschland"). */
 /* Markiert die entscheidende Buchstabenfolge in einem Wort fett (z.B. "äu" in "träumen"), damit
@@ -2214,6 +2534,13 @@ function viewHome(){
         <span>
           <span class="subject-title">Natur und Technik</span><br>
           <span class="subject-sub">NT · Klasse 8</span>
+        </span>
+      </a>
+      <a class="subject-card card active" href="#/informatik">
+        <span class="subject-icon">💻</span>
+        <span>
+          <span class="subject-title">Informatik</span><br>
+          <span class="subject-sub">Informatik Mittelschule Bayern 8 · Klasse 8</span>
         </span>
       </a>
     </div>
@@ -2518,6 +2845,89 @@ function viewNaturtechnikChapter(slug){
   `;
 }
 
+function viewInformatik(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Informatik", href:"#/informatik"}]);
+  const rows = informatikChapters.map(c => `
+    <a class="chapter-row linkable" href="#/informatik/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Informatik</span>
+      <h1>Informationssysteme &amp; Datenschutz.</h1>
+      <p>Übungen zu den Themen aus dem Unterricht. Weitere Kapitel folgen nach und nach.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewInformatikChapter(slug){
+  const c = informatikChapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Informatik", href:"#/informatik"}, {label:c.title, href:"#/informatik/"+slug}]);
+
+  if (slug === "informationssysteme-datenschutz"){
+    const rows = informatikInformationssystemeTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${pageHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/informatik">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Wie digitale Kommunikation, Informationssysteme und Datenschutz zusammenhängen. Weitere Themen folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/informatik">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">Kapitel ${c.nr}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieses Kapitel ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
+
 function viewGpg(){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Geschichte, Politik, Geographie", href:"#/gpg"}]);
   const rows = gpgFolders.map(f => `
@@ -2601,11 +3011,13 @@ function viewGpgChapter(folderSlug, slug){
       } else if (set){
         actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
       }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
       return `
         <div class="topic-row">
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
+          ${pageHtml}
           ${actionHtml}
         </div>
       `;
@@ -2761,7 +3173,8 @@ window.__startExercise = function(slug){
        nie versehentlich der Name der Strategie mit verraten wird. */
     const bigBadge = q.bigBadge ? `<div class="big-badge-row">${strategyBadgeHtml(q.bigBadge, true)}</div>` : "";
     const visual = q.shape ? `<div class="shape-block">${shapeSvg(q.shape)}</div>` : (q.chart ? pieChartHtml(q.chart) : "");
-    return `<div class="qmeta-row">${badge}<div class="qmeta">${esc(meta)}</div></div>${bigBadge}${visual}<div class="qtext">${esc(q.text)}</div>`;
+    const legendHtml = q.legend ? legendKeyHtml(q.legend.items, q.legend.caption) : "";
+    return `<div class="qmeta-row">${badge}<div class="qmeta">${esc(meta)}</div></div>${bigBadge}${visual}${legendHtml}<div class="qtext">${esc(q.text)}</div>`;
   }
 
   function tryAgainFeedback(msg){
@@ -2870,6 +3283,14 @@ window.__startExercise = function(slug){
       body = nachbarnMapHtml();
       mmTrayHtml = `
         <p class="gap-hint">Tippe einen Ländernamen an, halte ihn gedrückt und ziehe ihn auf die passende Fläche auf der Karte.</p>
+        <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+      `;
+    } else if (q.kind === "map-match" && q.mapType === "bayern-regionen"){
+      const chipList = shuffled(BAYERN_REGIONEN.map(s => ({ value:s.id, label:s.label })));
+      const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
+      body = bayernMapHtml();
+      mmTrayHtml = `
+        <p class="gap-hint">Tippe eine Region an, halte sie gedrückt und ziehe sie auf die ungefähre Lage auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
     } else if (q.kind === "map-match"){
@@ -2983,7 +3404,7 @@ window.__startExercise = function(slug){
           </div>
         </div>
       `;
-    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn")){
+    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen")){
       /* Ebenfalls Vollbild (siehe .mm-fullscreen oben): die Karte bekommt per flex:1+min-height:0
          nur den Platz, der nach Hinweistext und Chip-Leiste übrig bleibt, und schrumpft darin -
          so bleiben Karte UND alle Chips immer gleichzeitig sichtbar, auch auf kleinen/niedrigen
@@ -3228,15 +3649,29 @@ window.__startExercise = function(slug){
         }
         lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
-    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn")){
+    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen")){
       /* Gemeinsame Logik für beide echten Karten (Bundesländer und Nachbarländer) - beide rendern
          dieselbe DOM-Struktur (#deMap, .de-tile), daher reicht eine Bedingung für beide mapTypes. */
       const map = document.getElementById("deMap");
       const tray = document.getElementById("chipTray");
-      let draggedChip = null, ghost = null;
+      let draggedChip = null, ghost = null, draggedPointerId = null;
 
       function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
       function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+      /* Setzt den Drag-Zustand komplett zurück - genutzt sowohl bei einem normalen Loslassen als
+         auch bei "pointercancel" (siehe unten). WICHTIG: ohne pointercancel-Behandlung blieb
+         draggedChip auf iPads manchmal "hängen", wenn iOS eine Wischgeste als Scrollen statt als
+         Ziehen interpretiert hat (kein pointerup, nur pointercancel) - der nächste, völlig
+         unabhängige Tipp irgendwo auf der Seite wurde dann fälschlich als Loslassen DIESES Chips
+         gewertet und hat ihn auf ein zufälliges Bundesland gesetzt. Genau das hat dazu geführt,
+         dass beim Ziehen eines Namens auf einen Platz später "irgendwie" derselbe (oder ein
+         anderer) Name auf einer ganz anderen Fläche gelandet ist. */
+      function resetDrag(){
+        if (draggedChip) draggedChip.classList.remove("dragging");
+        draggedChip = null;
+        draggedPointerId = null;
+        endGhost();
+      }
 
       function checkComplete(){
         if (map.querySelectorAll('.de-tile[data-target]:not(.correct)').length === 0){
@@ -3248,9 +3683,12 @@ window.__startExercise = function(slug){
 
       tray.querySelectorAll(".mm-chip").forEach(chip=>{
         chip.addEventListener("pointerdown", (e)=>{
-          if (solved || chip.classList.contains("used")) return;
+          /* "|| draggedChip": solange schon ein Chip gezogen wird, wird ein zweiter, gleichzeitiger
+             Finger (z.B. beim Halten des iPads) ignoriert, statt den ersten Zug verwaist zurückzulassen. */
+          if (solved || chip.classList.contains("used") || draggedChip) return;
           e.preventDefault();
           draggedChip = chip;
+          draggedPointerId = e.pointerId;
           chip.classList.add("dragging");
           ghost = document.createElement("div");
           ghost.className = "mm-chip-ghost";
@@ -3261,14 +3699,12 @@ window.__startExercise = function(slug){
         });
       });
       window.addEventListener("pointermove", (e)=>{
-        if (draggedChip) moveGhost(e.clientX, e.clientY);
+        if (draggedChip && e.pointerId === draggedPointerId) moveGhost(e.clientX, e.clientY);
       });
       window.addEventListener("pointerup", (e)=>{
-        if (!draggedChip) return;
+        if (!draggedChip || e.pointerId !== draggedPointerId) return;
         const chip = draggedChip;
-        draggedChip = null;
-        endGhost();
-        chip.classList.remove("dragging");
+        resetDrag();
         if (solved) return;
         const el = document.elementFromPoint(e.clientX, e.clientY);
         const tile = el && el.closest ? el.closest(".de-tile[data-target]") : null;
@@ -3285,6 +3721,9 @@ window.__startExercise = function(slug){
           tryAgainFeedback();
         }
       });
+      window.addEventListener("pointercancel", (e)=>{
+        if (draggedChip && e.pointerId === draggedPointerId) resetDrag();
+      });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
         map.querySelectorAll('.de-tile[data-target]').forEach(tile=>{ tile.classList.add("correct"); revealTileLabel(tile); });
@@ -3294,7 +3733,7 @@ window.__startExercise = function(slug){
     } else if (q.kind === "map-match"){
       const board = document.getElementById("mmBoard");
       const tray = document.getElementById("chipTray");
-      let draggedChip = null, ghost = null;
+      let draggedChip = null, ghost = null, draggedPointerId = null;
 
       /* matchBy:"group": Reihenfolge innerhalb einer Spalte/Gruppe spielt keine Rolle - ein Chip
          darf auf JEDES freie Feld seiner eigenen Gruppe gezogen werden, nicht nur auf das eine,
@@ -3308,6 +3747,16 @@ window.__startExercise = function(slug){
 
       function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
       function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+      /* Siehe ausführlicher Kommentar bei der Bundesländer/Nachbarländer-Karte weiter oben: ohne
+         pointercancel-Behandlung und ohne pointerId-Prüfung kann ein abgebrochener Zug (iOS wertet
+         die Geste z.B. als Scrollen) dazu führen, dass ein späterer, unabhängiger Tipp den alten
+         Chip auf ein falsches Feld setzt. */
+      function resetDrag(){
+        if (draggedChip) draggedChip.classList.remove("dragging");
+        draggedChip = null;
+        draggedPointerId = null;
+        endGhost();
+      }
 
       function checkComplete(){
         if (board.querySelectorAll('.mm-tile[data-target]:not(.correct)').length === 0){
@@ -3319,9 +3768,10 @@ window.__startExercise = function(slug){
 
       tray.querySelectorAll(".mm-chip").forEach(chip=>{
         chip.addEventListener("pointerdown", (e)=>{
-          if (solved || chip.classList.contains("used")) return;
+          if (solved || chip.classList.contains("used") || draggedChip) return;
           e.preventDefault();
           draggedChip = chip;
+          draggedPointerId = e.pointerId;
           chip.classList.add("dragging");
           ghost = document.createElement("div");
           const isBadge = chip.classList.contains("mm-chip-badge");
@@ -3334,14 +3784,12 @@ window.__startExercise = function(slug){
         });
       });
       window.addEventListener("pointermove", (e)=>{
-        if (draggedChip) moveGhost(e.clientX, e.clientY);
+        if (draggedChip && e.pointerId === draggedPointerId) moveGhost(e.clientX, e.clientY);
       });
       window.addEventListener("pointerup", (e)=>{
-        if (!draggedChip) return;
+        if (!draggedChip || e.pointerId !== draggedPointerId) return;
         const chip = draggedChip;
-        draggedChip = null;
-        endGhost();
-        chip.classList.remove("dragging");
+        resetDrag();
         if (solved) return;
         const el = document.elementFromPoint(e.clientX, e.clientY);
         const tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
@@ -3367,6 +3815,9 @@ window.__startExercise = function(slug){
           tryAgainFeedback();
         }
       });
+      window.addEventListener("pointercancel", (e)=>{
+        if (draggedChip && e.pointerId === draggedPointerId) resetDrag();
+      });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
         board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
@@ -3381,7 +3832,7 @@ window.__startExercise = function(slug){
       const progressEl = document.getElementById("csProgress");
       const itemsTotal = q.items.length;
       let pos = 0;
-      let dragging = false, ghost = null;
+      let dragging = false, ghost = null, draggedPointerId = null;
 
       function renderWord(){
         const item = q.items[pos];
@@ -3393,11 +3844,20 @@ window.__startExercise = function(slug){
 
       function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
       function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+      /* Siehe Kommentar bei der Bundesländer-Karte weiter oben: pointercancel/pointerId-Prüfung
+         verhindert, dass ein abgebrochener Zug später einen unabhängigen Tipp als Loslassen wertet. */
+      function resetDrag(){
+        dragging = false;
+        draggedPointerId = null;
+        wordEl.classList.remove("dragging");
+        endGhost();
+      }
 
       wordEl.addEventListener("pointerdown", (e)=>{
-        if (solved) return;
+        if (solved || dragging) return;
         e.preventDefault();
         dragging = true;
+        draggedPointerId = e.pointerId;
         wordEl.classList.add("dragging");
         ghost = document.createElement("div");
         ghost.className = "cs-word-ghost";
@@ -3407,13 +3867,11 @@ window.__startExercise = function(slug){
         try { wordEl.setPointerCapture(e.pointerId); } catch(err){ /* ignorieren */ }
       });
       window.addEventListener("pointermove", (e)=>{
-        if (dragging) moveGhost(e.clientX, e.clientY);
+        if (dragging && e.pointerId === draggedPointerId) moveGhost(e.clientX, e.clientY);
       });
       window.addEventListener("pointerup", (e)=>{
-        if (!dragging) return;
-        dragging = false;
-        endGhost();
-        wordEl.classList.remove("dragging");
+        if (!dragging || e.pointerId !== draggedPointerId) return;
+        resetDrag();
         if (solved) return;
         const el = document.elementFromPoint(e.clientX, e.clientY);
         const circle = el && el.closest ? el.closest(".cs-circle") : null;
@@ -3438,6 +3896,9 @@ window.__startExercise = function(slug){
           setTimeout(()=>circle.classList.remove("wrong-flash"), 450);
           tryAgainFeedback();
         }
+      });
+      window.addEventListener("pointercancel", (e)=>{
+        if (dragging && e.pointerId === draggedPointerId) resetDrag();
       });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
@@ -3726,6 +4187,10 @@ function route(){
     html = viewNaturtechnik();
   } else if (parts[0] === "naturtechnik" && parts.length === 2){
     html = viewNaturtechnikChapter(parts[1]);
+  } else if (parts[0] === "informatik" && parts.length === 1){
+    html = viewInformatik();
+  } else if (parts[0] === "informatik" && parts.length === 2){
+    html = viewInformatikChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "loesung" && parts.length === 2){
