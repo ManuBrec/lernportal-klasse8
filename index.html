@@ -1799,31 +1799,33 @@ const exerciseSets = {
     /* Bewusst OHNE q.legend: Die Schüler sollen die Legende der Karte "Landwirtschaft in Bayern"
        auf S. 198 im echten Schulbuch nachschlagen, nicht eine Kopie davon am Bildschirm ablesen.
        Jede Frage verweist deshalb im Aufgabentext explizit auf S. 198; das Buch muss zum
-       Bearbeiten aufgeschlagen daliegen. Grautöne (keine bunten Farben - die Karte im
-       Buch ist eine Schwarzweiß-/Grauton-Karte) und Symbole anhand eines von Manuel
-       hochgeladenen Fotos der echten Buchseite geprüft/übernommen. Je 6 statt 4
-       Antwortmöglichkeiten, damit nicht mehr einfach geraten werden kann. */
+       Bearbeiten aufgeschlagen daliegen. Farben laut echtem Buch (Cornelsen digital, S. 198 direkt
+       im Browser angeschaut und mit Manuel abgeglichen) - NICHT die Grautöne aus einem später von
+       Manuel hochgeladenen Foto übernehmen, das offenbar nur ein Schwarzweiß-Ausdruck/-Scan der
+       Seite war und nicht die echten Buchfarben zeigt. Symbole (Weinbau/Rinder/Hopfen/Zuckerrüben)
+       bleiben aus diesem Foto, da dort korrekt erkennbar. Je 6 statt 4 Antwortmöglichkeiten, damit
+       nicht mehr einfach geraten werden kann. */
     questions: [
       { kind:"mc", section:"Bodennutzung",
-        text: "Schlag dein Buch auf S. 198 auf und schau dir die Karte „Landwirtschaft in Bayern“ mit ihrer Legende an. Auf der Karte ist ein großes zusammenhängendes Waldgebiet eingezeichnet. Welchen Grauton hat es laut der Legende im Buch?",
-        options: ["Dunkelgrau", "Mittelgrau", "Hellgrau", "Sehr helles Grau (fast weiß)", "Weiß (keine Farbe)", "Blau"], correct:0,
-        explain: "Wald wird in der Legende auf S. 198 dunkelgrau dargestellt." },
+        text: "Schlag dein Buch auf S. 198 auf und schau dir die Karte „Landwirtschaft in Bayern“ mit ihrer Legende an. Auf der Karte ist ein großes zusammenhängendes Waldgebiet eingezeichnet. Welche Farbe hat es laut der Legende im Buch?",
+        options: ["Goldgelb", "Dunkelgrün", "Cremeweiß", "Altrosa", "Blassgelbgrün", "Hellblau"], correct:1,
+        explain: "Wald wird in der Legende auf S. 198 dunkelgrün dargestellt." },
       { kind:"mc", section:"Bodennutzung",
-        text: "Schau auf S. 198 in deinem Buch nach: Ein Landwirt sucht ein Feld mit besonders ertragreichen (guten) Böden. Welchen Grauton muss die Fläche auf der Karte laut Legende haben?",
-        options: ["Dunkelgrau", "Mittelgrau", "Hellgrau", "Sehr helles Grau (fast weiß)", "Weiß (keine Farbe)", "Blau"], correct:2,
-        explain: "Auf S. 198 steht Hellgrau für „Ackerland mit guten Böden“ – dort lohnt sich der Ackerbau besonders." },
+        text: "Schau auf S. 198 in deinem Buch nach: Ein Landwirt sucht ein Feld mit besonders ertragreichen (guten) Böden. Welche Farbe muss die Fläche auf der Karte laut Legende haben?",
+        options: ["Goldgelb", "Dunkelgrün", "Cremeweiß", "Altrosa", "Blassgelbgrün", "Hellblau"], correct:0,
+        explain: "Auf S. 198 steht Goldgelb für „Ackerland mit guten Böden“ – dort lohnt sich der Ackerbau besonders." },
       { kind:"mc", section:"Bodennutzung",
-        text: "Schau auf S. 198 in deinem Buch nach: Eine Fläche auf der Karte ist sehr hell eingefärbt – fast weiß, aber mit einem ganz leichten Grauton. Wofür steht das laut Legende?",
+        text: "Schau auf S. 198 in deinem Buch nach: Eine Fläche auf der Karte ist blassgelbgrün gefärbt. Wofür steht diese Farbe laut Legende?",
         options: ["Ackerland mit geringen Böden", "Siedlungsgebiet", "Heide und Ödland", "Wald", "Ackerland mit guten Böden", "Gewässer"], correct:0,
-        explain: "Ein sehr helles, fast weißes Grau steht laut der Legende auf S. 198 für Ackerland mit geringen (weniger guten) Böden." },
+        explain: "Blassgelbgrün steht laut der Legende auf S. 198 für Ackerland mit geringen (weniger guten) Böden." },
       { kind:"mc", section:"Bodennutzung",
-        text: "Schau auf S. 198 in deinem Buch nach: Welchen Grauton zeigt die Legende für ein Siedlungsgebiet, also eine Stadt oder ein Dorf?",
-        options: ["Dunkelgrau", "Mittelgrau", "Hellgrau", "Sehr helles Grau (fast weiß)", "Weiß (keine Farbe)", "Blau"], correct:1,
-        explain: "Siedlungsgebiete sind in der Legende auf S. 198 mittelgrau markiert." },
+        text: "Schau auf S. 198 in deinem Buch nach: Welche Farbe zeigt die Legende für ein Siedlungsgebiet, also eine Stadt oder ein Dorf?",
+        options: ["Goldgelb", "Dunkelgrün", "Cremeweiß", "Altrosa", "Blassgelbgrün", "Hellblau"], correct:3,
+        explain: "Siedlungsgebiete sind in der Legende auf S. 198 altrosa (rötlich) markiert." },
       { kind:"mc", section:"Bodennutzung",
-        text: "Schau auf S. 198 in deinem Buch nach: Eine Fläche auf der Karte ist komplett weiß, also ganz ohne Farbe/Füllung. Wofür steht das laut Legende?",
+        text: "Schau auf S. 198 in deinem Buch nach: Eine Fläche auf der Karte ist cremeweiß gefärbt. Wofür steht das laut Legende?",
         options: ["Heide und Ödland", "Wald", "Siedlungsgebiet", "Ackerland mit guten Böden", "Ackerland mit geringen Böden", "Gewässer"], correct:0,
-        explain: "Weiß, also ganz ohne Füllung, steht in der Legende auf S. 198 für Heide und Ödland." },
+        explain: "Cremeweiß steht in der Legende auf S. 198 für Heide und Ödland." },
       { kind:"mc", section:"Symbole",
         text: "Schau auf S. 198 in deinem Buch nach: Zusätzlich zu den Grautönen gibt es auf der Karte kleine Symbole für einzelne Produkte. Du siehst dieses Symbol: 🍇 – wofür steht es laut Legende?",
         options: ["Weinbau", "Rinder", "Hopfen", "Zuckerrüben", "Schweine", "Obst"], correct:0,
@@ -1868,7 +1870,7 @@ const exerciseSets = {
     duration: "ca. 10 Minuten",
     questions: [
       { kind:"mc", section:"Gute Böden",
-        text: "Wo in Bayern liegen laut Karte die Gebiete mit den BESTEN Ackerböden (hellgrau in der Legende)?",
+        text: "Wo in Bayern liegen laut Karte die Gebiete mit den BESTEN Ackerböden (goldgelb)?",
         options: ["Vor allem im Gäuboden/Donautal bei Regensburg und in Teilen Mainfrankens", "Nur ganz im Süden in den Alpen", "Gleichmäßig über ganz Bayern verteilt", "Nur direkt in den großen Städten"], correct:0,
         explain: "Besonders gute Böden gibt es im Gäuboden bei Regensburg/Straubing und im Donautal sowie in Teilen Mainfrankens – dort ist der Boden durch Löss und Flussablagerungen sehr fruchtbar." },
       { kind:"mc", section:"Weniger gute Böden",
