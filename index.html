@@ -538,6 +538,14 @@
     paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round;
     pointer-events:none;
   }
+  /* Flüsse (Teil "Regionen zuordnen"): eigene Farbvariante statt des normalen Grün, weil ein
+     korrekt zugeordneter Fluss sich wie auf einer echten Karte blau färben soll. 3 Klassen sind
+     spezifischer als ".de-tile.correct" (2 Klassen) - überschreibt also automatisch, unabhängig
+     von der Reihenfolge im Stylesheet. Beschriftung etwas kleiner, damit sie schmal neben dem
+     Flussband Platz hat und die restliche Karte nicht zustellt. */
+  .de-tile.river polygon{stroke-width:1;}
+  .de-tile.river.correct polygon{fill:#60a5fa; stroke:#2563eb;}
+  .de-tile.river .de-label{font-size:9px; fill:#1d4ed8; color:#1d4ed8;}
   .skip-btn{
     margin-right:auto; background:transparent; border:1.5px solid var(--border); color:var(--ink-soft);
     border-radius:999px; padding:11px 18px; font-weight:700; font-size:14px; cursor:pointer;
@@ -863,20 +871,51 @@ const NACHBAR_GERMANY = { label:"Deutschland", cx:303.1, cy:389.6, parts:["209.5
    1:1 aus DE_STATES ("bayern") wiederverwendet (dieselbe, schon vorhandene reale Umrisslinie,
    Quelle d-maps.com - kein Buchbild), darauf liegen sieben größere runde Markierungen an den
    ungefähren Lagen bekannter Regionen - keine exakten Wirtschaftsraum-Grenzen (die gibt es so
-   auch im Schulbuch nicht), sondern eine deutlich sichtbare Orientierung, größer/besser
-   erkennbar als die vorherige Version mit 6 kleinen Punkten. Die Namen/Zuordnungen sind eigene,
-   überprüfte allgemeine geografische Fakten (nicht aus dem Buch übernommen, kein Bild aus dem
-   Buch verwendet). Bayerischer Wald neu dazugekommen, damit auch die Legende "Wald" abgedeckt ist. */
+   auch im Schulbuch nicht), sondern eine deutlich sichtbare Orientierung. Die Namen sind die von
+   der Lehrkraft vorgegebenen, fachlich korrekten Bezeichnungen (Knoblauchsland, Gäuboden,
+   Hallertau statt vorheriger vereinfachter/falscher Namen) - eigene, überprüfte allgemeine
+   geografische Fakten, kein Bild aus dem Buch verwendet. */
 const BAYERN_OUTLINE = DE_STATES.find(s => s.id === "bayern").parts;
 const BAYERN_MAP_VIEWBOX = "210 425 300 310";
 const BAYERN_REGIONEN = [
-  { id:"mainfranken",   label:"Mainfranken",       cx:279.9, cy:508.9 },
-  { id:"nuernberg",     label:"Nürnberger Land",   cx:342.4, cy:537.0 },
-  { id:"regensburg",    label:"Gäuboden/Regensburg", cx:415.0, cy:558.0 },
-  { id:"holledau",      label:"Holledau",          cx:362.0, cy:612.0 },
-  { id:"bayerwald",     label:"Bayerischer Wald",  cx:465.0, cy:630.0 },
-  { id:"alpenvorland",  label:"Alpenvorland",      cx:399.6, cy:669.0 },
-  { id:"allgaeu",       label:"Allgäu",            cx:300.5, cy:679.6 },
+  { id:"mainfranken",     label:"Mainfranken",      cx:279.9, cy:508.9 },
+  { id:"knoblauchsland",  label:"Knoblauchsland",   cx:342.4, cy:537.0 },
+  { id:"gaeuboden",       label:"Gäuboden",         cx:430.0, cy:578.0 },
+  { id:"hallertau",       label:"Hallertau",        cx:362.0, cy:612.0 },
+  { id:"bayerwald",       label:"Bayerischer Wald", cx:465.0, cy:630.0 },
+  { id:"alpenvorland",    label:"Alpenvorland",     cx:399.6, cy:669.0 },
+  { id:"allgaeu",         label:"Allgäu",           cx:300.5, cy:679.6 },
+];
+/* Flüsse-Karte (Teil 2 von "Regionen zuordnen"): Mittellinien der vier im Buch eingezeichneten
+   Flüsse Donau/Isar/Lech/Main, aus derselben d-maps.com-Vorlage (baviere29.pdf) übertragen und in
+   dasselbe Koordinatensystem wie BAYERN_OUTLINE/BAYERN_REGIONEN umgerechnet (kalibriert über
+   bekannte Stadtlagen). labelX/labelY: Position der Flussbeschriftung, die erst nach richtiger
+   Zuordnung neben dem Flusslauf erscheint (siehe revealTileLabel). */
+const BAYERN_FLUESSE = [
+  { id:"donau", label:"Donau",
+    points:[[279.5,627.4],[325.4,598.7],[363.5,592.4],[390.2,577.3],[403.9,568.1],[431.0,578.6],[453.6,581.6],[481.5,602.2]],
+    labelX:387.7, labelY:593.6 },
+  { id:"isar", label:"Isar",
+    points:[[349.8,705.2],[371.0,644.6],[381.7,622.0],[405.5,608.8],[426.2,599.2],[450.0,584.3]],
+    labelX:391.1, labelY:632.6 },
+  { id:"lech", label:"Lech",
+    points:[[318.0,695.9],[329.9,654.5],[332.0,627.2],[330.1,595.0]],
+    labelX:343.5, labelY:647.2 },
+  { id:"main", label:"Main",
+    points:[[368.9,482.5],[335.7,497.9],[297.6,486.3],[279.4,509.4],[234.4,495.6],[220.0,490.5]],
+    labelX:282.6, labelY:484.3 },
+];
+/* Städte-Karte (Teil 3 von "Regionen zuordnen"): fünf auf der Vorlage fett gedruckte, besonders
+   markante Städte (baviere29.pdf) - auf der Karte im Ipad absichtlich UNbeschriftet (wie bei den
+   Bundesländern/Nachbarländern auch: der Name steht erst nach richtiger Zuordnung im DOM, damit
+   nicht einfach im Seitenquelltext nachgeschaut werden kann). Radius bewusst klein (10 statt 24
+   bei den Regionen) - die Schüler sollen mit dem Stift genau treffen, nicht grob raten können. */
+const BAYERN_STAEDTE = [
+  { id:"muenchen",   label:"München",    cx:371.0, cy:644.6 },
+  { id:"nuernberg",  label:"Nürnberg",   cx:345.6, cy:534.7 },
+  { id:"augsburg",   label:"Augsburg",   cx:332.0, cy:627.2 },
+  { id:"regensburg", label:"Regensburg", cx:403.9, cy:568.1 },
+  { id:"ingolstadt", label:"Ingolstadt", cx:363.5, cy:592.4 },
 ];
 /* Kleines n-Eck als Kreis-Annäherung, als <polygon> statt <circle> - so gelten dieselben
    ".de-tile polygon"-CSS-Regeln (Füllfarbe/Rahmen bei richtig/falsch) ohne zusätzliches CSS. */
@@ -889,17 +928,50 @@ function circlePolygon(cx, cy, r, sides){
   }
   return pts.join(" ");
 }
-/* Rendert die Bayern-Regionenkarte: derselbe #deMap/.de-tile-Aufbau wie deMapHtml()/
-   nachbarnMapHtml(), daher funktionieren Zuordnungs-Logik/CSS unverändert mit. Der Umriss selbst
-   ist "fixed" (kein Ziel, nur Orientierung), die sieben Regionen sind die eigentlichen Ziele.
-   Radius bewusst größer (24 statt vorher 15) - deutlich besser erkennbar/antippbar auf dem iPad. */
-function bayernMapHtml(){
+/* Wandelt eine Fluss-Mittellinie (Liste von [x,y]-Punkten) in ein schmales, geschlossenes Band
+   (Polygon) um - so gilt auch hier dieselbe ".de-tile polygon"-CSS-Logik, nur mit einer eigenen
+   Farbvariante fürs Ergebnis (".de-tile.river.correct", siehe CSS: blau statt grün), ganz ohne
+   eigenes <line>/<path>-Element. "width" bewusst schmal gewählt, damit das Band wie ein Fluss auf
+   einer echten Karte wirkt und nicht den Rest der Karte zukleistert. */
+function ribbonPolygon(points, width){
+  const hw = width / 2;
+  const left = [], right = [];
+  for (let i=0; i<points.length; i++){
+    const prev = points[i-1] || points[i];
+    const next = points[i+1] || points[i];
+    const dx = next[0]-prev[0], dy = next[1]-prev[1];
+    const len = Math.hypot(dx,dy) || 1;
+    const px = -dy/len, py = dx/len;
+    left.push((points[i][0]+px*hw).toFixed(1) + "," + (points[i][1]+py*hw).toFixed(1));
+    right.push((points[i][0]-px*hw).toFixed(1) + "," + (points[i][1]-py*hw).toFixed(1));
+  }
+  return left.concat(right.reverse()).join(" ");
+}
+/* Rendert die Bayern-Karte für alle drei Teile von "Regionen zuordnen": derselbe #deMap/.de-tile-
+   Aufbau wie deMapHtml()/nachbarnMapHtml(), daher funktionieren Zuordnungs-Logik/CSS unverändert
+   mit. Der Umriss selbst ist immer "fixed" (kein Ziel, nur Orientierung); je nach "layer" sind nur
+   die Regionen ODER nur die Flüsse ODER nur die Städte die eigentlichen Ziele - so überlagern sich
+   die drei Ebenen nie gegenseitig und jede Teilaufgabe bleibt übersichtlich. */
+function bayernMapHtml(layer){
   const outlineParts = BAYERN_OUTLINE.map(p => `<polygon points="${p}"></polygon>`).join("");
   const outlineGroup = `<g class="de-tile fixed" data-id="bayern-umriss">${outlineParts}</g>`;
-  const groups = BAYERN_REGIONEN.map(r => {
-    const poly = `<polygon points="${circlePolygon(r.cx, r.cy, 24)}"></polygon>`;
-    return `<g class="de-tile" data-id="${esc(r.id)}" data-label="${esc(r.label)}" data-cx="${r.cx}" data-cy="${(r.cy + 32).toFixed(1)}" data-target="1">${poly}</g>`;
-  }).join("");
+  let groups;
+  if (layer === "fluesse"){
+    groups = BAYERN_FLUESSE.map(r => {
+      const poly = `<polygon points="${ribbonPolygon(r.points, 8)}"></polygon>`;
+      return `<g class="de-tile river" data-id="${esc(r.id)}" data-label="${esc(r.label)}" data-cx="${r.labelX}" data-cy="${r.labelY}" data-target="1">${poly}</g>`;
+    }).join("");
+  } else if (layer === "staedte"){
+    groups = BAYERN_STAEDTE.map(s => {
+      const poly = `<polygon points="${circlePolygon(s.cx, s.cy, 10)}"></polygon>`;
+      return `<g class="de-tile" data-id="${esc(s.id)}" data-label="${esc(s.label)}" data-cx="${s.cx}" data-cy="${(s.cy + 18).toFixed(1)}" data-target="1">${poly}</g>`;
+    }).join("");
+  } else {
+    groups = BAYERN_REGIONEN.map(r => {
+      const poly = `<polygon points="${circlePolygon(r.cx, r.cy, 24)}"></polygon>`;
+      return `<g class="de-tile" data-id="${esc(r.id)}" data-label="${esc(r.label)}" data-cx="${r.cx}" data-cy="${(r.cy + 32).toFixed(1)}" data-target="1">${poly}</g>`;
+    }).join("");
+  }
   return `<svg class="de-map" id="deMap" viewBox="${BAYERN_MAP_VIEWBOX}" xmlns="http://www.w3.org/2000/svg">${outlineGroup}${groups}</svg>`;
 }
 
@@ -1837,7 +1909,7 @@ const exerciseSets = {
       { kind:"mc", section:"Symbole",
         text: "Schau auf S. 198 in deinem Buch nach: Du siehst auf der Karte bei einer Region dieses Symbol: 🌿 – wofür steht es laut Legende?",
         options: ["Weinbau", "Rinder", "Hopfen", "Zuckerrüben", "Schweine", "Obst"], correct:2,
-        explain: "Das Symbol steht laut Legende auf S. 198 für Hopfen – wichtig für die Bierherstellung, besonders in der Holledau (Hallertau)." },
+        explain: "Das Symbol steht laut Legende auf S. 198 für Hopfen – wichtig für die Bierherstellung, besonders in der Hallertau." },
       { kind:"mc", section:"Symbole",
         text: "Schau auf S. 198 in deinem Buch nach: Du siehst auf der Karte bei einer Region dieses Symbol: 🥕 – wofür steht es laut Legende?",
         options: ["Weinbau", "Rinder", "Hopfen", "Zuckerrüben", "Schweine", "Obst"], correct:3,
@@ -1853,12 +1925,22 @@ const exerciseSets = {
     subject: "gpg",
     folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
-    duration: "ca. 8 Minuten",
+    duration: "ca. 12 Minuten",
     questions: [
       {
         section: "Landwirtschaftliche Regionen", kind: "map-match", mapType: "bayern-regionen",
         text: "Bayern hat unterschiedliche landwirtschaftliche Regionen. Ziehe jeden Namen auf die ungefähre Lage auf der Karte. Schau dir dazu auch die Karte auf S. 198 in deinem Buch an – die Grautöne und Symbole dort helfen dir bei der Zuordnung.",
-        explain: "Mainfranken (Würzburg) ist bekannt für Weinbau, das Nürnberger Land für Gemüseanbau (Knoblauchsland), die Holledau (Hallertau) für Hopfen, das Regensburger Becken/der Gäuboden für besonders gute Ackerböden, der Bayerische Wald für ein großes zusammenhängendes Waldgebiet, und das Alpenvorland um Rosenheim sowie das Allgäu für Rinderhaltung und Grünland."
+        explain: "Mainfranken (Würzburg) ist bekannt für Weinbau, das Knoblauchsland bei Nürnberg für Gemüseanbau, die Hallertau für Hopfen, der Gäuboden für besonders gute Ackerböden, der Bayerische Wald für ein großes zusammenhängendes Waldgebiet, und das Alpenvorland sowie das Allgäu für Rinderhaltung und Grünland."
+      },
+      {
+        section: "Flüsse", kind: "map-match", mapType: "bayern-fluesse",
+        text: "Bei dieser Aufgabe bitte den Stift benutzen, da man sehr genau zeichnen muss. Bayern wird von wichtigen Flüssen durchzogen. Diese Flüsse sind auch in deinem Buch auf S. 198 eingezeichnet – schau dort nach, wo Donau, Isar, Lech und Main verlaufen. Ziehe dann jeden Flussnamen genau auf den passenden Flusslauf auf der Karte.",
+        explain: "Die Donau fließt einmal quer durch Bayern von West nach Ost (u. a. durch Ingolstadt, Regensburg und Passau). Die Isar kommt aus den Alpen, fließt durch München und mündet bei Deggendorf in die Donau. Der Lech kommt ebenfalls aus den Alpen, fließt bei Augsburg vorbei und mündet in die Donau. Der Main fließt durch Unterfranken (u. a. Schweinfurt, Würzburg, Aschaffenburg) nach Westen aus Bayern hinaus."
+      },
+      {
+        section: "Städte", kind: "map-match", mapType: "bayern-staedte",
+        text: "Bei dieser Aufgabe bitte den Stift benutzen, da man sehr genau zeichnen muss. Auf der Karte sind fünf wichtige bayerische Städte markiert, aber nicht beschriftet. Ziehe jeden Stadtnamen genau auf den richtigen Punkt.",
+        explain: "München ist die Landeshauptstadt Bayerns. Nürnberg, Augsburg, Regensburg und Ingolstadt gehören ebenfalls zu den großen, bekannten Städten Bayerns."
       }
     ]
   },
@@ -3260,9 +3342,25 @@ window.__startExercise = function(slug){
     } else if (q.kind === "map-match" && q.mapType === "bayern-regionen"){
       const chipList = shuffled(BAYERN_REGIONEN.map(s => ({ value:s.id, label:s.label })));
       const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
-      body = bayernMapHtml();
+      body = bayernMapHtml("regionen");
       mmTrayHtml = `
         <p class="gap-hint">Tippe eine Region an, halte sie gedrückt und ziehe sie auf die ungefähre Lage auf der Karte.</p>
+        <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+      `;
+    } else if (q.kind === "map-match" && q.mapType === "bayern-fluesse"){
+      const chipList = shuffled(BAYERN_FLUESSE.map(s => ({ value:s.id, label:s.label })));
+      const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
+      body = bayernMapHtml("fluesse");
+      mmTrayHtml = `
+        <p class="gap-hint">Tippe einen Flussnamen an, halte ihn gedrückt und ziehe ihn genau auf den passenden Flusslauf auf der Karte.</p>
+        <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+      `;
+    } else if (q.kind === "map-match" && q.mapType === "bayern-staedte"){
+      const chipList = shuffled(BAYERN_STAEDTE.map(s => ({ value:s.id, label:s.label })));
+      const chipsHtml = chipList.map((chip,idx) => `<button type="button" class="mm-chip" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`).join("");
+      body = bayernMapHtml("staedte");
+      mmTrayHtml = `
+        <p class="gap-hint">Tippe einen Stadtnamen an, halte ihn gedrückt und ziehe ihn genau auf den passenden Punkt auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
     } else if (q.kind === "map-match"){
@@ -3376,7 +3474,7 @@ window.__startExercise = function(slug){
           </div>
         </div>
       `;
-    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen")){
+    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen" || q.mapType === "bayern-fluesse" || q.mapType === "bayern-staedte")){
       /* Ebenfalls Vollbild (siehe .mm-fullscreen oben): die Karte bekommt per flex:1+min-height:0
          nur den Platz, der nach Hinweistext und Chip-Leiste übrig bleibt, und schrumpft darin -
          so bleiben Karte UND alle Chips immer gleichzeitig sichtbar, auch auf kleinen/niedrigen
@@ -3621,7 +3719,7 @@ window.__startExercise = function(slug){
         }
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
-    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen")){
+    } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen" || q.mapType === "bayern-fluesse" || q.mapType === "bayern-staedte")){
       /* Gemeinsame Logik für beide echten Karten (Bundesländer und Nachbarländer) - beide rendern
          dieselbe DOM-Struktur (#deMap, .de-tile), daher reicht eine Bedingung für beide mapTypes. */
       const map = document.getElementById("deMap");
