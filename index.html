@@ -719,13 +719,16 @@ const geographieChapters = [
 ];
 
 const landwirtschaftTopics = [
+  /* Bundesländer/Nachbarländer: allgemeine Orientierungsübungen, tauchen im Inhaltsverzeichnis
+     des Kapitels "Landwirtschaft in Bayern" (S. 194-219) nicht auf und sind keiner Buchseite
+     zugeordnet - bleiben deshalb ohne Seitenzahl vorne. */
   { tag:"lernen", label:"Wo liegt Bayern? – Die Bundesländer", practice:"bundeslaender-orientierung" },
   { tag:"lernen", label:"Deutschlands Nachbarländer", practice:"nachbarlaender-zuordnen" },
+  { tag:"lernen", label:"Begriffe vom Bauernhof – Suchsel", page:196, practice:"bauernhof-suchsel" },
+  { tag:"lernen", label:"Wie sieht ein Arbeitstag auf dem Bauernhof aus? – Lückentext", page:196, practice:"bauernhof-luekentext" },
   { tag:"lernen", label:"Kartenlegende verstehen", page:198, practice:"gpg-landwirtschaft-kartenlegende" },
   { tag:"lernen", label:"Regionen zuordnen", page:198, practice:"gpg-landwirtschaft-regionen" },
   { tag:"abschluss", label:"Aufgabe 3: Böden im Vergleich", page:198, practice:"gpg-landwirtschaft-aufgabe3" },
-  { tag:"lernen", label:"Begriffe vom Bauernhof – Suchsel", practice:"bauernhof-suchsel" },
-  { tag:"lernen", label:"Wie sieht ein Arbeitstag auf dem Bauernhof aus? – Lückentext", practice:"bauernhof-luekentext" },
   /* Vorstrukturierung der restlichen Buchkapitel-Themen (S. 200-219) - nur Titel/Seitenzahlen aus
      dem Inhaltsverzeichnis bzw. dem "Wegweiser" auf S. 199 übernommen, noch OHNE eigene Übung
      ("practice" bewusst weggelassen) - erscheinen bis dahin als reine Themenpunkte ohne
@@ -1792,82 +1795,41 @@ const exerciseSets = {
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 8 Minuten",
     locked: true,
+    /* Bewusst OHNE q.legend: Die Schüler sollen die Legende der Karte "Orientierung -
+       Landwirtschaft in Bayern" auf S. 198 im echten Schulbuch nachschlagen, nicht eine
+       Kopie davon am Bildschirm ablesen. Jede Frage verweist deshalb im Aufgabentext explizit
+       auf S. 198; das Buch muss zum Bearbeiten aufgeschlagen daliegen. */
     questions: [
       { kind:"mc", section:"Bodennutzung",
-        legend: { caption:"Legende: Bodennutzung", items:[
-          { color:"#3F7A4E", label:"Wald" },
-          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
-          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
-          { color:"#F0EAD6", label:"Heide und Odland" },
-          { color:"#E3AFA0", label:"Siedlungsgebiet" },
-        ]},
-        text: "Auf der Karte ist ein großes zusammenhängendes Waldgebiet eingezeichnet. Welche Farbe hat es laut Legende?",
+        text: "Schlag dein Buch auf S. 198 auf und schau dir die Karte „Landwirtschaft in Bayern“ mit ihrer Legende an. Auf der Karte ist ein großes zusammenhängendes Waldgebiet eingezeichnet. Welche Farbe hat es laut der Legende im Buch?",
         options: ["Goldgelb", "Dunkelgrün", "Cremeweiß", "Altrosa"], correct:1,
-        explain: "Wald wird in der Legende dunkelgrün dargestellt." },
+        explain: "Wald wird in der Legende auf S. 198 dunkelgrün dargestellt." },
       { kind:"mc", section:"Bodennutzung",
-        legend: { caption:"Legende: Bodennutzung", items:[
-          { color:"#3F7A4E", label:"Wald" },
-          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
-          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
-          { color:"#F0EAD6", label:"Heide und Odland" },
-          { color:"#E3AFA0", label:"Siedlungsgebiet" },
-        ]},
-        text: "Ein Landwirt sucht ein Feld mit besonders ertragreichen (guten) Böden. Welche Farbe muss die Fläche auf der Karte haben?",
+        text: "Schau auf S. 198 in deinem Buch nach: Ein Landwirt sucht ein Feld mit besonders ertragreichen (guten) Böden. Welche Farbe muss die Fläche auf der Karte laut Legende haben?",
         options: ["Goldgelb", "Blassgelbgrün", "Altrosa", "Cremeweiß"], correct:0,
-        explain: "Goldgelb steht in der Legende für „Ackerland mit guten Böden“ – dort lohnt sich der Ackerbau besonders." },
+        explain: "Auf S. 198 steht Goldgelb für „Ackerland mit guten Böden“ – dort lohnt sich der Ackerbau besonders." },
       { kind:"mc", section:"Bodennutzung",
-        legend: { caption:"Legende: Bodennutzung", items:[
-          { color:"#3F7A4E", label:"Wald" },
-          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
-          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
-          { color:"#F0EAD6", label:"Heide und Odland" },
-          { color:"#E3AFA0", label:"Siedlungsgebiet" },
-        ]},
-        text: "Eine Fläche ist blassgelbgrün gefärbt. Wofür steht diese Farbe in der Legende?",
+        text: "Schau auf S. 198 in deinem Buch nach: Eine Fläche auf der Karte ist blassgelbgrün gefärbt. Wofür steht diese Farbe laut Legende?",
         options: ["Ackerland mit geringen Böden", "Siedlungsgebiet", "Heide und Odland", "Wald"], correct:0,
-        explain: "Blassgelbgrün steht für Ackerland mit geringen (weniger guten) Böden." },
+        explain: "Blassgelbgrün steht laut der Legende auf S. 198 für Ackerland mit geringen (weniger guten) Böden." },
       { kind:"mc", section:"Bodennutzung",
-        legend: { caption:"Legende: Bodennutzung", items:[
-          { color:"#3F7A4E", label:"Wald" },
-          { color:"#E8B93E", label:"Ackerland mit guten Böden" },
-          { color:"#DCE2A0", label:"Ackerland mit geringen Böden" },
-          { color:"#F0EAD6", label:"Heide und Odland" },
-          { color:"#E3AFA0", label:"Siedlungsgebiet" },
-        ]},
-        text: "Welche Farbe zeigt in der Legende ein Siedlungsgebiet, also eine Stadt oder ein Dorf?",
+        text: "Schau auf S. 198 in deinem Buch nach: Welche Farbe zeigt in der Legende ein Siedlungsgebiet, also eine Stadt oder ein Dorf?",
         options: ["Cremeweiß", "Altrosa", "Dunkelgrün", "Goldgelb"], correct:1,
-        explain: "Siedlungsgebiete sind in der Legende altrosa (rötlich) markiert." },
+        explain: "Siedlungsgebiete sind in der Legende auf S. 198 altrosa (rötlich) markiert." },
       { kind:"mc", section:"Symbole",
-        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
-          { icon:"🍇", label:"Weinbau" },
-          { icon:"🐄", label:"Rinder" },
-          { icon:"🐖", label:"Schweine" },
-          { icon:"🐔", label:"Geflügel" },
-        ]},
-        text: "Zusätzlich zu den Farben gibt es auf der Karte kleine Symbole für einzelne Produkte. Welches Symbol steht für Weinbau?",
+        text: "Schau auf S. 198 in deinem Buch nach: Zusätzlich zu den Farben gibt es auf der Karte kleine Symbole für einzelne Produkte. Welches Symbol steht laut Legende für Weinbau?",
         options: ["🍇", "🐄", "🥕", "🐔"], correct:0,
-        explain: "Die Trauben stehen für Weinbau." },
+        explain: "Die Trauben stehen laut Legende auf S. 198 für Weinbau." },
       { kind:"mc", section:"Symbole",
-        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
-          { icon:"🍇", label:"Weinbau" },
-          { icon:"🐄", label:"Rinder" },
-          { icon:"🐖", label:"Schweine" },
-          { icon:"🐔", label:"Geflügel" },
-        ]},
-        text: "Du siehst auf der Karte bei einer Region das Symbol 🐄. Welche Landwirtschaft wird dort betrieben?",
+        text: "Schau auf S. 198 in deinem Buch nach: Du siehst auf der Karte bei einer Region das Symbol für Rinder. Welche Landwirtschaft wird dort betrieben?",
         options: ["Rinderhaltung", "Schweinehaltung", "Weinbau", "Hopfenanbau"], correct:0,
-        explain: "🐄 steht für Rinderhaltung (Milch- und Fleischrinder)." },
+        explain: "Das Rinder-Symbol steht für Rinderhaltung (Milch- und Fleischrinder)." },
       { kind:"mc", section:"Symbole",
-        legend: { caption:"Legende: Anbau & Tierhaltung", items:[
-          { icon:"🌿", label:"Hopfen" },
-          { icon:"🍎", label:"Obst" },
-          { icon:"🥕", label:"Gemüse" },
-        ]},
-        text: "Ein Symbol auf der Karte zeigt 🌿. Hopfen ist wichtig für die Bierherstellung. Welches Produkt wird dort also angebaut?",
+        text: "Schau auf S. 198 in deinem Buch nach: Ein Symbol auf der Karte zeigt eine Pflanze und steht laut Legende für Hopfen. Hopfen ist wichtig für die Bierherstellung. Welches Produkt wird an dieser Stelle also angebaut?",
         options: ["Hopfen", "Obst", "Gemüse", "Zuckerrüben"], correct:0,
-        explain: "🌿 steht in dieser Legende für Hopfen – wichtig für die Bierherstellung, besonders in der Holledau (Hallertau)." },
+        explain: "Das Symbol steht in der Legende auf S. 198 für Hopfen – wichtig für die Bierherstellung, besonders in der Holledau (Hallertau)." },
       { kind:"text", section:"Fachbegriff",
-        text: "Wie nennt man die Übersicht am Kartenrand, die erklärt, was Farben und Symbole auf einer Karte bedeuten?",
+        text: "Wie nennt man die Übersicht am Kartenrand (so wie du sie gerade auf S. 198 benutzt hast), die erklärt, was Farben und Symbole auf einer Karte bedeuten?",
         placeholder:"Begriff eintippen", accept:["Legende","Kartenlegende","die Legende"],
         explain: "Diese Übersicht heißt Legende (oder Kartenlegende) – ohne sie lässt sich eine thematische Karte nicht richtig lesen." }
     ]
@@ -3207,7 +3169,7 @@ window.__startExercise = function(slug){
     host.innerHTML = `
       <div class="qcard">
         ${head(q)}
-        <div class="feedback show ${ok ? "correct" : "wrong"}">${ok ? "✓ Schon richtig gelöst" : "Noch nicht verstanden"}${triesText}. ${esc(q.explain)}</div>
+        <div class="feedback show ${ok ? "correct" : "wrong"}">${ok ? "✓ Schon richtig gelöst" : "Nicht gelöst"}${triesText}.${ok ? " " + esc(q.explain) : ""}</div>
         <div class="qactions">
           <button class="skip-btn" id="retryBtn">Nochmal versuchen</button>
           <button class="next-btn show" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
@@ -3463,7 +3425,7 @@ window.__startExercise = function(slug){
         document.getElementById("checkBtn").disabled = true;
         input.value = q.accept[0];
         input.parentElement.classList.add("wrong");
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "text"){
       const input = document.getElementById("textInput");
@@ -3497,7 +3459,7 @@ window.__startExercise = function(slug){
         document.getElementById("checkBtn").disabled = true;
         input.value = q.accept[0];
         input.parentElement.classList.add("wrong");
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "grid-shade"){
       const grid = document.getElementById("shadeGrid");
@@ -3560,7 +3522,7 @@ window.__startExercise = function(slug){
         document.getElementById("checkBtn").disabled = true;
         grid.querySelectorAll(".shade-cell").forEach(c=>c.style.pointerEvents="none");
         grid.querySelectorAll(".shade-cell").forEach((cell,idx)=>{ if (idx < target) cell.classList.add("target"); });
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "click-gap"){
       const sentence = document.getElementById("gapSentence");
@@ -3593,7 +3555,7 @@ window.__startExercise = function(slug){
           b.disabled = true;
           if (correctSet.has(b.dataset.g)) b.classList.add("target","active");
         });
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "map-select" && q.mapType === "de-states"){
       const map = document.getElementById("deMap");
@@ -3620,7 +3582,7 @@ window.__startExercise = function(slug){
           correctTile.classList.add("correct");
           revealTileLabel(correctTile);
         }
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "map-select"){
       const board = document.getElementById("mmBoard");
@@ -3647,7 +3609,7 @@ window.__startExercise = function(slug){
           correctTile.classList.add("correct");
           correctTile.innerHTML = `<span class="mm-label">${esc(correctTile.dataset.label)}</span>`;
         }
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "map-match" && (q.mapType === "de-states" || q.mapType === "de-nachbarn" || q.mapType === "bayern-regionen")){
       /* Gemeinsame Logik für beide echten Karten (Bundesländer und Nachbarländer) - beide rendern
@@ -3728,7 +3690,7 @@ window.__startExercise = function(slug){
         if (solved) return;
         map.querySelectorAll('.de-tile[data-target]').forEach(tile=>{ tile.classList.add("correct"); revealTileLabel(tile); });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "map-match"){
       const board = document.getElementById("mmBoard");
@@ -3825,7 +3787,7 @@ window.__startExercise = function(slug){
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
         });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "circle-sort"){
       const wordEl = document.getElementById("csWord");
@@ -3902,7 +3864,7 @@ window.__startExercise = function(slug){
       });
       document.getElementById("skipBtn").addEventListener("click", ()=>{
         if (solved) return;
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "wordsearch"){
       const board = document.getElementById("wsBoard");
@@ -4004,7 +3966,7 @@ window.__startExercise = function(slug){
             foundEl.appendChild(chip);
           }
         });
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "gapfill"){
       /* Antippen statt Ziehen: erst eine Lücke ODER erst ein Wort antippen (Reihenfolge egal -
@@ -4089,7 +4051,7 @@ window.__startExercise = function(slug){
           }
         });
         bankEl.querySelectorAll(".lt-chip").forEach(c=>{ c.classList.add("used"); c.disabled = true; });
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else {
       document.getElementById("opts").querySelectorAll(".option").forEach(btn=>{
@@ -4112,7 +4074,7 @@ window.__startExercise = function(slug){
         const opts = document.querySelectorAll("#opts .option");
         opts.forEach(o=>o.classList.add("disabled"));
         opts[q.correct].classList.add("correct");
-        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     }
 
