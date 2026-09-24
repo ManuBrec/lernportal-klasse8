@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Lernportal Klasse 8</title>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -861,12 +862,33 @@ const informatikInformationssystemeTopics = [
   { tag:"abschluss", label:"Alles im Blick" },
 ];
 
+/* Wirtschaft im Beruf (WiB): eigenes Fach mit eigenem Ordner. Kapitel/Themen wie im
+   Inhaltsverzeichnis des Schulbuchs (Kapitel "Wie arbeiten Betriebe, welche Ziele haben sie?",
+   S. 8-13). Die Schüler erarbeiten die Buchseiten selbst; die Übungen sagen ihnen, was sie lesen
+   sollen, und fordern nach vollständig richtiger Lösung per Pop-up zum Heft-Eintrag auf.
+   S. 10-13 sind nur als Themenpunkte angelegt (noch ohne Übung). */
+const wibChapters = [
+  { slug:"wie-arbeiten-betriebe", nr:1, title:"Wie arbeiten Betriebe, welche Ziele haben sie?", status:"aktuell" },
+];
+
+const wibBetriebeTopics = [
+  { tag:"lernen", label:"Was ist ein Betrieb?", page:8, practice:"wib-was-ist-ein-betrieb" },
+  { tag:"lernen", label:"Welche Ziele werden im Betrieb verfolgt?", page:8, practice:"wib-ziele-betrieb" },
+  { tag:"lernen", label:"Was muss ein Betrieb alles beschaffen, um arbeiten zu können?", page:9, practice:"wib-beschaffung" },
+  { tag:"lernen", label:"Wie ist die Produktion organisiert?", page:10 },
+  { tag:"lernen", label:"Was gehört zum Absatz?", page:11 },
+  { tag:"lernen", label:"Wichtige Begriffe zu Produktion und Absatz", page:"10–11", practice:"wib-begriffe-produktion-absatz" },
+  { tag:"lernen", label:"Wie wird die Ökologie im Betrieb beachtet?", page:12 },
+  { tag:"lernen", label:"Welchen Stellenwert haben die Arbeitsplätze in einem Betrieb?", page:13 },
+];
+
 const SUBJECT_META = {
   mathe:        { label:"Mathematik",                       homeHref:"#/mathe",        chapters: chapters },
   deutsch:      { label:"Deutsch",                          homeHref:"#/deutsch",      chapters: deutschChapters },
   gpg:          { label:"Geschichte, Politik, Geographie",  homeHref:"#/gpg",          folders: gpgFolders },
   naturtechnik: { label:"Natur und Technik",                homeHref:"#/naturtechnik", chapters: naturtechnikChapters },
   informatik:   { label:"Informatik",                       homeHref:"#/informatik",   chapters: informatikChapters },
+  wib:          { label:"Wirtschaft im Beruf",              homeHref:"#/wib",          chapters: wibChapters },
 };
 
 const prozentTopics = [
@@ -2232,6 +2254,183 @@ const exerciseSets = {
         explain: "Gut gemacht! Übertrage die vollständige Tabelle mit der richtigen Lösung jetzt in dein Heft." }
     ]
   },
+  /* ---------- WiB: Wie arbeiten Betriebe? (S. 8-9) ---------- */
+  "wib-was-ist-ein-betrieb": {
+    title: "Was ist ein Betrieb?",
+    subject: "wib",
+    chapterSlug: "wie-arbeiten-betriebe",
+    duration: "ca. 5–8 Minuten",
+    locked: false,
+    questions: [
+      { kind:"gapfill", section:"S. 8",
+        text: "Lies im Buch auf S. 8 den Abschnitt „Was ist ein Betrieb?“ und den blauen INFO-Kasten. Fülle dann die Lücken im Merksatz aus.",
+        template: "Ein Betrieb ist ein %%, an dem %% hergestellt oder %% angeboten werden.",
+        answers: ["Ort","Güter","Dienstleistungen"],
+        extraWords: ["Mensch","Geld","Kunden","Maschinen"],
+        popupText: "Schreibe den Merksatz „Was ist ein Betrieb?“ in dein Heft.",
+        explain: "Ein Betrieb ist ein Ort, an dem Güter hergestellt (z. B. Brot, Kleidung, Autos) oder Dienstleistungen angeboten werden (z. B. ein Reisebüro, das eine Reise bucht)." }
+    ]
+  },
+  "wib-ziele-betrieb": {
+    title: "Welche Ziele werden im Betrieb verfolgt?",
+    subject: "wib",
+    chapterSlug: "wie-arbeiten-betriebe",
+    duration: "ca. 8–10 Minuten",
+    locked: false,
+    questions: [
+      { kind:"table-match", section:"S. 8",
+        text: "Lies im Buch auf S. 8 den Abschnitt „Welche Ziele werden im Betrieb verfolgt?“. Welche Ziele verfolgt ein Betrieb? Ordne die richtigen Ziele zu – Achtung, nicht alle Kärtchen passen!",
+        columns: ["Wer verfolgt das Ziel?", "Ziele"],
+        rows: [
+          { label: "Eigentümer",                  accept: ["gewinn", "wachsen"] },
+          { label: "Mitarbeiter",                 accept: ["arbeitsplatz", "lohn"] },
+          { label: "Eigentümer und Mitarbeiter",  accept: ["zukunft", "image"] },
+        ],
+        chips: [
+          { id: "gewinn",       label: "Gewinn erzielen und Einkommen sichern" },
+          { id: "wachsen",      label: "Der Betrieb soll größer werden und wachsen" },
+          { id: "arbeitsplatz", label: "Einen sicheren Arbeitsplatz haben" },
+          { id: "lohn",         label: "Jeden Monat Lohn erhalten" },
+          { id: "zukunft",      label: "Der Betrieb soll auch in Zukunft bestehen" },
+          { id: "image",        label: "Ein gutes Ansehen (Image), z. B. durch Umweltschutz und Sozialleistungen" },
+          { id: "d1", label: "Möglichst wenig arbeiten" },
+          { id: "d2", label: "Die Preise immer weiter erhöhen" },
+          { id: "d3", label: "Möglichst viel Freizeit haben" },
+          { id: "d4", label: "Die Kunden möglichst selten sehen" },
+        ],
+        popupText: "Übernimm die Tabelle „Welche Ziele verfolgt ein Betrieb?“ schriftlich in dein Heft.",
+        explain: "Der Eigentümer möchte Gewinn erzielen und dass sein Betrieb wächst. Die Mitarbeiter wollen einen sicheren Arbeitsplatz und ihren monatlichen Lohn. Beide wollen, dass der Betrieb auch in Zukunft besteht und ein gutes Ansehen (Image) hat – dazu gehören z. B. Umweltschutz und Sozialleistungen." }
+    ]
+  },
+  "wib-beschaffung": {
+    title: "Was muss ein Betrieb alles beschaffen?",
+    subject: "wib",
+    chapterSlug: "wie-arbeiten-betriebe",
+    duration: "ca. 15–20 Minuten",
+    locked: false,
+    questions: [
+      { kind:"table-match", section:"Schritt 1: Der Kreislauf",
+        text: "Lies im Buch auf S. 9 die linke Spalte (bis zu den Zahnrädern). Was bedeuten die drei Zahnräder? Ordne jedem Begriff die passende Bedeutung zu.",
+        columns: ["Zahnrad", "Das bedeutet …"],
+        rows: [
+          { label: "Beschaffung", accept: ["einkaufen"] },
+          { label: "Produktion",  accept: ["herstellen"] },
+          { label: "Absatz",      accept: ["verkaufen"] },
+        ],
+        chips: [
+          { id: "einkaufen",  label: "einkaufen" },
+          { id: "herstellen", label: "herstellen" },
+          { id: "verkaufen",  label: "verkaufen" },
+          { id: "d1", label: "reparieren" },
+          { id: "d2", label: "ausleihen" },
+        ],
+        popupText: "Zeichne die drei Zahnräder in dein Heft und beschrifte sie: Beschaffung (= einkaufen), Produktion (= herstellen), Absatz (= verkaufen).",
+        explain: "Jeder Betrieb arbeitet in drei Schritten: Er kauft ein (Beschaffung), stellt her (Produktion) und verkauft (Absatz). Die Zahnräder greifen ineinander – fehlt eines, läuft der ganze Betrieb nicht." },
+      { kind:"table-match", section:"Schritt 2: Der Einkaufskorb der Bäckerei",
+        text: "Lies im Buch auf S. 9 die Abschnitte Werkstoffe, Betriebsmittel, Mitarbeiter und Finanzmittel. Was muss die Bäckerei alles beschaffen? Sortiere die Kärtchen in die Tabelle. Achtung: Zwei Kärtchen muss eine Bäckerei gar nicht beschaffen!",
+        columns: ["Bereich", "Beispiele aus der Bäckerei"],
+        rows: [
+          { label: "Werkstoffe (Rohstoffe)", accept: ["mehl", "hefe", "eier"] },
+          { label: "Betriebsstoffe",         accept: ["strom", "reinigung", "oel"] },
+          { label: "Betriebsmittel",         accept: ["ofen", "theke", "lieferwagen"] },
+          { label: "Mitarbeiter",            accept: ["baeckerin", "fahrer", "verkaeuferin"] },
+          { label: "Finanzmittel",           accept: ["kredit", "erspartes"] },
+        ],
+        chips: [
+          { id: "mehl",         label: "Mehl" },
+          { id: "hefe",         label: "Hefe" },
+          { id: "eier",         label: "Eier" },
+          { id: "strom",        label: "Strom" },
+          { id: "reinigung",    label: "Reinigungsmittel" },
+          { id: "oel",          label: "Öl für die Maschinen" },
+          { id: "ofen",         label: "Backofen" },
+          { id: "theke",        label: "Verkaufstheke" },
+          { id: "lieferwagen",  label: "Lieferwagen" },
+          { id: "baeckerin",    label: "Bäckerin" },
+          { id: "fahrer",       label: "Fahrer" },
+          { id: "verkaeuferin", label: "Verkäuferin" },
+          { id: "kredit",       label: "Kredit von der Bank" },
+          { id: "erspartes",    label: "Erspartes Geld des Inhabers" },
+          { id: "d1", label: "Fertige Brezen" },
+          { id: "d2", label: "Kunden" },
+        ],
+        popupText: "Übernimm die Tabelle „Was muss eine Bäckerei beschaffen?“ schriftlich in dein Heft.",
+        explain: "Werkstoffe (Rohstoffe) werden zum Produkt verarbeitet, Betriebsstoffe halten die Maschinen am Laufen, Betriebsmittel sind Maschinen, Geräte und Einrichtung. Dazu kommen Mitarbeiter und Geld (Finanzmittel), um alles zu bezahlen. Fertige Brezen stellt die Bäckerei selbst her – und Kunden kann man nicht einkaufen." },
+      { kind:"mc", section:"Schritt 3: Was wäre, wenn …?",
+        text: "Die Bäckerei hat zu wenig Mehl eingekauft. Was passiert?",
+        options: [
+          "Es können nicht genug Brote und Brötchen gebacken werden – Kunden gehen leer aus.",
+          "Nichts – die Bäckerei backt einfach mit Strom weiter.",
+          "Die Bäckerei verdient dadurch mehr Geld.",
+          "Die Mitarbeiter bekommen mehr Lohn."
+        ], correct:0,
+        explain: "Fehlen Werkstoffe, stockt die Produktion. Dann kann die Bäckerei weniger verkaufen und verdient weniger." },
+      { kind:"mc", section:"Schritt 3: Was wäre, wenn …?",
+        text: "Die Bäckerei backt jeden Tag viel mehr Brot, als die Kunden kaufen. Was passiert?",
+        options: [
+          "Die Kunden kaufen automatisch mehr.",
+          "Viel Brot bleibt übrig und muss weggeworfen werden – die Bäckerei verliert Geld.",
+          "Das ist egal, Brot hält ja wochenlang.",
+          "Die Bäckerei braucht weniger Mehl."
+        ], correct:1,
+        explain: "Wird zu viel produziert, bleibt Ware übrig. Die Kosten für Zutaten, Strom und Arbeit sind trotzdem angefallen – der Betrieb macht Verlust." },
+      { kind:"mc", section:"Schritt 3: Was wäre, wenn …?",
+        text: "Der große Backofen der Bäckerei ist kaputt. Was passiert?",
+        options: [
+          "Die Verkäuferinnen haben mehr zu tun.",
+          "Die Bäckerei spart Geld, weil sie keinen Strom braucht.",
+          "Die Produktion stockt: Ohne das Betriebsmittel können kaum Backwaren hergestellt werden.",
+          "Es passiert nichts, die Bäcker kneten einfach weiter."
+        ], correct:2,
+        explain: "Ohne Betriebsmittel (Maschinen, Geräte) steht die Produktion still oder wird sehr langsam und teuer." },
+      { kind:"mc", section:"Schritt 3: Was wäre, wenn …?",
+        text: "Die Bäckerei hat nicht genug Geld (Finanzmittel). Was passiert?",
+        options: [
+          "Sie kann keine Rohstoffe, Maschinen oder Löhne bezahlen – der Betrieb gerät in Gefahr.",
+          "Sie bekommt die Zutaten dann einfach geschenkt.",
+          "Das macht nichts, Geld braucht man erst nach dem Verkauf.",
+          "Sie muss einfach mehr Werbung machen, dann ist alles gut."
+        ], correct:0,
+        explain: "Bevor ein Betrieb etwas verkauft, muss er schon viel bezahlen: Zutaten, Maschinen, Strom und Löhne. Deshalb braucht er von Anfang an Geld (Finanzmittel)." }
+    ]
+  },
+  /* S. 10-11 "Wie ist die Produktion organisiert?" / "Was gehört zum Absatz?": die am Buch-Rand
+     als eigener Kasten (bzw. bei "Absatz" fett im Fließtext) erklärten Fachbegriffe als
+     Begriff-Erklärung-Zuordnung (table-match, wie schon bei den Zahnrädern auf S. 9) - Begriffe
+     und Erklärungen mit Manuel anhand der echten Buchseiten abgeglichen. Zwei Distraktor-Kärtchen
+     (d1/d2) wie beim übrigen WiB-Muster, damit nicht per Ausschluss geraten werden kann. */
+  "wib-begriffe-produktion-absatz": {
+    title: "Wichtige Begriffe zu Produktion und Absatz",
+    subject: "wib",
+    chapterSlug: "wie-arbeiten-betriebe",
+    duration: "ca. 8–10 Minuten",
+    locked: false,
+    questions: [
+      { kind:"table-match", section:"S. 10–11",
+        text: "Lies auf S. 10 und S. 11 die am Rand blau hervorgehobenen Begriffe. Ordne jedem Begriff die passende Erklärung zu.",
+        columns: ["Begriff", "Erklärung"],
+        rows: [
+          { label: "effizient",       accept: ["effizient_def"] },
+          { label: "Fließfertigung",  accept: ["fliess_def"] },
+          { label: "Marketing",       accept: ["marketing_def"] },
+          { label: "Kalkulation",     accept: ["kalkulation_def"] },
+          { label: "Filiale",         accept: ["filiale_def"] },
+          { label: "Absatz",          accept: ["absatz_def"] },
+        ],
+        chips: [
+          { id: "effizient_def",  label: "Mit möglichst wenig Aufwand ein möglichst großes Ergebnis erzielen" },
+          { id: "fliess_def",     label: "Arbeitsplätze und Maschinen sind so hintereinander angeordnet, dass das Produkt von Arbeitsplatz zu Arbeitsplatz wandert, bis es fertig ist" },
+          { id: "marketing_def",  label: "Alle Maßnahmen, die Produkte und Dienstleistungen bekannt machen und verkaufen sollen" },
+          { id: "kalkulation_def",label: "Eine Vorausberechnung von Kosten und Preisen" },
+          { id: "filiale_def",    label: "Eine weitere Verkaufsstelle eines Betriebs" },
+          { id: "absatz_def",     label: "Alle Tätigkeiten, die mit dem Verkauf der Produkte zusammenhängen" },
+          { id: "d1", label: "Eine Übersicht darüber, wie viel Ware gerade im Lager des Betriebs ist" },
+          { id: "d2", label: "Der Zeitpunkt, zu dem die fertigen Waren beim Kunden ankommen sollen" },
+        ],
+        popupText: "Übernimm die sechs Begriffe mit ihrer Erklärung in dein Heft.",
+        explain: "effizient = mit möglichst wenig Aufwand ein möglichst großes Ergebnis erzielen. Fließfertigung = das Produkt wandert von Arbeitsplatz zu Arbeitsplatz, bis es fertig ist. Marketing = alle Maßnahmen, um Produkte bekannt zu machen und zu verkaufen. Kalkulation = Vorausberechnung von Kosten und Preisen. Filiale = weitere Verkaufsstelle eines Betriebs. Absatz = alle Tätigkeiten rund um den Verkauf." }
+    ]
+  },
   "informatik-kommunikationssysteme": {
     title: "Vorwissen: Kommunikationssysteme",
     subject: "informatik",
@@ -2743,6 +2942,13 @@ function viewHome(){
           <span class="subject-sub">Informatik Mittelschule Bayern 8 · Klasse 8</span>
         </span>
       </a>
+      <a class="subject-card card active" href="#/wib">
+        <span class="subject-icon">💼</span>
+        <span>
+          <span class="subject-title">Wirtschaft im Beruf</span><br>
+          <span class="subject-sub">WiB · Klasse 8</span>
+        </span>
+      </a>
     </div>
   `;
 }
@@ -3120,6 +3326,89 @@ function viewInformatikChapter(slug){
 
   return h`
     <a class="backlink" href="#/informatik">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">Kapitel ${c.nr}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieses Kapitel ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
+
+function viewWib(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Wirtschaft im Beruf", href:"#/wib"}]);
+  const rows = wibChapters.map(c => `
+    <a class="chapter-row linkable" href="#/wib/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Wirtschaft im Beruf</span>
+      <h1>Betriebe &amp; Wirtschaft.</h1>
+      <p>Übungen zu den Themen aus dem Unterricht. Weitere Kapitel folgen nach und nach.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewWibChapter(slug){
+  const c = wibChapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Wirtschaft im Beruf", href:"#/wib"}, {label:c.title, href:"#/wib/"+slug}]);
+
+  if (slug === "wie-arbeiten-betriebe"){
+    const rows = wibBetriebeTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${pageHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/wib">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Lies die Buchseiten und löse die Aufgaben der Reihe nach. Weitere Themen folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/wib">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
       <span class="eyebrow">Kapitel ${c.nr}</span>
       <h1>${esc(c.title)}</h1>
@@ -3587,7 +3876,8 @@ window.__startExercise = function(slug){
       const textHtml = gapParts.map((seg, idx) =>
         esc(seg) + (idx < gapParts.length - 1 ? `<button type="button" class="lt-blank" data-idx="${idx}"></button>` : "")
       ).join("");
-      const bankWords = shuffled(q.answers.map((w,idx)=>({word:w, idx})));
+      /* q.extraWords (optional): zusätzliche Ablenkwörter in der Wortliste, passen in keine Lücke. */
+      const bankWords = shuffled(q.answers.map((w,idx)=>({word:w, idx})).concat((q.extraWords||[]).map(w=>({word:w, idx:-1}))));
       const chipsHtml = bankWords.map((item,i) => `<button type="button" class="lt-chip" data-word="${esc(item.word)}" id="ltChip_${i}">${esc(item.word)}</button>`).join("");
       body = `
         <p class="ws-instruction">👉 Tippe eine Lücke an und danach das passende Wort aus der Liste – oder umgekehrt.</p>
@@ -4285,7 +4575,19 @@ window.__startExercise = function(slug){
           chipEl.classList.add("used");
           chipEl.disabled = true;
           filledCount++;
-          if (filledCount >= total2) lockQuestion("correct", q.explain, "correct");
+          if (filledCount >= total2){
+            lockQuestion("correct", q.explain, "correct");
+            /* q.popupText (optional): Pop-up zum Heft-Eintrag nach vollständig richtigem Lückentext
+               (gleiches Aussehen wie bei table-match). */
+            if (q.popupText){
+              bankEl.querySelectorAll(".lt-chip").forEach(c=>{ c.disabled = true; });
+              const overlay = document.createElement("div");
+              overlay.className = "tm-popup-overlay";
+              overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+              document.body.appendChild(overlay);
+              overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+            }
+          }
         } else {
           flashWrong(blankBtnEl);
           flashWrong(chipEl);
@@ -4534,6 +4836,10 @@ function route(){
     html = viewInformatik();
   } else if (parts[0] === "informatik" && parts.length === 2){
     html = viewInformatikChapter(parts[1]);
+  } else if (parts[0] === "wib" && parts.length === 1){
+    html = viewWib();
+  } else if (parts[0] === "wib" && parts.length === 2){
+    html = viewWibChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "loesung" && parts.length === 2){
@@ -4764,3 +5070,5 @@ function initGate(){
 }
 initGate();
 </script>
+
+</body></html>
