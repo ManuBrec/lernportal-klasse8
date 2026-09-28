@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="de"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Lernportal Klasse 8</title>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -513,6 +513,47 @@
   }
   .mm-chip-ghost.mm-chip-ghost-badge svg{width:18px; height:18px;}
 
+  /* Verschachtelte Kreis-Zuordnung (map-match mit q.layout==="nested-circles", z.B. "Grundlagen
+     der Landwirtschaft"): drei große, farbige Kreise (Überbegriffe) mit kleineren Kreisen darin
+     (Begriffe) und je einem oder mehreren Erklärungs-Kärtchen direkt darunter. Technisch nutzt das
+     GENAU dieselbe Zieh-Logik wie die anderen map-match-Übungen (jedes Kreis-/Kärtchen-Element ist
+     ein normales ".mm-tile[data-target]", nur eigenständig positioniert statt im CSS-Grid) -
+     deshalb sind alle Ziele bewusst BLATT-Elemente ohne eigene Kind-Elemente: die Zieh-Logik
+     ersetzt bei richtiger Antwort das komplette innerHTML einer Kachel, das darf also nirgends
+     verschachtelten Inhalt zerstören. Der große Kreis selbst ist deshalb NUR Dekoration (kein
+     Ziel) - das Überbegriff-Wort landet auf einem eigenen kleinen "Label-Pill" ganz oben im Kreis.
+     .filled (per data-fill-target in der Zieh-Logik ergänzt) färbt den Hintergrund erst bei
+     richtiger Antwort ein, damit die Farbe nicht vorher schon den Überbegriff verrät. */
+  .nc-board{display:flex; flex-direction:column; align-items:center; gap:34px; margin:8px 0 18px;}
+  .nc-circle{
+    position:relative; width:100%; max-width:340px; aspect-ratio:1; border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    border:3px dashed var(--border); background:var(--surface); padding:22px 18px; text-align:center;
+  }
+  .nc-circle.filled{border-style:solid;}
+  .nc-circle.nc-boden.filled{background:#DCE3FA; border-color:#3454D1;}
+  .nc-circle.nc-temp.filled{background:#FBEBD9; border-color:#C97A2B;}
+  .nc-circle.nc-hoehe.filled{background:#DFF0E4; border-color:#237A4B;}
+  .nc-label-pill{
+    min-width:0; width:auto; max-width:230px; padding:10px 18px; font-size:14.5px; font-weight:700;
+    border-radius:999px;
+  }
+  .nc-term-cols{display:flex; gap:8px; justify-content:center; align-items:flex-start; flex-wrap:wrap;}
+  .nc-term-col{display:flex; flex-direction:column; align-items:center; gap:6px; width:30%; min-width:84px;}
+  .nc-term{
+    width:100%; aspect-ratio:1; border-radius:50%; font-size:10px; padding:4px;
+    overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+  }
+  .nc-explain{
+    width:100%; min-height:0; border-radius:9px; font-size:8.5px; font-weight:700; padding:5px 4px; line-height:1.25;
+    overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+  }
+  .nc-circle.nc-boden .mm-tile.correct{border-color:#3454D1; background:#fff; color:var(--ink);}
+  .nc-circle.nc-temp .mm-tile.correct{border-color:#C97A2B; background:#fff; color:var(--ink);}
+  .nc-circle.nc-hoehe .mm-tile.correct{border-color:#237A4B; background:#fff; color:var(--ink);}
+  .mm-chip.nc-category{border-color:#9aa8c9; background:#F1F3FC; color:#3454D1;}
+  .mm-chip.nc-fact{font-size:11px; font-weight:600; color:var(--ink-soft);}
+
   /* "Wörter in Kreise sortieren" (circle-sort): 5 feste, immer sichtbare Strategie-Kreise im
      Hintergrund, ein Wort nach dem anderen wird nacheinander in den passenden Kreis gezogen. */
   /* "Wörter in Kreise sortieren" (Aufgabe: circle-sort) läuft im Vollbild: die Übung legt sich
@@ -832,7 +873,7 @@ const landwirtschaftTopics = [
      dem Inhaltsverzeichnis bzw. dem "Wegweiser" auf S. 199 übernommen, noch OHNE eigene Übung
      ("practice" bewusst weggelassen) - erscheinen bis dahin als reine Themenpunkte ohne
      "Jetzt üben"-Knopf, genau wie z.B. "Die Prozentrechnung anwenden" bei Mathe. */
-  { tag:"lernen", label:"Grundlagen der Landwirtschaft", page:200 },
+  { tag:"lernen", label:"Grundlagen der Landwirtschaft", page:200, practice:"gpg-landwirtschaft-grundlagen" },
   { tag:"lernen", label:"Der Gäuboden", page:202 },
   { tag:"lernen", label:"Das Knoblauchsland", page:204 },
   { tag:"lernen", label:"Konventionelle Landwirtschaft", page:206 },
@@ -2497,6 +2538,57 @@ const exerciseSets = {
         popupBody: "Ackerbau bedeutet, dass Felder bewirtschaftet werden um z.B. Getreide, Kartoffeln oder Zuckerrüben anzubauen. Ob Ackerbau möglich ist, hängt vom Klima, der Bodenqualität und Form der Oberfläche ab.¶Viehzucht bedeutet, dass Landwirte Tiere halten, um deren Produkte zu verkaufen. In Bayern gibt es vor allem Milchvieh-, Schweinezucht- und Geflügelbetriebe." }
     ]
   },
+  /* --- S. 200 "Grundlagen der Landwirtschaft": drei große, farbige Kreise für die Überbegriffe
+     (Der Boden / Temperatur und Niederschlag / Höhenlage und Oberflächenform) - siehe CSS-
+     Kommentar bei ".nc-board" für die Technik. Alle Begriffe UND Erklärungen stammen aus Manuels
+     Aufschrieb zur Doppelseite; bewusst als EINE Frage mit einem gemeinsamen, gemischten Wortpool
+     (nicht in drei Einzelfragen aufgeteilt), weil laut Manuel alles zusammen in die passenden
+     Kreise sortiert werden soll. */
+  "gpg-landwirtschaft-grundlagen": {
+    title: "Grundlagen der Landwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 12 Minuten",
+    questions: [
+      { kind:"map-match", layout:"nested-circles", section:"Grundlagen der Landwirtschaft",
+        text: "Zieh zuerst die drei Überbegriffe in die großen Kreise. Zieh dann die passenden Begriffe in die kleinen Kreise darin – und die passende Erklärung dazu direkt darunter.",
+        groups: [
+          { id:"boden", label:"Der Boden", color:"boden", terms: [
+            { id:"fruchtbarkeit", label:"Fruchtbarkeit", explain: [
+              { id:"ex-frucht", label:"Entscheidend fürs Wachstum, hoher Nährstoffgehalt" }
+            ]},
+            { id:"leichte-boeden", label:"Leichte Böden", explain: [
+              { id:"ex-leicht", label:"Gut für Zuckerrüben" }
+            ]},
+            { id:"schwere-boeden", label:"Schwere Böden", explain: [
+              { id:"ex-schwer", label:"Gut für Kartoffeln/Roggen" }
+            ]}
+          ]},
+          { id:"temp", label:"Temperatur und Niederschlag", color:"temp", terms: [
+            { id:"temperatur", label:"Temperatur", explain: [
+              { id:"ex-kalt", label:"Zu kalt = kein Wachstum" },
+              { id:"ex-heiss", label:"Zu heiß/trocken = Pflanzen vertrocknen" }
+            ]},
+            { id:"niederschlag", label:"Niederschlag", explain: [
+              { id:"ex-regen", label:"Wichtig fürs Wachstum – zu viel Regen/Hagel = Schäden" }
+            ]}
+          ]},
+          { id:"hoehe", label:"Höhenlage und Oberflächenform", color:"hoehe", terms: [
+            { id:"hoeher-orte", label:"Höher gelegene Orte", explain: [
+              { id:"ex-hoeher", label:"Kürzere Vegetationszeit" }
+            ]},
+            { id:"steile-haenge", label:"Steile Hänge", explain: [
+              { id:"ex-steil", label:"Schwer zu bearbeiten, aber gut für Weinbau" }
+            ]},
+            { id:"ebene-flaechen", label:"Ebene Flächen", explain: [
+              { id:"ex-ebene", label:"Gut für Maschinen, z. B. Ackerbau" }
+            ]}
+          ]}
+        ],
+        explain: "Richtig – alle Begriffe und Erklärungen sind den richtigen Kreisen zugeordnet!" }
+    ]
+  },
   "bauernhof-suchsel": {
     title: "Begriffe vom Bauernhof – Suchsel",
     subject: "gpg",
@@ -3372,6 +3464,50 @@ function mmBoardHtml(q, revealAll){
     return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-mark="${t.mark ? esc(t.mark) : ""}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr}${groupAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
   }).join("");
   return `<div class="mm-board" id="mmBoard" style="grid-template-columns:repeat(${q.cols},1fr); grid-template-rows:repeat(${q.rows},minmax(48px,1fr));">${cells}</div>`;
+}
+
+/* Verschachtelte Kreis-Zuordnung (siehe CSS-Kommentar bei ".nc-board"): q.groups ist eine Liste
+   von { id, label, color, terms:[{ id, label, explain:[{id,label}, ...] }, ...] }. Jedes Wort
+   (Überbegriff, Begriff, Erklärung) wird ein eigener Chip; alle zusammen kommen gemischt in EINEN
+   Wortpool - genau wie bei den anderen map-match-Übungen, nur mit drei "Ebenen" von Zielen statt
+   einer. data-fill-target auf dem Label-Pill verweist auf die id des dekorativen großen Kreises,
+   damit die Zieh-Logik ihn erst bei richtiger Antwort einfärben kann (siehe dort). */
+function nestedCirclesHtml(q){
+  const groupsHtml = q.groups.map(g => {
+    const termsHtml = g.terms.map(t => {
+      const explainHtml = t.explain.map(ex =>
+        `<div class="mm-tile nc-explain" data-id="${esc(ex.id)}" data-label="${esc(ex.label)}" data-target="1"></div>`
+      ).join("");
+      return `
+        <div class="nc-term-col">
+          <div class="mm-tile nc-term" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-target="1"></div>
+          ${explainHtml}
+        </div>`;
+    }).join("");
+    return `
+      <div class="nc-circle nc-${g.color}" id="ncCircle_${esc(g.id)}">
+        <div class="mm-tile nc-label-pill" data-id="${esc(g.id)}" data-label="${esc(g.label)}" data-target="1" data-fill-target="ncCircle_${esc(g.id)}"></div>
+        <div class="nc-term-cols">${termsHtml}</div>
+      </div>`;
+  }).join("");
+
+  const chipItems = [];
+  q.groups.forEach(g => {
+    chipItems.push({ value:g.id, label:g.label, cls:"nc-category" });
+    g.terms.forEach(t => {
+      chipItems.push({ value:t.id, label:t.label, cls:"" });
+      t.explain.forEach(ex => chipItems.push({ value:ex.id, label:ex.label, cls:"nc-fact" }));
+    });
+  });
+  const chipsHtml = shuffled(chipItems).map((c,i) =>
+    `<button type="button" class="mm-chip${c.cls ? " "+c.cls : ""}" data-value="${esc(c.value)}" id="chip_${i}">${esc(c.label)}</button>`
+  ).join("");
+
+  return `
+    <div class="mm-board nc-board" id="mmBoard">${groupsHtml}</div>
+    <p class="gap-hint">👉 Tippe ein Wort an, halte es gedrückt und ziehe es auf den passenden Kreis: erst den Überbegriff, dann die Begriffe, dann die Erklärungen dazu.</p>
+    <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+  `;
 }
 
 /* Rendert die echte Deutschlandkarte (16 Bundesländer, aus DE_STATES) als anklickbare/
@@ -4337,6 +4473,8 @@ window.__startExercise = function(slug){
         <p class="gap-hint">Tippe einen Stadtnamen an, halte ihn gedrückt und ziehe ihn genau auf den passenden Punkt auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
+    } else if (q.kind === "map-match" && q.layout === "nested-circles"){
+      body = nestedCirclesHtml(q);
     } else if (q.kind === "map-match"){
       const realChips = q.tiles.filter(t=>!t.fixed).map(t => ({ value:t.id, label:t.label }));
       const distractorChipsList = (q.distractorChips || []).map((label,idx) => ({ value:"__distractor_"+idx, label:label }));
@@ -4914,6 +5052,13 @@ window.__startExercise = function(slug){
             : highlightLabel(tile.dataset.label, tile.dataset.mark);
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${labelHtml}</span>`;
           chip.classList.add("used");
+          /* Verschachtelte Kreis-Zuordnung: der dekorative große Kreis färbt sich erst jetzt ein
+             (siehe CSS-Kommentar bei ".nc-board") - bei allen anderen map-match-Übungen ist
+             data-fill-target einfach nicht gesetzt, ändert also nichts. */
+          if (tile.dataset.fillTarget){
+            const wrap = document.getElementById(tile.dataset.fillTarget);
+            if (wrap) wrap.classList.add("filled");
+          }
           checkComplete();
         } else {
           tile.classList.add("wrong-flash");
@@ -4930,6 +5075,10 @@ window.__startExercise = function(slug){
         board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
           tile.classList.add("correct");
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
+          if (tile.dataset.fillTarget){
+            const wrap = document.getElementById(tile.dataset.fillTarget);
+            if (wrap) wrap.classList.add("filled");
+          }
         });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
