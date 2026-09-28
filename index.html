@@ -513,31 +513,44 @@
   }
   .mm-chip-ghost.mm-chip-ghost-badge svg{width:18px; height:18px;}
 
-  /* Verschachtelte Kreis-Zuordnung (map-match mit q.layout==="nested-circles", z.B. "Grundlagen
-     der Landwirtschaft"): drei große, farbige Kreise (Überbegriffe) mit kleineren Kreisen darin
-     (Begriffe) und je einem oder mehreren Erklärungs-Kärtchen direkt darunter. Technisch nutzt das
-     GENAU dieselbe Zieh-Logik wie die anderen map-match-Übungen (jedes Kreis-/Kärtchen-Element ist
-     ein normales ".mm-tile[data-target]", nur eigenständig positioniert statt im CSS-Grid) -
-     deshalb sind alle Ziele bewusst BLATT-Elemente ohne eigene Kind-Elemente: die Zieh-Logik
-     ersetzt bei richtiger Antwort das komplette innerHTML einer Kachel, das darf also nirgends
-     verschachtelten Inhalt zerstören. Der große Kreis selbst ist deshalb NUR Dekoration (kein
-     Ziel) - das Überbegriff-Wort landet auf einem eigenen kleinen "Label-Pill" ganz oben im Kreis.
-     .filled (per data-fill-target in der Zieh-Logik ergänzt) färbt den Hintergrund erst bei
-     richtiger Antwort ein, damit die Farbe nicht vorher schon den Überbegriff verrät. */
-  .nc-board{display:flex; flex-direction:column; align-items:center; gap:34px; margin:8px 0 18px;}
+  /* Verschachtelte Kreis-Zuordnung, Schritt für Schritt (map-match mit
+     q.layout==="nested-circles-staged", z.B. "Grundlagen der Landwirtschaft"): läuft im Vollbild
+     (.cs-fullscreen, siehe dort) statt als normale .qcard, damit die Seite nie länger als ein
+     Bildschirm wird. Schritt 1: die drei Überbegriffe NEBENEINANDER als kleine Kreise
+     (.nc-circle-sm). Schritt 2..N: jeweils EIN großer Kreis (.nc-circle) mit seinen Begriffen
+     (.nc-term) und Erklärungen (.nc-explain) darunter - der Überbegriff steht dort nur noch als
+     fertiger, nicht mehr ziehbarer Kopf (.nc-label-static), weil er schon in Schritt 1 geklärt
+     wurde. Jedes Ziel ist ein normales ".mm-tile[data-target]" (siehe Event-Wiring
+     q.layout==="nested-circles-staged"), bewusst immer ein BLATT-Element ohne Kind-Elemente, weil
+     die Zieh-Logik bei richtiger Antwort das komplette innerHTML einer Kachel ersetzt. */
+  .nc-fs-row{display:flex; gap:14px; justify-content:center; align-items:center; flex-wrap:wrap;}
+  .nc-circle-sm{
+    width:28vw; max-width:130px; min-width:92px; aspect-ratio:1; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    border:3px dashed var(--border); background:var(--surface); font-size:11.5px; font-weight:700;
+    color:var(--ink-faint); padding:8px;
+    overflow-wrap:break-word; -webkit-hyphens:auto; hyphens:auto;
+  }
+  .nc-circle-sm.correct{border-style:solid; color:var(--ink);}
+  .nc-circle-sm.nc-boden.correct{background:#DCE3FA; border-color:#3454D1;}
+  .nc-circle-sm.nc-temp.correct{background:#FBEBD9; border-color:#C97A2B;}
+  .nc-circle-sm.nc-hoehe.correct{background:#DFF0E4; border-color:#237A4B;}
   .nc-circle{
     position:relative; width:100%; max-width:340px; aspect-ratio:1; border-radius:50%;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
-    border:3px dashed var(--border); background:var(--surface); padding:22px 18px; text-align:center;
+    border:3px solid var(--border); background:var(--surface); padding:22px 18px; text-align:center;
   }
-  .nc-circle.filled{border-style:solid;}
-  .nc-circle.nc-boden.filled{background:#DCE3FA; border-color:#3454D1;}
-  .nc-circle.nc-temp.filled{background:#FBEBD9; border-color:#C97A2B;}
-  .nc-circle.nc-hoehe.filled{background:#DFF0E4; border-color:#237A4B;}
-  .nc-label-pill{
-    min-width:0; width:auto; max-width:230px; padding:10px 18px; font-size:14.5px; font-weight:700;
-    border-radius:999px;
+  .nc-circle.nc-boden{background:#DCE3FA; border-color:#3454D1;}
+  .nc-circle.nc-temp{background:#FBEBD9; border-color:#C97A2B;}
+  .nc-circle.nc-hoehe{background:#DFF0E4; border-color:#237A4B;}
+  .nc-label-static{
+    display:inline-flex; align-items:center; justify-content:center;
+    max-width:230px; padding:10px 18px; font-size:14.5px; font-weight:700;
+    border-radius:999px; background:#fff; border:2px solid var(--border); color:var(--ink);
   }
+  .nc-circle.nc-boden .nc-label-static{border-color:#3454D1;}
+  .nc-circle.nc-temp .nc-label-static{border-color:#C97A2B;}
+  .nc-circle.nc-hoehe .nc-label-static{border-color:#237A4B;}
   .nc-term-cols{display:flex; gap:8px; justify-content:center; align-items:flex-start; flex-wrap:wrap;}
   .nc-term-col{display:flex; flex-direction:column; align-items:center; gap:6px; width:30%; min-width:84px;}
   .nc-term{
@@ -2551,7 +2564,7 @@ const exerciseSets = {
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 12 Minuten",
     questions: [
-      { kind:"map-match", layout:"nested-circles", section:"Grundlagen der Landwirtschaft",
+      { kind:"map-match", layout:"nested-circles-staged", section:"Grundlagen der Landwirtschaft",
         text: "Zieh zuerst die drei Überbegriffe in die großen Kreise. Zieh dann die passenden Begriffe in die kleinen Kreise darin – und die passende Erklärung dazu direkt darunter.",
         groups: [
           { id:"boden", label:"Der Boden", color:"boden", terms: [
@@ -3464,50 +3477,6 @@ function mmBoardHtml(q, revealAll){
     return `<div class="${cls}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-mark="${t.mark ? esc(t.mark) : ""}" data-icon="${t.icon ? esc(t.icon) : ""}"${targetAttr}${groupAttr} style="grid-column:${t.col} / span ${t.colSpan||1}; grid-row:${t.row} / span ${t.rowSpan||1};">${iconHtml}${labelHtml}</div>`;
   }).join("");
   return `<div class="mm-board" id="mmBoard" style="grid-template-columns:repeat(${q.cols},1fr); grid-template-rows:repeat(${q.rows},minmax(48px,1fr));">${cells}</div>`;
-}
-
-/* Verschachtelte Kreis-Zuordnung (siehe CSS-Kommentar bei ".nc-board"): q.groups ist eine Liste
-   von { id, label, color, terms:[{ id, label, explain:[{id,label}, ...] }, ...] }. Jedes Wort
-   (Überbegriff, Begriff, Erklärung) wird ein eigener Chip; alle zusammen kommen gemischt in EINEN
-   Wortpool - genau wie bei den anderen map-match-Übungen, nur mit drei "Ebenen" von Zielen statt
-   einer. data-fill-target auf dem Label-Pill verweist auf die id des dekorativen großen Kreises,
-   damit die Zieh-Logik ihn erst bei richtiger Antwort einfärben kann (siehe dort). */
-function nestedCirclesHtml(q){
-  const groupsHtml = q.groups.map(g => {
-    const termsHtml = g.terms.map(t => {
-      const explainHtml = t.explain.map(ex =>
-        `<div class="mm-tile nc-explain" data-id="${esc(ex.id)}" data-label="${esc(ex.label)}" data-target="1"></div>`
-      ).join("");
-      return `
-        <div class="nc-term-col">
-          <div class="mm-tile nc-term" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-target="1"></div>
-          ${explainHtml}
-        </div>`;
-    }).join("");
-    return `
-      <div class="nc-circle nc-${g.color}" id="ncCircle_${esc(g.id)}">
-        <div class="mm-tile nc-label-pill" data-id="${esc(g.id)}" data-label="${esc(g.label)}" data-target="1" data-fill-target="ncCircle_${esc(g.id)}"></div>
-        <div class="nc-term-cols">${termsHtml}</div>
-      </div>`;
-  }).join("");
-
-  const chipItems = [];
-  q.groups.forEach(g => {
-    chipItems.push({ value:g.id, label:g.label, cls:"nc-category" });
-    g.terms.forEach(t => {
-      chipItems.push({ value:t.id, label:t.label, cls:"" });
-      t.explain.forEach(ex => chipItems.push({ value:ex.id, label:ex.label, cls:"nc-fact" }));
-    });
-  });
-  const chipsHtml = shuffled(chipItems).map((c,i) =>
-    `<button type="button" class="mm-chip${c.cls ? " "+c.cls : ""}" data-value="${esc(c.value)}" id="chip_${i}">${esc(c.label)}</button>`
-  ).join("");
-
-  return `
-    <div class="mm-board nc-board" id="mmBoard">${groupsHtml}</div>
-    <p class="gap-hint">👉 Tippe ein Wort an, halte es gedrückt und ziehe es auf den passenden Kreis: erst den Überbegriff, dann die Begriffe, dann die Erklärungen dazu.</p>
-    <div class="chip-tray" id="chipTray">${chipsHtml}</div>
-  `;
 }
 
 /* Rendert die echte Deutschlandkarte (16 Bundesländer, aus DE_STATES) als anklickbare/
@@ -4473,8 +4442,12 @@ window.__startExercise = function(slug){
         <p class="gap-hint">Tippe einen Stadtnamen an, halte ihn gedrückt und ziehe ihn genau auf den passenden Punkt auf der Karte.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
-    } else if (q.kind === "map-match" && q.layout === "nested-circles"){
-      body = nestedCirclesHtml(q);
+    } else if (q.kind === "map-match" && q.layout === "nested-circles-staged"){
+      /* Nur der Bühnen-Platzhalter - der eigentliche Inhalt (drei Kreise nebeneinander, dann
+         Kreis für Kreis die Begriffe/Erklärungen) wird beim Event-Wiring Schritt für Schritt
+         per JS hineingerendert, genau wie bei circle-sort (siehe dort). Läuft komplett im
+         Vollbild - siehe host.innerHTML weiter unten. */
+      body = `<div id="ncStage"></div>`;
     } else if (q.kind === "map-match"){
       const realChips = q.tiles.filter(t=>!t.fixed).map(t => ({ value:t.id, label:t.label }));
       const distractorChipsList = (q.distractorChips || []).map((label,idx) => ({ value:"__distractor_"+idx, label:label }));
@@ -4613,6 +4586,27 @@ window.__startExercise = function(slug){
           <div class="cs-fs-top">
             <div class="cs-progress" id="csProgress">Wort 1 von ${q.items.length}</div>
             <p class="cs-fs-hint">${esc(q.text)}</p>
+          </div>
+          ${body}
+          <div class="feedback" id="fb"></div>
+          <div class="qactions">
+            <button class="skip-btn" id="skipBtn">Überspringen</button>
+            <button class="next-btn" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
+          </div>
+        </div>
+      `;
+    } else if (q.kind === "map-match" && q.layout === "nested-circles-staged"){
+      /* Vollbild wie circle-sort (siehe dort): oben Fortschritt+Hinweis, die eigentlichen Kreise
+         kommen Schritt für Schritt per JS in #ncStage - erst die drei Überbegriffe nebeneinander,
+         dann für jeden Überbegriff einzeln ein großer Kreis mit seinen Begriffen/Erklärungen.
+         Löst zwei Probleme der ursprünglichen (langen, gestapelten) Version auf einmal: die Seite
+         wird nie länger als ein Bildschirm, UND der Wortpool ist pro Schritt klein statt alle 20
+         Wörter auf einmal gemischt. */
+      host.innerHTML = `
+        <div class="cs-fullscreen">
+          <div class="cs-fs-top">
+            <div class="cs-progress" id="ncProgress"></div>
+            <p class="cs-fs-hint" id="ncHint"></p>
           </div>
           ${body}
           <div class="feedback" id="fb"></div>
@@ -4974,6 +4968,157 @@ window.__startExercise = function(slug){
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
+    } else if (q.kind === "map-match" && q.layout === "nested-circles-staged"){
+      /* Schritt-für-Schritt-Zuordnung (siehe Kommentar bei ".nc-board"/host.innerHTML oben):
+         Schritt 0 = die drei Überbegriffe nebeneinander, Schritt 1..N = je EIN großer Kreis mit
+         seinen Begriffen + Erklärungen. Jeder Schritt bekommt sein eigenes, kleines Wortpaar aus
+         Zielen ("board") und Wörtern ("tray") - komplett neu gerendert bei jedem Schrittwechsel
+         (renderStage), mit frisch angehängten Pointer-Handlern. Die eigentliche Zieh-Logik
+         (Ghost-Element, pointerdown/move/up/cancel) ist bewusst dieselbe wie beim generischen
+         map-match weiter unten, nur dass "board"/"tray" hier VARIABLEN sind, die bei jedem
+         Schrittwechsel neu gesetzt werden, statt fester Elemente. */
+      const stageMount = document.getElementById("ncStage");
+      const progressEl = document.getElementById("ncProgress");
+      const hintEl = document.getElementById("ncHint");
+      const totalStages = q.groups.length + 1;
+      let stage = 0;
+      let board = null, tray = null;
+      let draggedChip = null, ghost = null, draggedPointerId = null;
+
+      function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
+      function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+      function resetDrag(){
+        if (draggedChip) draggedChip.classList.remove("dragging");
+        draggedChip = null;
+        draggedPointerId = null;
+        endGhost();
+      }
+      function attachChipHandlers(){
+        tray.querySelectorAll(".mm-chip").forEach(chip=>{
+          chip.addEventListener("pointerdown", (e)=>{
+            if (solved || chip.classList.contains("used") || draggedChip) return;
+            e.preventDefault();
+            draggedChip = chip;
+            draggedPointerId = e.pointerId;
+            chip.classList.add("dragging");
+            ghost = document.createElement("div");
+            ghost.className = "mm-chip-ghost";
+            ghost.textContent = chip.textContent;
+            document.body.appendChild(ghost);
+            moveGhost(e.clientX, e.clientY);
+            try { chip.setPointerCapture(e.pointerId); } catch(err){ /* ignorieren */ }
+          });
+        });
+      }
+
+      function renderCategoriesStage(){
+        progressEl.textContent = `Schritt 1 von ${totalStages} · Überbegriffe`;
+        hintEl.textContent = "Zieh die drei Überbegriffe in die passenden Kreise.";
+        const circlesHtml = q.groups.map(g =>
+          `<div class="nc-circle-sm mm-tile nc-${g.color}" data-id="${esc(g.id)}" data-label="${esc(g.label)}" data-target="1"></div>`
+        ).join("");
+        const chipItems = shuffled(q.groups.map(g => ({ value:g.id, label:g.label })));
+        const chipsHtml = chipItems.map((c,idx) =>
+          `<button type="button" class="mm-chip nc-category" data-value="${esc(c.value)}" id="chip_${idx}">${esc(c.label)}</button>`
+        ).join("");
+        stageMount.innerHTML = `
+          <div class="nc-fs-row" id="ncBoard">${circlesHtml}</div>
+          <div class="chip-tray" id="ncTray">${chipsHtml}</div>
+        `;
+        board = document.getElementById("ncBoard");
+        tray = document.getElementById("ncTray");
+        attachChipHandlers();
+      }
+
+      function renderGroupStage(groupIdx){
+        const g = q.groups[groupIdx];
+        progressEl.textContent = `Schritt ${groupIdx+2} von ${totalStages} · ${g.label}`;
+        hintEl.textContent = "Zieh die passenden Begriffe in die kleinen Kreise – und die Erklärung dazu direkt darunter.";
+        const termsHtml = g.terms.map(t => {
+          const explainHtml = t.explain.map(ex =>
+            `<div class="mm-tile nc-explain" data-id="${esc(ex.id)}" data-label="${esc(ex.label)}" data-target="1"></div>`
+          ).join("");
+          return `
+            <div class="nc-term-col">
+              <div class="mm-tile nc-term" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-target="1"></div>
+              ${explainHtml}
+            </div>`;
+        }).join("");
+        const chipItems = [];
+        g.terms.forEach(t => {
+          chipItems.push({ value:t.id, label:t.label, cls:"" });
+          t.explain.forEach(ex => chipItems.push({ value:ex.id, label:ex.label, cls:"nc-fact" }));
+        });
+        const chipsHtml = shuffled(chipItems).map((c,idx) =>
+          `<button type="button" class="mm-chip${c.cls ? " "+c.cls : ""}" data-value="${esc(c.value)}" id="chip_${idx}">${esc(c.label)}</button>`
+        ).join("");
+        stageMount.innerHTML = `
+          <div class="nc-circle nc-${g.color} filled" id="ncBoard">
+            <div class="nc-label-pill nc-label-static">${esc(g.label)}</div>
+            <div class="nc-term-cols">${termsHtml}</div>
+          </div>
+          <div class="chip-tray" id="ncTray">${chipsHtml}</div>
+        `;
+        board = document.getElementById("ncBoard");
+        tray = document.getElementById("ncTray");
+        attachChipHandlers();
+      }
+
+      function goToStage(n){
+        stage = n;
+        if (stage === 0) renderCategoriesStage();
+        else renderGroupStage(stage - 1);
+      }
+
+      window.addEventListener("pointermove", (e)=>{
+        if (draggedChip && e.pointerId === draggedPointerId) moveGhost(e.clientX, e.clientY);
+      });
+      window.addEventListener("pointerup", (e)=>{
+        if (!draggedChip || e.pointerId !== draggedPointerId) return;
+        const chip = draggedChip;
+        resetDrag();
+        if (solved) return;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
+        if (!tile || tile.classList.contains("correct")) return;
+        attempts++;
+        const isMatch = tile.dataset.id === chip.dataset.value;
+        if (isMatch){
+          tile.classList.add("correct");
+          tile.innerHTML = `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
+          chip.classList.add("used");
+          if (board.querySelectorAll('.mm-tile[data-target]:not(.correct)').length === 0){
+            if (stage < totalStages - 1){
+              setTimeout(()=>goToStage(stage + 1), 500);
+            } else {
+              setTimeout(()=>lockQuestion("correct", q.explain, "correct"), 300);
+            }
+          }
+        } else {
+          tile.classList.add("wrong-flash");
+          setTimeout(()=>tile.classList.remove("wrong-flash"), 450);
+          tryAgainFeedback();
+        }
+      });
+      window.addEventListener("pointercancel", (e)=>{
+        if (draggedChip && e.pointerId === draggedPointerId) resetDrag();
+      });
+
+      const skipBtn = document.getElementById("skipBtn");
+      if (skipBtn) skipBtn.addEventListener("click", ()=>{
+        /* Zeigt (wie bei den anderen Übungen) die Lösung des GERADE aktiven Schritts an, statt
+           einfach nur "nicht gelöst" zu melden - bei mehreren Schritten wäre ein Durchklicken
+           durch alle noch offenen Schritte hier zu viel Aufwand für zu wenig Nutzen. */
+        if (solved) return;
+        board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
+          tile.classList.add("correct");
+          tile.innerHTML = `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
+        });
+        tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
+      });
+
+      goToStage(0);
     } else if (q.kind === "map-match"){
       const board = document.getElementById("mmBoard");
       const tray = document.getElementById("chipTray");
@@ -5052,13 +5197,6 @@ window.__startExercise = function(slug){
             : highlightLabel(tile.dataset.label, tile.dataset.mark);
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${labelHtml}</span>`;
           chip.classList.add("used");
-          /* Verschachtelte Kreis-Zuordnung: der dekorative große Kreis färbt sich erst jetzt ein
-             (siehe CSS-Kommentar bei ".nc-board") - bei allen anderen map-match-Übungen ist
-             data-fill-target einfach nicht gesetzt, ändert also nichts. */
-          if (tile.dataset.fillTarget){
-            const wrap = document.getElementById(tile.dataset.fillTarget);
-            if (wrap) wrap.classList.add("filled");
-          }
           checkComplete();
         } else {
           tile.classList.add("wrong-flash");
@@ -5075,10 +5213,6 @@ window.__startExercise = function(slug){
         board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
           tile.classList.add("correct");
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
-          if (tile.dataset.fillTarget){
-            const wrap = document.getElementById(tile.dataset.fillTarget);
-            if (wrap) wrap.classList.add("filled");
-          }
         });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
