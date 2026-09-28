@@ -412,6 +412,18 @@
   .lt-chip.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
   .lt-chip.used{opacity:.35; text-decoration:line-through; cursor:default;}
   .lt-chip.wrong-flash{border-color:var(--danger); background:var(--danger-soft);}
+  /* Getippte Lücken (gapfill mit q.typeIn): eigenes <input> statt Wortliste je Lücke. */
+  .lt-type-input{
+    display:inline-block; box-sizing:content-box; width:8ch; max-width:85vw; padding:3px 8px; margin:0 2px;
+    border:none; border-bottom:2px dashed var(--ink-faint); border-radius:6px 6px 0 0;
+    background:var(--accent-soft); font:inherit; font-weight:700; color:var(--ink);
+    vertical-align:middle; text-align:center;
+  }
+  .lt-type-input:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+  .lt-type-input.correct{
+    border-bottom:2px solid var(--success); color:var(--success); background:var(--success-soft);
+  }
+  .lt-type-input.wrong{border-bottom-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
 
   /* Tabellen-Zuordnung (table-match): Tabelle mit fester linker Spalte, rechte Spalte mit
      Lücken-Kärtchen ("tm-blank"), die Kärtchenbank selbst nutzt bewusst dieselben .lt-chip/
@@ -804,6 +816,7 @@ const landwirtschaftTopics = [
   { tag:"lernen", label:"Regionen zuordnen", page:198, practice:"gpg-landwirtschaft-regionen" },
   { tag:"lernen", label:"Tabellen: Landnutzung in Bayern", page:198, practice:"gpg-landwirtschaft-tabellen" },
   { tag:"abschluss", label:"Aufgabe 3: Böden im Vergleich", page:198, practice:"gpg-landwirtschaft-aufgabe3" },
+  { tag:"lernen", label:"Ackerbau und Viehwirtschaft", page:199, practice:"gpg-landwirtschaft-ackerbau-viehwirtschaft" },
   /* Vorstrukturierung der restlichen Buchkapitel-Themen (S. 200-219) - nur Titel/Seitenzahlen aus
      dem Inhaltsverzeichnis bzw. dem "Wegweiser" auf S. 199 übernommen, noch OHNE eigene Übung
      ("practice" bewusst weggelassen) - erscheinen bis dahin als reine Themenpunkte ohne
@@ -2446,6 +2459,27 @@ const exerciseSets = {
         text: "Welche Landnutzung passt zum Allgäu – eher Ackerbau (Getreide) oder eher Grünland/Rinderhaltung?",
         placeholder:"Antwort eintippen", accept:["Grünland/Rinderhaltung","Grünland","Rinderhaltung","Viehzucht","Milchwirtschaft","Grünland und Rinderhaltung"],
         explain: "Im Allgäu sorgen viel Niederschlag und saftige Wiesen für ideale Bedingungen für Grünland und Rinderhaltung (Milchwirtschaft) statt Ackerbau." }
+    ]
+  },
+  /* --- S. 199 "Wegweiser"-Seite: Lückentext-Merksatz zu Ackerbau/Viehzucht, mit den Wörtern zum
+     Eintippen statt Antippen (q.typeIn) - Manuel hat dafür Buchtext + fertigen Lösungs-Merksatz mit
+     Unterstreichungen geschickt. Bewusst NUR eine Frage mit allen Lücken zusammen (nicht auf mehrere
+     Fragen aufgeteilt), weil der Merksatz als Ganzes fertig ausgefüllt werden und danach als
+     Heft-Eintrag übernommen werden soll - dafür popupText. Ohne "locked", also wie die anderen
+     GPG-Landwirtschaft-Übungen sofort sichtbar. */
+  "gpg-landwirtschaft-ackerbau-viehwirtschaft": {
+    title: "Bedeutung von Ackerbau und Viehwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 10 Minuten",
+    questions: [
+      { kind:"gapfill", typeIn:true, strict:true, section:"Bedeutung von Ackerbau und Viehwirtschaft",
+        text: "Lies auf S. 199 im Buch den Text „Ackerbau und Viehwirtschaft“ und ergänze damit die Lücken im Merksatz. Tippe die passenden Wörter ein (auf Groß-/Kleinschreibung achten!).",
+        template: "Ackerbau bedeutet, dass Felder bewirtschaftet werden um z.B. %%, %% oder %% anzubauen. Ob Ackerbau möglich ist, hängt vom %%, der %% und Form der Oberfläche ab.¶Viehzucht bedeutet, dass Landwirte Tiere halten, um deren Produkte zu verkaufen. In Bayern gibt es vor allem %%-, %%- und %%.",
+        answers: ["Getreide","Kartoffeln","Zuckerrüben","Klima","Bodenqualität","Milchvieh","Schweinezucht","Geflügelbetriebe"],
+        explain: "Richtig! Ackerbau hängt vor allem vom Klima, der Bodenqualität und der Form der Oberfläche ab – angebaut werden z. B. Getreide, Kartoffeln oder Zuckerrüben. Bei der Viehzucht gibt es in Bayern vor allem Milchvieh-, Schweinezucht- und Geflügelbetriebe.",
+        popupText: "Übernimm diesen Merksatz „Bedeutung von Ackerbau und Viehwirtschaft“ in dein Heft." }
     ]
   },
   "bauernhof-suchsel": {
@@ -4358,22 +4392,35 @@ window.__startExercise = function(slug){
         <div class="ws-found" id="wsFound"></div>
       `;
     } else if (q.kind === "gapfill"){
-      /* Lückentext mit Wortliste: q.template enthält "%%" als Platzhalter für jede Lücke (in
-         Reihenfolge), q.answers das passende Lösungswort je Lücke (gleiche Reihenfolge). Bedienung
-         bewusst wie beim Suchsel per Antippen statt Ziehen (robuster auf dem iPad): eine Lücke
-         antippen und danach das passende Wort aus der Liste antippen - oder umgekehrt. */
+      /* Lückentext: q.template enthält "%%" als Platzhalter für jede Lücke (in Reihenfolge),
+         q.answers das passende Lösungswort je Lücke (gleiche Reihenfolge); "¶" im Template erzeugt
+         einen Absatzumbruch. q.typeIn (optional): Wörter werden getippt statt aus einer Wortliste
+         angetippt - siehe Event-Wiring q.kind==="gapfill" weiter unten. Ohne q.typeIn bleibt es wie
+         bisher: Lücke antippen und danach das passende Wort aus der Liste antippen (oder umgekehrt,
+         robuster auf dem iPad als Ziehen). */
       const gapParts = q.template.split("%%");
-      const textHtml = gapParts.map((seg, idx) =>
-        esc(seg) + (idx < gapParts.length - 1 ? `<button type="button" class="lt-blank" data-idx="${idx}"></button>` : "")
-      ).join("");
-      /* q.extraWords (optional): zusätzliche Ablenkwörter in der Wortliste, passen in keine Lücke. */
-      const bankWords = shuffled(q.answers.map((w,idx)=>({word:w, idx})).concat((q.extraWords||[]).map(w=>({word:w, idx:-1}))));
-      const chipsHtml = bankWords.map((item,i) => `<button type="button" class="lt-chip" data-word="${esc(item.word)}" id="ltChip_${i}">${esc(item.word)}</button>`).join("");
-      body = `
-        <p class="ws-instruction">👉 Tippe eine Lücke an und danach das passende Wort aus der Liste – oder umgekehrt.</p>
-        <div class="lt-text" id="ltText">${textHtml}</div>
-        <div class="lt-wordbank" id="ltWordbank">${chipsHtml}</div>
-      `;
+      if (q.typeIn){
+        const textHtml = gapParts.map((seg, idx) =>
+          esc(seg).split("¶").join("<br><br>") + (idx < gapParts.length - 1 ? `<input type="text" class="lt-type-input" id="ltInput_${idx}" data-idx="${idx}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">` : "")
+        ).join("");
+        body = `
+          <p class="ws-instruction">👉 Tippe die fehlenden Wörter in die Lücken – nutze dazu den Text im Buch.</p>
+          <div class="lt-text" id="ltText">${textHtml}</div>
+          <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
+        `;
+      } else {
+        const textHtml = gapParts.map((seg, idx) =>
+          esc(seg) + (idx < gapParts.length - 1 ? `<button type="button" class="lt-blank" data-idx="${idx}"></button>` : "")
+        ).join("");
+        /* q.extraWords (optional): zusätzliche Ablenkwörter in der Wortliste, passen in keine Lücke. */
+        const bankWords = shuffled(q.answers.map((w,idx)=>({word:w, idx})).concat((q.extraWords||[]).map(w=>({word:w, idx:-1}))));
+        const chipsHtml = bankWords.map((item,i) => `<button type="button" class="lt-chip" data-word="${esc(item.word)}" id="ltChip_${i}">${esc(item.word)}</button>`).join("");
+        body = `
+          <p class="ws-instruction">👉 Tippe eine Lücke an und danach das passende Wort aus der Liste – oder umgekehrt.</p>
+          <div class="lt-text" id="ltText">${textHtml}</div>
+          <div class="lt-wordbank" id="ltWordbank">${chipsHtml}</div>
+        `;
+      }
     } else if (q.kind === "table-match"){
       /* Tabelle ausfüllen: linke Spalte(n) fest vorgegeben, rechte Spalte(n) mit Lücken-Kärtchen
          (ein oder - bei Aufgabe 4 - zwei Kärtchen je Zeile, siehe row.accept.length). Bedienung wie
@@ -5051,6 +5098,71 @@ window.__startExercise = function(slug){
             foundEl.appendChild(chip);
           }
         });
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
+      });
+    } else if (q.kind === "gapfill" && q.typeIn){
+      /* Getippte Lücken: ein <input> je Lücke, ein gemeinsamer "Prüfen"-Button kontrolliert alle auf
+         einmal (wie bei grid-shade/click-gap). Falsch beantwortete Lücken bleiben editierbar für
+         einen neuen Versuch, schon richtige werden gesperrt. q.strict: Groß-/Kleinschreibung zählt
+         (gleiches Verhalten wie beim "text"-Aufgabentyp). */
+      const inputs = [...document.querySelectorAll(".lt-type-input")];
+      const normalize = s => {
+        const t = String(s).trim().replace(/\s+/g," ");
+        return q.strict ? t : t.toLowerCase();
+      };
+      /* Lücken wachsen beim Tippen mit, damit lange Wörter (z.B. "Geflügelbetriebe") nicht
+         abgeschnitten werden - Breite in "ch" (Zeichenbreite), Mindestbreite über die CSS-Regel. */
+      const autoSize = input => { input.style.width = Math.max(8, input.value.length + 2) + "ch"; };
+      inputs.forEach(autoSize);
+      const checkBtn = document.getElementById("checkBtn");
+      const showPopup = ()=>{
+        if (!q.popupText) return;
+        const overlay = document.createElement("div");
+        overlay.className = "tm-popup-overlay";
+        overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+      };
+      const check = ()=>{
+        if (solved) return;
+        attempts++;
+        let allCorrect = true;
+        inputs.forEach((input, idx)=>{
+          if (input.disabled) return; // schon vorher richtig beantwortet
+          const ok = input.value.trim() !== "" && normalize(input.value) === normalize(q.answers[idx]);
+          if (ok){
+            input.disabled = true;
+            input.classList.remove("wrong");
+            input.classList.add("correct");
+          } else {
+            allCorrect = false;
+            input.classList.add("wrong");
+          }
+        });
+        if (allCorrect){
+          checkBtn.disabled = true;
+          lockQuestion("correct", q.explain, "correct");
+          showPopup();
+        } else {
+          tryAgainFeedback();
+        }
+      };
+      checkBtn.addEventListener("click", check);
+      inputs.forEach(input=>{
+        input.addEventListener("keydown", e=>{ if (e.key === "Enter"){ e.preventDefault(); check(); } });
+        input.addEventListener("input", ()=>{ input.classList.remove("wrong"); autoSize(input); });
+      });
+      const skipBtn = document.getElementById("skipBtn");
+      if (skipBtn) skipBtn.addEventListener("click", ()=>{
+        if (solved) return;
+        inputs.forEach((input, idx)=>{
+          input.value = q.answers[idx];
+          autoSize(input);
+          input.disabled = true;
+          input.classList.remove("wrong");
+          input.classList.add("correct");
+        });
+        checkBtn.disabled = true;
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "gapfill"){
