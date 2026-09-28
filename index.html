@@ -457,6 +457,17 @@
     padding:26px 22px;
   }
   .tm-popup-card p{font-size:16px; font-weight:700; color:var(--ink); margin:0 0 18px;}
+  /* Variante für Pop-ups mit längerem Fließtext (z.B. der fertig ausgefüllte Merksatz bei einer
+     getippten Lücken-Übung) statt einer kurzen, fett zentrierten Anweisung: linksbündig, normale
+     Schriftstärke, etwas breiter. */
+  .tm-popup-card.text-content{max-width:480px; text-align:left;}
+  .tm-popup-card.text-content h3{
+    font-family:var(--font-display); font-size:17px; font-weight:700; color:var(--ink);
+    text-align:center; margin:0 0 16px;
+  }
+  .tm-popup-card.text-content p{
+    font-size:15px; font-weight:500; line-height:1.6; color:var(--ink); text-align:left; margin:0 0 14px;
+  }
   .tm-popup-close{
     background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
     padding:11px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
@@ -2461,25 +2472,29 @@ const exerciseSets = {
         explain: "Im Allgäu sorgen viel Niederschlag und saftige Wiesen für ideale Bedingungen für Grünland und Rinderhaltung (Milchwirtschaft) statt Ackerbau." }
     ]
   },
-  /* --- S. 199 "Wegweiser"-Seite: Lückentext-Merksatz zu Ackerbau/Viehzucht, mit den Wörtern zum
-     Eintippen statt Antippen (q.typeIn) - Manuel hat dafür Buchtext + fertigen Lösungs-Merksatz mit
-     Unterstreichungen geschickt. Bewusst NUR eine Frage mit allen Lücken zusammen (nicht auf mehrere
-     Fragen aufgeteilt), weil der Merksatz als Ganzes fertig ausgefüllt werden und danach als
-     Heft-Eintrag übernommen werden soll - dafür popupText. Ohne "locked", also wie die anderen
+  /* --- S. 199 "Wegweiser"-Seite: Lückentext mit dem VOLLSTÄNDIGEN Buchtext "Ackerbau und
+     Viehwirtschaft" (die Schüler haben denselben Text im Buch aufgeschlagen und tippen die
+     fehlenden Wörter von dort ab - q.typeIn statt Antippen). Erst wenn dieser Lückentext komplett
+     richtig ausgefüllt ist, erscheint per Pop-up der KÜRZERE Merksatz/Vergleich ("Ackerbau
+     bedeutet... Viehzucht bedeutet...", q.popupBody - eigener, kürzerer Text von Manuel, NICHT
+     identisch mit dem Lückentext selbst), den die Schüler dann ins Heft übernehmen. Bewusst NUR
+     eine Frage mit allen Lücken zusammen (nicht aufgeteilt), weil der ganze Text auf einmal fertig
+     ausgefüllt sein soll, bevor der Heft-Merksatz erscheint. Ohne "locked", also wie die anderen
      GPG-Landwirtschaft-Übungen sofort sichtbar. */
   "gpg-landwirtschaft-ackerbau-viehwirtschaft": {
     title: "Bedeutung von Ackerbau und Viehwirtschaft",
     subject: "gpg",
     folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
-    duration: "ca. 10 Minuten",
+    duration: "ca. 12 Minuten",
     questions: [
       { kind:"gapfill", typeIn:true, strict:true, section:"Bedeutung von Ackerbau und Viehwirtschaft",
-        text: "Lies auf S. 199 im Buch den Text „Ackerbau und Viehwirtschaft“ und ergänze damit die Lücken im Merksatz. Tippe die passenden Wörter ein (auf Groß-/Kleinschreibung achten!).",
-        template: "Ackerbau bedeutet, dass Felder bewirtschaftet werden um z.B. %%, %% oder %% anzubauen. Ob Ackerbau möglich ist, hängt vom %%, der %% und Form der Oberfläche ab.¶Viehzucht bedeutet, dass Landwirte Tiere halten, um deren Produkte zu verkaufen. In Bayern gibt es vor allem %%-, %%- und %%.",
-        answers: ["Getreide","Kartoffeln","Zuckerrüben","Klima","Bodenqualität","Milchvieh","Schweinezucht","Geflügelbetriebe"],
-        explain: "Richtig! Ackerbau hängt vor allem vom Klima, der Bodenqualität und der Form der Oberfläche ab – angebaut werden z. B. Getreide, Kartoffeln oder Zuckerrüben. Bei der Viehzucht gibt es in Bayern vor allem Milchvieh-, Schweinezucht- und Geflügelbetriebe.",
-        popupText: "Übernimm diesen Merksatz „Bedeutung von Ackerbau und Viehwirtschaft“ in dein Heft." }
+        text: "Lies auf S. 199 im Buch den Text „Ackerbau und Viehwirtschaft“ und tippe die fehlenden Wörter genauso ab, wie sie im Buch stehen (auf Groß-/Kleinschreibung achten!).",
+        template: "Bayern ist ein abwechslungsreiches Land mit %%, %% sowie breiten %%. Aus diesem Grund kommen nicht alle Regionen gleichermaßen für eine landwirtschaftliche Nutzung in Frage. %%, %% und %% sind beispielsweise ausschlaggebend für den Ackerbau.¶Ein Großteil der Felder in Bayern wird mit %%, aber auch anderen %% bewirtschaftet. %% ist ebenfalls auf vielen heimischen Feldern zu sehen. Zudem hat in einigen Regionen Bayerns der Anbau von %% und %% eine große Bedeutung.¶Es gibt einige %%-, %%- und %%. Die Landwirte haben sich in der Regel auf eine %% spezialisiert. Oftmals erzeugen die Landwirte selbst das %% für ihre Tiere, um keine teuren Produkte ankaufen zu müssen.",
+        answers: ["Hoch- und Mittelgebirgen","Hügelländern","Flusstälern","Bodenqualität","Klima","Lage","Weizen","Getreidesorten","Futtermais","Zuckerrüben","Kartoffeln","Milchvieh","Schweinezucht","Geflügelbetriebe","Tierart","Futter"],
+        explain: "Richtig – du hast den ganzen Text vollständig und richtig ergänzt!",
+        popupText: "Unterscheidung von Ackerbau und Viehwirtschaft – übernimm diesen Text in dein Heft:",
+        popupBody: "Ackerbau bedeutet, dass Felder bewirtschaftet werden um z.B. Getreide, Kartoffeln oder Zuckerrüben anzubauen. Ob Ackerbau möglich ist, hängt vom Klima, der Bodenqualität und Form der Oberfläche ab.¶Viehzucht bedeutet, dass Landwirte Tiere halten, um deren Produkte zu verkaufen. In Bayern gibt es vor allem Milchvieh-, Schweinezucht- und Geflügelbetriebe." }
     ]
   },
   "bauernhof-suchsel": {
@@ -5115,11 +5130,17 @@ window.__startExercise = function(slug){
       const autoSize = input => { input.style.width = Math.max(8, input.value.length + 2) + "ch"; };
       inputs.forEach(autoSize);
       const checkBtn = document.getElementById("checkBtn");
+      /* Pop-up nach vollständig richtigem Lückentext zeigt nicht nur eine Anweisung, sondern einen
+         eigenen kürzeren Text zum Abschreiben (q.popupBody, z.B. ein kurzer Merksatz/Vergleich) -
+         das ist bewusst ein ANDERER, kürzerer Text als der Lückentext selbst (q.template), nicht
+         einfach der ausgefüllte Lückentext. q.popupText ist die Überschrift darüber; "¶" in
+         q.popupBody trennt Absätze. */
       const showPopup = ()=>{
-        if (!q.popupText) return;
+        if (!q.popupText || !q.popupBody) return;
+        const paragraphsHtml = q.popupBody.split("¶").map(p => `<p>${esc(p.trim())}</p>`).join("");
         const overlay = document.createElement("div");
         overlay.className = "tm-popup-overlay";
-        overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+        overlay.innerHTML = `<div class="tm-popup-card text-content"><h3>${esc(q.popupText)}</h3>${paragraphsHtml}<button type="button" class="tm-popup-close">Schließen</button></div>`;
         document.body.appendChild(overlay);
         overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
       };
