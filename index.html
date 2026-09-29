@@ -468,6 +468,13 @@
   .tm-popup-card.text-content p{
     font-size:15px; font-weight:500; line-height:1.6; color:var(--ink); text-align:left; margin:0 0 14px;
   }
+  /* Variante mit einer echten, fertig ausgefüllten Tabelle zum Abschreiben (z.B. Spam-/
+     Phishing-Merkmale nach staged-sort): breiter als die Standard-Karte, damit die Tabelle nicht zu
+     gequetscht wirkt - Spalten dürfen trotzdem normal umbrechen (kein nowrap), da die Aussagen oft
+     ganze Sätze sind. */
+  .tm-popup-card.table-content{max-width:560px;}
+  .tm-popup-card.table-content .tm-table{text-align:left; font-size:12.5px;}
+  .tm-popup-card.table-content .tm-table th, .tm-popup-card.table-content .tm-table td{padding:7px 8px;}
   .tm-popup-close{
     background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
     padding:11px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
@@ -3310,7 +3317,8 @@ const exerciseSets = {
           { id:"p-klicken",     label:"Aufforderung, diverse Links anzuklicken",                                     group:"phishing" },
         ],
         explain: "Spam-Mails erkennt man z. B. an unerwarteten Absendern, merkwürdigen Adressen oder reißerischen Betreffs. Phishing-Mails wollen gezielt an persönliche Daten gelangen – oft mit dringlichem Handlungsbedarf, Sprach-/Rechtschreibfehlern und Aufforderungen, Links anzuklicken oder Dateien zu öffnen.",
-        popupText: "Übernimm die Tabelle „Merkmale von Spam-Mails / Merkmale von Phishing-Mails“ schriftlich in dein Heft." }
+        popupText: "Übernimm die Tabelle schriftlich in dein Heft:",
+        popupShowTable: true }
     ]
   }
 };
@@ -5750,11 +5758,27 @@ window.__startExercise = function(slug){
           } else {
             chipEl.style.display = "none";
             /* q.popupText (optional): wie beim table-match/generischen map-match ein Pop-up, das
-               zum Übernehmen ins Heft auffordert - muss aktiv geschlossen werden. */
+               zum Übernehmen ins Heft auffordert - muss aktiv geschlossen werden. q.popupShowTable
+               (optional, zusätzlich): die fertig sortierten Begriffe werden hier NICHT einfach nur
+               mit Text beschrieben, sondern als echte, vollständig ausgefüllte Tabelle (beide
+               Kategorien nebeneinander) direkt im Pop-up angezeigt - genau das, was abgeschrieben
+               werden soll, nicht nur eine Aufforderung dazu (Rückmeldung von Manuel: eine reine
+               Text-Aufforderung ohne sichtbare Tabelle reicht zum Abschreiben nicht). */
             if (q.popupText){
               const overlay = document.createElement("div");
               overlay.className = "tm-popup-overlay";
-              overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+              let tableHtml = "";
+              if (q.popupShowTable){
+                const colA = items.filter(it => it.group === q.categories[0].id);
+                const colB = items.filter(it => it.group === q.categories[1].id);
+                const rowCount = Math.max(colA.length, colB.length);
+                let rowsHtml = "";
+                for (let r=0; r<rowCount; r++){
+                  rowsHtml += `<tr><td>${colA[r] ? esc(colA[r].label) : ""}</td><td>${colB[r] ? esc(colB[r].label) : ""}</td></tr>`;
+                }
+                tableHtml = `<table class="tm-table"><thead><tr><th>${esc(q.categories[0].label)}</th><th>${esc(q.categories[1].label)}</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+              }
+              overlay.innerHTML = `<div class="tm-popup-card${q.popupShowTable ? " table-content" : ""}"><p>${esc(q.popupText)}</p>${tableHtml}<button type="button" class="tm-popup-close">Schließen</button></div>`;
               document.body.appendChild(overlay);
               overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
             }
