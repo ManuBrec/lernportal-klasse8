@@ -3370,7 +3370,9 @@ const exerciseSets = {
      set.questions.length generisch liest, z.B. applyRemoteProgress). "locked:true": Manuel schaltet
      den Test erst frei, wenn die Klasse so weit ist (siehe isLocked-Kommentar); zusätzlich sorgt
      isEinstiegstestDone/markEinstiegstestDone dafür, dass jedes Schülergerät den Test nur einmal
-     machen kann. Läuft komplett lokal, ohne Google-Sheets-Meldung. */
+     machen kann. Meldet jede gelöste Teilaufgabe ans Google-Sheets-Auswertungs-Backend (siehe
+     reportResult-Aufrufe in window.__startWortartenEinstiegstest) - dafür muss dieser Slug auch in
+     der "Freischaltungen"-Tabelle stehen (Code.gs, Liste "neueUebungen"). */
   "deutsch-wortarten-einstiegstest": {
     title: "Einstiegstest: Wortarten",
     subject: "deutsch",
@@ -3453,7 +3455,7 @@ const exerciseSets = {
     part3Questions: [
       { wortart:"Nomen",        correct:["s2","s13"] },
       { wortart:"Verb",         correct:["s1","s6","s11","s16"] },
-      { wortart:"Adjektiv",     correct:["s2","s4","s10","s15"] },
+      { wortart:"Adjektiv",     correct:["s2","s4","s10"] },
       { wortart:"Artikel",      correct:["s2","s15","s18"] },
       { wortart:"Pronomen",     correct:["s2","s7","s9"] },
       { wortart:"Adverb",       correct:["s3","s8","s14"] },
@@ -6601,8 +6603,18 @@ function locateWordsInOrder(text, words){
    .tm-popup-overlay/.tm-popup-card, .result-table/.result-row), damit es optisch nicht auffällt.
    Persistiert NUR den einmaligen Abschluss (isEinstiegstestDone/markEinstiegstestDone) - ein
    Zwischenstand beim Neuladen wird bewusst NICHT gespeichert (anders als beim generischen Motor),
-   weil dieser Einstiegstest als EIN zusammenhängender Durchlauf gedacht ist. Meldet nichts an das
-   Google-Sheets-Backend (kein reportResult-Aufruf). */
+   weil dieser Einstiegstest als EIN zusammenhängender Durchlauf gedacht ist. Meldet trotzdem jede
+   gelöste Teilaufgabe per reportResult() ans bestehende Google-Sheets-Auswertungs-Backend (wie der
+   generische Motor), damit der Test auch im Lehrer-Dashboard (Auswertung pro Schüler/Frage)
+   auftaucht. Da es hier - anders als beim generischen Motor - keine flache Fragenliste gibt, wird
+   dafür ein fester, fortlaufender globaler Index über alle 5 Teile hinweg verwendet:
+     0        = Teil 1 (1 Eintrag, "correct" nur bei 8/8, sonst "teilweise x/8")
+     1..22    = Teil 2 (1 Eintrag je Wort, in Reihenfolge der beiden Sätze)
+     23..30   = Teil 3 (1 Eintrag je Wortart-Frage)
+     31..48   = Teil 4 (1 Eintrag je Lücke, siehe p4BlankIndex weiter unten)
+     49..66   = Teil 5 (Satz-Index * 3 + [Numerus=0/Person=1/Tempus=2])
+   Damit das im Dashboard auch sichtbar wird, muss "deutsch-wortarten-einstiegstest" zusätzlich in
+   der "Freischaltungen"-Tabelle des Google-Skripts stehen (siehe Code.gs, Liste "neueUebungen"). */
 window.__startWortartenEinstiegstest = function(slug){
   const set = exerciseSets[slug];
   if (!set) return;
@@ -6667,6 +6679,7 @@ window.__startWortartenEinstiegstest = function(slug){
         if (tokens.some(tok => target.terms.includes(tok))) foundKeys.add(target.key);
       });
       scores.p1 = foundKeys.size;
+      reportResult(slug, 0, scores.p1 === 8 ? "correct" : ("teilweise " + scores.p1 + "/8"), 1);
       const foundChips = set.part1Targets.filter(t => foundKeys.has(t.key))
         .map(t => `<li class="we-feedback-chip found">${esc(t.label)}</li>`).join("");
       const missingChips = set.part1Targets.filter(t => !foundKeys.has(t.key))
@@ -6709,9 +6722,11 @@ window.__startWortartenEinstiegstest = function(slug){
       </div>
     `;
     let solved = false;
+    let attempts = 0;
     document.querySelectorAll("#p2Opts .option").forEach(btn => {
       btn.addEventListener("click", ()=>{
         if (solved || btn.classList.contains("disabled")) return;
+        attempts++;
         if (btn.dataset.opt === item.answer){
           solved = true;
           scores.p2++;
@@ -6721,6 +6736,7 @@ window.__startWortartenEinstiegstest = function(slug){
           fb.className = "feedback show correct";
           fb.textContent = "Richtig!";
           document.getElementById("p2Next").classList.add("show");
+          reportResult(slug, 1 + p2Pos, "correct", attempts);
         } else {
           btn.classList.add("wrong","disabled");
         }
@@ -6754,8 +6770,10 @@ window.__startWortartenEinstiegstest = function(slug){
       </div>
     `;
     let solved = false;
+    let attempts = 0;
     document.getElementById("p3Check").addEventListener("click", ()=>{
       if (solved) return;
+      attempts++;
       const selected = [...document.querySelectorAll("#p3Opts input:checked")].map(i => i.value);
       const target = q.correct;
       const ok = selected.length === target.length && selected.every(v => target.includes(v));
@@ -6763,6 +6781,7 @@ window.__startWortartenEinstiegstest = function(slug){
       if (ok){
         solved = true;
         scores.p3++;
+        reportResult(slug, 23 + p3Pos, "correct", attempts);
         document.getElementById("p3Check").disabled = true;
         document.querySelectorAll("#p3Opts .we-msel-opt").forEach(lbl => {
           lbl.classList.add("disabled");
@@ -6783,7 +6802,18 @@ window.__startWortartenEinstiegstest = function(slug){
     });
   }
 
-  /* ---------- Teil 4: "Verben in Zeiten setzen" (18 Punkte, je 1 Punkt pro Lücke) ---------- */
+  /* ---------- Teil 4: "Verben in Zeiten setzen" (18 Punkte, je 1 Punkt pro Lücke) ----------
+     p4BlankIndex ordnet jeder der 18 Lücken-Zellen (nicht "given") einmalig einen fortlaufenden
+     Index 0..17 zu (Reihenfolge: zeilenweise) - für reportResult()/die Auswertung im Dashboard,
+     wo jede Lücke als eigene "Frage" gezählt wird (global 31 + Index, siehe Kommentar oben bei
+     window.__startWortartenEinstiegstest). */
+  const p4BlankIndex = new Map();
+  (function buildP4BlankIndex(){
+    let n = 0;
+    set.part4Rows.forEach((row, rIdx) => {
+      row.cells.forEach((cell, cIdx) => { if (!cell.given) p4BlankIndex.set(rIdx + "-" + cIdx, n++); });
+    });
+  })();
   function renderPart4(){
     const rowsHtml = set.part4Rows.map((row, rIdx) => {
       const cellsHtml = row.cells.map((cell, cIdx) => cell.given
@@ -6809,7 +6839,9 @@ window.__startWortartenEinstiegstest = function(slug){
     `;
     const normalize = s => String(s).trim().replace(/\s+/g," ").toLowerCase();
     const inputs = [...document.querySelectorAll(".we-p4-input")];
+    let attempts = 0;
     function check(){
+      attempts++;
       let allCorrect = true;
       inputs.forEach(input => {
         if (input.disabled) return;
@@ -6820,6 +6852,7 @@ window.__startWortartenEinstiegstest = function(slug){
           input.classList.remove("wrong");
           input.classList.add("correct");
           scores.p4++;
+          reportResult(slug, 31 + p4BlankIndex.get(r + "-" + c), "correct", attempts);
         } else {
           allCorrect = false;
           input.classList.add("wrong");
@@ -6871,6 +6904,7 @@ window.__startWortartenEinstiegstest = function(slug){
       </div>
     `;
     const solvedSub = [false,false,false];
+    const subAttempts = [0,0,0];
     function checkAllDone(){
       if (solvedSub.every(Boolean)) document.getElementById("p5Next").classList.add("show");
     }
@@ -6879,11 +6913,13 @@ window.__startWortartenEinstiegstest = function(slug){
       group.querySelectorAll(".option").forEach(btn => {
         btn.addEventListener("click", ()=>{
           if (solvedSub[si] || btn.classList.contains("disabled")) return;
+          subAttempts[si]++;
           if (btn.dataset.opt === subs[si].answer){
             solvedSub[si] = true;
             scores.p5++;
             btn.classList.add("correct");
             group.querySelectorAll(".option").forEach(o => o.classList.add("disabled"));
+            reportResult(slug, 49 + (p5Pos * 3 + si), "correct", subAttempts[si]);
             checkAllDone();
           } else {
             btn.classList.add("wrong","disabled");
