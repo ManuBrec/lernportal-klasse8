@@ -894,6 +894,37 @@
   .gate-error{color:var(--danger); font-size:13.5px; margin-top:12px; display:none;}
   .gate-error.show{display:block;}
   .gate-hint{font-size:12.5px !important; color:var(--ink-faint) !important; margin-top:18px !important;}
+
+  /* Deutsch: Einstiegstest Wortarten (Teil 1-5) - eigene, additive Stile für die freie Eingabe
+     (Teil 1), die Mehrfachauswahl-Fragen (Teil 3) und die Satz-Teilfragen (Teil 5). Alles andere
+     nutzt bestehende Klassen (.qcard, .option, .check-btn, .lt-type-input, .tm-table,
+     .tm-popup-overlay, .result-table). */
+  .we-textarea{
+    width:100%; min-height:120px; padding:13px 16px; border-radius:var(--radius-md);
+    border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink);
+    font-size:15px; font-family:inherit; resize:vertical; box-sizing:border-box;
+  }
+  .we-textarea:focus-visible{outline:3px solid var(--accent); outline-offset:1px;}
+  .we-part-meta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
+  .we-sublabel{font-size:13px; font-weight:700; color:var(--ink-soft); margin:0 0 8px;}
+  .we-feedback-list{list-style:none; margin:10px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px;}
+  .we-feedback-chip{font-size:12.5px; font-weight:700; padding:4px 10px; border-radius:999px;}
+  .we-feedback-chip.found{background:var(--success-soft); color:var(--success);}
+  .we-feedback-chip.missing{background:var(--surface-2); color:var(--ink-faint); border:1px dashed var(--border);}
+  .we-msel{display:grid; gap:9px; margin:4px 0 4px;}
+  .we-msel-opt{
+    display:flex; align-items:flex-start; gap:10px; text-align:left; padding:12px 14px;
+    border-radius:var(--radius-md); border:1.5px solid var(--border); background:var(--surface-2);
+    color:var(--ink); font-size:14.5px; font-weight:600; cursor:pointer; font-family:inherit;
+  }
+  .we-msel-opt:hover{border-color:var(--accent);}
+  .we-msel-opt input{margin-top:2px; flex:none;}
+  .we-msel-opt.correct{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .we-msel-opt.disabled{cursor:default;}
+  .we-subgrid{margin-top:8px;}
+  .we-subrow{padding:14px 0; border-top:1px solid var(--border);}
+  .we-subrow:first-child{border-top:none; padding-top:0;}
+  .we-result-band{font-size:15px; font-weight:600; line-height:1.6; margin:0 0 18px; color:var(--ink);}
 </style>
 
 <div class="topbar no-print" id="topbar">
@@ -937,6 +968,7 @@ const chapters = [
 const deutschChapters = [
   { slug:"grammatik", nr:1, title:"Grammatik", status:"aktuell" },
   { slug:"rechtschreibung", nr:2, title:"Rechtschreibung", status:"aktuell" },
+  { slug:"wortarten", nr:3, title:"Wortarten", status:"aktuell" },
 ];
 
 const deutschGrammatikTopics = [
@@ -948,6 +980,15 @@ const deutschRechtschreibungTopics = [
   { tag:"lernen", label:"Wörter den Strategien zuordnen", practice:"deutsch-strategien-zuordnen" },
   { tag:"lernen", label:"Wörter korrigieren mit den Strategien", practice:"deutsch-strategien-korrigieren" },
   { tag:"lernen", label:"Wörter korrigieren mit den Strategien (Teil 2)", practice:"deutsch-strategien-korrigieren-2" },
+];
+
+/* Wortarten: neues Kapitel mit einem einmaligen, diagnostischen Einstiegstest (5 Teile, siehe
+   exerciseSets["deutsch-wortarten-einstiegstest"]). "locked:true" dort sperrt ihn zunächst für die
+   Klasse (Freischaltung durch Manuel, siehe Kommentar bei exerciseSets); zusätzlich merkt sich
+   jedes Schülergerät nach einmaligem Abschluss dauerhaft, dass der Test schon gemacht wurde (siehe
+   isEinstiegstestDone/markEinstiegstestDone) - rein lokal, ohne Sheets-Backend. */
+const deutschWortartenTopics = [
+  { tag:"lernen", label:"Einstiegstest: Wortarten", practice:"deutsch-wortarten-einstiegstest" },
 ];
 
 /* Geschichte, Politik, Geographie (GPG): ein Fach mit zwei Bereichen ("Ordnern") - Geschichte und
@@ -3320,6 +3361,160 @@ const exerciseSets = {
         popupText: "Übernimm die Tabelle schriftlich in dein Heft:",
         popupShowTable: true }
     ]
+  },
+  /* Deutsch, Kapitel "Wortarten": diagnostischer Einstiegstest in 5 Teilen (vor der eigentlichen
+     Unterrichtseinheit). "custom:'wortarten-einstiegstest'" markiert diese Übung für route()/
+     viewExercise() als Sonderfall mit eigenem, mehrteiligem Ablauf (siehe
+     window.__startWortartenEinstiegstest) statt des generischen "eine Frage nach der anderen"-
+     Motors - deshalb bleibt "questions" hier bewusst leer (nur zur Kompatibilität mit Code, der
+     set.questions.length generisch liest, z.B. applyRemoteProgress). "locked:true": Manuel schaltet
+     den Test erst frei, wenn die Klasse so weit ist (siehe isLocked-Kommentar); zusätzlich sorgt
+     isEinstiegstestDone/markEinstiegstestDone dafür, dass jedes Schülergerät den Test nur einmal
+     machen kann. Läuft komplett lokal, ohne Google-Sheets-Meldung. */
+  "deutsch-wortarten-einstiegstest": {
+    title: "Einstiegstest: Wortarten",
+    subject: "deutsch",
+    chapterSlug: "wortarten",
+    duration: "ca. 25–30 Minuten",
+    locked: true,
+    custom: "wortarten-einstiegstest",
+    maxScore: 74,
+    questions: [],
+
+    /* --- Teil 1 (8 Punkte): freie Eingabe, automatisch gegen 8 Zielbegriffe + Synonyme geprüft. --- */
+    part1Targets: [
+      { key:"nomen",        label:"Nomen",        terms:["nomen","hauptwort","namenwort","substantiv"] },
+      { key:"verb",         label:"Verb",         terms:["verb","tätigkeitswort","zeitwort"] },
+      { key:"adjektiv",     label:"Adjektiv",     terms:["adjektiv","eigenschaftswort","wiewort"] },
+      { key:"artikel",      label:"Artikel",      terms:["artikel","begleiter","geschlechtswort"] },
+      { key:"pronomen",     label:"Pronomen",     terms:["pronomen","fürwort"] },
+      { key:"adverb",       label:"Adverb",       terms:["adverb","umstandswort"] },
+      { key:"praeposition", label:"Präposition",  terms:["präposition","verhältniswort"] },
+      { key:"konjunktion",  label:"Konjunktion",  terms:["konjunktion","bindewort"] },
+    ],
+
+    /* --- Teil 2 (22 Punkte, je 1 Punkt pro Wort): jedes Wort in zwei Sätzen bestimmen. --- */
+    wortartOptions: ["Nomen","Verb","Adjektiv","Artikel","Pronomen","Adverb","Präposition","Konjunktion"],
+    part2Sentences: [
+      { text: "Der clevere Schüler löst schwierige Aufgaben schnell und richtig.",
+        words: [
+          { word:"Der",        answer:"Artikel" },
+          { word:"clevere",    answer:"Adjektiv" },
+          { word:"Schüler",    answer:"Nomen" },
+          { word:"löst",       answer:"Verb" },
+          { word:"schwierige", answer:"Adjektiv" },
+          { word:"Aufgaben",   answer:"Nomen" },
+          { word:"schnell",    answer:"Adverb" },
+          { word:"und",        answer:"Konjunktion" },
+          { word:"richtig",    answer:"Adverb" },
+        ]
+      },
+      { text: "Sie und ihr Bruder gehen oft ins Kino, weil sie neue Filme lieben.",
+        words: [
+          { word:"Sie",    answer:"Pronomen" },
+          { word:"und",    answer:"Konjunktion" },
+          { word:"ihr",    answer:"Pronomen" },
+          { word:"Bruder", answer:"Nomen" },
+          { word:"gehen",  answer:"Verb" },
+          { word:"oft",    answer:"Adverb" },
+          { word:"ins",    answer:"Präposition" },
+          { word:"Kino",   answer:"Nomen" },
+          { word:"weil",   answer:"Konjunktion" },
+          { word:"sie",    answer:"Pronomen" },
+          { word:"neue",   answer:"Adjektiv" },
+          { word:"Filme",  answer:"Nomen" },
+          { word:"lieben", answer:"Verb" },
+        ]
+      }
+    ],
+
+    /* --- Teil 3 (8 Punkte, je 1 Punkt pro Wortart): dieselben 18 Aussagen bei jeder der 8 Fragen,
+       nur die richtige Teilmenge ändert sich - nur bei EXAKT richtiger Auswahl gibt es den Punkt. --- */
+    part3Statements: [
+      { id:"s1",  text:"kann man konjugieren (beugen)" },
+      { id:"s2",  text:"kann man deklinieren (beugen)" },
+      { id:"s3",  text:"lässt sich nicht beugen" },
+      { id:"s4",  text:"Beispiel: tief, dunkel, stürmisch" },
+      { id:"s5",  text:"verlangt einen Kasus (bestimmt den Fall des folgenden Wortes)" },
+      { id:"s6",  text:"bildet verschiedene Tempora (Zeitformen)" },
+      { id:"s7",  text:"Fürwort, Stellvertreter für ein Nomen" },
+      { id:"s8",  text:"Beispiel: heute, dort, bald" },
+      { id:"s9",  text:"Beispiel: mein, dieser, jener, wir, sie" },
+      { id:"s10", text:"ist steigerbar (Positiv, Komparativ, Superlativ)" },
+      { id:"s11", text:"besitzt einen Imperativ (Befehlsform)" },
+      { id:"s12", text:"Bindewort, verbindet Sätze oder Satzteile" },
+      { id:"s13", text:"wird immer großgeschrieben" },
+      { id:"s14", text:"gibt die Umstände einer Handlung an (Zeit, Ort, Art und Weise)" },
+      { id:"s15", text:"Beispiel: die, das, eine, ein" },
+      { id:"s16", text:"bildet Aktiv und Passiv" },
+      { id:"s17", text:"Beispiel: auf, unter, neben, mit, in" },
+      { id:"s18", text:"steht meistens direkt vor einem Nomen und zeigt dessen Geschlecht/Zahl/Fall an" },
+    ],
+    part3Questions: [
+      { wortart:"Nomen",        correct:["s2","s13"] },
+      { wortart:"Verb",         correct:["s1","s6","s11","s16"] },
+      { wortart:"Adjektiv",     correct:["s2","s4","s10","s15"] },
+      { wortart:"Artikel",      correct:["s2","s15","s18"] },
+      { wortart:"Pronomen",     correct:["s2","s7","s9"] },
+      { wortart:"Adverb",       correct:["s3","s8","s14"] },
+      { wortart:"Präposition",  correct:["s3","s5","s17"] },
+      { wortart:"Konjunktion",  correct:["s3","s12"] },
+    ],
+
+    /* --- Teil 4 (18 Punkte, je 1 Punkt pro Lücke): "lernen" in 6 Personen x 4 Zeiten, 6 der 24
+       Zellen sind als Beispiel vorgegeben (given:true), 18 sind Texteingabe-Lücken. --- */
+    part4Columns: ["Präsens","Präteritum","Perfekt","Futur I"],
+    part4Rows: [
+      { person:"1. Person Singular (ich)", cells:[
+        { value:"lerne",        given:false },
+        { value:"lernte",       given:true },
+        { value:"habe gelernt", given:false },
+        { value:"werde lernen", given:false },
+      ]},
+      { person:"2. Person Singular (du)", cells:[
+        { value:"lernst",       given:false },
+        { value:"lerntest",     given:false },
+        { value:"hast gelernt", given:true },
+        { value:"wirst lernen", given:false },
+      ]},
+      { person:"3. Person Singular (er/sie/es)", cells:[
+        { value:"lernt",       given:true },
+        { value:"lernte",      given:false },
+        { value:"hat gelernt", given:false },
+        { value:"wird lernen", given:false },
+      ]},
+      { person:"1. Person Plural (wir)", cells:[
+        { value:"lernen",        given:false },
+        { value:"lernten",       given:false },
+        { value:"haben gelernt", given:true },
+        { value:"werden lernen", given:false },
+      ]},
+      { person:"2. Person Plural (ihr)", cells:[
+        { value:"lernt",        given:false },
+        { value:"lerntet",      given:true },
+        { value:"habt gelernt", given:false },
+        { value:"werdet lernen", given:false },
+      ]},
+      { person:"3. Person Plural (sie)", cells:[
+        { value:"lernen",        given:false },
+        { value:"lernten",       given:false },
+        { value:"haben gelernt", given:false },
+        { value:"werden lernen", given:true },
+      ]},
+    ],
+
+    /* --- Teil 5 (18 Punkte, je 1 Punkt pro Teilfrage): 6 Sätze x 3 MC-Teilfragen. --- */
+    numerusOptions: ["Singular","Plural"],
+    personOptions: ["1. Person","2. Person","3. Person"],
+    tempusOptions: ["Präsens","Präteritum","Perfekt","Futur I"],
+    part5Sentences: [
+      { text:"Sie lernte fleißig für die Probe.",          numerus:"Singular", person:"3. Person", tempus:"Präteritum" },
+      { text:"Wir werden morgen lernen.",                  numerus:"Plural",   person:"1. Person", tempus:"Futur I" },
+      { text:"Du hast gestern viel gelernt.",               numerus:"Singular", person:"2. Person", tempus:"Perfekt" },
+      { text:"Die Schüler lernen gerade.",                  numerus:"Plural",   person:"3. Person", tempus:"Präsens" },
+      { text:"Ich lerne jeden Tag Vokabeln.",                numerus:"Singular", person:"1. Person", tempus:"Präsens" },
+      { text:"Ihr lerntet letztes Jahr Französisch.",        numerus:"Plural",   person:"2. Person", tempus:"Präteritum" },
+    ]
   }
 };
 
@@ -3648,6 +3843,21 @@ function isLocked(set, slug){
     return !!remoteLocksCache[slug];
   }
   return !!set.locked;
+}
+
+/* Einmaligkeit pro Gerät für den Wortarten-Einstiegstest (Deutsch, Kapitel "wortarten"): sobald
+   das Ergebnis-Popup einmal angezeigt wurde, merkt sich DIESES Gerät das dauerhaft (eigener,
+   klar benannter localStorage-Schlüssel nach demselben Muster wie GATE_KEY/PREVIEW_KEY) - der Test
+   lässt sich danach nicht erneut starten, unabhängig vom "locked"-Flag (siehe isLocked oben, das ist
+   die getrennte Lehrer-Ebene). Rein lokal, kein Sheets-Backend. */
+function einstiegstestDoneKey(slug){ return "lernportal:einstiegstest-done:" + slug; }
+function isEinstiegstestDone(slug){
+  try { return !!localStorage.getItem(einstiegstestDoneKey(slug)); }
+  catch(e){ return false; }
+}
+function markEinstiegstestDone(slug, total, max){
+  try { localStorage.setItem(einstiegstestDoneKey(slug), JSON.stringify({ total, max, at: Date.now() })); }
+  catch(e){ /* ignorieren, z.B. privater Modus */ }
 }
 
 /* Erkennt Bruch-Strings wie "3/10" oder "45,2/100" und rendert sie als gestapelten Bruch
@@ -4174,6 +4384,39 @@ function viewDeutschChapter(slug){
     `;
   }
 
+  if (slug === "wortarten"){
+    const rows = deutschWortartenTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      const done = set && !locked ? isEinstiegstestDone(t.practice) : false;
+      let actionHtml = "";
+      if (set && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set && done){
+        actionHtml = `<span class="pill pill-soon" title="Dieser Einstiegstest lässt sich auf diesem Gerät nur einmal machen">erledigt</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      }
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/deutsch">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">${esc(c.title)}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Ein einmaliger Einstiegstest zu den Wortarten, bevor wir das Thema im Unterricht beginnen.</p>
+      </div>
+      <div class="section-label">Themen in diesem Bereich</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
   return h`
     <a class="backlink" href="#/deutsch">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
@@ -4584,6 +4827,22 @@ function viewExercise(slug){
         <h1>${esc(set.title)}</h1>
         <p>Diese Übung ist noch nicht freigeschaltet. Sie wird verfügbar, sobald wir im Unterricht so weit sind.</p>
       </div>
+    `;
+  }
+
+  /* set.custom === "wortarten-einstiegstest": eigener, mehrteiligiger Ablauf statt der generischen
+     Ein-Frage-nach-der-anderen-Ansicht (kein qnav, kein "X Aufgaben"-Text, da set.questions hier
+     nicht die übliche flache Fragenliste ist - siehe window.__startWortartenEinstiegstest). */
+  if (set.custom === "wortarten-einstiegstest"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>5 Teile${set.duration ? " · " + esc(set.duration) : ""}. Dieser Einstiegstest lässt sich auf diesem Gerät nur einmal machen – am Ende siehst du dein Ergebnis.</p>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="exerciseHost"></div>
     `;
   }
 
@@ -6314,6 +6573,390 @@ window.__startExercise = function(slug){
   if (state.q.every(x => x.status !== "open")) renderResult(); else renderQuestion();
 };
 
+/* Sucht jedes Wort aus "words" der Reihe nach (ab der vorherigen Fundstelle) in "text" und liefert
+   Start/Ende je Fundstelle zurück - so lässt sich später genau EIN Wort im Satz fett hervorheben,
+   auch wenn derselbe Wortlaut (z.B. "sie"/"Sie") mehrfach im Satz vorkommt (siehe
+   window.__startWortartenEinstiegstest, Teil 2). Anders als markWordInText (das nur die erste
+   Fundstelle im ganzen Text sucht) bewusst als eigene, kleine Hilfsfunktion, weil hier mehrere
+   Wörter IN REIHENFOLGE lokalisiert werden müssen. */
+function locateWordsInOrder(text, words){
+  let cursor = 0;
+  return words.map(w => {
+    let idx = text.indexOf(w, cursor);
+    if (idx === -1) idx = text.indexOf(w); // Rückfall, sollte bei sauberen Daten nicht vorkommen
+    if (idx === -1) idx = 0;
+    const start = idx, end = idx + w.length;
+    cursor = end;
+    return { start, end };
+  });
+}
+
+/* ---------- Deutsch: Einstiegstest Wortarten (5 Teile) ----------
+   Eigener, additiver Übungs-Motor NUR für exerciseSets[...].custom === "wortarten-einstiegstest"
+   (siehe route()) - die Fragen dort sind zu unterschiedlich (freie Eingabe mit Teilpunkten,
+   Mehrfachauswahl-Fragen, eine ganze Tabelle, mehrere MC-Teilfragen pro Satz), um sie in den
+   generischen "eine Frage nach der anderen"-Motor (window.__startExercise) oben zu pressen, ohne
+   dort für einen einzigen Einsatz Sonderfälle einzubauen. Nutzt bewusst dieselben CSS-Klassen wie
+   der generische Motor (.qcard, .option, .check-btn, .feedback, .lt-type-input, .tm-table,
+   .tm-popup-overlay/.tm-popup-card, .result-table/.result-row), damit es optisch nicht auffällt.
+   Persistiert NUR den einmaligen Abschluss (isEinstiegstestDone/markEinstiegstestDone) - ein
+   Zwischenstand beim Neuladen wird bewusst NICHT gespeichert (anders als beim generischen Motor),
+   weil dieser Einstiegstest als EIN zusammenhängender Durchlauf gedacht ist. Meldet nichts an das
+   Google-Sheets-Backend (kein reportResult-Aufruf). */
+window.__startWortartenEinstiegstest = function(slug){
+  const set = exerciseSets[slug];
+  if (!set) return;
+  const host = document.getElementById("exerciseHost");
+  const fill = document.getElementById("progressFill");
+  if (!host) return;
+
+  /* Schüler-Ebene: schon einmal abgeschlossen -> gar nicht erst starten, nur das letzte
+     Ergebnis anzeigen (siehe auch die "erledigt"-Anzeige in viewDeutschChapter). */
+  if (isEinstiegstestDone(slug)){
+    let info = null;
+    try {
+      const raw = localStorage.getItem(einstiegstestDoneKey(slug));
+      if (raw) info = JSON.parse(raw);
+    } catch(e){ /* ignorieren */ }
+    if (fill) fill.style.width = "100%";
+    host.innerHTML = `
+      <div class="qcard result">
+        ${info && typeof info.total === "number" ? `<div class="score num">${info.total} / ${info.max || set.maxScore}</div><p>erreichte Punkte beim letzten Versuch</p>` : ""}
+        <p style="margin-top:16px; font-weight:700;">Du hast diesen Einstiegstest auf diesem Gerät bereits gemacht.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const maxes = { p1:8, p2:22, p3:8, p4:18, p5:18 };
+  const scores = { p1:0, p2:0, p3:0, p4:0, p5:0 };
+  let partIdx = 0; // 0..4 = Teil 1-5, 5 = fertig
+
+  function setProgress(){
+    if (fill) fill.style.width = Math.round((partIdx / 5) * 100) + "%";
+  }
+  function partHeader(label){
+    return `<div class="we-part-meta">Teil ${partIdx+1} von 5 · ${esc(label)}</div>`;
+  }
+  function goToPart(n){
+    partIdx = n;
+    setProgress();
+    render();
+  }
+
+  /* ---------- Teil 1: "Welche Wortarten kennst du?" (freie Eingabe, 8 Punkte) ---------- */
+  function renderPart1(){
+    host.innerHTML = `
+      <div class="qcard">
+        ${partHeader("Welche Wortarten kennst du?")}
+        <div class="qtext">Welche Wortarten kennst du? Schreib alle auf, die dir einfallen (getrennt durch Komma, Leerzeichen oder Zeilenumbruch).</div>
+        <textarea class="we-textarea" id="p1Input" placeholder="z. B. Nomen, Verb, ..." autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+        <div class="qactions"><button class="check-btn" id="p1Check">Absenden</button></div>
+        <div id="p1FbWrap"></div>
+      </div>
+    `;
+    document.getElementById("p1Check").addEventListener("click", ()=>{
+      const raw = document.getElementById("p1Input").value || "";
+      const tokens = raw
+        .toLowerCase()
+        .split(/[\s,]+/)
+        .map(s => s.trim().replace(/[.;:!?]+$/, ""))
+        .filter(Boolean);
+      const foundKeys = new Set();
+      set.part1Targets.forEach(target => {
+        if (tokens.some(tok => target.terms.includes(tok))) foundKeys.add(target.key);
+      });
+      scores.p1 = foundKeys.size;
+      const foundChips = set.part1Targets.filter(t => foundKeys.has(t.key))
+        .map(t => `<li class="we-feedback-chip found">${esc(t.label)}</li>`).join("");
+      const missingChips = set.part1Targets.filter(t => !foundKeys.has(t.key))
+        .map(t => `<li class="we-feedback-chip missing">${esc(t.label)}</li>`).join("");
+      document.getElementById("p1Check").disabled = true;
+      document.getElementById("p1Input").disabled = true;
+      document.getElementById("p1FbWrap").innerHTML = `
+        <div class="feedback show correct">Du hast ${scores.p1} von 8 Wortarten genannt.</div>
+        ${foundChips ? `<p class="we-sublabel" style="margin-top:14px;">Erkannt:</p><ul class="we-feedback-list">${foundChips}</ul>` : ""}
+        ${missingChips ? `<p class="we-sublabel" style="margin-top:14px;">Noch nicht genannt:</p><ul class="we-feedback-list">${missingChips}</ul>` : ""}
+        <div class="qactions" style="margin-top:20px;"><button class="next-btn show" id="p1Next">Weiter</button></div>
+      `;
+      document.getElementById("p1Next").addEventListener("click", ()=> goToPart(1));
+    });
+  }
+
+  /* ---------- Teil 2: "Bestimme die Wortarten im Satz" (22 Punkte, je 1 Punkt pro Wort) ---------- */
+  const p2Items = [];
+  set.part2Sentences.forEach((s, sIdx) => {
+    if (!s._spans) s._spans = locateWordsInOrder(s.text, s.words.map(w => w.word));
+    s.words.forEach((w, wIdx) => p2Items.push({ sIdx, wIdx, sentence:s, word:w.word, answer:w.answer }));
+  });
+  let p2Pos = 0;
+  function renderPart2(){
+    const item = p2Items[p2Pos];
+    const sp = item.sentence._spans[item.wIdx];
+    const t = item.sentence.text;
+    const sentenceHtml = esc(t.slice(0, sp.start)) + "<b>" + esc(t.slice(sp.start, sp.end)) + "</b>" + esc(t.slice(sp.end));
+    host.innerHTML = `
+      <div class="qcard">
+        ${partHeader("Bestimme die Wortarten im Satz")}
+        <div class="qmeta">Wort ${p2Pos+1} von ${p2Items.length}</div>
+        <div class="qtext">${sentenceHtml}</div>
+        <p class="we-sublabel">Welche Wortart hat <b>${esc(item.word)}</b> hier?</p>
+        <div class="options" id="p2Opts">
+          ${set.wortartOptions.map(o => `<button type="button" class="option" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}
+        </div>
+        <div class="feedback" id="p2Fb"></div>
+        <div class="qactions"><button class="next-btn" id="p2Next">Weiter</button></div>
+      </div>
+    `;
+    let solved = false;
+    document.querySelectorAll("#p2Opts .option").forEach(btn => {
+      btn.addEventListener("click", ()=>{
+        if (solved || btn.classList.contains("disabled")) return;
+        if (btn.dataset.opt === item.answer){
+          solved = true;
+          scores.p2++;
+          btn.classList.add("correct");
+          document.querySelectorAll("#p2Opts .option").forEach(o => o.classList.add("disabled"));
+          const fb = document.getElementById("p2Fb");
+          fb.className = "feedback show correct";
+          fb.textContent = "Richtig!";
+          document.getElementById("p2Next").classList.add("show");
+        } else {
+          btn.classList.add("wrong","disabled");
+        }
+      });
+    });
+    document.getElementById("p2Next").addEventListener("click", ()=>{
+      p2Pos++;
+      if (p2Pos >= p2Items.length) goToPart(2); else renderPart2();
+    });
+  }
+
+  /* ---------- Teil 3: "Merkmale je Wortart" (8 Punkte, je 1 Punkt bei exakt richtiger Auswahl) ---------- */
+  let p3Pos = 0;
+  function renderPart3(){
+    const q = set.part3Questions[p3Pos];
+    const optsHtml = set.part3Statements.map(st => `
+      <label class="we-msel-opt" data-id="${esc(st.id)}">
+        <input type="checkbox" value="${esc(st.id)}">
+        <span>${esc(st.text)}</span>
+      </label>
+    `).join("");
+    host.innerHTML = `
+      <div class="qcard">
+        ${partHeader("Merkmale je Wortart")}
+        <div class="qmeta">Wortart ${p3Pos+1} von ${set.part3Questions.length}</div>
+        <div class="qtext">Was sind die wesentlichen Merkmale von ${esc(q.wortart)}? (Mehrfachauswahl möglich)</div>
+        <div class="we-msel" id="p3Opts">${optsHtml}</div>
+        <div class="qactions"><button class="check-btn" id="p3Check">Prüfen</button></div>
+        <div class="feedback" id="p3Fb"></div>
+        <div class="qactions"><button class="next-btn" id="p3Next">Weiter</button></div>
+      </div>
+    `;
+    let solved = false;
+    document.getElementById("p3Check").addEventListener("click", ()=>{
+      if (solved) return;
+      const selected = [...document.querySelectorAll("#p3Opts input:checked")].map(i => i.value);
+      const target = q.correct;
+      const ok = selected.length === target.length && selected.every(v => target.includes(v));
+      const fb = document.getElementById("p3Fb");
+      if (ok){
+        solved = true;
+        scores.p3++;
+        document.getElementById("p3Check").disabled = true;
+        document.querySelectorAll("#p3Opts .we-msel-opt").forEach(lbl => {
+          lbl.classList.add("disabled");
+          lbl.querySelector("input").disabled = true;
+          if (target.includes(lbl.dataset.id)) lbl.classList.add("correct");
+        });
+        fb.className = "feedback show correct";
+        fb.textContent = "Richtig!";
+        document.getElementById("p3Next").classList.add("show");
+      } else {
+        fb.className = "feedback show wrong";
+        fb.textContent = "Leider nicht ganz richtig – versuch's nochmal.";
+      }
+    });
+    document.getElementById("p3Next").addEventListener("click", ()=>{
+      p3Pos++;
+      if (p3Pos >= set.part3Questions.length) goToPart(3); else renderPart3();
+    });
+  }
+
+  /* ---------- Teil 4: "Verben in Zeiten setzen" (18 Punkte, je 1 Punkt pro Lücke) ---------- */
+  function renderPart4(){
+    const rowsHtml = set.part4Rows.map((row, rIdx) => {
+      const cellsHtml = row.cells.map((cell, cIdx) => cell.given
+        ? `<td class="tm-given">${esc(cell.value)}</td>`
+        : `<td><input type="text" class="lt-type-input we-p4-input" data-row="${rIdx}" data-col="${cIdx}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></td>`
+      ).join("");
+      return `<tr><td class="tm-given">${esc(row.person)}</td>${cellsHtml}</tr>`;
+    }).join("");
+    host.innerHTML = `
+      <div class="qcard">
+        ${partHeader("Verben in Zeiten setzen")}
+        <div class="qtext">Setze das Verb „lernen“ in die richtige Person und Zeitform. Einige Felder sind schon als Beispiel ausgefüllt.</div>
+        <div style="overflow-x:auto;">
+          <table class="tm-table" id="p4Table">
+            <thead><tr><th></th>${set.part4Columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>
+            <tbody>${rowsHtml}</tbody>
+          </table>
+        </div>
+        <div class="qactions"><button class="check-btn" id="p4Check">Prüfen</button></div>
+        <div class="feedback" id="p4Fb"></div>
+        <div class="qactions"><button class="next-btn" id="p4Next">Weiter</button></div>
+      </div>
+    `;
+    const normalize = s => String(s).trim().replace(/\s+/g," ").toLowerCase();
+    const inputs = [...document.querySelectorAll(".we-p4-input")];
+    function check(){
+      let allCorrect = true;
+      inputs.forEach(input => {
+        if (input.disabled) return;
+        const r = Number(input.dataset.row), c = Number(input.dataset.col);
+        const expected = set.part4Rows[r].cells[c].value;
+        if (input.value.trim() !== "" && normalize(input.value) === normalize(expected)){
+          input.disabled = true;
+          input.classList.remove("wrong");
+          input.classList.add("correct");
+          scores.p4++;
+        } else {
+          allCorrect = false;
+          input.classList.add("wrong");
+        }
+      });
+      const fb = document.getElementById("p4Fb");
+      if (allCorrect){
+        document.getElementById("p4Check").disabled = true;
+        fb.className = "feedback show correct";
+        fb.textContent = "Super – alle 18 Formen richtig!";
+        document.getElementById("p4Next").classList.add("show");
+      } else {
+        fb.className = "feedback show wrong";
+        fb.textContent = "Einige Formen sind noch nicht richtig – versuch's nochmal.";
+      }
+    }
+    document.getElementById("p4Check").addEventListener("click", check);
+    inputs.forEach(input => {
+      input.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); check(); } });
+      input.addEventListener("input", ()=> input.classList.remove("wrong"));
+    });
+    document.getElementById("p4Next").addEventListener("click", ()=> goToPart(4));
+  }
+
+  /* ---------- Teil 5: "Singular/Plural, Person, Zeit ankreuzen" (18 Punkte) ---------- */
+  let p5Pos = 0;
+  function renderPart5(){
+    const s = set.part5Sentences[p5Pos];
+    const subs = [
+      { label:"Numerus", options:set.numerusOptions, answer:s.numerus },
+      { label:"Person",  options:set.personOptions,  answer:s.person },
+      { label:"Tempus",  options:set.tempusOptions,  answer:s.tempus },
+    ];
+    const subsHtml = subs.map((sub, si) => `
+      <div class="we-subrow">
+        <div class="we-sublabel">${esc(sub.label)}</div>
+        <div class="options" data-sub="${si}">
+          ${sub.options.map(o => `<button type="button" class="option" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}
+        </div>
+      </div>
+    `).join("");
+    host.innerHTML = `
+      <div class="qcard">
+        ${partHeader("Singular/Plural, Person, Zeit ankreuzen")}
+        <div class="qmeta">Satz ${p5Pos+1} von ${set.part5Sentences.length}</div>
+        <div class="qtext">„${esc(s.text)}“</div>
+        <div class="we-subgrid" id="p5Subs">${subsHtml}</div>
+        <div class="qactions" style="margin-top:8px;"><button class="next-btn" id="p5Next">Weiter</button></div>
+      </div>
+    `;
+    const solvedSub = [false,false,false];
+    function checkAllDone(){
+      if (solvedSub.every(Boolean)) document.getElementById("p5Next").classList.add("show");
+    }
+    document.querySelectorAll("#p5Subs [data-sub]").forEach(group => {
+      const si = Number(group.dataset.sub);
+      group.querySelectorAll(".option").forEach(btn => {
+        btn.addEventListener("click", ()=>{
+          if (solvedSub[si] || btn.classList.contains("disabled")) return;
+          if (btn.dataset.opt === subs[si].answer){
+            solvedSub[si] = true;
+            scores.p5++;
+            btn.classList.add("correct");
+            group.querySelectorAll(".option").forEach(o => o.classList.add("disabled"));
+            checkAllDone();
+          } else {
+            btn.classList.add("wrong","disabled");
+          }
+        });
+      });
+    });
+    document.getElementById("p5Next").addEventListener("click", ()=>{
+      p5Pos++;
+      if (p5Pos >= set.part5Sentences.length) goToPart(5); else renderPart5();
+    });
+  }
+
+  /* ---------- Abschluss: Gesamtpunktzahl, Rückmeldung, Teilergebnisse (Pop-up + Ergebnis-Karte) ---------- */
+  function renderFinish(){
+    if (fill) fill.style.width = "100%";
+    const total = scores.p1 + scores.p2 + scores.p3 + scores.p4 + scores.p5;
+    const max = maxes.p1 + maxes.p2 + maxes.p3 + maxes.p4 + maxes.p5;
+    let bandText;
+    if (total <= 40) bandText = "Du stehst bei den Wortarten noch am Anfang – das ist der perfekte Zeitpunkt, das Thema jetzt gründlich zu lernen!";
+    else if (total <= 60) bandText = "Du kennst schon viel! Schau dir noch die Bereiche genauer an, die nicht geklappt haben, dann sitzt es bald sicher.";
+    else bandText = "Richtig stark! Du kennst dich mit den Wortarten schon sehr gut aus.";
+
+    const partRows = [
+      ["Teil 1: Welche Wortarten kennst du?", scores.p1, maxes.p1],
+      ["Teil 2: Wortarten im Satz bestimmen", scores.p2, maxes.p2],
+      ["Teil 3: Merkmale je Wortart", scores.p3, maxes.p3],
+      ["Teil 4: Verben in Zeiten setzen", scores.p4, maxes.p4],
+      ["Teil 5: Numerus, Person, Zeit", scores.p5, maxes.p5],
+    ].map(([label, s, m]) => `
+      <div class="result-row" style="cursor:default;">
+        <span class="result-label">${esc(label)}</span>
+        <span class="result-status ${s === m ? "ok" : "bad"}">${s} / ${m}</span>
+      </div>
+    `).join("");
+
+    host.innerHTML = `
+      <div class="qcard result">
+        <div class="score num">${total} / ${max}</div>
+        <p>Punkten</p>
+      </div>
+      <div class="result-table">${partRows}</div>
+    `;
+
+    markEinstiegstestDone(slug, total, max);
+
+    const overlay = document.createElement("div");
+    overlay.className = "tm-popup-overlay";
+    overlay.innerHTML = `
+      <div class="tm-popup-card text-content" style="max-width:420px;">
+        <h3>Dein Ergebnis: ${total} / ${max} Punkten</h3>
+        <p class="we-result-band">${esc(bandText)}</p>
+        <div class="result-table" style="margin-bottom:18px;">${partRows}</div>
+        <button type="button" class="tm-popup-close">Schließen</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+  }
+
+  function render(){
+    if (partIdx === 0) renderPart1();
+    else if (partIdx === 1) renderPart2();
+    else if (partIdx === 2) renderPart3();
+    else if (partIdx === 3) renderPart4();
+    else if (partIdx === 4) renderPart5();
+    else renderFinish();
+  }
+
+  setProgress();
+  render();
+};
+
 /* ---------- Router ---------- */
 function route(){
   const hash = location.hash.replace(/^#/, "") || "/";
@@ -6359,7 +7002,13 @@ function route(){
   window.scrollTo(0,0);
 
   if (parts[0] === "uebung" && parts.length === 2 && exerciseSets[parts[1]] && !isLocked(exerciseSets[parts[1]], parts[1])){
-    window.__startExercise(parts[1]);
+    /* exerciseSets[...].custom: markiert Übungen mit einem eigenen, mehrteiligen Ablauf statt des
+       generischen Ein-Frage-nach-der-anderen-Motors (siehe window.__startWortartenEinstiegstest). */
+    if (exerciseSets[parts[1]].custom === "wortarten-einstiegstest"){
+      window.__startWortartenEinstiegstest(parts[1]);
+    } else {
+      window.__startExercise(parts[1]);
+    }
   }
 }
 /* ---------- Zugangscode-Sperre ----------
