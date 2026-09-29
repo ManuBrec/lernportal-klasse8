@@ -5300,26 +5300,11 @@ window.__startExercise = function(slug){
 
       const skipBtn = document.getElementById("skipBtn");
       if (skipBtn) skipBtn.addEventListener("click", ()=>{
-        /* Zeigt (wie bei den anderen Übungen) die Lösung des GERADE aktiven Schritts an, statt
-           einfach nur "nicht gelöst" zu melden - bei mehreren Schritten wäre ein Durchklicken
-           durch alle noch offenen Schritte hier zu viel Aufwand für zu wenig Nutzen. */
+        /* Anders als bei den übrigen Übungen wird hier bei "Überspringen" die Lösung NICHT
+           eingeblendet (Vorgabe von Manuel) - der Zwischenstand bleibt einfach so stehen, wie er
+           ist, die Übung wird nur als "nicht gelöst" gesperrt (weitere Interaktion blockiert
+           lockQuestion() bereits über die überall geprüfte "solved"-Variable). */
         if (solved) return;
-        if (stage === 0){
-          const emptyTiles = Array.from(board.querySelectorAll('.mm-tile[data-target]:not(.correct)'));
-          const unusedChips = Array.from(tray.querySelectorAll('.mm-chip:not(.used)'));
-          emptyTiles.forEach((tile, i) => {
-            const chip = unusedChips[i];
-            const g = q.groups.find(gr => gr.id === chip.dataset.value);
-            tile.classList.add("correct", "nc-"+g.color);
-            tile.innerHTML = `<span class="mm-label">${esc(g.label)}</span>`;
-          });
-        } else {
-          board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
-            tile.classList.add("correct");
-            tile.innerHTML = `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
-          });
-        }
-        tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
 
