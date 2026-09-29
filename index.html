@@ -5185,10 +5185,17 @@ window.__startExercise = function(slug){
       }
 
       function renderCategoriesStage(){
+        /* Reine Einstiegs-Übersicht ohne Bewertung (Feedback von Manuel: die drei leeren Kreise
+           sehen vor dem Ablegen alle identisch aus, es gibt also nichts, an dem man "richtig"
+           erkennen könnte, welcher Kreis zu welchem Überbegriff gehört - das wäre reines Raten).
+           Deshalb passt hier JEDER Kreis JEDEN Überbegriff: die Kachel bekommt beim Ablegen einfach
+           die Farbe/Beschriftung des gezogenen Begriffs selbst (siehe pointerup-Handler, Zweig
+           stage===0), nicht die eines vorab festgelegten Ziels. Kein wrong-flash, kein attempts++ -
+           die eigentliche Wissensprüfung folgt erst in den Schritten 2..N. */
         progressEl.textContent = `Schritt 1 von ${totalStages} · Überbegriffe`;
-        hintEl.textContent = "Zieh die drei Überbegriffe in die passenden Kreise.";
-        const circlesHtml = q.groups.map(g =>
-          `<div class="nc-circle-sm mm-tile nc-${g.color}" data-id="${esc(g.id)}" data-label="${esc(g.label)}" data-target="1"></div>`
+        hintEl.textContent = "Zieh die drei Überbegriffe in die Kreise – das ist nur zum Ankommen, hier kannst du nichts falsch machen.";
+        const circlesHtml = q.groups.map(() =>
+          `<div class="nc-circle-sm mm-tile" data-target="1"></div>`
         ).join("");
         const chipItems = shuffled(q.groups.map(g => ({ value:g.id, label:g.label })));
         const chipsHtml = chipItems.map((c,idx) =>
@@ -5254,6 +5261,20 @@ window.__startExercise = function(slug){
         const el = document.elementFromPoint(e.clientX, e.clientY);
         const tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
         if (!tile || tile.classList.contains("correct")) return;
+
+        if (stage === 0){
+          /* Ungewertete Einstiegs-Übersicht: jeder Kreis akzeptiert jeden Überbegriff, "richtig"
+             ist immer die Farbe/Beschriftung des gezogenen Begriffs selbst - kein Falsch möglich. */
+          const g = q.groups.find(gr => gr.id === chip.dataset.value);
+          tile.classList.add("correct", "nc-"+g.color);
+          tile.innerHTML = `<span class="mm-label">${esc(g.label)}</span>`;
+          chip.classList.add("used");
+          if (board.querySelectorAll('.mm-tile[data-target]:not(.correct)').length === 0){
+            setTimeout(()=>goToStage(1), 500);
+          }
+          return;
+        }
+
         attempts++;
         const isMatch = tile.dataset.id === chip.dataset.value;
         if (isMatch){
@@ -5283,10 +5304,21 @@ window.__startExercise = function(slug){
            einfach nur "nicht gelöst" zu melden - bei mehreren Schritten wäre ein Durchklicken
            durch alle noch offenen Schritte hier zu viel Aufwand für zu wenig Nutzen. */
         if (solved) return;
-        board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
-          tile.classList.add("correct");
-          tile.innerHTML = `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
-        });
+        if (stage === 0){
+          const emptyTiles = Array.from(board.querySelectorAll('.mm-tile[data-target]:not(.correct)'));
+          const unusedChips = Array.from(tray.querySelectorAll('.mm-chip:not(.used)'));
+          emptyTiles.forEach((tile, i) => {
+            const chip = unusedChips[i];
+            const g = q.groups.find(gr => gr.id === chip.dataset.value);
+            tile.classList.add("correct", "nc-"+g.color);
+            tile.innerHTML = `<span class="mm-label">${esc(g.label)}</span>`;
+          });
+        } else {
+          board.querySelectorAll('.mm-tile[data-target]').forEach(tile=>{
+            tile.classList.add("correct");
+            tile.innerHTML = `<span class="mm-label">${esc(tile.dataset.label)}</span>`;
+          });
+        }
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
