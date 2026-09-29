@@ -513,6 +513,81 @@
   }
   .mm-chip-ghost.mm-chip-ghost-badge svg{width:18px; height:18px;}
 
+  /* Breite Chips/Kacheln für lange Aussagen (ganze Sätze statt einzelner Wörter, z.B. bei den
+     Kategorie-Karten "Merkmale von Spam-/Phishing-Mails" oder der Waage "Vorteile/Nachteile"):
+     die normale runde Pillenform (.mm-chip) und die schmale, zentrierte Kachel (.mm-tile) sind
+     für kurze Wörter gedacht - bei mehrzeiligem Text sehen sie sonst unschön aus (sehr hohe,
+     schmale Pille bzw. zusammengequetschter Text). */
+  .mm-chip.chip-wide{
+    border-radius:12px; text-align:left; white-space:normal; max-width:280px; line-height:1.35;
+  }
+  .mm-tile.tile-wide{
+    min-height:auto; align-items:flex-start; text-align:left; padding:9px 11px; font-size:12.5px;
+  }
+  .mm-tile.tile-wide .mm-label{font-size:12.5px; font-weight:600; line-height:1.35;}
+
+  /* Kategorie-Karten (map-match mit q.layout==="category-cards", z.B. "Apps -> Kommunikations-
+     dienste" oder "Merkmale -> Spam-/Phishing-Mails"): statt der generischen CSS-Grid-Tabelle
+     (mmBoardHtml) eine variable Anzahl bunter Karten - eine pro Kategorie aus q.categories -, jede
+     mit eigenem Icon/eigener Farbe (per CSS-Variable inline gesetzt) und darin lose angeordneten
+     leeren Zielfeldern für die zugehörigen Begriffe. Nutzt dieselbe Zieh-Logik wie der normale
+     map-match mit matchBy:"group" (jedes Ziel prüft nur noch data-group, nicht die genaue
+     Position) - hier wird NUR der Body anders gebaut, das Event-Wiring bleibt unverändert. */
+  .cc-board{display:grid; grid-template-columns:repeat(auto-fit, minmax(190px,1fr)); gap:14px; margin:4px 0 18px;}
+  .cc-card{
+    border-radius:var(--radius-lg); padding:14px; border:2px solid var(--cc-color, var(--border));
+    background:var(--cc-soft, var(--surface-2));
+  }
+  .cc-card-head{
+    display:flex; align-items:center; gap:8px; font-weight:800; font-size:14px; margin-bottom:10px;
+    color:var(--cc-color, var(--ink));
+  }
+  .cc-card-icon{font-size:19px; line-height:1; flex:none;}
+  .cc-slots{display:flex; flex-wrap:wrap; gap:8px;}
+  .cc-slots .mm-tile{min-width:84px; flex:1 1 84px;}
+  .cc-slots .mm-tile.tile-wide{flex-basis:100%;}
+
+  /* Waage-Sortierung (map-match mit q.layout==="balance-sort", z.B. Vorteile/Nachteile der
+     digitalen Kommunikation): dieselbe matchBy:"group"-Zieh-Logik wie bei den Kategorie-Karten,
+     nur mit einer Waage als reiner Bild-Metapher oben (dekoratives Inline-SVG, siehe
+     balanceScaleSvg()) und zwei "Waagschalen" darunter als den eigentlichen Zielbereichen - bewusst
+     normale HTML-Divs statt Kind-Elemente des SVGs (Textumbruch bei den oft langen Aussagen wäre in
+     SVG unpraktisch), nur optisch unter die beiden Balken-Enden gesetzt. */
+  .bal-wrap{text-align:center; margin-bottom:2px;}
+  .bal-svg{width:min(78vw, 340px); height:auto; display:block; margin:0 auto;}
+  .bal-pans{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:-8px 0 18px;}
+  .bal-pan{
+    border-radius:0 0 20px 20px; border:2px solid var(--bal-color, var(--border)); border-top:none;
+    background:var(--bal-soft, var(--surface-2)); padding:14px 10px 16px;
+  }
+  .bal-pan-head{
+    display:flex; align-items:center; justify-content:center; gap:6px; font-weight:800; font-size:13.5px;
+    margin-bottom:10px; color:var(--bal-color, var(--ink)); text-align:center;
+  }
+  .bal-slots{display:flex; flex-direction:column; gap:8px;}
+  @media (max-width:480px){
+    .bal-pans{grid-template-columns:1fr; gap:14px;}
+  }
+
+  /* Schritt-für-Schritt-Sortierung (q.kind==="staged-sort", z.B. "Vorteile/Nachteile" oder
+     "Merkmale von Spam-/Phishing-Mails"): bei sehr vielen, oft langen Aussagen wird eine Seite mit
+     ALLEN Begriffen gleichzeitig (wie bei category-cards/balance-sort oben) so lang, dass Zielbereich
+     und Begriff nicht mehr gleichzeitig auf dem Bildschirm sichtbar sind - und weil man während des
+     Ziehens nicht scrollen kann (touch-action:none, siehe Kommentar bei .mm-fullscreen), wäre eine
+     Zuordnung dann auf dem Handy gar nicht mehr möglich (derselbe Grund, aus dem es die
+     Kreis-Zuordnung "Grundlagen der Landwirtschaft" als Vollbild-Variante gibt). Hier bleiben die
+     zwei Zielbereiche (Waagschalen oder Karten) fest stehen, aber es wird immer nur EIN Begriff auf
+     einmal gezeigt statt aller gleichzeitig - dadurch passt die ganze Aufgabe (Ziele + aktueller
+     Begriff) immer auf einen Blick, ganz ohne eigene Vollbild-Technik. */
+  .ss-stage{display:flex; justify-content:center; margin:6px 0 4px;}
+  .mm-chip.chip-wide.ss-current{
+    max-width:320px; text-align:center; padding:14px 16px; font-size:14.5px; border-radius:14px;
+    border-width:2px; box-shadow:var(--shadow);
+  }
+  .ss-zone{transition:background .2s, border-color .2s;}
+  .ss-zone.flash-correct{border-color:var(--success); background:var(--success-soft);}
+  .ss-zone.wrong-flash{border-color:var(--danger); background:var(--danger-soft);}
+
   /* Verschachtelte Kreis-Zuordnung, Schritt für Schritt (map-match mit
      q.layout==="nested-circles-staged", z.B. "Grundlagen der Landwirtschaft"): läuft im Vollbild
      (.cs-fullscreen, siehe dort) statt als normale .qcard, damit die Seite nie länger als ein
@@ -946,6 +1021,7 @@ const informatikChapters = [
 
 const informatikInformationssystemeTopics = [
   { tag:"lernen", label:"Vorwissen: Kommunikationssysteme", page:6, practice:"informatik-kommunikationssysteme" },
+  { tag:"lernen", label:"Kommunikationsdienste: Apps, Vor-/Nachteile & Mail-Merkmale", page:6, practice:"informatik-kommunikationsdienste-uebung" },
   { tag:"lernen", label:"Aufbau digitaler Informationssysteme", page:8 },
   { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10 },
   { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12 },
@@ -3141,6 +3217,101 @@ const exerciseSets = {
         accept: ["Netiquette"],
         explain: "Richtig – die „Netiquette\" beschreibt Verhaltensregeln für einen respektvollen und wertschätzenden Umgang im Internet." }
     ]
+  },
+
+  /* Drei Zuordnungs-Übungen zur Wiederholung/Vertiefung von "Kommunikationssysteme", direkt
+     hintereinander in EINEM Übungs-Set (Wunsch von Manuel: "können alle direkt hintereinander
+     geschaltet werden als separate Übung"). Aufgabe 1+2 sind reine Wiederholung (Apps den Diensten
+     zuordnen, Vor-/Nachteile sortieren); Aufgabe 3 (Spam-/Phishing-Merkmale) endet - wie bei den
+     anderen Heft-Übungen - mit einem Pop-up, das zum Übernehmen ins Heft auffordert (q.popupText).
+     Alle drei nutzen bewusst KEINE stupide Tabellenanordnung, sondern eigene Zuordnungs-"Bilder"
+     (Kategorie-Karten bzw. Waage) - siehe q.layout "category-cards"/"balance-sort" und die
+     zugehörigen CSS-/Body-Bau-Kommentare weiter oben/unten. */
+  "informatik-kommunikationsdienste-uebung": {
+    title: "Kommunikationsdienste: Apps, Vor-/Nachteile & Mail-Merkmale",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 12–15 Minuten",
+    locked: false,
+    questions: [
+      { kind:"map-match", matchBy:"group", layout:"category-cards", section:"Beispiel-Apps für die Kommunikationsdienste",
+        text: "Ordne jede App dem passenden Kommunikationsdienst zu. Die Reihenfolge innerhalb einer Kategorie spielt keine Rolle.",
+        categories: [
+          { id:"im",   label:"Instant Messenger", icon:"💬", color:"#3454D1" },
+          { id:"sm",   label:"Social Media",       icon:"👥", color:"#C97A2B" },
+          { id:"mail", label:"E-Mail",             icon:"✉️", color:"#237A4B" },
+          { id:"sms",  label:"SMS",                icon:"📩", color:"#7C5CBF" },
+        ],
+        tiles: [
+          { id:"app-whatsapp",    label:"WhatsApp",              group:"im" },
+          { id:"app-messenger",   label:"Messenger (Facebook)",  group:"im" },
+          { id:"app-skype",       label:"Skype",                 group:"im" },
+          { id:"app-snapchat",    label:"Snapchat",               group:"im" },
+          { id:"app-threema",     label:"Threema",                group:"im" },
+          { id:"app-signal",      label:"Signal",                 group:"im" },
+          { id:"app-facebook",    label:"Facebook",               group:"sm" },
+          { id:"app-instagram",   label:"Instagram",              group:"sm" },
+          { id:"app-twitter",     label:"Twitter",                 group:"sm" },
+          { id:"app-gmail",       label:"gmail",                   group:"mail" },
+          { id:"app-gmx",         label:"gmx",                     group:"mail" },
+          { id:"app-yahoo",       label:"yahoo",                   group:"mail" },
+          { id:"app-web",         label:"web",                     group:"mail" },
+          { id:"app-outlook",     label:"outlook",                 group:"mail" },
+          { id:"app-imessage",    label:"iMessage",                group:"sms" },
+          { id:"app-sms",         label:"SMS",                     group:"sms" },
+        ],
+        explain: "Instant Messenger (z. B. WhatsApp, Signal), Social Media (z. B. Instagram, Facebook), E-Mail-Anbieter (z. B. gmail, gmx) und SMS/iMessage sind vier verschiedene Wege, digital zu kommunizieren." },
+
+      { kind:"staged-sort", visual:"balance", section:"Vorteile und Nachteile der digitalen Kommunikation",
+        text: "Sortiere die Aussagen in die passende Waagschale: Vorteil oder Nachteil der digitalen Kommunikation?",
+        categories: [
+          { id:"vorteil",  label:"Vorteile",  icon:"👍", color:"#237A4B" },
+          { id:"nachteil", label:"Nachteile", icon:"👎", color:"#B8402D" },
+        ],
+        items: [
+          { id:"v-schnell",     label:"sekundenschnelle Übertragung",                                            group:"vorteil" },
+          { id:"v-mehrere",     label:"mehrere Empfänger gleichzeitig",                                          group:"vorteil" },
+          { id:"v-anhang",      label:"Dateianhänge möglich",                                                    group:"vorteil" },
+          { id:"v-speicher",    label:"elektronische Speicherung ist einfacher als in Papierform",               group:"vorteil" },
+          { id:"v-handhabung",  label:"einfache Handhabung",                                                     group:"vorteil" },
+          { id:"v-autokorrek",  label:"Autokorrektur (Fehlervermeidung)",                                        group:"vorteil" },
+          { id:"v-kosten",      label:"niedrigere Kosten (in der Regel kostenfrei) als Portogebühren",           group:"vorteil" },
+          { id:"v-umwelt",      label:"umweltfreundlich (kein Papier)",                                          group:"vorteil" },
+          { id:"n-lesebest",    label:"Absender erfährt nicht, ob und wann der Empfänger die Nachricht gelesen hat", group:"nachteil" },
+          { id:"n-geraet",      label:"elektronisches Gerät erforderlich",                                       group:"nachteil" },
+          { id:"n-internet",    label:"Internetzugang erforderlich",                                             group:"nachteil" },
+          { id:"n-datenklau",   label:"Gefahr von Datenklau im Internet",                                        group:"nachteil" },
+          { id:"n-viren",       label:"Ausbreitung von Viren",                                                   group:"nachteil" },
+          { id:"n-spam",        label:"Gefahr von Spam und Phishing",                                            group:"nachteil" },
+          { id:"n-falsch",      label:"E-Mails können an falsche Empfänger geschickt werden.",                   group:"nachteil" },
+        ],
+        explain: "Digitale Kommunikation ist schnell, günstig und praktisch – bringt aber auch Risiken mit sich, z. B. Datenklau, Viren oder Spam/Phishing, und man braucht dafür immer ein Gerät mit Internetzugang." },
+
+      { kind:"staged-sort", visual:"cards", section:"Merkmale von Spam- und Phishing-Mails",
+        text: "Ordne jedes Merkmal der passenden Mail-Art zu: Spam oder Phishing?",
+        categories: [
+          { id:"spam",     label:"Merkmale von Spam-Mails",     icon:"📢", color:"#C97A2B" },
+          { id:"phishing", label:"Merkmale von Phishing-Mails", icon:"🎣", color:"#B8402D" },
+        ],
+        items: [
+          { id:"s-unerwartet",  label:"unerwartete E-Mail",                                                          group:"spam" },
+          { id:"s-unbekannt",   label:"unbekannter Empfänger",                                                       group:"spam" },
+          { id:"s-adresse",     label:"merkwürdige Absender-Adressen",                                               group:"spam" },
+          { id:"s-betreff",     label:"Betreffs wie: „unglaublich“, „unschlagbar günstig“, „traumhaft“ …",           group:"spam" },
+          { id:"s-inhalt",      label:"seltsamer Inhalt",                                                            group:"spam" },
+          { id:"s-links",       label:"Links enthalten",                                                             group:"spam" },
+          { id:"s-fehler",      label:"Rechtschreib- und Grammatikfehler",                                           group:"spam" },
+          { id:"p-fehler",      label:"viele Grammatik- und Orthografiefehler",                                      group:"phishing" },
+          { id:"p-sprache",     label:"Mail ist in fremder Sprache geschrieben",                                     group:"phishing" },
+          { id:"p-anrede",      label:"Name fehlt in der persönlichen Anrede",                                       group:"phishing" },
+          { id:"p-dringlich",   label:"meist besteht ein dringlicher Handlungsbedarf",                               group:"phishing" },
+          { id:"p-daten",       label:"Aufforderung, um persönliche Daten einzugeben",                               group:"phishing" },
+          { id:"p-datei",       label:"Aufforderung, eine Datei zu öffnen",                                          group:"phishing" },
+          { id:"p-klicken",     label:"Aufforderung, diverse Links anzuklicken",                                     group:"phishing" },
+        ],
+        explain: "Spam-Mails erkennt man z. B. an unerwarteten Absendern, merkwürdigen Adressen oder reißerischen Betreffs. Phishing-Mails wollen gezielt an persönliche Daten gelangen – oft mit dringlichem Handlungsbedarf, Sprach-/Rechtschreibfehlern und Aufforderungen, Links anzuklicken oder Dateien zu öffnen.",
+        popupText: "Übernimm die Tabelle „Merkmale von Spam-Mails / Merkmale von Phishing-Mails“ schriftlich in dein Heft." }
+    ]
   }
 };
 
@@ -3527,6 +3698,27 @@ function equationsTaskHtml(t, num){
 function polarPoint(cx,cy,r,angleDeg){
   const rad = (angleDeg - 90) * Math.PI / 180;
   return { x: cx + r*Math.cos(rad), y: cy + r*Math.sin(rad) };
+}
+
+/* Rein dekorative Waage (Balken + Ständer + zwei kurze "Ketten" zu den Waagschalen darunter) für
+   q.layout==="balance-sort" (z.B. Vorteile/Nachteile). Kippt NICHT dynamisch mit dem Lösungsstand -
+   ist nur die Bild-Metapher über den beiden echten Zielbereichen (.bal-pan, per HTML/CSS, nicht
+   Teil dieses SVGs - Fließtext in SVG wäre unpraktisch). Die beiden kleinen Kreise an den
+   Kettenenden sind bewusst schon grün/rot eingefärbt, damit die Zuordnung Balken-Ende -> Waagschale
+   auch ohne exakte Pixel-Ausrichtung sofort klar ist. */
+function balanceScaleSvg(){
+  return `
+    <svg class="bal-svg" viewBox="0 0 220 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="110" y1="14" x2="110" y2="80" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round"/>
+      <polygon points="86,80 134,80 110,98" fill="var(--ink-faint)"/>
+      <circle cx="110" cy="14" r="6" fill="var(--ink-faint)"/>
+      <line x1="22" y1="20" x2="198" y2="20" stroke="var(--ink-faint)" stroke-width="4" stroke-linecap="round"/>
+      <line x1="22" y1="20" x2="22" y2="38" stroke="var(--ink-faint)" stroke-width="3" stroke-linecap="round"/>
+      <line x1="198" y1="20" x2="198" y2="38" stroke="var(--ink-faint)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="22" cy="38" r="5" fill="var(--success)"/>
+      <circle cx="198" cy="38" r="5" fill="var(--danger)"/>
+    </svg>
+  `;
 }
 
 /* Statische Anschauungs-Grafiken für "Flächenanteile ablesen" (eigene Formen, keine Buchgrafiken) */
@@ -4621,6 +4813,85 @@ window.__startExercise = function(slug){
          per JS hineingerendert, genau wie bei circle-sort (siehe dort). Läuft komplett im
          Vollbild - siehe host.innerHTML weiter unten. */
       body = `<div id="ncStage"></div>`;
+    } else if (q.kind === "map-match" && q.layout === "category-cards"){
+      /* Bunte Kategorie-Karten statt der generischen Tabelle (siehe CSS-Kommentar bei .cc-board):
+         nutzt dieselbe matchBy:"group"-Zieh-Logik wie der normale map-match weiter unten - hier wird
+         nur der Body anders gebaut, kein eigenes Event-Wiring nötig. */
+      const cardsHtml = q.categories.map(cat => {
+        const catTiles = q.tiles.filter(t => t.group === cat.id);
+        const slotsHtml = catTiles.map(t =>
+          `<div class="mm-tile${q.wideTiles ? " tile-wide" : ""}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
+        ).join("");
+        return `
+          <div class="cc-card" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
+            <div class="cc-card-head"><span class="cc-card-icon">${cat.icon}</span>${esc(cat.label)}</div>
+            <div class="cc-slots">${slotsHtml}</div>
+          </div>`;
+      }).join("");
+      const realChips = q.tiles.map(t => ({ value:t.id, label:t.label }));
+      const chipList = shuffled(realChips);
+      const chipsHtml = chipList.map((chip,idx) =>
+        `<button type="button" class="mm-chip${q.wideTiles ? " chip-wide" : ""}" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`
+      ).join("");
+      body = `
+        <div class="cc-board" id="mmBoard">${cardsHtml}</div>
+        <p class="gap-hint">Tippe einen Begriff an, halte ihn gedrückt und ziehe ihn in die passende Kategorie.</p>
+        <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+      `;
+    } else if (q.kind === "map-match" && q.layout === "balance-sort"){
+      /* Waage als Bild-Metapher (siehe balanceScaleSvg() und CSS-Kommentar bei .bal-wrap), sonst
+         dieselbe matchBy:"group"-Zieh-Logik wie der normale map-match weiter unten. */
+      const pansHtml = q.categories.map(cat => {
+        const catTiles = q.tiles.filter(t => t.group === cat.id);
+        const slotsHtml = catTiles.map(t =>
+          `<div class="mm-tile tile-wide" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
+        ).join("");
+        return `
+          <div class="bal-pan" style="--bal-color:${esc(cat.color)}; --bal-soft:${esc(cat.color)}18;">
+            <div class="bal-pan-head"><span>${cat.icon}</span>${esc(cat.label)}</div>
+            <div class="bal-slots">${slotsHtml}</div>
+          </div>`;
+      }).join("");
+      const realChips = q.tiles.map(t => ({ value:t.id, label:t.label }));
+      const chipList = shuffled(realChips);
+      const chipsHtml = chipList.map((chip,idx) =>
+        `<button type="button" class="mm-chip chip-wide" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`
+      ).join("");
+      body = `
+        <div class="bal-wrap">${balanceScaleSvg()}</div>
+        <div class="bal-pans" id="mmBoard">${pansHtml}</div>
+        <p class="gap-hint">Tippe eine Aussage an, halte sie gedrückt und ziehe sie in die passende Waagschale.</p>
+        <div class="chip-tray" id="chipTray">${chipsHtml}</div>
+      `;
+    } else if (q.kind === "staged-sort"){
+      /* Schritt-für-Schritt-Variante von map-match/matchBy:"group" (siehe CSS-Kommentar bei
+         .ss-stage): die zwei Zielbereiche (q.categories, IMMER genau zwei) stehen fest im Markup,
+         nur der aktuell zu sortierende Begriff (q.items) wird per JS ausgetauscht - siehe
+         Event-Wiring q.kind==="staged-sort" weiter unten (renderCurrent()). */
+      const zonesHtml = q.categories.map(cat => {
+        if (q.visual === "balance"){
+          return `
+            <div class="bal-pan ss-zone" data-group="${esc(cat.id)}" style="--bal-color:${esc(cat.color)}; --bal-soft:${esc(cat.color)}18;">
+              <div class="bal-pan-head"><span>${cat.icon}</span>${esc(cat.label)}</div>
+            </div>`;
+        }
+        return `
+          <div class="cc-card ss-zone" data-group="${esc(cat.id)}" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
+            <div class="cc-card-head"><span class="cc-card-icon">${cat.icon}</span>${esc(cat.label)}</div>
+          </div>`;
+      }).join("");
+      const zonesWrap = q.visual === "balance"
+        ? `<div class="bal-wrap">${balanceScaleSvg()}</div><div class="bal-pans" id="ssZones">${zonesHtml}</div>`
+        : `<div class="cc-board" id="ssZones">${zonesHtml}</div>`;
+      const hint = q.visual === "balance"
+        ? "Tippe die Aussage an, halte sie gedrückt und ziehe sie in die passende Waagschale."
+        : "Tippe das Merkmal an, halte es gedrückt und ziehe es in die passende Karte.";
+      body = `
+        ${zonesWrap}
+        <div class="cs-progress" id="ssProgress"></div>
+        <div class="ss-stage"><button type="button" class="mm-chip chip-wide ss-current" id="ssChip"></button></div>
+        <p class="gap-hint">${hint}</p>
+      `;
     } else if (q.kind === "map-match"){
       const realChips = q.tiles.filter(t=>!t.fixed).map(t => ({ value:t.id, label:t.label }));
       const distractorChipsList = (q.distractorChips || []).map((label,idx) => ({ value:"__distractor_"+idx, label:label }));
@@ -5342,6 +5613,15 @@ window.__startExercise = function(slug){
           const skipBtn = document.getElementById("skipBtn");
           if (skipBtn) skipBtn.style.display = "none";
           lockQuestion("correct", q.explain, "correct");
+          /* q.popupText (optional): wie beim table-match ein Pop-up, das zum Übernehmen ins Heft
+             auffordert - muss aktiv geschlossen werden, damit es wirklich wahrgenommen wird. */
+          if (q.popupText){
+            const overlay = document.createElement("div");
+            overlay.className = "tm-popup-overlay";
+            overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+          }
         }
       }
 
@@ -5405,6 +5685,97 @@ window.__startExercise = function(slug){
           tile.innerHTML = (tile.dataset.icon ? `<span class="mm-icon">${tile.dataset.icon}</span>` : "") + `<span class="mm-label">${highlightLabel(tile.dataset.label, tile.dataset.mark)}</span>`;
         });
         tray.querySelectorAll(".mm-chip").forEach(c=>c.classList.add("used"));
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
+      });
+    } else if (q.kind === "staged-sort"){
+      /* Schritt-für-Schritt-Variante von map-match/matchBy:"group" (siehe CSS-Kommentar bei
+         .ss-stage und Body-Kommentar oben): die Zieh-Logik (Ghost-Element, pointerdown/move/up/
+         cancel) ist dieselbe wie beim generischen map-match, nur dass es hier IMMER nur ein
+         einziges, zu ersetzendes Begriffs-Element (#ssChip) gibt statt einer ganzen Chip-Tray, und
+         die zwei Zielbereiche (.ss-zone) fest stehen bleiben statt einzelne Kacheln "aufzubrauchen". */
+      const progressEl = document.getElementById("ssProgress");
+      const chipEl = document.getElementById("ssChip");
+      const items = shuffled(q.items);
+      const itemsTotal = items.length;
+      let idx = 0;
+      let dragging = false, ghost = null, draggedPointerId = null;
+
+      function renderCurrent(){
+        const item = items[idx];
+        chipEl.dataset.value = item.id;
+        chipEl.innerHTML = highlightLabel(item.label, item.mark);
+        progressEl.textContent = `${idx+1} von ${itemsTotal}`;
+      }
+      renderCurrent();
+
+      function moveGhost(x,y){ if (ghost){ ghost.style.left = x+"px"; ghost.style.top = y+"px"; } }
+      function endGhost(){ if (ghost){ ghost.remove(); ghost = null; } }
+      function resetDrag(){
+        dragging = false;
+        draggedPointerId = null;
+        chipEl.classList.remove("dragging");
+        endGhost();
+      }
+      chipEl.addEventListener("pointerdown", (e)=>{
+        if (solved || dragging) return;
+        e.preventDefault();
+        dragging = true;
+        draggedPointerId = e.pointerId;
+        chipEl.classList.add("dragging");
+        ghost = document.createElement("div");
+        ghost.className = "mm-chip-ghost";
+        ghost.textContent = chipEl.textContent;
+        document.body.appendChild(ghost);
+        moveGhost(e.clientX, e.clientY);
+        try { chipEl.setPointerCapture(e.pointerId); } catch(err){ /* ignorieren */ }
+      });
+      window.addEventListener("pointermove", (e)=>{
+        if (dragging && e.pointerId === draggedPointerId) moveGhost(e.clientX, e.clientY);
+      });
+      window.addEventListener("pointerup", (e)=>{
+        if (!dragging || e.pointerId !== draggedPointerId) return;
+        resetDrag();
+        if (solved) return;
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const zone = el && el.closest ? el.closest(".ss-zone") : null;
+        if (!zone) return;
+        attempts++;
+        const item = items[idx];
+        if (zone.dataset.group === item.group){
+          zone.classList.add("flash-correct");
+          setTimeout(()=>zone.classList.remove("flash-correct"), 350);
+          idx++;
+          if (idx < itemsTotal){
+            renderCurrent();
+          } else {
+            chipEl.style.display = "none";
+            /* q.popupText (optional): wie beim table-match/generischen map-match ein Pop-up, das
+               zum Übernehmen ins Heft auffordert - muss aktiv geschlossen werden. */
+            if (q.popupText){
+              const overlay = document.createElement("div");
+              overlay.className = "tm-popup-overlay";
+              overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+              document.body.appendChild(overlay);
+              overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+            }
+            setTimeout(()=>lockQuestion("correct", q.explain, "correct"), 250);
+          }
+        } else {
+          zone.classList.add("wrong-flash");
+          setTimeout(()=>zone.classList.remove("wrong-flash"), 450);
+          tryAgainFeedback();
+        }
+      });
+      window.addEventListener("pointercancel", (e)=>{
+        if (dragging && e.pointerId === draggedPointerId) resetDrag();
+      });
+      const skipBtn = document.getElementById("skipBtn");
+      if (skipBtn) skipBtn.addEventListener("click", ()=>{
+        /* Wie bei "Grundlagen der Landwirtschaft" (siehe dort) wird hier bei "Überspringen" die
+           Lösung NICHT eingeblendet - der bereits erreichte Fortschritt (idx) bleibt einfach so
+           stehen, die Übung wird nur als "nicht gelöst" gesperrt. */
+        if (solved) return;
+        chipEl.style.display = "none";
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "circle-sort"){
