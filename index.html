@@ -3380,23 +3380,27 @@ const exerciseSets = {
     duration: "ca. 25–30 Minuten",
     locked: true,
     custom: "wortarten-einstiegstest",
-    maxScore: 74,
+    maxScore: 78,
     questions: [],
 
-    /* --- Teil 1 (8 Punkte): freie Eingabe, automatisch gegen 8 Zielbegriffe + Synonyme geprüft. --- */
+    /* --- Teil 1 (12 Punkte): freie Eingabe, automatisch gegen 12 Zielbegriffe + Synonyme geprüft. --- */
     part1Targets: [
-      { key:"nomen",        label:"Nomen",        terms:["nomen","hauptwort","namenwort","substantiv"] },
-      { key:"verb",         label:"Verb",         terms:["verb","tätigkeitswort","zeitwort"] },
-      { key:"adjektiv",     label:"Adjektiv",     terms:["adjektiv","eigenschaftswort","wiewort"] },
-      { key:"artikel",      label:"Artikel",      terms:["artikel","begleiter","geschlechtswort"] },
-      { key:"pronomen",     label:"Pronomen",     terms:["pronomen","fürwort"] },
-      { key:"adverb",       label:"Adverb",       terms:["adverb","umstandswort"] },
-      { key:"praeposition", label:"Präposition",  terms:["präposition","verhältniswort"] },
-      { key:"konjunktion",  label:"Konjunktion",  terms:["konjunktion","bindewort"] },
+      { key:"nomen",         label:"Nomen",              terms:["nomen","hauptwort","namenwort","substantiv"] },
+      { key:"verb",          label:"Verb",               terms:["verb","tätigkeitswort","zeitwort"] },
+      { key:"adjektiv",      label:"Adjektiv",           terms:["adjektiv","eigenschaftswort","wiewort"] },
+      { key:"artikel",       label:"Artikel",            terms:["artikel","begleiter","geschlechtswort"] },
+      { key:"personal",      label:"Personalpronomen",   terms:["personalpronomen","persönliches fürwort"] },
+      { key:"possessiv",     label:"Possessivpronomen",  terms:["possessivpronomen","besitzanzeigendes fürwort","besitzpronomen"] },
+      { key:"demonstrativ",  label:"Demonstrativpronomen", terms:["demonstrativpronomen","hinweisendes fürwort","hinweisewort"] },
+      { key:"adverb",        label:"Adverb",             terms:["adverb","umstandswort"] },
+      { key:"praeposition",  label:"Präposition",        terms:["präposition","verhältniswort"] },
+      { key:"konjunktion",   label:"Konjunktion",        terms:["konjunktion","bindewort"] },
+      { key:"numerale",      label:"Numerale",           terms:["numerale","zahlwort","numeral"] },
+      { key:"interjektion",  label:"Interjektion",       terms:["interjektion","ausrufewort","empfindungswort"] },
     ],
 
     /* --- Teil 2 (22 Punkte, je 1 Punkt pro Wort): jedes Wort in zwei Sätzen bestimmen. --- */
-    wortartOptions: ["Nomen","Verb","Adjektiv","Artikel","Pronomen","Adverb","Präposition","Konjunktion"],
+    wortartOptions: ["Nomen","Verb","Adjektiv","Artikel","Personalpronomen","Possessivpronomen","Demonstrativpronomen","Adverb","Präposition","Konjunktion"],
     part2Sentences: [
       { text: "Der clevere Schüler löst schwierige Aufgaben schnell und richtig.",
         words: [
@@ -3413,16 +3417,16 @@ const exerciseSets = {
       },
       { text: "Sie und ihr Bruder gehen oft ins Kino, weil sie neue Filme lieben.",
         words: [
-          { word:"Sie",    answer:"Pronomen" },
+          { word:"Sie",    answer:"Personalpronomen" },
           { word:"und",    answer:"Konjunktion" },
-          { word:"ihr",    answer:"Pronomen" },
+          { word:"ihr",    answer:"Possessivpronomen" },
           { word:"Bruder", answer:"Nomen" },
           { word:"gehen",  answer:"Verb" },
           { word:"oft",    answer:"Adverb" },
           { word:"ins",    answer:"Präposition" },
           { word:"Kino",   answer:"Nomen" },
           { word:"weil",   answer:"Konjunktion" },
-          { word:"sie",    answer:"Pronomen" },
+          { word:"sie",    answer:"Personalpronomen" },
           { word:"neue",   answer:"Adjektiv" },
           { word:"Filme",  answer:"Nomen" },
           { word:"lieben", answer:"Verb" },
@@ -3452,12 +3456,16 @@ const exerciseSets = {
       { id:"s17", text:"Beispiel: auf, unter, neben, mit, in" },
       { id:"s18", text:"steht meistens direkt vor einem Nomen und zeigt dessen Geschlecht/Zahl/Fall an" },
     ],
+    /* Vereinfachung auf Wunsch: die Merkmale "kann man konjugieren" (s1) und "kann man
+       deklinieren" (s2) werden nur noch bei Verb bzw. Adjektiv überhaupt als Auswahl
+       angezeigt (siehe statementsForQuestion() weiter unten) - bei den anderen Wortarten
+       entfällt das "Beugen"-Kriterium dadurch komplett aus der Auswahl UND aus "correct". */
     part3Questions: [
-      { wortart:"Nomen",        correct:["s2","s13"] },
+      { wortart:"Nomen",        correct:["s13"] },
       { wortart:"Verb",         correct:["s1","s6","s11","s16"] },
       { wortart:"Adjektiv",     correct:["s2","s4","s10"] },
-      { wortart:"Artikel",      correct:["s2","s15","s18"] },
-      { wortart:"Pronomen",     correct:["s2","s7","s9"] },
+      { wortart:"Artikel",      correct:["s15","s18"] },
+      { wortart:"Pronomen",     correct:["s7","s9"] },
       { wortart:"Adverb",       correct:["s3","s8","s14"] },
       { wortart:"Präposition",  correct:["s3","s5","s17"] },
       { wortart:"Konjunktion",  correct:["s3","s12"] },
@@ -6608,7 +6616,7 @@ function locateWordsInOrder(text, words){
    generische Motor), damit der Test auch im Lehrer-Dashboard (Auswertung pro Schüler/Frage)
    auftaucht. Da es hier - anders als beim generischen Motor - keine flache Fragenliste gibt, wird
    dafür ein fester, fortlaufender globaler Index über alle 5 Teile hinweg verwendet:
-     0        = Teil 1 (1 Eintrag, "correct" nur bei 8/8, sonst "teilweise x/8")
+     0        = Teil 1 (1 Eintrag, "correct" nur bei 12/12, sonst "teilweise x/12")
      1..22    = Teil 2 (1 Eintrag je Wort, in Reihenfolge der beiden Sätze)
      23..30   = Teil 3 (1 Eintrag je Wortart-Frage)
      31..48   = Teil 4 (1 Eintrag je Lücke, siehe p4BlankIndex weiter unten)
@@ -6640,7 +6648,7 @@ window.__startWortartenEinstiegstest = function(slug){
     return;
   }
 
-  const maxes = { p1:8, p2:22, p3:8, p4:18, p5:18 };
+  const maxes = { p1:12, p2:22, p3:8, p4:18, p5:18 };
   const scores = { p1:0, p2:0, p3:0, p4:0, p5:0 };
   let partIdx = 0; // 0..4 = Teil 1-5, 5 = fertig
 
@@ -6662,7 +6670,7 @@ window.__startWortartenEinstiegstest = function(slug){
       <div class="qcard">
         ${partHeader("Welche Wortarten kennst du?")}
         <div class="qtext">Welche Wortarten kennst du? Schreib alle auf, die dir einfallen (getrennt durch Komma, Leerzeichen oder Zeilenumbruch).</div>
-        <textarea class="we-textarea" id="p1Input" placeholder="z. B. Nomen, Verb, ..." autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
+        <textarea class="we-textarea" id="p1Input" placeholder="Antwort eingeben ..." autocapitalize="off" autocorrect="off" spellcheck="false"></textarea>
         <div class="qactions"><button class="check-btn" id="p1Check">Absenden</button></div>
         <div id="p1FbWrap"></div>
       </div>
@@ -6679,7 +6687,7 @@ window.__startWortartenEinstiegstest = function(slug){
         if (tokens.some(tok => target.terms.includes(tok))) foundKeys.add(target.key);
       });
       scores.p1 = foundKeys.size;
-      reportResult(slug, 0, scores.p1 === 8 ? "correct" : ("teilweise " + scores.p1 + "/8"), 1);
+      reportResult(slug, 0, scores.p1 === 12 ? "correct" : ("teilweise " + scores.p1 + "/12"), 1);
       const foundChips = set.part1Targets.filter(t => foundKeys.has(t.key))
         .map(t => `<li class="we-feedback-chip found">${esc(t.label)}</li>`).join("");
       const missingChips = set.part1Targets.filter(t => !foundKeys.has(t.key))
@@ -6687,7 +6695,7 @@ window.__startWortartenEinstiegstest = function(slug){
       document.getElementById("p1Check").disabled = true;
       document.getElementById("p1Input").disabled = true;
       document.getElementById("p1FbWrap").innerHTML = `
-        <div class="feedback show correct">Du hast ${scores.p1} von 8 Wortarten genannt.</div>
+        <div class="feedback show correct">Du hast ${scores.p1} von 12 Wortarten genannt.</div>
         ${foundChips ? `<p class="we-sublabel" style="margin-top:14px;">Erkannt:</p><ul class="we-feedback-list">${foundChips}</ul>` : ""}
         ${missingChips ? `<p class="we-sublabel" style="margin-top:14px;">Noch nicht genannt:</p><ul class="we-feedback-list">${missingChips}</ul>` : ""}
         <div class="qactions" style="margin-top:20px;"><button class="next-btn show" id="p1Next">Weiter</button></div>
@@ -6713,7 +6721,7 @@ window.__startWortartenEinstiegstest = function(slug){
         ${partHeader("Bestimme die Wortarten im Satz")}
         <div class="qmeta">Wort ${p2Pos+1} von ${p2Items.length}</div>
         <div class="qtext">${sentenceHtml}</div>
-        <p class="we-sublabel">Welche Wortart hat <b>${esc(item.word)}</b> hier?</p>
+        <p class="we-sublabel">Welche Wortart ist das markierte Wort?</p>
         <div class="options" id="p2Opts">
           ${set.wortartOptions.map(o => `<button type="button" class="option" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}
         </div>
@@ -6748,11 +6756,24 @@ window.__startWortartenEinstiegstest = function(slug){
     });
   }
 
-  /* ---------- Teil 3: "Merkmale je Wortart" (8 Punkte, je 1 Punkt bei exakt richtiger Auswahl) ---------- */
+  /* ---------- Teil 3: "Merkmale je Wortart" (8 Punkte, je 1 Punkt bei exakt richtiger Auswahl) ----------
+     Vereinfachung: die "Beugen"-Aussagen (s1 = konjugieren, s2 = deklinieren) werden nur noch bei der
+     Frage angezeigt, bei der sie auch tatsächlich zutreffen (s1 nur bei Verb, s2 nur bei Adjektiv) - bei
+     allen anderen Wortarten entfallen sie komplett aus der Auswahl, damit die Aufgabe nicht mehr so
+     schwer ist. Außerdem: nach 5 Fehlversuchen wird die Lösung angezeigt und man kommt ohne Punkt weiter
+     (statt festzustecken). */
+  function statementsForQuestion(q){
+    return set.part3Statements.filter(st => {
+      if (st.id === "s1") return q.wortart === "Verb";
+      if (st.id === "s2") return q.wortart === "Adjektiv";
+      return true;
+    });
+  }
+  const P3_MAX_ATTEMPTS = 5;
   let p3Pos = 0;
   function renderPart3(){
     const q = set.part3Questions[p3Pos];
-    const optsHtml = set.part3Statements.map(st => `
+    const optsHtml = statementsForQuestion(q).map(st => `
       <label class="we-msel-opt" data-id="${esc(st.id)}">
         <input type="checkbox" value="${esc(st.id)}">
         <span>${esc(st.text)}</span>
@@ -6791,9 +6812,21 @@ window.__startWortartenEinstiegstest = function(slug){
         fb.className = "feedback show correct";
         fb.textContent = "Richtig!";
         document.getElementById("p3Next").classList.add("show");
+      } else if (attempts >= P3_MAX_ATTEMPTS){
+        solved = true;
+        reportResult(slug, 23 + p3Pos, "nicht geschafft (5 Versuche)", attempts);
+        document.getElementById("p3Check").disabled = true;
+        document.querySelectorAll("#p3Opts .we-msel-opt").forEach(lbl => {
+          lbl.classList.add("disabled");
+          lbl.querySelector("input").disabled = true;
+          if (target.includes(lbl.dataset.id)) lbl.classList.add("correct");
+        });
+        fb.className = "feedback show wrong";
+        fb.textContent = "Kein Problem – hier ist die Lösung markiert. Weiter geht's!";
+        document.getElementById("p3Next").classList.add("show");
       } else {
         fb.className = "feedback show wrong";
-        fb.textContent = "Leider nicht ganz richtig – versuch's nochmal.";
+        fb.textContent = `Leider nicht ganz richtig – versuch's nochmal. (Versuch ${attempts} von ${P3_MAX_ATTEMPTS})`;
       }
     });
     document.getElementById("p3Next").addEventListener("click", ()=>{
@@ -6939,8 +6972,8 @@ window.__startWortartenEinstiegstest = function(slug){
     const total = scores.p1 + scores.p2 + scores.p3 + scores.p4 + scores.p5;
     const max = maxes.p1 + maxes.p2 + maxes.p3 + maxes.p4 + maxes.p5;
     let bandText;
-    if (total <= 40) bandText = "Du stehst bei den Wortarten noch am Anfang – das ist der perfekte Zeitpunkt, das Thema jetzt gründlich zu lernen!";
-    else if (total <= 60) bandText = "Du kennst schon viel! Schau dir noch die Bereiche genauer an, die nicht geklappt haben, dann sitzt es bald sicher.";
+    if (total <= 42) bandText = "Du stehst bei den Wortarten noch am Anfang – das ist der perfekte Zeitpunkt, das Thema jetzt gründlich zu lernen!";
+    else if (total <= 63) bandText = "Du kennst schon viel! Schau dir noch die Bereiche genauer an, die nicht geklappt haben, dann sitzt es bald sicher.";
     else bandText = "Richtig stark! Du kennst dich mit den Wortarten schon sehr gut aus.";
 
     const partRows = [
