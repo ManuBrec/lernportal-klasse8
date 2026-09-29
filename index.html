@@ -756,6 +756,19 @@
   .task-table td{font-family:var(--font-mono); min-width:56px;}
   .task-table td.tt-solved{color:var(--success); font-weight:700; background:var(--success-soft);}
 
+  .eq-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 22px; margin-top:12px;}
+  .eq-item{display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:14.5px; padding:6px 0;}
+  .eq-label{font-family:var(--font-mono); font-weight:700; color:var(--ink-soft); flex:none;}
+  .eq-chain{display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .eq-eq{color:var(--ink-faint); font-weight:600; margin:0 1px;}
+  .eq-final{font-weight:800; color:var(--success); background:var(--success-soft); padding:2px 8px; border-radius:6px;}
+  .frac{display:inline-flex; flex-direction:column; align-items:center; font-size:0.85em; line-height:1.05; vertical-align:middle;}
+  .frac-num{border-bottom:1.3px solid currentColor; padding:0 4px 1px;}
+  .frac-den{padding:1px 4px 0;}
+  @media (max-width:480px){
+    .eq-grid{grid-template-columns:1fr;}
+  }
+
   @media print{
     .topbar, .backlink, .no-print{display:none !important;}
     body::before{display:none;}
@@ -3233,6 +3246,125 @@ const solutionSheets = {
         ]
       }
     ]
+  },
+
+  /* "Prozentschreibweise" (Niveau 1 + 2) - Aufgabe 1+2 sind Umwandlungsketten (Bruch/Prozent),
+     Aufgabe 3+4 sind normale Tabellenaufgaben wie bei den Grundwerte-Blättern. */
+  "ab-prozent-schreibweise-niveau1": {
+    title: "Prozentschreibweise (Niveau 1)",
+    chapterSlug: "prozentrechnung",
+    tasks: [
+      {
+        kind: "equations",
+        intro: "Schreibe als Bruch mit dem Nenner 100 und dann als Prozent.",
+        items: [
+          { label:"a", chain:["1/10","10/100","10 %"] },
+          { label:"b", chain:["3/10","30/100","30 %"] },
+          { label:"c", chain:["1/50","2/100","2 %"] },
+          { label:"d", chain:["6/50","12/100","12 %"] },
+          { label:"e", chain:["1/20","5/100","5 %"] },
+          { label:"f", chain:["7/20","35/100","35 %"] },
+          { label:"g", chain:["1/5","20/100","20 %"] },
+          { label:"h", chain:["2/5","40/100","40 %"] },
+          { label:"i", chain:["1/25","4/100","4 %"] },
+          { label:"j", chain:["8/25","32/100","32 %"] },
+          { label:"k", chain:["3/300","1/100","1 %"] },
+          { label:"l", chain:["9/300","3/100","3 %"] }
+        ]
+      },
+      {
+        kind: "equations",
+        intro: "Schreibe als Bruch und kürze diesen anschließend vollständig.",
+        items: [
+          { label:"a", chain:["100 %","100/100","1"] },
+          { label:"b", chain:["50 %","50/100","1/2"] },
+          { label:"c", chain:["1 %","1/100","1/100"] },
+          { label:"d", chain:["2 %","2/100","1/50"] },
+          { label:"e", chain:["15 %","15/100","3/20"] },
+          { label:"f", chain:["8 %","8/100","2/25"] },
+          { label:"g", chain:["80 %","80/100","4/5"] },
+          { label:"h", chain:["75 %","75/100","3/4"] },
+          { label:"i", chain:["12 %","12/100","3/25"] },
+          { label:"j", chain:["60 %","60/100","3/5"] }
+        ]
+      },
+      {
+        intro: "Gib als Dezimalbruch und in Prozent an.",
+        columns: ["a","b","c","d","e"],
+        rows: [
+          { label:"Bruch",        given:["30/100","15/100","7/10","1/50","150/200"], solved:["30/100","15/100","7/10","1/50","150/200"] },
+          { label:"Dezimalbruch", given:["","","","",""],                            solved:["0,3","0,15","0,7","0,02","0,75"] },
+          { label:"Prozent",      given:["","","","",""],                            solved:["30 %","15 %","70 %","2 %","75 %"] }
+        ]
+      },
+      {
+        intro: "Ergänze die Tabelle.",
+        columns: ["a","b","c","d","e"],
+        rows: [
+          { label:"Bruch",        given:["","24/100","","","6/50"],   solved:["1/10","24/100","9/10","1/4","6/50"] },
+          { label:"Dezimalbruch", given:["0,1","","","0,25",""],      solved:["0,1","0,24","0,9","0,25","0,12"] },
+          { label:"Prozent",      given:["","","90 %","",""],         solved:["10 %","24 %","90 %","25 %","12 %"] }
+        ]
+      }
+    ]
+  },
+  "ab-prozent-schreibweise-niveau2": {
+    title: "Prozentschreibweise (Niveau 2)",
+    chapterSlug: "prozentrechnung",
+    tasks: [
+      {
+        kind: "equations",
+        intro: "Schreibe als Bruch mit dem Nenner 100 und dann als Prozent.",
+        items: [
+          { label:"a", chain:["7/10","70/100","70 %"] },
+          { label:"b", chain:["3/50","6/100","6 %"] },
+          { label:"c", chain:["8/25","32/100","32 %"] },
+          { label:"d", chain:["27/50","54/100","54 %"] },
+          { label:"e", chain:["39/300","13/100","13 %"] },
+          { label:"f", chain:["19/20","95/100","95 %"] },
+          { label:"g", chain:["75/500","15/100","15 %"] },
+          { label:"h", chain:["370/1000","37/100","37 %"] },
+          { label:"i", chain:["3/5","60/100","60 %"] },
+          { label:"j", chain:["64/400","16/100","16 %"] },
+          { label:"k", chain:["6/15","40/100","40 %"] },
+          { label:"l", chain:["14/35","40/100","40 %"] }
+        ]
+      },
+      {
+        kind: "equations",
+        intro: "Schreibe als Bruch und gib ihn anschließend ohne Komma und vollständig gekürzt an.",
+        items: [
+          { label:"a", chain:["17 %","17/100","17/100"] },
+          { label:"b", chain:["12 %","12/100","3/25"] },
+          { label:"c", chain:["34 %","34/100","17/50"] },
+          { label:"d", chain:["46 %","46/100","23/50"] },
+          { label:"e", chain:["45,2 %","45,2/100","113/250"] },
+          { label:"f", chain:["15,4 %","15,4/100","77/500"] },
+          { label:"g", chain:["98,7 %","98,7/100","987/1000"] },
+          { label:"h", chain:["6,75 %","6,75/100","27/40"] },
+          { label:"i", chain:["0,9 %","0,9/100","9/1000"] },
+          { label:"j", chain:["9,9 %","9,9/100","99/1000"] }
+        ]
+      },
+      {
+        intro: "Gib als Dezimalbruch und in Prozent an.",
+        columns: ["a","b","c","d","e"],
+        rows: [
+          { label:"Bruch",        given:["67/100","15/20","32/200","80/500","180/200"], solved:["67/100","15/20","32/200","80/500","180/200"] },
+          { label:"Dezimalbruch", given:["","","","",""],                               solved:["0,67","0,75","0,16","0,16","0,9"] },
+          { label:"Prozent",      given:["","","","",""],                               solved:["67 %","75 %","16 %","16 %","90 %"] }
+        ]
+      },
+      {
+        intro: "Ergänze die Tabelle.",
+        columns: ["a","b","c","d","e"],
+        rows: [
+          { label:"Bruch",        given:["","205/500","","","17/50"],  solved:["3/10","205/500","127/500","1/8","17/50"] },
+          { label:"Dezimalbruch", given:["0,3","","","0,125",""],      solved:["0,3","0,41","0,254","0,125","0,34"] },
+          { label:"Prozent",      given:["","","25,4 %","",""],        solved:["30 %","41 %","25,4 %","12,5 %","34 %"] }
+        ]
+      }
+    ]
   }
 };
 
@@ -3339,6 +3471,15 @@ function isLocked(set, slug){
   return !!set.locked;
 }
 
+/* Erkennt Bruch-Strings wie "3/10" oder "45,2/100" und rendert sie als gestapelten Bruch
+   (Zähler über Nenner). Alles andere (Dezimalzahlen, Prozentwerte, ganze Zahlen) wird als
+   normaler Text ausgegeben. Wird sowohl in Tabellen- als auch in Ketten-Aufgaben verwendet. */
+function fracOrText(s){
+  const m = /^(-?\d+(?:,\d+)?)\/(-?\d+(?:,\d+)?)$/.exec(String(s).trim());
+  if (!m) return esc(s);
+  return `<span class="frac"><span class="frac-num">${esc(m[1])}</span><span class="frac-den">${esc(m[2])}</span></span>`;
+}
+
 /* Rendert eine Tabellen-Aufgabe eines Arbeitsblatts. showSolved=false -> leere Felder ("given"),
    showSolved=true -> vollständige Lösung, dabei die vorher leeren Felder farblich hervorgehoben. */
 function tableTaskHtml(t, num, showSolved){
@@ -3347,7 +3488,7 @@ function tableTaskHtml(t, num, showSolved){
     const cells = r.given.map((giv, i) => {
       const val = showSolved ? r.solved[i] : giv;
       const cls = (showSolved && giv === "") ? ' class="tt-solved"' : "";
-      return `<td${cls}>${val ? esc(val) : ""}</td>`;
+      return `<td${cls}>${val ? fracOrText(val) : ""}</td>`;
     }).join("");
     return `<tr><th class="tt-rowlabel">${esc(r.label)}</th>${cells}</tr>`;
   }).join("");
@@ -3358,6 +3499,27 @@ function tableTaskHtml(t, num, showSolved){
         <thead><tr><th></th>${headCells}</tr></thead>
         <tbody>${bodyRows}</tbody>
       </table></div>
+    </div>
+  `;
+}
+
+/* Rendert eine "Umwandlungsketten"-Aufgabe eines Arbeitsblatts (z.B. 1/10 = 10/100 = 10 %):
+   jedes Element hat einen Buchstaben (label) und eine Kette von Werten (chain), die durch "="
+   verbunden werden; der letzte Wert der Kette ist das Endergebnis und wird hervorgehoben. */
+function equationsTaskHtml(t, num){
+  const items = t.items.map(it => {
+    const chain = it.chain.map((part, i) => {
+      const isLast = i === it.chain.length - 1;
+      const eq = i > 0 ? '<span class="eq-eq">=</span>' : "";
+      const part2 = isLast ? `<span class="eq-final">${fracOrText(part)}</span>` : fracOrText(part);
+      return eq + part2;
+    }).join("");
+    return `<div class="eq-item"><span class="eq-label">${esc(it.label)})</span><span class="eq-chain">${chain}</span></div>`;
+  }).join("");
+  return `
+    <div class="task">
+      <div><span class="task-num num">${num}.</span>${esc(t.intro)}</div>
+      <div class="eq-grid">${items}</div>
     </div>
   `;
 }
@@ -3675,8 +3837,18 @@ function viewChapter(slug){
           <span class="topic-name">Arbeitsblatt: Grundwerte, Prozentsätze und Prozentwerte berechnen – Niveau 2</span>
           <a class="practice-btn" href="#/loesung/ab-prozent-grundwerte-niveau2">Ansehen</a>
         </div>
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Prozentschreibweise Niveau 1</span>
+          <a class="practice-btn" href="#/loesung/ab-prozent-schreibweise-niveau1">Ansehen</a>
+        </div>
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Prozentschreibweise Niveau 2</span>
+          <a class="practice-btn" href="#/loesung/ab-prozent-schreibweise-niveau2">Ansehen</a>
+        </div>
       </div>
-      <p class="result-hint" style="margin-top:10px;">Hier findest du direkt die Lösungen zu den beiden ausgeteilten Arbeitsblättern.</p>
+      <p class="result-hint" style="margin-top:10px;">Hier findest du direkt die Lösungen zu den ausgeteilten Arbeitsblättern.</p>
     `;
   }
 
@@ -4234,7 +4406,8 @@ function viewSolution(slug){
   if (!ws) return viewNotFound();
   const chap = chapters.find(c => c.slug === ws.chapterSlug);
   setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:chap.title, href:"#/mathe/"+ws.chapterSlug}, {label:"Lösung", href:"#/loesung/"+slug}]);
-  const tasks = ws.tables.map((t,i) => tableTaskHtml(t, i+1, true)).join("");
+  const taskList = ws.tasks || ws.tables;
+  const tasks = taskList.map((t,i) => t.kind === "equations" ? equationsTaskHtml(t, i+1) : tableTaskHtml(t, i+1, true)).join("");
   return h`
     <a class="backlink no-print" href="#/mathe/${ws.chapterSlug}">← Zurück zum Kapitel</a>
     <div class="doc-card">
