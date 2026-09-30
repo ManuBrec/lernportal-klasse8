@@ -940,11 +940,23 @@
   }
   .vg-regelheft{border-radius:var(--radius-lg);}
   .vg-regelheft-label{
+    display:flex; align-items:center; gap:8px;
     font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; margin:0 0 12px;
   }
+  .vg-regelheft-icon{display:inline-flex; flex-shrink:0;}
   .vg-regelheft-sentence{
     font-size:15.5px; font-weight:600; line-height:1.5; color:var(--ink); margin:0 0 16px;
     padding:12px 14px; background:var(--surface); border-radius:var(--radius-md);
+  }
+  /* Das/die markierte(n) Zeitform-Wort(-Wörter) im Regelheft-Satz farbig hervorheben (nicht nur fett -
+     reines <b> ist bei font-weight:600 im Fließtext kaum zu erkennen). Farbe/Hintergrund kommen je
+     Zeitform aus --rh-mark/--rh-mark-bg (siehe renderRegelheftPopup). */
+  .vg-regelheft-sentence b{
+    color:var(--rh-mark, #1B2A33); background:var(--rh-mark-bg, rgba(0,0,0,.08));
+    font-weight:800; border-radius:4px; padding:1px 4px;
+  }
+  .vg-regelheft-note{
+    font-size:12.5px; font-weight:700; text-align:center; margin:0 0 14px; color:var(--rh-mark, var(--ink-faint));
   }
 </style>
 
@@ -3584,6 +3596,17 @@ const exerciseSets = {
           "vor allem beim Schreiben: Erzählungen, Berichte, Geschichten",
           "im Gespräch nimmt man meistens lieber das Perfekt – außer bei sein und haben (ich war, ich hatte)",
         ],
+        formation: {
+          title: "Wie bildet man das Präteritum?",
+          points: [
+            "regelmäßige (schwache) Verben: Stamm + Endung -te (lernen → lernte)",
+            "unregelmäßige (starke) Verben: der Wortstamm ändert sich (gehen → ging) – am besten auswendig lernen",
+          ],
+          examples: [
+            { label: "Regelmäßig (schwach)", infinitive: "lernen", form: "ich lernte", mark: "lernte" },
+            { label: "Unregelmäßig (stark)", infinitive: "gehen", form: "ich ging", mark: "ging" },
+          ],
+        },
         regelheft: {
           text: "Im letzten Winter fuhr die Familie nach Österreich in den Skiurlaub.",
           verbs: ["fuhr"],
@@ -3606,6 +3629,18 @@ const exerciseSets = {
           "die Zeitform der gesprochenen Sprache und des Alltags",
           "gebildet mit haben oder sein + Partizip II",
         ],
+        formation: {
+          title: "Wie bildet man das Perfekt?",
+          points: [
+            "Bildung: haben oder sein (Präsens) + Partizip II",
+            "regelmäßige (schwache) Verben: Partizip II = ge + Stamm + t (lernen → gelernt)",
+            "unregelmäßige (starke) Verben: Partizip II endet meist auf -en, der Stamm kann sich ändern (gehen → gegangen)",
+          ],
+          examples: [
+            { label: "Regelmäßig (schwach)", infinitive: "lernen", form: "ich habe gelernt", mark: "habe gelernt" },
+            { label: "Unregelmäßig (stark)", infinitive: "gehen", form: "ich bin gegangen", mark: "bin gegangen" },
+          ],
+        },
         regelheft: {
           text: "Ich habe heute Morgen mein Zimmer aufgeräumt.",
           verbs: ["habe", "aufgeräumt"],
@@ -3628,6 +3663,18 @@ const exerciseSets = {
           "zeigt die „Vorvergangenheit“: ein Ereignis liegt vor einem anderen Ereignis in der Vergangenheit",
           "steht oft zusammen mit dem Präteritum und Signalwörtern wie nachdem, bevor, als",
         ],
+        formation: {
+          title: "Wie bildet man das Plusquamperfekt?",
+          points: [
+            "Bildung: haben oder sein im Präteritum + Partizip II – also wie das Perfekt, nur mit hatte/war statt habe/bin",
+            "regelmäßig: hatte + Partizip II (lernen → hatte gelernt)",
+            "unregelmäßig: war/hatte + Partizip II (gehen → war gegangen)",
+          ],
+          examples: [
+            { label: "Regelmäßig (schwach)", infinitive: "lernen", form: "ich hatte gelernt", mark: "hatte gelernt" },
+            { label: "Unregelmäßig (stark)", infinitive: "gehen", form: "ich war gegangen", mark: "war gegangen" },
+          ],
+        },
         regelheft: {
           text: "Der Zug war schon abgefahren, als wir am Bahnhof ankamen.",
           verbs: ["war", "abgefahren"],
@@ -7204,6 +7251,25 @@ function vgTimelineSvg(kind, color){
   return `<svg viewBox="0 0 300 66" width="260" height="58" role="img" aria-hidden="true">${line}${jetzt}${frueher}${marks}</svg>`;
 }
 
+/* Kleines, thematisch passendes Icon je Zeitform fürs Regelheft-Popup (eigene, einfache
+   Strichzeichnung - keine Übernahme fremder Grafiken/Bilder): Präteritum = Buch (Erzähl-/
+   Schriftsprache), Perfekt = Sprechblase (gesprochene Sprache), Plusquamperfekt = Doppelpfeil
+   zurück (Vorvergangenheit - "noch weiter zurück"). */
+function vgThemeIcon(kind, color){
+  const common = `fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+  let inner = "";
+  if (kind === "perfekt"){
+    inner = `<rect x="3" y="4.5" width="18" height="12" rx="4" ${common}/>
+      <path d="M8 16.5l-1 4 4.5-4" ${common}/>`;
+  } else if (kind === "plusquamperfekt"){
+    inner = `<path d="M11 6l-6 6 6 6" ${common}/><path d="M18 6l-6 6 6 6" ${common}/>`;
+  } else {
+    inner = `<path d="M12 6c-1.6-1.3-4.2-1.9-7.5-1.6v13.6c3.3-0.3 5.9 0.3 7.5 1.6c1.6-1.3 4.2-1.9 7.5-1.6V4.4c-3.3-0.3-5.9 0.3-7.5 1.6z" ${common}/>
+      <path d="M12 6v13.6" ${common}/>`;
+  }
+  return `<svg width="22" height="22" viewBox="0 0 24 24">${inner}</svg>`;
+}
+
 /* ---------- Deutsch: Übung "Die Vergangenheiten" (Präteritum, Perfekt, Plusquamperfekt) ----------
    Eigener, additiver Motor NUR für exerciseSets[...].custom === "vergangenheiten" (siehe route()) -
    analog zu window.__startWortartenEinstiegstest, aber bewusst OHNE die Einmaligkeits-Sperre (siehe
@@ -7307,8 +7373,13 @@ window.__startVergangenheitenUebung = function(slug){
     const overlay = document.createElement("div");
     overlay.className = "tm-popup-overlay";
     overlay.innerHTML = `
-      <div class="tm-popup-card text-content vg-regelheft" style="max-width:460px; background:${round.colorBg}; border-left:8px solid ${round.color};">
-        <div class="vg-regelheft-label" style="color:${round.color};">Regelheft-Eintrag · ${esc(round.tempus)}</div>
+      <div class="tm-popup-card text-content vg-regelheft" style="max-width:460px; background:${round.colorBg}; border-left:8px solid ${round.color}; --rh-mark:${round.color}; --rh-mark-bg:${round.colorBg};">
+        <div class="vg-regelheft-label" style="color:${round.color};">
+          <span class="vg-regelheft-icon">${vgThemeIcon(round.key, round.color)}</span>
+          Regelheft-Eintrag · ${esc(round.tempus)}
+        </div>
+        <div class="vg-timeline">${vgTimelineSvg(round.key, round.color)}</div>
+        <p class="vg-regelheft-note">✏️ Übertrage diesen Zeitstrahl mit der Beschriftung in dein Regelheft.</p>
         <div class="vg-regelheft-sentence">${boldWordsInText(rh.text, rh.verbs)}</div>
         <ul class="vg-rule-list">${rh.points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>
         <div class="qactions" style="margin-top:16px; justify-content:center;">
