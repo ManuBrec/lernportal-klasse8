@@ -1151,6 +1151,7 @@ const prozentTopics = [
   { tag:"lernen", label:"Noch fit?", page:8, practice:"noch-fit-prozentrechnung" },
   { tag:"lernen", label:"Formel", page:9, practice:"prozentrechnung-formeldreieck" },
   { tag:"lernen", label:"Grundaufgaben der Prozentrechnung", page:9, practice:"prozentrechnung-grundaufgaben" },
+  { tag:"lernen", label:"Rechenweg-Trainer", page:9, practice:"prozentrechnung-rechenweg-trainer" },
   { tag:"lernen", label:"Die Prozentrechnung anwenden", page:13 },
   { tag:"lernen", label:"Mit Wachstumsfaktoren rechnen", page:17 },
   { tag:"lernen", label:"Weitere Anwendungen von Wachstumsfaktoren", page:20 },
@@ -1479,6 +1480,17 @@ const exerciseSets = {
      Zahlen wie Manuels eigenes Tafelbeispiel (200 €, 17 %, 34 €), A2/B2/C2 dieselbe zweite Situation
      aus drei Blickwinkeln (W/G/p) - damit Schüler dieselbe Aufgabe schon mal in eine Richtung
      gerechnet haben, wenn sie sie aus einer anderen Richtung wiedersehen. */
+  /* Rechenweg-Trainer: eigener Ablauf (window.__startRechenwegTrainer), Aufgaben werden zufällig
+     erzeugt, daher keine feste Fragenliste. locked:true = für Schüler gesperrt (Manuel testet). */
+  "prozentrechnung-rechenweg-trainer": {
+    title: "Rechenweg-Trainer: P, G und p",
+    subject: "mathe",
+    chapterSlug: "prozentrechnung",
+    duration: "ca. 20 Minuten",
+    locked: true,
+    custom: "rechenweg-trainer",
+    questions: [],
+  },
   "prozentrechnung-formeldreieck": {
     title: "Formeldreieck: Rechenweg üben",
     subject: "mathe",
@@ -4718,7 +4730,7 @@ function viewChapter(slug){
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
-      if (set && !locked){
+      if (set && !locked && !set.custom){
         const prog = exerciseProgress(t.practice);
         const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
         const done = !!prog && prog.correct === prog.total;
@@ -5368,6 +5380,18 @@ function viewExercise(slug){
   /* set.custom === "vergangenheiten": ebenfalls eigener Ablauf (siehe
      window.__startVergangenheitenUebung), aber - anders als der Einstiegstest oben - beliebig oft
      wiederholbar, daher ohne den "nur einmal"-Hinweis. */
+  if (set.custom === "rechenweg-trainer"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>10 zufällige Aufgaben${set.duration ? " · " + esc(set.duration) : ""}. Rechne zuerst mit dem Stift auf dem Schmierzettel, dann trägst du deinen Rechenweg Schritt für Schritt ein und bekommst sofort Rückmeldung.</p>
+      </div>
+      <div id="exerciseHost"></div>
+    `;
+  }
+
   if (set.custom === "vergangenheiten"){
     return h`
       <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
@@ -7627,6 +7651,534 @@ function vgThemeIcon(kind, color){
    Zeitform. Meldet jeden Satz per reportResult() ans Sheets-Backend (globaler Index 0..5, siehe
    Kommentar bei exerciseSets["deutsch-vergangenheiten"]) - dafür muss "deutsch-vergangenheiten"
    auch in Code.gs (Liste "neueUebungen") stehen. */
+/* Rechenweg-Trainer Prozentrechnung (custom:"rechenweg-trainer"): zufällige P/G/p-Aufgaben nach dem
+   Klassen-Schema P=(G·p):100, G=(P:p)·100, p=(P:G)·100, Schmierzettel für den Stift, 5 geprüfte Schritte
+   mit gezielter Fehlererkennung, Auswertung mit "Stolpersteinen". Läuft in einem Shadow-DOM, damit
+   Klassen/IDs nicht mit dem restlichen Portal kollidieren; Farben/Schriften kommen über die
+   Portal-Tokens (CSS-Variablen erben in den Shadow-DOM hinein). Kein Sheets-Reporting. */
+window.__startRechenwegTrainer = function(){
+const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
+const root = host.attachShadow({mode:"open"});
+root.innerHTML = `<style>:host{display:block;font-family:var(--font-body);color:var(--ink);line-height:1.5;--grid:color-mix(in srgb,var(--border) 75%,transparent);--pen:var(--accent)}
+[hidden]{display:none!important}
+.stats{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;text-wrap:balance}
+button{font-family:inherit}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+.pill{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink-soft)}
+.pill b{color:var(--accent);font-family:var(--font-mono)}
+
+.shell{display:flex;flex-direction:column;gap:16px}
+.track{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border)}
+.track div{height:100%;background:var(--accent);width:0;transition:width .3s ease}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+.qtext{font-size:19px;font-weight:600;line-height:1.45;text-wrap:pretty}
+.qtext b{color:var(--mark);background:var(--mark-soft);font-weight:800;border-radius:4px;padding:0 3px;white-space:nowrap}
+
+/* Schmierzettel */
+.scratch{padding:14px}
+.scratch-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 4px 10px}
+.scratch-head h3{font-size:16px;margin-right:auto}
+.tool{border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.tool[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tool:focus-visible,.choice:focus-visible,.btn:focus-visible,.cell:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.paper{position:relative;height:300px;border-radius:12px;border:1px solid var(--border);overflow:hidden;
+  background-color:var(--surface);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:22px 22px;background-position:-1px -1px}
+.paper canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.paper-hint{position:absolute;left:14px;bottom:10px;font-size:13px;color:var(--ink-faint);pointer-events:none}
+
+/* Schritte */
+.steps{display:flex;flex-direction:column;gap:18px}
+.step{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start}
+.step.locked{opacity:.4;pointer-events:none}
+.step-nr{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:13px;background:var(--surface-2);border:1.5px solid var(--border);color:var(--ink-soft)}
+.step.active .step-nr{border-color:var(--accent);color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.step.done .step-nr{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.step-.step-title{font-weight:700;font-size:15.5px;margin:3px 0 10px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;text-align:left}
+.choice:hover{border-color:var(--accent)}
+.choice .sym{font-family:var(--font-mono);font-weight:600;color:var(--accent);margin-right:6px}
+.choice.formula{font-family:var(--font-mono);font-weight:500;font-size:15px}
+.choice.right{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.choice.wrong{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+.choice:disabled{cursor:default}
+
+.eq{display:flex;flex-direction:column;gap:10px}
+.eq-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;font-family:var(--font-mono);font-size:18px;font-weight:500}
+.eq-row[hidden]{display:none!important}
+.eq-label{font-family:var(--font-body);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);width:100%}
+.cell{width:7.2ch;padding:8px 8px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink);font:inherit;font-size:18px;text-align:center}
+.cell.wide{width:9ch}
+.cell:disabled{opacity:1}
+.cell.ok{border-color:var(--success);background:var(--success-soft);color:var(--success)}
+.cell.bad{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.cell.helped{border-color:var(--warm);background:var(--warm-soft);color:var(--warm)}
+
+.feedback{border-radius:14px;padding:13px 16px;font-size:15px;line-height:1.45}
+.feedback[hidden]{display:none!important}
+.feedback.good{background:var(--success-soft);color:var(--success)}
+.feedback.bad{background:var(--danger-soft);color:var(--danger)}
+.feedback.help{background:var(--warm-soft);color:var(--warm)}
+.feedback strong{display:block;margin-bottom:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+.btn{border:none;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;border:1.5px solid var(--border);color:var(--ink-soft);margin-right:auto}
+.btn.ghost:hover{border-color:var(--warm);color:var(--warm)}
+.btn[hidden]{display:none!important}
+
+/* Auswertung */
+.result-score{font-family:var(--font-mono);font-size:54px;font-weight:600;color:var(--accent);line-height:1;margin:6px 0}
+.result-msg{color:var(--ink-soft);font-size:16px;max-width:52ch}
+.list{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:12px}
+.list-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--border);font-size:14.5px}
+.list-row:last-child{border-bottom:none}
+.list-row .grow{flex:1;min-width:0}
+.list-row .meta{color:var(--ink-faint);font-size:13px}
+.dots{display:flex;gap:4px;flex:none}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--danger-soft);border:1.5px solid var(--danger)}
+.dot.on{background:var(--success);border-color:var(--success)}
+.bar-row{display:grid;grid-template-columns:1fr 110px 28px;gap:10px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);font-size:14.5px}
+.bar-row:last-child{border-bottom:none}
+.bar{height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar span{display:block;height:100%;background:var(--warm);border-radius:999px}
+.section-label{font-size:12.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin:22px 0 0}
+@media (max-width:480px){.card{padding:16px}.qtext{font-size:17.5px}.eq-row{font-size:16px}.cell{font-size:16px;width:6.4ch}.paper{height:240px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style><div class="shell"><div class="stats"><span class="pill">Aufgabe <b id="nr">1</b>/<span id="total">10</span></span><span class="pill">Punkte <b id="pts">0</b></span></div>
+  <div id="game" style="display:contents">
+    <div class="track"><div id="bar"></div></div>
+
+    <section class="card">
+      <div class="eyebrow" id="eyebrow">Aufgabe 1</div>
+      <div class="qtext" id="qtext"></div>
+    </section>
+
+    <section class="card scratch">
+      <div class="scratch-head">
+        <h3>Schmierzettel</h3>
+        <button class="tool" id="t-pen" aria-pressed="true">Stift</button>
+        <button class="tool" id="t-eraser" aria-pressed="false">Radierer</button>
+        <button class="tool" id="t-undo">Rückgängig</button>
+        <button class="tool" id="t-clear">Alles löschen</button>
+      </div>
+      <div class="paper"><canvas id="pad"></canvas><div class="paper-hint" id="paperHint">Rechne hier mit dem Stift. Dann trag deinen Rechenweg unten ein.</div></div>
+    </section>
+
+    <section class="card steps" id="steps">
+      <div class="step" data-step="1">
+        <div class="step-nr">1</div>
+        <div class="step-body">
+          <div class="step-title">Was ist gesucht?</div>
+          <div class="choices" id="c-target">
+            <button class="choice" data-v="P"><span class="sym">P</span>Prozentwert (der Anteil)</button>
+            <button class="choice" data-v="G"><span class="sym">G</span>Grundwert (das Ganze, 100&nbsp;%)</button>
+            <button class="choice" data-v="p"><span class="sym">p</span>Prozentsatz (die Zahl mit %)</button>
+          </div>
+        </div>
+      </div>
+      <div class="step" data-step="2">
+        <div class="step-nr">2</div>
+        <div class="step-body">
+          <div class="step-title">Welche Formel passt?</div>
+          <div class="choices" id="c-formula"></div>
+        </div>
+      </div>
+      <div class="step" data-step="3">
+        <div class="step-nr">3</div>
+        <div class="step-body">
+          <div class="step-title">Rechenweg eintragen</div>
+          <div class="eq">
+            <div class="eq-row" id="row-a"><span class="eq-label">Einsetzen</span><span id="lhs">P</span><span>= (</span><input class="cell" id="in-a" inputmode="decimal" autocomplete="off" aria-label="erste Zahl"><span id="op1">·</span><input class="cell" id="in-b" inputmode="decimal" autocomplete="off" aria-label="zweite Zahl"><span>)</span><span id="op2">: 100</span></div>
+            <div class="eq-row" id="row-z" hidden><span class="eq-label" id="lbl-z">Ausrechnen</span><span id="lhs2">P</span><span>=</span><input class="cell wide" id="in-z" inputmode="decimal" autocomplete="off" aria-label="Zwischenergebnis"><span id="op3">: 100</span></div>
+            <div class="eq-row" id="row-r" hidden><span class="eq-label">Ergebnis</span><span id="lhs3">P</span><span>=</span><input class="cell wide" id="in-r" inputmode="decimal" autocomplete="off" aria-label="Ergebnis"><span id="unit">€</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="feedback" id="fb" hidden></div>
+      <div class="actions">
+        <button class="btn ghost" id="b-help" hidden>Lösung zeigen</button>
+        <button class="btn" id="b-check" hidden>Prüfen</button>
+        <button class="btn" id="b-next" hidden>Nächste Aufgabe</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" id="end" hidden>
+    <div class="eyebrow">Geschafft</div>
+    <h2>Deine Auswertung</h2>
+    <div class="result-score num" id="endScore"></div>
+    <p class="result-msg" id="endMsg"></p>
+    <div id="endStones"></div>
+    <div class="section-label">Alle Aufgaben</div>
+    <div class="list" id="endList"></div>
+    <div class="actions" style="margin-top:18px"><button class="btn" id="b-restart">Neue Aufgaben</button></div>
+  </section>
+</div>`;
+const TOTAL = 10, STEPS = 5;
+const $ = s => root.querySelector(s);
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const rstep = (lo,hi,st) => lo + st*Math.floor(Math.random()*((hi-lo)/st+1));
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const r6 = n => Math.round(n*1e6)/1e6;
+const fmt = n => r6(n).toLocaleString('de-DE',{maximumFractionDigits:4});
+const eq = (a,b) => Math.abs(a-b) < 1e-7*Math.max(1,Math.abs(b));
+const isInt = n => Math.abs(n-Math.round(n)) < 1e-9;
+const dec2 = n => isInt(n*100);
+
+function parseNum(s){
+  s = String(s||'').trim().replace(/[€%\s]/g,'').replace(/[a-zäöü]+$/i,'');
+  if(/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g,'');
+  s = s.replace(',', '.');
+  if(!/^\d*\.?\d+$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+
+/* ---------- Aufgaben-Kontexte ---------- */
+const P_EASY = [10,20,25,50];
+const P_ALL = [2,3,4,5,6,8,10,12,15,16,20,24,25,30,35,40,45,60,75,80];
+const CONTEXTS = [
+  { id:'jacke', kind:'money', uP:'€', uG:'€', g:l=>l?rstep(40,250,5):pick([200,300,400,500]),
+    P:v=>`Eine Jacke kostet <b>${v.G} €</b>. Im Sale gibt es <b>${v.p} %</b> Rabatt. Wie viel Euro sparst du?`,
+    G:v=>`Im Sale sparst du bei einer Jacke <b>${v.P} €</b>. Das sind <b>${v.p} %</b> Rabatt. Wie viel hat die Jacke ursprünglich gekostet?`,
+    p:v=>`Eine Jacke kostet <b>${v.G} €</b>. Im Sale sparst du <b>${v.P} €</b>. Wie viel Prozent Rabatt bekommst du?` },
+  { id:'fahrrad', kind:'money', uP:'€', uG:'€', g:l=>l?rstep(250,1500,10):pick([200,400,600,800]),
+    P:v=>`Ein Fahrrad kostet <b>${v.G} €</b>. Du zahlst <b>${v.p} %</b> sofort an. Wie viel Euro sind das?`,
+    G:v=>`Du zahlst für ein Fahrrad <b>${v.P} €</b> an. Das sind <b>${v.p} %</b> des Preises. Wie viel kostet das Fahrrad?`,
+    p:v=>`Ein Fahrrad kostet <b>${v.G} €</b>. Du zahlst <b>${v.P} €</b> an. Wie viel Prozent des Preises sind das?` },
+  { id:'schule', kind:'count', uP:'Schüler', uG:'Schüler', g:l=>l?rstep(150,900,10):pick([200,300,400,500,600]),
+    P:v=>`An einer Schule sind <b>${v.G}</b> Schülerinnen und Schüler. <b>${v.p} %</b> kommen mit dem Bus. Wie viele sind das?`,
+    G:v=>`<b>${v.P}</b> Schülerinnen und Schüler kommen mit dem Bus. Das sind <b>${v.p} %</b> aller Kinder der Schule. Wie viele gehen insgesamt auf die Schule?`,
+    p:v=>`Von <b>${v.G}</b> Schülerinnen und Schülern kommen <b>${v.P}</b> mit dem Bus. Wie viel Prozent sind das?` },
+  { id:'verein', kind:'count', uP:'Mitglieder', uG:'Mitglieder', g:l=>l?rstep(60,480,5):pick([200,300,400]),
+    P:v=>`Der Sportverein hat <b>${v.G}</b> Mitglieder. <b>${v.p} %</b> davon spielen Fußball. Wie viele Mitglieder spielen Fußball?`,
+    G:v=>`<b>${v.P}</b> Mitglieder des Sportvereins spielen Fußball. Das sind <b>${v.p} %</b> aller Mitglieder. Wie viele Mitglieder hat der Verein?`,
+    p:v=>`Der Sportverein hat <b>${v.G}</b> Mitglieder, <b>${v.P}</b> davon spielen Fußball. Wie viel Prozent sind das?` },
+  { id:'wanderung', kind:'dec', uP:'km', uG:'km', g:l=>l?rstep(8,36,1):pick([20,40]),
+    P:v=>`Eine Wanderung ist <b>${v.G} km</b> lang. Nach <b>${v.p} %</b> der Strecke macht ihr Pause. Wie viele km seid ihr bis zur Pause gelaufen?`,
+    G:v=>`Nach <b>${v.P} km</b> macht ihr Pause. Das sind <b>${v.p} %</b> der ganzen Strecke. Wie lang ist die Wanderung?`,
+    p:v=>`Eine Wanderung ist <b>${v.G} km</b> lang. Nach <b>${v.P} km</b> macht ihr Pause. Wie viel Prozent der Strecke habt ihr geschafft?` },
+  { id:'handy', kind:'dec', uP:'GB', uG:'GB', g:l=>l?pick([5,8,12,15,16,20,25,30,40]):pick([20,40,60]),
+    P:v=>`Dein Handyvertrag hat <b>${v.G} GB</b> Datenvolumen. Du hast schon <b>${v.p} %</b> verbraucht. Wie viele GB sind das?`,
+    G:v=>`Du hast <b>${v.P} GB</b> Datenvolumen verbraucht. Das sind <b>${v.p} %</b> deines Vertrags. Wie viele GB hat dein Vertrag insgesamt?`,
+    p:v=>`Dein Handyvertrag hat <b>${v.G} GB</b>. Du hast <b>${v.P} GB</b> verbraucht. Wie viel Prozent sind das?` },
+  { id:'taschengeld', kind:'money', uP:'€', uG:'€', g:l=>l?pick([25,30,35,40,45,60,80,120]):pick([20,40,60,80]),
+    P:v=>`Mia bekommt <b>${v.G} €</b> Taschengeld im Monat. Sie spart <b>${v.p} %</b> davon. Wie viel Euro spart sie?`,
+    G:v=>`Mia spart jeden Monat <b>${v.P} €</b>. Das sind <b>${v.p} %</b> ihres Taschengelds. Wie viel Taschengeld bekommt sie?`,
+    p:v=>`Mia bekommt <b>${v.G} €</b> Taschengeld und spart davon <b>${v.P} €</b>. Wie viel Prozent spart sie?` },
+  { id:'konzert', kind:'count', uP:'Kinder', uG:'Besucher', g:l=>l?rstep(250,4000,50):pick([200,400,500,800]),
+    P:v=>`Zu einem Konzert kommen <b>${v.G}</b> Besucher. <b>${v.p} %</b> davon sind Kinder. Wie viele Kinder sind das?`,
+    G:v=>`Bei einem Konzert sind <b>${v.P}</b> Kinder. Das sind <b>${v.p} %</b> aller Besucher. Wie viele Besucher sind es insgesamt?`,
+    p:v=>`Bei einem Konzert mit <b>${v.G}</b> Besuchern sind <b>${v.P}</b> Kinder. Wie viel Prozent sind das?` }
+];
+
+function makeTask(target, level, avoidId){
+  for(let tries=0; tries<2000; tries++){
+    const ctx = pick(CONTEXTS);
+    if(ctx.id===avoidId) continue;
+    const G = ctx.g(level), p = pick(level?P_ALL:P_EASY), P = r6(G*p/100);
+    if(ctx.kind==='count' && !isInt(P)) continue;
+    if(!level && !isInt(P)) continue;
+    if(!dec2(P)) continue;
+    const vals = [G,P,p,p/100];
+    if(new Set(vals.map(r6)).size<4) continue;
+    if(P < 1) continue;
+    return { target, ctx, G, P, p, text: ctx[target]({G:fmt(G),P:fmt(P),p:fmt(p)}) };
+  }
+}
+function makeSet(){
+  const first = shuffle(['P','G','p']);
+  const rest = shuffle(['P','G','p','P','G','p', pick(['P','G','p'])]);
+  const list = []; let last = null;
+  first.concat(rest).forEach((t,i)=>{ const task = makeTask(t, i<3?0:1, last); last = task.ctx.id; list.push(task); });
+  return list;
+}
+
+/* ---------- Formeln nach dem Klassen-Schema ---------- */
+const FORMULAS = { P:'P = (G · p) : 100', G:'G = (P : p) · 100', p:'p = (P : G) · 100' };
+const DISTRACT = { P:'P = (G : p) · 100', G:'G = (P · p) : 100', p:'p = (G : P) · 100' };
+const NAME = { P:'den Prozentwert P', G:'den Grundwert G', p:'den Prozentsatz p' };
+
+/* ---------- Zustand ---------- */
+let tasks, idx, step, tries, taskPts, stepPts, errLog;
+const ERR = { gesucht:'Gesuchte Größe erkennen', formel:'Passende Formel wählen', einsetzen:'Zahlen richtig einsetzen', rechnen:'Ausrechnen (mal / geteilt)', hundert:'Am Schluss : 100 oder · 100', komma:'Komma und Stellen' };
+
+function start(){
+  tasks = makeSet(); idx = 0; taskPts = []; errLog = {};
+  $('#total').textContent = TOTAL;
+  $('#end').hidden = true; $('#game').style.display = 'contents';
+  loadTask();
+  window.scrollTo({top:0});
+}
+
+function loadTask(){
+  const t = tasks[idx];
+  step = 1; tries = 0; stepPts = 0;
+  $('#nr').textContent = idx+1;
+  $('#pts').textContent = taskPts.reduce((a,b)=>a+b,0);
+  $('#bar').style.width = (idx/TOTAL*100)+'%';
+  $('#eyebrow').textContent = 'Aufgabe ' + (idx+1) + ' von ' + TOTAL;
+  $('#qtext').innerHTML = t.text;
+  // Schritt 1 zurücksetzen
+  root.querySelectorAll('#c-target .choice').forEach(b=>{ b.className='choice'; b.disabled=false; });
+  // Schritt 2: Formel-Auswahl mischen
+  const opts = shuffle([FORMULAS.P, FORMULAS.G, FORMULAS.p, DISTRACT[t.target]]);
+  $('#c-formula').innerHTML = opts.map(f=>`<button class="choice formula">${f}</button>`).join('');
+  // Schritt 3: Gleichung aufbauen
+  const mult = t.target==='P';
+  ['#lhs','#lhs2','#lhs3'].forEach(s=>$(s).textContent = t.target);
+  $('#op1').textContent = mult ? '·' : ':';
+  $('#op2').textContent = mult ? ': 100' : '· 100';
+  $('#op3').textContent = mult ? ': 100' : '· 100';
+  $('#unit').textContent = t.target==='p' ? '%' : (t.target==='P' ? t.ctx.uP : t.ctx.uG);
+  ['#in-a','#in-b','#in-z','#in-r'].forEach(s=>{ const el=$(s); el.value=''; el.className = el.className.replace(/\b(ok|bad|helped)\b/g,'').trim(); el.disabled=true; });
+  $('#row-z').hidden = true; $('#row-r').hidden = true;
+  hideFb();
+  clearPad();
+  render();
+}
+
+function render(){
+  root.querySelectorAll('.step').forEach(el=>{
+    const s = +el.dataset.step, cur = Math.min(step,3);
+    el.classList.toggle('locked', s>cur);
+    el.classList.toggle('active', s===cur && step<=STEPS);
+    el.classList.toggle('done', s<cur || step>STEPS);
+  });
+  const inEq = step>=3 && step<=STEPS;
+  $('#b-check').hidden = !inEq;
+  $('#b-help').hidden = !(step<=STEPS && tries>=2);
+  $('#b-next').hidden = step<=STEPS;
+  $('#b-next').textContent = idx===TOTAL-1 ? 'Zur Auswertung' : 'Nächste Aufgabe';
+  if(step===3){ $('#in-a').disabled=false; $('#in-b').disabled=false; }
+  if(step===4){ $('#row-z').hidden=false; $('#in-z').disabled=false; }
+  if(step===5){ $('#row-r').hidden=false; $('#in-r').disabled=false; }
+}
+function focusCurrent(){
+  const el = step===3 ? ($('#in-a').value ? $('#in-b') : $('#in-a')) : step===4 ? $('#in-z') : step===5 ? $('#in-r') : null;
+  if(el) el.focus({preventScroll:false});
+}
+
+/* ---------- Feedback ---------- */
+function showFb(kind, title, text){ const f=$('#fb'); f.hidden=false; f.className='feedback '+kind; f.innerHTML=(title?`<strong>${title}</strong>`:'')+(text||''); }
+function hideFb(){ $('#fb').hidden = true; }
+const PRAISE = ['Richtig!','Stimmt!','Genau!','Sehr gut!','Passt!'];
+
+function wrong(cat, text, cells){
+  tries++;
+  errLog[cat] = (errLog[cat]||0) + 1;
+  (cells||[]).forEach(c=>{ c.classList.remove('ok'); c.classList.add('bad'); });
+  showFb('bad', tries>=2 ? 'Noch nicht – du kannst dir auch die Lösung zeigen lassen.' : 'Noch nicht ganz.', text);
+  render();
+}
+function right(text, cells, helped){
+  if(!helped && tries===0) stepPts++;
+  (cells||[]).forEach(c=>{ c.classList.remove('bad'); c.classList.add(helped?'helped':'ok'); c.disabled=true; });
+  tries = 0; step++;
+  if(step>STEPS){
+    taskPts.push(stepPts);
+    $('#pts').textContent = taskPts.reduce((a,b)=>a+b,0);
+    $('#bar').style.width = ((idx+1)/TOTAL*100)+'%';
+    showFb(helped?'help':'good', (helped?'Lösung eingetragen. ':pick(PRAISE)+' ') + `${stepPts} von ${STEPS} Punkten bei dieser Aufgabe.`, text);
+  } else {
+    showFb(helped?'help':'good', helped?'Lösung eingetragen.':pick(PRAISE), text);
+  }
+  render();
+  if(step<=STEPS) setTimeout(focusCurrent, 30); else $('#b-next').focus();
+}
+
+/* Schritt 1: gesucht */
+$('#c-target').addEventListener('click', e=>{
+  const b = e.target.closest('.choice'); if(!b || b.disabled || step!==1) return;
+  const t = tasks[idx], v = b.dataset.v;
+  if(v===t.target){
+    root.querySelectorAll('#c-target .choice').forEach(x=>x.disabled=true);
+    b.classList.add('right');
+    right(`Gesucht ist ${NAME[t.target]}.`);
+  } else {
+    b.classList.add('wrong'); b.disabled = true;
+    const why = {
+      P:'Gefragt ist nach einem <em>Teil</em> vom Ganzen. Das Ganze und die Prozent stehen schon im Text.',
+      G:'Gefragt ist nach dem <em>Ganzen</em> (also 100 %). Der Anteil und die Prozent stehen schon im Text.',
+      p:'Die Frage lautet „Wie viel <em>Prozent</em> …?“ – also wird die Zahl mit % gesucht.'
+    }[t.target];
+    wrong('gesucht', `${v} steht schon in der Aufgabe oder wird nicht gefragt. ${why}`);
+  }
+});
+
+/* Schritt 2: Formel */
+$('#c-formula').addEventListener('click', e=>{
+  const b = e.target.closest('.choice'); if(!b || b.disabled || step!==2) return;
+  const t = tasks[idx], f = b.textContent;
+  if(f===FORMULAS[t.target]){
+    root.querySelectorAll('#c-formula .choice').forEach(x=>x.disabled=true);
+    b.classList.add('right');
+    right(t.target==='P' ? 'Erst multiplizieren, am Schluss durch 100 teilen.' : 'Erst teilen, am Schluss mal 100 nehmen.');
+  } else {
+    b.classList.add('wrong'); b.disabled = true;
+    let msg;
+    if(f===DISTRACT[t.target]){
+      msg = { P:'Fast! Beim Prozentwert rechnest du zuerst G · p und teilst erst am Schluss durch 100.',
+              G:'Fast! Beim Grundwert teilst du zuerst P : p und nimmst erst am Schluss mal 100.',
+              p:'Fast! Beim Prozentsatz immer Teil durch Ganzes: P : G – nicht andersherum.' }[t.target];
+    } else {
+      const other = f.trim()[0];
+      msg = `Mit dieser Formel berechnest du ${NAME[other]}. Gesucht ist aber ${NAME[t.target]}. Links vom = steht immer, was du suchst.`;
+    }
+    wrong('formel', msg);
+  }
+});
+
+/* Schritte 3–5: Rechenweg */
+function expected(t){
+  if(t.target==='P') return { a:t.G, b:t.p, z:r6(t.G*t.p), r:t.P, ordered:false };
+  if(t.target==='G') return { a:t.P, b:t.p, z:r6(t.P/t.p), r:t.G, ordered:true };
+  return { a:t.P, b:t.G, z:r6(t.P/t.G), r:t.p, ordered:true };
+}
+function near10(v,x){ return eq(v,x*10)||eq(v,x/10)||eq(v,x*1000)||eq(v,x/1000); }
+
+function check(){
+  const t = tasks[idx], E = expected(t);
+  const A=$('#in-a'), B=$('#in-b'), Z=$('#in-z'), R=$('#in-r');
+  if(step===3){
+    const a = parseNum(A.value), b = parseNum(B.value);
+    if(isNaN(a)||isNaN(b)){ showFb('bad','Beide Kästchen ausfüllen.','Trag in jedes Kästchen eine Zahl ein (ohne € oder %).'); return; }
+    for(const v of [a,b]){
+      if(eq(v,t.p/100) && !eq(v,t.P) && !eq(v,t.G)) return wrong('einsetzen', `Den Prozentsatz setzt du in unserer Formel als ganze Zahl ein: <b>${fmt(t.p)}</b>, nicht ${fmt(v)}. Das „durch 100“ kommt am Schluss.`, [v===a?A:B]);
+      if(![t.G,t.P,t.p].some(x=>eq(v,x))) return wrong('einsetzen', `Die Zahl ${fmt(v)} steht nicht in der Aufgabe. Nimm die Zahlen aus dem Text.`, [v===a?A:B]);
+      if(eq(v, t[t.target])) return wrong('einsetzen', `${fmt(v)} ist doch gerade gesucht – das kannst du nicht einsetzen.`, [v===a?A:B]);
+    }
+    const okStraight = eq(a,E.a)&&eq(b,E.b), okSwap = eq(a,E.b)&&eq(b,E.a);
+    if(okStraight || (!E.ordered && okSwap)) return right(`${t.target} = (${fmt(a)} ${t.target==='P'?'·':':'} ${fmt(b)}) ${t.target==='P'?': 100':'· 100'}`, [A,B]);
+    if(okSwap){
+      const msg = t.target==='G' ? 'Reihenfolge vertauscht! Zuerst kommt der Prozentwert P, dann teilst du durch den Prozentsatz p.'
+                                 : 'Reihenfolge vertauscht! Beim Prozentsatz immer Teil durch Ganzes: erst P, dann durch G.';
+      return wrong('einsetzen', msg, [A,B]);
+    }
+    const need = t.target==='P' ? 'G (das Ganze) und p (die Prozentzahl)' : t.target==='G' ? 'P (der Anteil) und p (die Prozentzahl)' : 'P (der Anteil) und G (das Ganze)';
+    return wrong('einsetzen', `Schau, welche Zahl was ist. Du brauchst hier ${need}.`, [A,B]);
+  }
+  if(step===4){
+    const z = parseNum(Z.value);
+    if(isNaN(z)){ showFb('bad','Zahl fehlt.','Trag das Ergebnis der Klammer ein.'); return; }
+    const opTxt = `${fmt(E.a)} ${t.target==='P'?'·':':'} ${fmt(E.b)}`;
+    if(eq(z,E.z)) return right(`${opTxt} = ${fmt(E.z)}`, [Z]);
+    if(t.target==='P' && eq(z,E.z/100)) return wrong('hundert', 'Das ist schon das Endergebnis! In unserem Schema rechnest du hier nur die Klammer aus. Durch 100 teilen kommt im nächsten Schritt.', [Z]);
+    if(t.target!=='P' && eq(z,E.z*100)) return wrong('hundert', `Du hast schon mal 100 genommen. Hier rechnest du nur die Klammer: ${opTxt}.`, [Z]);
+    if(t.target!=='P' && eq(z, r6(E.b/E.a))) return wrong('rechnen', `Du hast andersherum geteilt. Es heißt ${opTxt}.`, [Z]);
+    if(near10(z,E.z)) return wrong('komma', `Fast – da ist eine Null zu viel oder zu wenig, oder das Komma sitzt falsch. Rechne ${opTxt} nochmal nach.`, [Z]);
+    return wrong('rechnen', `Da hat sich ein Rechenfehler eingeschlichen. Rechne ${opTxt} nochmal auf dem Schmierzettel nach.`, [Z]);
+  }
+  if(step===5){
+    const r = parseNum(R.value);
+    if(isNaN(r)){ showFb('bad','Zahl fehlt.','Trag dein Ergebnis ein.'); return; }
+    const div = t.target==='P';
+    const unit = $('#unit').textContent;
+    if(eq(r,E.r)){
+      const probe = t.target==='G' ? ` Probe: Das Ganze (${fmt(t.G)}) ist größer als der Anteil (${fmt(t.P)}). ✓` : '';
+      return right(`${fmt(E.z)} ${div?': 100':'· 100'} = <b>${fmt(E.r)} ${unit}</b>.${probe}`, [R]);
+    }
+    if(eq(r,E.z)) return wrong('hundert', `Der letzte Schritt fehlt noch: ${fmt(E.z)} ${div?': 100':'· 100'}.`, [R]);
+    if(div && eq(r,E.z*100)) return wrong('hundert', 'Am Schluss durch 100 teilen – nicht mal 100!', [R]);
+    if(!div && eq(r,E.z/100)) return wrong('hundert', 'Am Schluss mal 100 – nicht durch 100!', [R]);
+    if(near10(r,E.r)) return wrong('komma', `Das Komma sitzt falsch. ${div?'Durch 100 teilen: Komma um zwei Stellen nach links.':'Mal 100: Komma um zwei Stellen nach rechts.'}`, [R]);
+    return wrong('hundert', `Nicht ganz. Rechne ${fmt(E.z)} ${div?': 100 (Komma zwei Stellen nach links)':'· 100 (Komma zwei Stellen nach rechts)'}.`, [R]);
+  }
+}
+
+function help(){
+  const t = tasks[idx], E = expected(t);
+  if(step===1){ const b=root.querySelector(`#c-target .choice[data-v="${t.target}"]`); root.querySelectorAll('#c-target .choice').forEach(x=>x.disabled=true); b.classList.add('right'); return right(`Gesucht ist ${NAME[t.target]}.`, null, true); }
+  if(step===2){ const b=[...root.querySelectorAll('#c-formula .choice')].find(x=>x.textContent===FORMULAS[t.target]); root.querySelectorAll('#c-formula .choice').forEach(x=>x.disabled=true); b.classList.add('right'); return right(`Die Formel lautet ${FORMULAS[t.target]}.`, null, true); }
+  if(step===3){ $('#in-a').value=fmt(E.a); $('#in-b').value=fmt(E.b); return right(`Einsetzen: ${t.target} = (${fmt(E.a)} ${t.target==='P'?'·':':'} ${fmt(E.b)}) ${t.target==='P'?': 100':'· 100'}`, [$('#in-a'),$('#in-b')], true); }
+  if(step===4){ $('#in-z').value=fmt(E.z); return right(`${fmt(E.a)} ${t.target==='P'?'·':':'} ${fmt(E.b)} = ${fmt(E.z)}`, [$('#in-z')], true); }
+  if(step===5){ $('#in-r').value=fmt(E.r); return right(`${fmt(E.z)} ${t.target==='P'?': 100':'· 100'} = ${fmt(E.r)} ${$('#unit').textContent}`, [$('#in-r')], true); }
+}
+
+$('#b-check').addEventListener('click', check);
+$('#b-help').addEventListener('click', help);
+$('#b-next').addEventListener('click', ()=>{ if(idx<TOTAL-1){ idx++; loadTask(); window.scrollTo({top:0,behavior:'smooth'}); } else finish(); });
+$('#b-restart').addEventListener('click', start);
+['#in-a','#in-b','#in-z','#in-r'].forEach(s=>{
+  const el=$(s);
+  el.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); if(s==='#in-a' && !$('#in-b').value) $('#in-b').focus(); else check(); } });
+  el.addEventListener('input', ()=>el.classList.remove('bad'));
+});
+
+/* ---------- Auswertung ---------- */
+function finish(){
+  const sum = taskPts.reduce((a,b)=>a+b,0), max = TOTAL*STEPS;
+  $('#game').style.display = 'none'; $('#end').hidden = false;
+  $('#endScore').textContent = sum + ' / ' + max;
+  const q = sum/max;
+  $('#endMsg').textContent = q>=.9 ? 'Super! Du beherrschst den Rechenweg sicher.' :
+                             q>=.7 ? 'Gut gemacht! Ein paar Stolpersteine sind noch drin – schau sie dir unten an.' :
+                             q>=.5 ? 'Du bist auf dem richtigen Weg. Übe die Punkte unten noch einmal gezielt.' :
+                                     'Das war noch schwierig. Schau dir die Formeln im Heft nochmal an und starte eine neue Runde.';
+  const stones = Object.entries(errLog).sort((a,b)=>b[1]-a[1]);
+  const maxN = stones.length ? stones[0][1] : 1;
+  $('#endStones').innerHTML = stones.length ? `<div class="section-label">Deine Stolpersteine</div><div class="list">` +
+    stones.map(([k,n])=>`<div class="bar-row"><span>${ERR[k]}</span><div class="bar"><span style="width:${n/maxN*100}%"></span></div><span class="num">${n}</span></div>`).join('') + `</div>`
+    : `<div class="section-label">Deine Stolpersteine</div><p class="result-msg">Keine Fehler – stark!</p>`;
+  const tn = { P:'Prozentwert gesucht', G:'Grundwert gesucht', p:'Prozentsatz gesucht' };
+  $('#endList').innerHTML = tasks.map((t,i)=>`<div class="list-row"><span class="num meta">${i+1}</span><div class="grow">${tn[t.target]}<div class="meta">${t.text.replace(/<[^>]+>/g,'').slice(0,70)}…</div></div><div class="dots">${Array.from({length:STEPS},(_,k)=>`<span class="dot${k<taskPts[i]?' on':''}"></span>`).join('')}</div></div>`).join('');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- Schmierzettel (Stift) ---------- */
+const pad = $('#pad'), ctx2 = pad.getContext('2d');
+let strokes = [], cur = null, tool = 'pen', penSeen = false;
+function penColor(){ return getComputedStyle(host).getPropertyValue('--pen').trim() || '#1C2F8A'; }
+function resize(){
+  const r = pad.getBoundingClientRect(), d = window.devicePixelRatio||1;
+  pad.width = Math.round(r.width*d); pad.height = Math.round(r.height*d);
+  ctx2.setTransform(d,0,0,d,0,0); redraw();
+}
+function drawStroke(s){
+  if(s.pts.length<1) return;
+  ctx2.save();
+  ctx2.globalCompositeOperation = s.tool==='eraser' ? 'destination-out' : 'source-over';
+  ctx2.strokeStyle = penColor(); ctx2.fillStyle = penColor();
+  ctx2.lineCap='round'; ctx2.lineJoin='round';
+  for(let i=1;i<s.pts.length;i++){
+    const [x0,y0]=s.pts[i-1], [x1,y1,pr]=s.pts[i];
+    ctx2.lineWidth = s.tool==='eraser' ? 22 : 1.6 + 2.2*(pr||.5);
+    ctx2.beginPath(); ctx2.moveTo(x0,y0); ctx2.lineTo(x1,y1); ctx2.stroke();
+  }
+  if(s.pts.length===1 && s.tool!=='eraser'){ const [x,y]=s.pts[0]; ctx2.beginPath(); ctx2.arc(x,y,1.8,0,Math.PI*2); ctx2.fill(); }
+  ctx2.restore();
+}
+function redraw(){ const r=pad.getBoundingClientRect(); ctx2.clearRect(0,0,r.width,r.height); strokes.forEach(drawStroke); $('#paperHint').hidden = strokes.length>0; }
+function clearPad(){ strokes=[]; cur=null; redraw(); }
+function pos(e){ const r=pad.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top, e.pressure||.5]; }
+pad.addEventListener('pointerdown', e=>{
+  if(e.pointerType==='pen') penSeen = true;
+  if(penSeen && e.pointerType==='touch') return;           // Handballen ignorieren, sobald der Stift benutzt wurde
+  e.preventDefault(); pad.setPointerCapture(e.pointerId);
+  cur = { tool, pts:[pos(e)], id:e.pointerId }; strokes.push(cur); $('#paperHint').hidden = true; drawStroke(cur);
+});
+pad.addEventListener('pointermove', e=>{
+  if(!cur || e.pointerId!==cur.id) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  evs.forEach(ev=>{ cur.pts.push(pos(ev)); drawStroke({tool:cur.tool, pts:cur.pts.slice(-2)}); });
+});
+['pointerup','pointercancel','pointerleave'].forEach(n=>pad.addEventListener(n, e=>{ if(cur && e.pointerId===cur.id) cur=null; }));
+function setTool(t){ tool=t; $('#t-pen').setAttribute('aria-pressed', t==='pen'); $('#t-eraser').setAttribute('aria-pressed', t==='eraser'); }
+$('#t-pen').addEventListener('click', ()=>setTool('pen'));
+$('#t-eraser').addEventListener('click', ()=>setTool('eraser'));
+$('#t-undo').addEventListener('click', ()=>{ strokes.pop(); redraw(); });
+$('#t-clear').addEventListener('click', clearPad);
+new ResizeObserver(resize).observe(pad);
+
+
+start();
+};
+
 window.__startVergangenheitenUebung = function(slug){
   const set = exerciseSets[slug];
   if (!set) return;
@@ -7809,6 +8361,8 @@ function route(){
        generischen Ein-Frage-nach-der-anderen-Motors (siehe window.__startWortartenEinstiegstest). */
     if (exerciseSets[parts[1]].custom === "wortarten-einstiegstest"){
       window.__startWortartenEinstiegstest(parts[1]);
+    } else if (exerciseSets[parts[1]].custom === "rechenweg-trainer"){
+      window.__startRechenwegTrainer();
     } else if (exerciseSets[parts[1]].custom === "vergangenheiten"){
       window.__startVergangenheitenUebung(parts[1]);
     } else {
