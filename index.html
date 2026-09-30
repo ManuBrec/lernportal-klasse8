@@ -1023,6 +1023,7 @@ const deutschRechtschreibungTopics = [
 const deutschWortartenTopics = [
   { tag:"lernen", label:"Einstiegstest: Wortarten", practice:"deutsch-wortarten-einstiegstest" },
   { tag:"lernen", label:"Die Vergangenheiten: Präteritum, Perfekt, Plusquamperfekt", practice:"deutsch-vergangenheiten" },
+  { tag:"lernen", label:"Verben in die Vergangenheit setzen", practice:"deutsch-vergangenheiten-verbformen" },
 ];
 
 /* Geschichte, Politik, Geographie (GPG): ein Fach mit zwei Bereichen ("Ordnern") - Geschichte und
@@ -3685,6 +3686,105 @@ const exerciseSets = {
           ],
         },
       },
+    ],
+  },
+
+  /* Deutsch: 30 Lücken-Aufgaben zum Üben der Vergangenheitsformen (Präteritum/Perfekt/
+     Plusquamperfekt) - Ergänzung zu "deutsch-vergangenheiten" (dort wird die Zeitform nur erkannt,
+     hier muss die Verbform selbst gebildet und eingetippt werden). Läuft über den normalen,
+     generischen Übungsmotor (window.__startExercise, kind:"text" - siehe z.B.
+     "deutsch-rechtschreibstrategien"), kein eigener Motor nötig.
+     Aufbau je Zeitform (10 Fragen):
+     - Präteritum: einfacher Hauptsatz, eine Lücke = ein Wort (die Verbform selbst).
+     - Perfekt: teils Hilfsverb schon im Satz vorgegeben, Lücke = nur das Partizip II (klassisches
+       Übungsformat); teils Nebensatz (weil/dass), dort steht das ganze Verb (Partizip + Hilfsverb)
+       am Satzende zusammen, Lücke = beide Wörter.
+     - Plusquamperfekt: durchgehend als nachdem-Nebensatz, da dort Partizip + hatte/war im Deutschen
+       ohnehin zusammen am Satzende stehen (siehe rulePoints bei "deutsch-vergangenheiten" - genau
+       diese Signalwörter). So bleibt die Lücke immer ein zusammenhängendes Stück Text.
+     Bei zweiteiligen Lücken (Perfekt-Nebensatz/Plusquamperfekt) werden beide Wortstellungen
+     akzeptiert ("gemacht hatte" wie "hatte gemacht"), damit an der Zeitform selbst geübt wird und
+     nicht an der (für Klasse 8 noch schwierigeren) Nebensatz-Wortstellung scheitert. */
+  /* Nur 15 der 30 Sätze laufen hier digital (auf Anweisung: die anderen 15 werden stattdessen als
+     Arbeitsblatt fürs Übungsheft ausgegeben, siehe Infoblatt_Verbformen_Uebungsheft.docx - dort
+     schreiben die Schüler die (bereits fertigen) Sätze mit der Hand ab und markieren die Verben
+     selbst, statt sie einzutippen). Beide Sätze-Sets teilen sich denselben Vorrat an 30 geprüften
+     Sätzen/Formen - digital bekommt jeweils die ungerade, Papier die gerade Nummer je Zeitform, damit
+     in beiden Sets ein ähnlich guter Mix aus regelmäßigen/unregelmäßigen Verben und Personen bleibt. */
+  "deutsch-vergangenheiten-verbformen": {
+    title: "Verben in die Vergangenheit setzen",
+    subject: "deutsch",
+    chapterSlug: "wortarten",
+    duration: "ca. 15–20 Minuten",
+    locked: false,
+    questions: [
+      /* --- Präteritum (5) --- */
+      { section:"Präteritum", kind:"text",
+        text: "Ich ___ jeden Tag Vokabeln. (lernen, Präteritum)", placeholder: "Verbform eintippen",
+        accept: ["lernte"],
+        explain: "Richtig ist „lernte“ – regelmäßiges (schwaches) Verb: Stamm + Endung -te." },
+      { section:"Präteritum", kind:"text",
+        text: "Er ___ langsam die Straße entlang. (gehen, Präteritum)", placeholder: "Verbform eintippen",
+        accept: ["ging"],
+        explain: "Richtig ist „ging“ – unregelmäßiges (starkes) Verb, der Wortstamm ändert sich (gehen → ging)." },
+      { section:"Präteritum", kind:"text",
+        text: "Ich ___ gestern sehr müde. (sein, Präteritum)", placeholder: "Verbform eintippen",
+        accept: ["war"],
+        explain: "Richtig ist „war“ – Präteritum von „sein“ (unregelmäßig, am besten auswendig lernen)." },
+      { section:"Präteritum", kind:"text",
+        text: "Du ___ jeden Abend ein Glas Milch. (trinken, Präteritum)", placeholder: "Verbform eintippen",
+        accept: ["trankst"],
+        explain: "Richtig ist „trankst“ – unregelmäßiges (starkes) Verb (trinken → trank-)." },
+      { section:"Präteritum", kind:"text",
+        text: "Meine Schwester ___ sich ein neues Fahrrad. (kaufen, Präteritum)", placeholder: "Verbform eintippen",
+        accept: ["kaufte"],
+        explain: "Richtig ist „kaufte“ – regelmäßiges (schwaches) Verb: Stamm + Endung -te." },
+
+      /* --- Perfekt (5): #1-2 Hilfsverb im Satz vorgegeben, Lücke = nur das Partizip II;
+         #3-5 Nebensatz (weil/dass), Lücke = Partizip + Hilfsverb zusammen. --- */
+      { section:"Perfekt", kind:"text",
+        text: "Ich habe heute Morgen mein Zimmer ___. (aufräumen, Perfekt)", placeholder: "Partizip II eintippen",
+        accept: ["aufgeräumt"],
+        explain: "Richtig ist „aufgeräumt“ – regelmäßig: ge + Stamm + t." },
+      { section:"Perfekt", kind:"text",
+        text: "Wir sind letztes Wochenende ins Kino ___. (gehen, Perfekt)", placeholder: "Partizip II eintippen",
+        accept: ["gegangen"],
+        explain: "Richtig ist „gegangen“ – unregelmäßig, mit „sein“ (Ortswechsel)." },
+      { section:"Perfekt", kind:"text",
+        text: "Die Schüler haben das Buch für den Unterricht ___. (lesen, Perfekt)", placeholder: "Partizip II eintippen",
+        accept: ["gelesen"],
+        explain: "Richtig ist „gelesen“ – unregelmäßig, mit „haben“." },
+      { section:"Perfekt", kind:"text",
+        text: "Ich glaube, dass meine Schwester ihre Hausaufgaben schon ___. (machen, Perfekt)", placeholder: "Verbform eintippen",
+        accept: ["gemacht hat", "hat gemacht"],
+        explain: "Richtig ist „gemacht hat“ – regelmäßiges Partizip + „hat“; im Nebensatz stehen beide Teile zusammen am Ende." },
+      { section:"Perfekt", kind:"text",
+        text: "Sie ist traurig, weil ihre Katze ___. (weglaufen, Perfekt)", placeholder: "Verbform eintippen",
+        accept: ["weggelaufen ist", "ist weggelaufen"],
+        explain: "Richtig ist „weggelaufen ist“ – unregelmäßiges Partizip + „ist“ (Ortswechsel)." },
+
+      /* --- Plusquamperfekt (5): durchgehend als nachdem-Nebensatz, Lücke = Partizip + hatte/war
+         zusammen am Satzende. --- */
+      { section:"Plusquamperfekt", kind:"text",
+        text: "Nachdem er sein Zimmer ___, durfte er fernsehen. (aufräumen, Plusquamperfekt)", placeholder: "Verbform eintippen",
+        accept: ["aufgeräumt hatte", "hatte aufgeräumt"],
+        explain: "Richtig ist „aufgeräumt hatte“ – regelmäßiges Partizip + „hatte“." },
+      { section:"Plusquamperfekt", kind:"text",
+        text: "Nachdem sie den Brief ___, brachte sie ihn zur Post. (schreiben, Plusquamperfekt)", placeholder: "Verbform eintippen",
+        accept: ["geschrieben hatte", "hatte geschrieben"],
+        explain: "Richtig ist „geschrieben hatte“ – unregelmäßiges Partizip + „hatte“." },
+      { section:"Plusquamperfekt", kind:"text",
+        text: "Nachdem du das Spiel ___, warst du sehr stolz. (gewinnen, Plusquamperfekt)", placeholder: "Verbform eintippen",
+        accept: ["gewonnen hattest", "hattest gewonnen"],
+        explain: "Richtig ist „gewonnen hattest“ – unregelmäßiges Partizip + „hattest“." },
+      { section:"Plusquamperfekt", kind:"text",
+        text: "Nachdem ihr eure Hausaufgaben ___, durftet ihr spielen. (erledigen, Plusquamperfekt)", placeholder: "Verbform eintippen",
+        accept: ["erledigt hattet", "hattet erledigt"],
+        explain: "Richtig ist „erledigt hattet“ – „erledigen“ hat kein ge- (Vorsilbe er-)." },
+      { section:"Plusquamperfekt", kind:"text",
+        text: "Nachdem wir schon Popcorn ___, begann der Film. (kaufen, Plusquamperfekt)", placeholder: "Verbform eintippen",
+        accept: ["gekauft hatten", "hatten gekauft"],
+        explain: "Richtig ist „gekauft hatten“ – regelmäßiges Partizip + „hatten“." },
     ],
   },
 };
