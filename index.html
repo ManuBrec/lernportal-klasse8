@@ -806,6 +806,23 @@
     .result-label{order:1; width:100%; margin-top:2px;}
   }
 
+  /* Sicherheitsabfrage (z.B. vor "Alles zurücksetzen") - generisches Overlay, per showConfirmDialog() */
+  .confirm-overlay{
+    position:fixed; inset:0; background:rgba(15,20,30,0.55); display:flex; align-items:center;
+    justify-content:center; padding:20px; z-index:999;
+  }
+  .confirm-card{
+    background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--shadow);
+    padding:26px; max-width:360px; width:100%; text-align:center;
+  }
+  .confirm-card p{font-size:15px; line-height:1.5; margin-bottom:20px;}
+  .confirm-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .confirm-btn{
+    border-radius:999px; padding:10px 20px; font-weight:700; font-size:14px; cursor:pointer; border:1px solid var(--border);
+  }
+  .confirm-btn.cancel{background:var(--surface-2); color:var(--ink);}
+  .confirm-btn.danger{background:var(--danger-soft); border-color:var(--danger); color:var(--danger);}
+
   /* Worksheet / solution */
   .doc-card{
     background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg);
@@ -4371,6 +4388,26 @@ const buchLoesungen = {
 /* ---------- Hilfsfunktionen ---------- */
 function h(strings, ...vals){ return strings.reduce((a,s,i)=>a+s+(vals[i]??""),""); }
 function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+/* Generische Sicherheitsabfrage (z.B. vor "Alles zurücksetzen"), damit ein Klick auf einen
+   gefährlichen Button nicht sofort etwas unwiderruflich löscht. onConfirm wird nur bei "Ja" aufgerufen. */
+function showConfirmDialog(message, confirmLabel, onConfirm){
+  const overlay = document.createElement("div");
+  overlay.className = "confirm-overlay";
+  overlay.innerHTML = `
+    <div class="confirm-card">
+      <p>${esc(message)}</p>
+      <div class="confirm-actions">
+        <button type="button" class="confirm-btn cancel" id="confirmCancelBtn">Abbrechen</button>
+        <button type="button" class="confirm-btn danger" id="confirmOkBtn">${esc(confirmLabel)}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  function close(){ overlay.remove(); }
+  overlay.addEventListener("click", (e)=>{ if (e.target === overlay) close(); });
+  document.getElementById("confirmCancelBtn").addEventListener("click", close);
+  document.getElementById("confirmOkBtn").addEventListener("click", ()=>{ close(); onConfirm(); });
+}
 /* q.markWord/q.markPart: markiert die Problemstelle innerhalb eines in q.text eingebetteten Wortes
    fett (genauso wie highlightLabel() das bei Kacheln/Kreisen tut), z.B. bei "Wörter korrigieren":
    markWord ist die falsch geschriebene Wortform, wie sie wörtlich in q.text vorkommt (z.B. "Herte"),
@@ -7348,10 +7385,16 @@ window.__startExercise = function(slug){
       });
     });
     document.getElementById("restartBtn").addEventListener("click", ()=>{
-      i = 0;
-      state.q = freshExerciseState(total).q;
-      persist();
-      renderQuestion();
+      showConfirmDialog(
+        "Willst du wirklich alles zurücksetzen? Dein bisheriges Ergebnis geht dann verloren und du fängst wieder bei Aufgabe 1 an.",
+        "Ja, zurücksetzen",
+        ()=>{
+          i = 0;
+          state.q = freshExerciseState(total).q;
+          persist();
+          renderQuestion();
+        }
+      );
     });
   }
 
