@@ -922,6 +922,37 @@
   }
   .lek-tipp strong{color:var(--warm);}
 
+  /* Neu 4.10.2026 (Rückmeldung Manuel): zwei zusätzliche, farbig abgesetzte Erklärblöcke auf der
+     Lektionsseite - Steigerungsstufen (Positiv/Komparativ/Superlativ) als Kärtchen-Reihe, und
+     "Was bedeutet deklinieren?" als eigene Box mit Beispielsatz. Die Akzentfarbe kommt - falls
+     vorhanden - per Inline-style von l.color/l.colorBg (siehe viewLektion()); ohne l.color bleibt
+     die neutrale Rahmenfarbe aus var(--border)/var(--accent) erhalten. */
+  .lek-steigerung{
+    margin:22px 0 0; padding:18px 20px; border-radius:var(--radius-md);
+    background:var(--surface); border:1.5px solid var(--border);
+  }
+  .lek-steigerung-title{
+    font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--accent); margin-bottom:6px;
+  }
+  .lek-steigerung-intro{font-size:13.5px; color:var(--ink-soft); margin:0 0 14px;}
+  .lek-steigerung-row{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:10px;}
+  .lek-stufe{
+    background:var(--accent-soft); border-radius:var(--radius-sm); padding:12px 14px;
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .lek-stufe-name{font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--accent);}
+  .lek-stufe-beispiel{font-weight:700; font-size:14.5px; color:var(--ink);}
+  .lek-stufe-erklaerung{font-size:12px; color:var(--ink-soft); line-height:1.35;}
+  .lek-deklinieren{
+    margin:16px 0 0; padding:16px 18px; border-radius:var(--radius-md);
+    background:var(--surface); border:1px solid var(--border); border-left:6px solid var(--accent);
+  }
+  .lek-deklinieren-title{font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--accent); margin-bottom:6px;}
+  .lek-deklinieren-text{font-size:13.5px; color:var(--ink-soft); margin:0 0 10px;}
+  .lek-deklinieren-beispiel{font-size:14.5px; font-weight:600; margin-bottom:4px;}
+  .lek-deklinieren-beispiel b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
+  .lek-deklinieren-beispiel-erklaerung{font-size:12.5px; color:var(--ink-soft);}
+
   /* "markieren"-Aufgaben (Wörter in einem Satz ankreuzen, siehe q.kind==="markieren" weiter unten):
      jedes Wort ein eigener Chip zum Antippen, Satzzeichen als reiner Text ohne Lücke davor. */
   .mk-sentence{
@@ -3918,15 +3949,18 @@ const exerciseSets = {
   },
 
   /* --- ADJEKTIV --- */
-  /* Adjektiv: 20 Fragen gesamt (Umbau 4.10.2026, Wunsch Manuel: mind. 20 Übungen pro Wortart,
-     unterschiedliche Art - Texte mit Adjektiven markieren, Adjektive steigern, passende Adjektive
-     zuordnen). Bewusst NICHT mehr derselbe Beispielsatz wie auf der Lektionsseite ("Die neugierige
-     Katze...") als allererste Frage - das war zu einfach, siehe Rückmeldung. Mischung aus: einfaches
-     Erkennen (mc), Wort eintippen (text), Adjektive in einem Satz ankreuzen (markieren, neuer
-     Fragetyp - siehe q.kind==="markieren" weiter oben/unten), Steigerungsformen selbst bilden (text)
-     und "welches Adjektiv passt" (mc, als einfache Alternative zu einer echten Zuordnen-Aufgabe). */
+  /* Adjektiv: 29 Fragen gesamt (2. Umbau 4.10.2026, weitere Rückmeldung Manuel nach Ansicht der
+     ersten Fassung): (1) der "(klein geschrieben)"-Hinweis bei den nominalisierten-Adjektiv-Fallen
+     wurde entfernt, weil er den Trick vorwegnahm und die Aufgabe trivial machte - die Aufgabe bleibt
+     trotzdem exakt prüfbar, weil "neue"/"Gute" usw. jeweils nur EIN kleingeschriebenes Vorkommen im
+     Satz haben. (2) Adverb-Verwechslungsgefahr eingebaut: Adjektiv und Adverb haben im Deutschen oft
+     denselben Wortstamm, aber unterschiedliche Form - ein attributives (deklniniertes) Adjektiv vor
+     einem Nomen hat immer eine Endung ("die schnelle Katze"), ein Adverb (das ein Verb beschreibt)
+     bleibt in der Grundform ("sie läuft schnell"). Dadurch bleiben auch diese Verwechslungs-Aufgaben
+     exakt per Textvergleich/markieren prüfbar, ohne doppeldeutig zu sein. (3) mehr Fragen zu den
+     Fachbegriffen selbst (deklinieren, Positiv/Komparativ/Superlativ), wie gewünscht. */
   "deutsch-wa-adjektiv-leicht": {
-    title: "Adjektiv – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
+    title: "Adjektiv – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 10 Minuten",
     questions: [
       { section:"Adjektiv – leicht", kind:"mc",
         text: "„Der müde Wanderer setzt sich auf eine Bank.“ – welches Wort ist ein Adjektiv?",
@@ -3953,10 +3987,22 @@ const exerciseSets = {
         tokens: ["Der","kluge","Fuchs","beobachtet","die","langsame","Schildkröte","."],
         correctIndices: [1,5],
         explain: "„kluge“ beschreibt den Fuchs, „langsame“ die Schildkröte – beide sind Adjektive." },
+      { section:"Adjektiv – leicht", kind:"mc",
+        text: "Was bedeutet „deklinieren“ bei einem Adjektiv?",
+        options: ["Die Endung passt sich an das Nomen an (Geschlecht, Zahl, Fall).","Das Adjektiv wird in die Vergangenheit gesetzt.","Das Adjektiv wird immer großgeschrieben.","Das Adjektiv verliert seine Endung."], correct: 0,
+        explain: "Deklinieren heißt: Die Endung des Adjektivs richtet sich nach dem Nomen – z. B. ein schneller Roller, eine schnelle Straßenbahn." },
+      { section:"Adjektiv – leicht", kind:"mc",
+        text: "Wie heißen die drei Steigerungsstufen eines Adjektivs in der richtigen Reihenfolge?",
+        options: ["Positiv – Komparativ – Superlativ","Präsens – Präteritum – Perfekt","Singular – Plural – Genitiv","Aktiv – Passiv – Imperativ"], correct: 0,
+        explain: "Die drei Steigerungsstufen heißen Positiv (Grundform), Komparativ (gesteigert) und Superlativ (höchste Stufe)." },
+      { section:"Adjektiv – leicht", kind:"mc",
+        text: "„Der laute Presslufthammer dröhnt laut durch die Straße.“ – welches Wort ist hier das ADJEKTIV (nicht das Adverb)?",
+        options: ["laute","dröhnt","Presslufthammer","laut"], correct: 0,
+        explain: "„laute“ steht direkt vor dem Nomen „Presslufthammer“ und ist dekliniert – das Adjektiv. „laut“ beschreibt hier das Verb „dröhnt“ – das ist ein Adverb." },
     ]
   },
   "deutsch-wa-adjektiv-mittel": {
-    title: "Adjektiv – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
+    title: "Adjektiv – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 10 Minuten",
     questions: [
       { section:"Adjektiv – mittel", kind:"text",
         text: "Im Satz „Das kleine Kind lacht fröhlich.“ – wie heißt das Adjektiv, das das Kind beschreibt?",
@@ -3987,13 +4033,25 @@ const exerciseSets = {
         text: "Welches Adjektiv passt am besten zu „eine ___ Suppe, die eben erst vom Herd kommt“?",
         options: ["heiße","kalte","laute","schnelle"], correct: 0,
         explain: "Eine Suppe direkt vom Herd ist „heiß“ – das passende Adjektiv." },
+      { section:"Adjektiv – mittel", kind:"text",
+        text: "„Die fleißige Schülerin arbeitet fleißig den ganzen Nachmittag.“ – welches Wort ist hier das ADJEKTIV (nicht das Adverb)?",
+        accept: ["fleißige"], strict: true, placeholder: "Adjektiv eintippen",
+        explain: "„fleißige“ ist dekliniert und beschreibt die Schülerin – das Adjektiv. „fleißig“ beschreibt hier das Verb „arbeitet“ – ein Adverb." },
+      { section:"Adjektiv – mittel", kind:"text",
+        text: "Dekliniere richtig: „Das ist ein ___ Auto.“ (Steigerungsform „schnell“, sächlich, Einzahl)",
+        accept: ["schnelles"], strict: true, placeholder: "Adjektiv mit Endung eintippen",
+        explain: "Vor einem sächlichen Nomen im Singular bekommt das Adjektiv die Endung -es: ein schnelles Auto." },
+      { section:"Adjektiv – mittel", kind:"mc",
+        text: "Welche Steigerungsform drückt einen Vergleich mit „als“ aus (z. B. „schneller als du“)?",
+        options: ["Komparativ","Superlativ","Positiv","Infinitiv"], correct: 0,
+        explain: "Der Komparativ vergleicht zwei Dinge – oft erkennbar am Wort „als“." },
     ]
   },
   "deutsch-wa-adjektiv-schwer": {
-    title: "Adjektiv – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
+    title: "Adjektiv – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 12 Minuten",
     questions: [
       { section:"Adjektiv – schwer", kind:"text",
-        text: "„Das Neue an diesem Handy ist die Kamera, doch es hat auch neue Probleme.“ – welches Wort ist hier (klein geschrieben) ein Adjektiv?",
+        text: "„Das Neue an diesem Handy ist die Kamera, doch es hat auch neue Probleme.“ – welches Wort ist hier ein Adjektiv?",
         accept: ["neue"], strict: true, placeholder: "Adjektiv eintippen",
         explain: "„neue“ (klein) beschreibt hier die Probleme – ein Adjektiv. „Das Neue“ (groß) am Satzanfang ist ein nominalisiertes Adjektiv (Nomen)." },
       { section:"Adjektiv – schwer", kind:"text",
@@ -4009,7 +4067,7 @@ const exerciseSets = {
         accept: ["mehr"], placeholder: "Komparativ eintippen",
         explain: "„viel“ wird unregelmäßig gesteigert: viel – mehr – am meisten." },
       { section:"Adjektiv – schwer", kind:"markieren",
-        text: "Kreuze alle (klein geschriebenen) Adjektive in diesem Satz an:",
+        text: "Kreuze alle Adjektive in diesem Satz an:",
         tokens: ["Das","Gute","an","der","langen","Reise","war","das","herrliche","Wetter","."],
         correctIndices: [4,8],
         explain: "„langen“ und „herrliche“ sind echte (kleingeschriebene) Adjektive. „Gute“ ist hier großgeschrieben und damit ein nominalisiertes Adjektiv (Nomen), kein Adjektiv mehr." },
@@ -4021,6 +4079,19 @@ const exerciseSets = {
         text: "„Er ist der beste Spieler der Mannschaft, obwohl er heute schlecht spielt.“ – welches Wort ist die höchste Steigerungsform (Superlativ) eines Adjektivs?",
         accept: ["beste"], strict: true, placeholder: "Adjektiv eintippen",
         explain: "„beste“ ist die unregelmäßige Superlativform von „gut“ – ein Adjektiv." },
+      { section:"Adjektiv – schwer", kind:"markieren",
+        text: "Kreuze NUR die echten Adjektive an (Vorsicht, hier sind auch Adverbien versteckt!):",
+        tokens: ["Die","schnelle","Katze","jagt","schnell","durch","den","Garten","und","springt","elegant","über","den","Zaun","."],
+        correctIndices: [1],
+        explain: "„schnelle“ ist dekliniert und beschreibt die Katze – das einzige echte Adjektiv hier. „schnell“ und „elegant“ beschreiben die Verben „jagt“ und „springt“ – das sind Adverbien, keine Adjektive." },
+      { section:"Adjektiv – schwer", kind:"text",
+        text: "Wie nennt man es, wenn sich die Endung eines Adjektivs an Geschlecht, Zahl und Fall des Nomens anpasst?",
+        accept: ["deklinieren","dekliniert werden","deklination"], placeholder: "Fachbegriff eintippen",
+        explain: "Das nennt man „deklinieren“ (die Deklination des Adjektivs)." },
+      { section:"Adjektiv – schwer", kind:"text",
+        text: "„Die ernste Lehrerin ermahnt die Klasse, die viel zu laut gefeiert hat.“ – welches Wort ist hier das ADJEKTIV (nicht das Adverb)?",
+        accept: ["ernste"], strict: true, placeholder: "Adjektiv eintippen",
+        explain: "„ernste“ ist dekliniert und beschreibt die Lehrerin – das Adjektiv. „laut“ beschreibt hier, wie gefeiert wurde – ein Adverb." },
     ]
   },
 
@@ -5389,6 +5460,24 @@ const lektionen = {
     satz: "Die <b>neugierige</b> Katze beobachtet den bunten Vogel.",
     erklaerung: "„neugierige“ beschreibt die Katze näher – typisch für ein Adjektiv.",
     tipp: "Ist das Wort steigerbar (gut – besser – am besten)? Dann ist es ein Adjektiv.",
+    /* Neu 4.10.2026 (Rückmeldung Manuel): eigenes Farbthema für diese Lektion (wird u.a. für den
+       farbigen Rahmen der Karte und das Regelheft-Popup vor "Weiter zur Übung" genutzt, siehe
+       viewLektion()) sowie zwei zusätzliche Erklärblöcke, die er ausdrücklich ergänzt haben wollte:
+       die drei Steigerungsstufen mit Fachbegriff, und eine Erklärung von "deklinieren" mit Beispiel. */
+    color: "#9A3B7A", colorBg: "#F6E3EF",
+    steigerung: {
+      intro: "Adjektive lassen sich in drei Stufen steigern. Jede Stufe hat einen eigenen Fachbegriff:",
+      stufen: [
+        { name: "Positiv", beispiel: "schnell", erklaerung: "die Grundform – ohne Vergleich" },
+        { name: "Komparativ", beispiel: "schneller", erklaerung: "die gesteigerte Form – vergleicht zwei Dinge (mit „als“)" },
+        { name: "Superlativ", beispiel: "am schnellsten", erklaerung: "die höchste Steigerungsform – der Spitzenwert (mit „am … -sten“)" },
+      ]
+    },
+    deklinieren: {
+      erklaerung: "„Deklinieren“ bedeutet: Die Endung des Adjektivs passt sich an das Nomen an – je nachdem, ob es männlich, weiblich oder sächlich ist, in der Einzahl oder Mehrzahl steht und in welchem Fall es steht.",
+      beispielsatz: "ein <b>schneller</b> Roller · eine <b>schnelle</b> Straßenbahn · ein <b>schnelles</b> Fahrrad · viele <b>schnelle</b> Fahrräder",
+      beispielerklaerung: "Immer dasselbe Adjektiv „schnell“ – aber mit unterschiedlicher Endung, je nach Nomen."
+    },
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-adjektiv-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5805,6 +5894,44 @@ function viewLektion(slug){
   const l = lektionen[slug];
   if (!l) return viewNotFound();
   setCrumbs([{label:"Start", href:"#/"}, {label:"Deutsch", href:"#/deutsch"}, {label:"Wortarten", href:"#/deutsch/wortarten"}, {label:"Lektion", href:"#/lektion/"+slug}]);
+  /* Eigenes Farbthema je Lektion (bisher nur bei "adjektiv" gesetzt, siehe lektionen dort) - ohne
+     l.color fällt alles auf die bisherigen, neutralen Standardfarben zurück (var(--accent)/
+     var(--warm)), damit die anderen 11 Wortarten unverändert bleiben, bis sie ein eigenes
+     Farbthema bekommen. */
+  const cardBorder = l.color ? `border-top:5px solid ${l.color};` : "";
+  const tippStyle = l.color ? `background:${l.colorBg}; border-color:color-mix(in srgb, ${l.color} 30%, transparent);` : "";
+  const tippStrongStyle = l.color ? `style="color:${l.color};"` : "";
+
+  /* Neu 4.10.2026 (Rückmeldung Manuel): Steigerungsformen mit Fachbegriffen (Positiv/Komparativ/
+     Superlativ) als eigener, farbig abgesetzter Block - nur gerendert, wenn die Lektion l.steigerung
+     definiert (aktuell nur Adjektiv). */
+  const steigerungHtml = l.steigerung ? `
+    <div class="lek-steigerung" style="${l.color ? `border-color:${l.color};` : ""}">
+      <div class="lek-steigerung-title" ${l.color ? `style="color:${l.color};"` : ""}>Die drei Steigerungsstufen</div>
+      <p class="lek-steigerung-intro">${esc(l.steigerung.intro)}</p>
+      <div class="lek-steigerung-row">
+        ${l.steigerung.stufen.map(s => `
+          <div class="lek-stufe" style="${l.colorBg ? `background:${l.colorBg};` : ""}">
+            <div class="lek-stufe-name" ${l.color ? `style="color:${l.color};"` : ""}>${esc(s.name)}</div>
+            <div class="lek-stufe-beispiel">${esc(s.beispiel)}</div>
+            <div class="lek-stufe-erklaerung">${esc(s.erklaerung)}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  ` : "";
+
+  /* Neu 4.10.2026 (Rückmeldung Manuel): eigener Block "Was bedeutet deklinieren?" mit Beispielsatz -
+     nur gerendert, wenn l.deklinieren definiert ist (aktuell nur Adjektiv). */
+  const deklinierenHtml = l.deklinieren ? `
+    <div class="lek-deklinieren" style="${l.color ? `border-left-color:${l.color};` : ""}">
+      <div class="lek-deklinieren-title" ${l.color ? `style="color:${l.color};"` : ""}>Was bedeutet „deklinieren“?</div>
+      <p class="lek-deklinieren-text">${esc(l.deklinieren.erklaerung)}</p>
+      <div class="lek-deklinieren-beispiel">${l.deklinieren.beispielsatz}</div>
+      <div class="lek-deklinieren-beispiel-erklaerung">${esc(l.deklinieren.beispielerklaerung)}</div>
+    </div>
+  ` : "";
+
   return h`
     <a class="backlink" href="${l.backHref}">← ${esc(l.backLabel)}</a>
     <div class="hero" style="padding-top:0;">
@@ -5813,7 +5940,7 @@ function viewLektion(slug){
     </div>
     <div class="section-label">${esc(l.groupTitle)}</div>
     <div class="lek-grid">
-      <div class="lek-card">
+      <div class="lek-card" style="${cardBorder}">
         <div class="lek-card-head">
           <span class="lek-name">${esc(l.title)}</span>
           <span class="lek-subtitle">${esc(l.subtitle)}</span>
@@ -5826,11 +5953,41 @@ function viewLektion(slug){
         </div>
       </div>
     </div>
-    <div class="lek-tipp"><strong>Tipp zum Bestimmen:</strong> ${esc(l.tipp)}</div>
+    ${steigerungHtml}
+    ${deklinierenHtml}
+    <div class="lek-tipp" style="${tippStyle}"><strong ${tippStrongStyle}>Tipp zum Bestimmen:</strong> ${esc(l.tipp)}</div>
     <div style="margin-top:26px; text-align:center;">
-      <a class="practice-btn" href="${l.nextHref}" style="padding:12px 24px; font-size:15px;">${esc(l.nextLabel)}</a>
+      <button type="button" id="lekNextBtn" class="practice-btn" style="padding:12px 24px; font-size:15px; border:none;" data-next-href="${l.nextHref}" data-next-label="${esc(l.nextLabel)}">${esc(l.nextLabel)}</button>
     </div>
   `;
+}
+
+/* Neu 4.10.2026 (Rückmeldung Manuel: "muss nach dem Button, weiter zur Übung nochmal das Fenster
+   aufgehen, übernimm davor den Info text in dein Heft"): Popup im selben Stil wie das bestehende
+   Regelheft-Popup bei den Vergangenheiten (tm-popup-overlay/.tm-popup-card, siehe
+   window.__startVergangenheitenUebung) - erscheint beim Klick auf "Weiter zur Übung" auf einer
+   Lektionsseite und erinnert daran, den Infotext erst abzuschreiben, bevor es weitergeht. Erst der
+   Klick auf den Button IM Popup navigiert tatsächlich zur Übung (location.hash). */
+function showLektionRegelheftPopup(l, nextHref, nextLabel){
+  const overlay = document.createElement("div");
+  overlay.className = "tm-popup-overlay";
+  const borderStyle = l.color ? `border-left:8px solid ${l.color};` : "";
+  const bgStyle = l.colorBg ? `background:${l.colorBg};` : "";
+  overlay.innerHTML = `
+    <div class="tm-popup-card text-content" style="max-width:420px; ${borderStyle} ${bgStyle}">
+      <h3 ${l.color ? `style="color:${l.color};"` : ""}>✏️ Erst ins Regelheft!</h3>
+      <p>Übertrage den Infotext oben zu <strong>${esc(l.title)}</strong> – Erklärung, Beispiele, Merkmale und den Tipp – in dein Regelheft.</p>
+      <p>Wenn du fertig abgeschrieben hast, geht es hier weiter zur Übung.</p>
+      <div class="qactions" style="margin-top:16px; justify-content:center;">
+        <button class="next-btn show" id="lekPopupNext">${esc(nextLabel)}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  document.getElementById("lekPopupNext").addEventListener("click", () => {
+    overlay.remove();
+    location.hash = nextHref;
+  });
 }
 
 function polarPoint(cx,cy,r,angleDeg){
@@ -9847,6 +10004,15 @@ function route(){
     } else {
       window.__startExercise(parts[1]);
     }
+  }
+
+  if (parts[0] === "lektion" && parts.length === 2 && lektionen[parts[1]]){
+    /* Siehe showLektionRegelheftPopup()/viewLektion(): der Button navigiert nicht direkt über href,
+       sondern öffnet erst das Regelheft-Erinnerungs-Popup - erst der Klick darin setzt location.hash. */
+    const btn = document.getElementById("lekNextBtn");
+    if (btn) btn.addEventListener("click", () => {
+      showLektionRegelheftPopup(lektionen[parts[1]], btn.dataset.nextHref, btn.dataset.nextLabel);
+    });
   }
 }
 /* ---------- Zugangscode-Sperre ----------
