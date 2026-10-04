@@ -922,6 +922,24 @@
   }
   .lek-tipp strong{color:var(--warm);}
 
+  /* "markieren"-Aufgaben (Wörter in einem Satz ankreuzen, siehe q.kind==="markieren" weiter unten):
+     jedes Wort ein eigener Chip zum Antippen, Satzzeichen als reiner Text ohne Lücke davor. */
+  .mk-sentence{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    font-size:17px; line-height:1.7; padding:16px 18px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius-md);
+    margin-bottom:4px;
+  }
+  .mk-word{
+    font:inherit; padding:4px 11px; border-radius:999px; cursor:pointer;
+    border:1.5px solid var(--border); background:var(--surface); color:var(--ink);
+  }
+  .mk-word:hover:not(.disabled){border-color:var(--accent);}
+  .mk-word.mk-selected{background:var(--accent-soft); border-color:var(--accent); color:var(--accent);}
+  .mk-word.correct{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .mk-word.disabled{cursor:default;}
+  .mk-punct{margin-left:-6px; color:var(--ink-soft);}
+
   @media print{
     .topbar, .backlink, .no-print{display:none !important;}
     body::before{display:none;}
@@ -3900,25 +3918,45 @@ const exerciseSets = {
   },
 
   /* --- ADJEKTIV --- */
+  /* Adjektiv: 20 Fragen gesamt (Umbau 4.10.2026, Wunsch Manuel: mind. 20 Übungen pro Wortart,
+     unterschiedliche Art - Texte mit Adjektiven markieren, Adjektive steigern, passende Adjektive
+     zuordnen). Bewusst NICHT mehr derselbe Beispielsatz wie auf der Lektionsseite ("Die neugierige
+     Katze...") als allererste Frage - das war zu einfach, siehe Rückmeldung. Mischung aus: einfaches
+     Erkennen (mc), Wort eintippen (text), Adjektive in einem Satz ankreuzen (markieren, neuer
+     Fragetyp - siehe q.kind==="markieren" weiter oben/unten), Steigerungsformen selbst bilden (text)
+     und "welches Adjektiv passt" (mc, als einfache Alternative zu einer echten Zuordnen-Aufgabe). */
   "deutsch-wa-adjektiv-leicht": {
-    title: "Adjektiv – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adjektiv – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Adjektiv – leicht", kind:"mc",
-        text: "„Die neugierige Katze beobachtet den bunten Vogel.“ – welches Wort ist ein Adjektiv?",
-        options: ["neugierige","Katze","beobachtet","Vogel"], correct: 0,
-        explain: "„neugierige“ beschreibt die Katze näher – ein Adjektiv." },
+        text: "„Der müde Wanderer setzt sich auf eine Bank.“ – welches Wort ist ein Adjektiv?",
+        options: ["Wanderer","müde","setzt","Bank"], correct: 1,
+        explain: "„müde“ beschreibt den Wanderer näher – ein Adjektiv." },
+      { section:"Adjektiv – leicht", kind:"mc",
+        text: "Welches Merkmal passt NICHT zum Adjektiv?",
+        options: ["es ist steigerbar","es kann ein Nomen näher beschreiben","es lässt sich konjugieren","es kann dekliniert werden"], correct: 2,
+        explain: "Konjugieren kann man nur Verben, nicht Adjektive." },
+      { section:"Adjektiv – leicht", kind:"mc",
+        text: "„Ein frischer Wind weht über das ruhige Meer.“ – welches Wort ist ein Adjektiv?",
+        options: ["Wind","weht","frischer","Meer"], correct: 2,
+        explain: "„frischer“ beschreibt den Wind näher – ein Adjektiv." },
       { section:"Adjektiv – leicht", kind:"mc",
         text: "Welche Reihe zeigt die Steigerung eines Adjektivs richtig?",
         options: ["schnell – schneller – am schnellsten","Haus – Häuser – Häusern","laufen – lief – gelaufen","der – die – das"], correct: 0,
         explain: "Nur Adjektive lassen sich steigern: Positiv – Komparativ – Superlativ." },
       { section:"Adjektiv – leicht", kind:"mc",
-        text: "„Der alte Baum spendet angenehmen Schatten.“ – welches Wort ist ein Adjektiv?",
-        options: ["Baum","spendet","alte","Schatten"], correct: 2,
-        explain: "„alte“ beschreibt den Baum näher und ist steigerbar (alt – älter – am ältesten) – ein Adjektiv." },
+        text: "„Die riesige Welle rollt auf den schmalen Strand.“ – welches Wort ist ein Adjektiv?",
+        options: ["Welle","rollt","riesige","Strand"], correct: 2,
+        explain: "„riesige“ beschreibt die Welle näher – ein Adjektiv." },
+      { section:"Adjektiv – leicht", kind:"markieren",
+        text: "Kreuze alle Adjektive in diesem Satz an:",
+        tokens: ["Der","kluge","Fuchs","beobachtet","die","langsame","Schildkröte","."],
+        correctIndices: [1,5],
+        explain: "„kluge“ beschreibt den Fuchs, „langsame“ die Schildkröte – beide sind Adjektive." },
     ]
   },
   "deutsch-wa-adjektiv-mittel": {
-    title: "Adjektiv – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adjektiv – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Adjektiv – mittel", kind:"text",
         text: "Im Satz „Das kleine Kind lacht fröhlich.“ – wie heißt das Adjektiv, das das Kind beschreibt?",
@@ -3932,10 +3970,27 @@ const exerciseSets = {
         text: "Im Satz „Die laute Musik stört die müden Nachbarn.“ – wie heißt das Adjektiv, das die Musik beschreibt?",
         accept: ["laute"], strict: true, placeholder: "Adjektiv eintippen",
         explain: "„laute“ beschreibt die Musik näher – ein Adjektiv." },
+      { section:"Adjektiv – mittel", kind:"markieren",
+        text: "Kreuze alle Adjektive in diesem Satz an:",
+        tokens: ["Meine","ältere","Schwester","kauft","ein","buntes","Fahrrad","."],
+        correctIndices: [1,5],
+        explain: "„ältere“ beschreibt die Schwester, „buntes“ das Fahrrad – beide Adjektive." },
+      { section:"Adjektiv – mittel", kind:"text",
+        text: "Wie lautet die gesteigerte Form (Komparativ) von „warm“?",
+        accept: ["wärmer"], placeholder: "Komparativ eintippen",
+        explain: "„wärmer“ ist die gesteigerte Form (Komparativ) von „warm“." },
+      { section:"Adjektiv – mittel", kind:"text",
+        text: "Wie lautet die höchste Steigerungsform (Superlativ) von „gut“?",
+        accept: ["am besten","beste","bester","bestes","besten"], placeholder: "Superlativ eintippen",
+        explain: "„gut“ wird unregelmäßig gesteigert: gut – besser – am besten." },
+      { section:"Adjektiv – mittel", kind:"mc",
+        text: "Welches Adjektiv passt am besten zu „eine ___ Suppe, die eben erst vom Herd kommt“?",
+        options: ["heiße","kalte","laute","schnelle"], correct: 0,
+        explain: "Eine Suppe direkt vom Herd ist „heiß“ – das passende Adjektiv." },
     ]
   },
   "deutsch-wa-adjektiv-schwer": {
-    title: "Adjektiv – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adjektiv – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Adjektiv – schwer", kind:"text",
         text: "„Das Neue an diesem Handy ist die Kamera, doch es hat auch neue Probleme.“ – welches Wort ist hier (klein geschrieben) ein Adjektiv?",
@@ -3949,6 +4004,23 @@ const exerciseSets = {
         text: "„Von allen Läufern ist er der schnellste, obwohl er heute müde wirkt.“ – welches Wort ist die höchste Steigerungsform (Superlativ) eines Adjektivs?",
         accept: ["schnellste"], strict: true, placeholder: "Adjektiv eintippen",
         explain: "„schnellste“ ist die höchste Steigerungsstufe (Superlativ) von „schnell“ – ein Adjektiv." },
+      { section:"Adjektiv – schwer", kind:"text",
+        text: "Wie lautet der Komparativ (die gesteigerte Form) von „viel“?",
+        accept: ["mehr"], placeholder: "Komparativ eintippen",
+        explain: "„viel“ wird unregelmäßig gesteigert: viel – mehr – am meisten." },
+      { section:"Adjektiv – schwer", kind:"markieren",
+        text: "Kreuze alle (klein geschriebenen) Adjektive in diesem Satz an:",
+        tokens: ["Das","Gute","an","der","langen","Reise","war","das","herrliche","Wetter","."],
+        correctIndices: [4,8],
+        explain: "„langen“ und „herrliche“ sind echte (kleingeschriebene) Adjektive. „Gute“ ist hier großgeschrieben und damit ein nominalisiertes Adjektiv (Nomen), kein Adjektiv mehr." },
+      { section:"Adjektiv – schwer", kind:"mc",
+        text: "Welches Adjektiv passt NICHT zu „ein Eis“ an einem heißen Sommertag?",
+        options: ["kaltes","erfrischendes","eisiges","trockenes"], correct: 3,
+        explain: "„trockenes“ passt inhaltlich nicht zu einem Eis – die anderen beschreiben typische Eigenschaften." },
+      { section:"Adjektiv – schwer", kind:"text",
+        text: "„Er ist der beste Spieler der Mannschaft, obwohl er heute schlecht spielt.“ – welches Wort ist die höchste Steigerungsform (Superlativ) eines Adjektivs?",
+        accept: ["beste"], strict: true, placeholder: "Adjektiv eintippen",
+        explain: "„beste“ ist die unregelmäßige Superlativform von „gut“ – ein Adjektiv." },
     ]
   },
 
@@ -7076,6 +7148,22 @@ window.__startExercise = function(slug){
           <button class="check-btn" id="checkBtn">Prüfen</button>
         </div>
       `;
+    } else if (q.kind === "markieren"){
+      /* Neu 4.10.2026 (Wunsch Manuel: "Texte, wo sie Adjektive markieren müssen"): q.text trägt die
+         Anweisung ("Kreuze alle Adjektive an:"), q.tokens ist der zu lesende Satz Wort für Wort
+         zerlegt, q.correctIndices die Positionen (0-basiert, bezogen auf q.tokens) der richtigen
+         Wörter. Reine Satzzeichen (".", ",", "!", "?") werden nicht als eigener anklickbarer Chip
+         gerendert, sondern als normaler Text direkt ans vorherige Wort angehängt (siehe .mk-punct
+         CSS, negativer Rand gleicht die Lücke aus). Bedienung/Check-Logik bewusst wie bei "text":
+         beliebig oft "Prüfen" bis richtig, "Überspringen" zeigt die Lösung (siehe Event-Wiring unten). */
+      const tokensHtml = q.tokens.map((tok, idx) => {
+        if (/^[.,!?;:]+$/.test(tok)) return `<span class="mk-punct">${esc(tok)}</span>`;
+        return `<button type="button" class="mk-word" data-idx="${idx}">${esc(tok)}</button>`;
+      }).join(" ");
+      body = `
+        <div class="mk-sentence" id="mkSentence">${tokensHtml}</div>
+        <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
+      `;
     } else if (q.kind === "circle-sort"){
       /* 5 immer sichtbare Strategie-Kreise, kreisförmig (Fünfeck) um das Wort in der Mitte
          verteilt; die Wörter aus q.items erscheinen eines nach dem anderen und werden in die Mitte
@@ -7168,9 +7256,17 @@ window.__startExercise = function(slug){
         <div class="lt-wordbank" id="tmWordbank">${chipsHtml}</div>
       `;
     } else {
+      /* Fix 4.10.2026 (Rückmeldung Manuel: "die richtige Antwort ist immer zuerst"): die
+         Antwortreihenfolge wird bei jedem Aufruf neu gemischt (shuffled()), statt immer in der
+         Reihenfolge aus den Daten zu erscheinen. data-idx trägt dabei weiterhin den ORIGINAL-Index
+         aus q.options (nicht die Anzeigeposition) - der Klick-Handler und der "Überspringen"-Button
+         weiter unten vergleichen bzw. suchen also unverändert über q.correct/data-idx und brauchen
+         deshalb keine Anpassung außer dem Überspringen-Handler (der statt opts[q.correct] jetzt
+         gezielt nach [data-idx="..."] sucht, siehe dort). */
+      const shuffledOptions = shuffled(q.options.map((o, idx) => ({ label:o, idx })));
       body = `
         <div class="options" id="opts">
-          ${q.options.map((o,idx)=>`<button class="option" data-idx="${idx}">${esc(o)}</button>`).join("")}
+          ${shuffledOptions.map(o=>`<button class="option" data-idx="${o.idx}">${esc(o.label)}</button>`).join("")}
         </div>
       `;
     }
@@ -7328,6 +7424,47 @@ window.__startExercise = function(slug){
         document.getElementById("checkBtn").disabled = true;
         input.value = q.accept[0];
         input.parentElement.classList.add("wrong");
+        lockQuestion("skipped", "Nicht gelöst.", "wrong");
+      });
+    } else if (q.kind === "markieren"){
+      /* Gegenstück zum Body-Aufbau oben (q.kind === "markieren"): Wörter antippen schaltet sie um,
+         "Prüfen" vergleicht die ausgewählten Positionen (unabhängig von der Klick-Reihenfolge) exakt
+         mit q.correctIndices - beliebig oft erneut versuchbar wie bei "text", keine Teilpunkte. */
+      const wordBtns = Array.from(document.querySelectorAll("#mkSentence .mk-word"));
+      const selected = new Set();
+      wordBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (solved) return;
+          const idx = Number(btn.dataset.idx);
+          if (selected.has(idx)){ selected.delete(idx); btn.classList.remove("mk-selected"); }
+          else { selected.add(idx); btn.classList.add("mk-selected"); }
+        });
+      });
+      const check = ()=>{
+        if (solved) return;
+        attempts++;
+        const chosen = Array.from(selected).sort((a,b)=>a-b);
+        const correct = (q.correctIndices || []).slice().sort((a,b)=>a-b);
+        const ok = chosen.length === correct.length && chosen.every((v,idx)=>v===correct[idx]);
+        if (ok){
+          wordBtns.forEach(b=>{ b.classList.add("disabled"); if (correct.includes(Number(b.dataset.idx))) b.classList.add("correct"); });
+          document.getElementById("checkBtn").disabled = true;
+          lockQuestion("correct", q.explain, "correct");
+        } else {
+          tryAgainFeedback();
+        }
+      };
+      document.getElementById("checkBtn").addEventListener("click", check);
+      const skipBtn2 = document.getElementById("skipBtn");
+      if (skipBtn2) skipBtn2.addEventListener("click", ()=>{
+        if (solved) return;
+        const correct = q.correctIndices || [];
+        wordBtns.forEach(b=>{
+          b.classList.add("disabled");
+          b.classList.remove("mk-selected");
+          if (correct.includes(Number(b.dataset.idx))) b.classList.add("correct");
+        });
+        document.getElementById("checkBtn").disabled = true;
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     } else if (q.kind === "grid-shade"){
@@ -8410,7 +8547,11 @@ window.__startExercise = function(slug){
         if (solved) return;
         const opts = document.querySelectorAll("#opts .option");
         opts.forEach(o=>o.classList.add("disabled"));
-        opts[q.correct].classList.add("correct");
+        /* Seit der Options-Mischung oben (siehe Kommentar dort) steht die richtige Antwort nicht
+           mehr zwingend an Position q.correct in der ANZEIGE - gezielt über data-idx suchen statt
+           über die Position im NodeList. */
+        const correctBtn = document.querySelector(`#opts .option[data-idx="${q.correct}"]`);
+        if (correctBtn) correctBtn.classList.add("correct");
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
     }
