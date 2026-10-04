@@ -893,6 +893,35 @@
     .bl-niveau-grid{grid-template-columns:1fr; gap:16px;}
   }
 
+  /* Wortarten-Lektion (Erklärseite vor den Übungen, siehe lektionen/"wortarten-ueberblick"):
+     eine Karte pro Wortart, gruppiert nach beugbar/Pronomen/nicht beugbar/weitere - dieselbe
+     Gruppierung wie auf Manuels Infoblatt, mit einem Beispielsatz pro Wortart (markiertes Wort
+     per <b>, gleicher Stil wie .qtext b in den Übungen selbst). */
+  .lek-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; margin:4px 0 26px;}
+  .lek-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:18px; display:flex; flex-direction:column; gap:10px;
+  }
+  .lek-card-head{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
+  .lek-name{font-family:var(--font-display); font-weight:700; font-size:17px; color:var(--ink);}
+  .lek-subtitle{font-size:12.5px; color:var(--ink-faint); font-style:italic;}
+  .lek-examples{font-size:13.5px; color:var(--ink-soft);}
+  .lek-examples strong{color:var(--ink);}
+  .lek-merkmale{margin:0; padding-left:18px; font-size:13.5px; color:var(--ink-soft); display:flex; flex-direction:column; gap:3px;}
+  .lek-beispielsatz{
+    margin-top:2px; padding:10px 12px; border-radius:var(--radius-sm);
+    background:var(--accent-soft); font-size:14px;
+  }
+  .lek-satz{font-weight:600; margin-bottom:4px;}
+  .lek-satz b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
+  .lek-satz-erklaerung{font-size:12.5px; color:var(--ink-soft);}
+  .lek-tipp{
+    margin-top:4px; padding:16px 18px; border-radius:var(--radius-md);
+    background:var(--warm-soft); border:1px solid color-mix(in srgb, var(--warm) 25%, transparent);
+    font-size:14.5px; color:var(--ink);
+  }
+  .lek-tipp strong{color:var(--warm);}
+
   @media print{
     .topbar, .backlink, .no-print{display:none !important;}
     body::before{display:none;}
@@ -1064,6 +1093,7 @@ const deutschRechtschreibungTopics = [
    isEinstiegstestDone/markEinstiegstestDone) - rein lokal, ohne Sheets-Backend. */
 const deutschWortartenTopics = [
   { tag:"lernen", label:"Einstiegstest: Wortarten", practice:"deutsch-wortarten-einstiegstest" },
+  { tag:"lernen", label:"Die Wortarten im Überblick – Erklärung", lektion:"wortarten-ueberblick" },
   { tag:"lernen", label:"Wortarten Teil 1: Nomen, Verb, Adjektiv, Artikel", practice:"deutsch-wortarten-teil1-beugbar" },
   { tag:"lernen", label:"Wortarten Teil 2: Personal-, Possessiv- und Demonstrativpronomen", practice:"deutsch-wortarten-teil2-pronomen" },
   { tag:"lernen", label:"Wortarten Teil 3: Adverb, Präposition, Konjunktion, Numerale, Interjektion", practice:"deutsch-wortarten-teil3-unveraenderlich" },
@@ -3698,22 +3728,22 @@ const exerciseSets = {
     chapterSlug: "wortarten",
     duration: "ca. 10–15 Minuten",
     questions: [
-      { section:"Nomen und Artikel", kind:"mc",
-        text: "Im Satz „Der Hund bellt laut.“ – welches Wort ist das Nomen?",
-        options: ["Der","Hund","bellt","laut"], correct: 1,
+      { section:"Nomen und Artikel", kind:"text",
+        text: "Im Satz „Der Hund bellt laut.“ – wie heißt das Nomen? (Tipp: Nomen werden großgeschrieben!)",
+        accept: ["Hund"], strict: true, placeholder: "Nomen eintippen",
         explain: "„Hund“ ist das Nomen – es wird großgeschrieben und ein Artikel („der“) steht davor." },
       { section:"Nomen und Artikel", kind:"mc",
         text: "Welches Merkmal passt NICHT zum Nomen?",
         options: ["wird immer großgeschrieben","hat ein Geschlecht (Genus)","ist steigerbar (schnell – schneller)","steht oft mit einem Artikel"], correct: 2,
         explain: "Steigerbar sind Adjektive, nicht Nomen – zum Beispiel „schnell – schneller – am schnellsten“." },
-      { section:"Nomen und Artikel", kind:"mc",
-        text: "Im Satz „Die Schülerin liest ein spannendes Buch.“ – welches Wort ist der Artikel vor „Buch“?",
-        options: ["Die","liest","ein","spannendes"], correct: 2,
-        explain: "„ein“ steht direkt vor dem Nomen „Buch“ und zeigt dessen Geschlecht an (hier: sächlich)." },
+      { section:"Nomen und Artikel", kind:"text",
+        text: "Im Satz „Die Schülerin liest ein spannendes Buch.“ – wie heißt der Artikel vor „Buch“? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["ein"], strict: true, placeholder: "Artikel eintippen",
+        explain: "„ein“ steht direkt vor dem Nomen „Buch“ und zeigt dessen Geschlecht an (hier: sächlich) – klein geschrieben, kein Nomen." },
 
-      { section:"Verb", kind:"mc",
-        text: "Welches Wort im Satz „Die Kinder spielen im Garten Fußball.“ ist das Verb?",
-        options: ["Kinder","spielen","im","Garten"], correct: 1,
+      { section:"Verb", kind:"text",
+        text: "Im Satz „Die Kinder spielen im Garten Fußball.“ – wie heißt das Verb? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["spielen"], strict: true, placeholder: "Verb eintippen",
         explain: "„spielen“ ist das Verb – man kann es konjugieren: ich spiele, du spielst …" },
       { section:"Verb", kind:"mc",
         text: "„Lauf schneller!“ – in welcher Form steht das Verb „Lauf“ hier?",
@@ -3724,9 +3754,9 @@ const exerciseSets = {
         options: ["Ich lese ein Buch.","Ich las ein Buch.","Ich habe ein Buch gelesen.","Ich werde ein Buch lesen."], correct: 2,
         explain: "Das Perfekt bildet man mit „haben“/„sein“ + Partizip II: „habe … gelesen“." },
 
-      { section:"Adjektiv", kind:"mc",
-        text: "Welches Wort im Satz „Die neugierige Katze beobachtet den bunten Vogel.“ ist ein Adjektiv?",
-        options: ["Katze","beobachtet","neugierige","den"], correct: 2,
+      { section:"Adjektiv", kind:"text",
+        text: "Im Satz „Die neugierige Katze beobachtet den bunten Vogel.“ – wie heißt das Adjektiv, das die Katze beschreibt? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["neugierige"], strict: true, placeholder: "Adjektiv eintippen",
         explain: "„neugierige“ beschreibt die Katze näher – das ist typisch für ein Adjektiv." },
       { section:"Adjektiv", kind:"mc",
         text: "Welche Reihe zeigt die Steigerung eines Adjektivs richtig?",
@@ -3762,19 +3792,19 @@ const exerciseSets = {
     chapterSlug: "wortarten",
     duration: "ca. 10–15 Minuten",
     questions: [
-      { section:"Personalpronomen", kind:"mc",
-        text: "Im Satz „Sie ruft ihn an.“ – welches Wort ist ein Personalpronomen, das für eine männliche Person steht?",
-        options: ["Sie","ruft","ihn","an"], correct: 2,
-        explain: "„ihn“ steht stellvertretend für eine männliche Person (Akkusativ von „er“)." },
+      { section:"Personalpronomen", kind:"text",
+        text: "Im Satz „Sie ruft ihn an.“ – welches Wort ist das Personalpronomen, das für eine männliche Person steht? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["ihn"], strict: true, placeholder: "Personalpronomen eintippen",
+        explain: "„ihn“ steht stellvertretend für eine männliche Person (Akkusativ von „er“) – klein geschrieben." },
       { section:"Personalpronomen", kind:"mc",
         text: "Welches Merkmal passt zum Personalpronomen?",
         options: ["steht stellvertretend für eine Person/Sache und verändert sich nach Person, Zahl und Fall","zeigt immer Besitz an","weist ganz bestimmt auf etwas hin","lässt sich nicht beugen"], correct: 0,
         explain: "Personalpronomen (ich, du, er, wir, sie …) ersetzen eine Person oder Sache und werden nach Person, Zahl und Fall gebeugt." },
 
-      { section:"Possessivpronomen", kind:"mc",
-        text: "„Hast du meinen Stift gesehen?“ – welches Wort zeigt hier Besitz an?",
-        options: ["Hast","du","meinen","Stift"], correct: 2,
-        explain: "„meinen“ ist ein Possessivpronomen – es zeigt, wem der Stift gehört." },
+      { section:"Possessivpronomen", kind:"text",
+        text: "„Hast du meinen Stift gesehen?“ – welches Wort zeigt hier Besitz an? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["meinen"], strict: true, placeholder: "Possessivpronomen eintippen",
+        explain: "„meinen“ ist ein Possessivpronomen – es zeigt, wem der Stift gehört – klein geschrieben." },
       { section:"Possessivpronomen", kind:"mc",
         text: "Welches Beispiel ist KEIN Possessivpronomen?",
         options: ["mein","dein","dieser","unser"], correct: 2,
@@ -3825,28 +3855,28 @@ const exerciseSets = {
         text: "„Er läuft schnell.“ – welche Wortart ist „schnell“ in diesem Satz?",
         options: ["Adjektiv, weil es ein Nomen beschreibt","Adverb, weil es angibt, WIE er läuft","Nomen, weil man es großschreiben könnte","Verb, weil es zum Laufen gehört"], correct: 1,
         explain: "„schnell“ beschreibt hier die Handlung „läuft“ näher – das macht es zum Adverb. In „der schnelle Läufer“ beschreibt dasselbe Wort dagegen ein Nomen und ist dort ein Adjektiv." },
-      { section:"Adverb", kind:"mc",
-        text: "Welches Wort ist in „Die Kinder spielen draußen.“ ein Adverb?",
-        options: ["Die","Kinder","spielen","draußen"], correct: 3,
-        explain: "„draußen“ gibt den Ort der Handlung an – unveränderlich, also ein Adverb." },
+      { section:"Adverb", kind:"text",
+        text: "Welches Wort ist in „Die Kinder spielen draußen.“ das Adverb? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["draußen"], strict: true, placeholder: "Adverb eintippen",
+        explain: "„draußen“ gibt den Ort der Handlung an – unveränderlich, also ein Adverb, klein geschrieben." },
       { section:"Adverb", kind:"mc",
         text: "Welches Merkmal passt zum Adverb?",
         options: ["lässt sich nicht beugen und gibt Umstände einer Handlung an (Zeit, Ort, Art und Weise)","steht immer vor einem Nomen","ist steigerbar wie ein Adjektiv","hat einen Artikel"], correct: 0,
         explain: "Adverbien bleiben in jeder Satzstellung gleich (nicht beugbar) und geben an, wann/wo/wie etwas passiert." },
 
-      { section:"Präposition", kind:"mc",
-        text: "Im Satz „Die Katze sitzt unter dem Tisch.“ – welches Wort ist die Präposition?",
-        options: ["Die","sitzt","unter","dem"], correct: 2,
-        explain: "„unter“ ist die Präposition – sie verlangt hier den Dativ („dem Tisch“)." },
+      { section:"Präposition", kind:"text",
+        text: "Im Satz „Die Katze sitzt unter dem Tisch.“ – welches Wort ist die Präposition? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["unter"], strict: true, placeholder: "Präposition eintippen",
+        explain: "„unter“ ist die Präposition – sie verlangt hier den Dativ („dem Tisch“) – klein geschrieben." },
       { section:"Präposition", kind:"mc",
         text: "Welches Beispiel ist KEINE Präposition?",
         options: ["auf","mit","aber","neben"], correct: 2,
         explain: "„aber“ ist eine Konjunktion (verbindet Sätze), keine Präposition." },
 
-      { section:"Konjunktion", kind:"mc",
-        text: "„Ich bleibe zu Hause, weil es regnet.“ – welches Wort ist die Konjunktion?",
-        options: ["Ich","bleibe","weil","regnet"], correct: 2,
-        explain: "„weil“ verbindet die beiden Satzteile und begründet – typisch für eine Konjunktion." },
+      { section:"Konjunktion", kind:"text",
+        text: "„Ich bleibe zu Hause, weil es regnet.“ – welches Wort ist die Konjunktion? (Achte auf die Schreibweise – klein oder groß?)",
+        accept: ["weil"], strict: true, placeholder: "Konjunktion eintippen",
+        explain: "„weil“ verbindet die beiden Satzteile und begründet – typisch für eine Konjunktion, klein geschrieben." },
       { section:"Konjunktion", kind:"mc",
         text: "Welches Merkmal passt zur Konjunktion?",
         options: ["verbindet Wörter, Satzteile oder ganze Sätze und lässt sich nicht beugen","verlangt einen bestimmten Fall beim folgenden Wort","steht meist direkt vor einem Nomen","wird immer großgeschrieben"], correct: 0,
@@ -4728,6 +4758,94 @@ const buchLoesungen = {
   }
 };
 
+/* Statische Erklärseiten ("Lektionen") - anders als exerciseSets/buchLoesungen keine Übung und
+   keine Buchlösung, sondern reiner Lesestoff zum Nachschlagen vor einer Übung. Aufgebaut auf
+   Manuels eigenem Infoblatt "Die Wortarten im Überblick" (Klasse 8): exakt dieselben 4 Gruppen
+   (beugbar / Pronomen / nicht beugbar / weitere), dieselben Merkmale und Beispiele - ergänzt um
+   je einen kurzen Beispielsatz mit markiertem Wort, bewusst dieselben Beispielsätze wie in den
+   Übungen "deutsch-wortarten-teil1/2/3" (siehe dort), damit die Lektion die Übungen direkt
+   vorbereitet statt mit neuen, unbekannten Sätzen zu verwirren. Aufruf über #/lektion/<slug>
+   (siehe route() und viewLektion unten), verlinkt aus deutschWortartenTopics über "lektion:". */
+const lektionen = {
+  "wortarten-ueberblick": {
+    title: "Die Wortarten im Überblick",
+    backHref: "#/deutsch/wortarten",
+    backLabel: "Zurück zum Kapitel",
+    intro: "Bevor es mit den Übungen losgeht: Hier stehen alle Wortarten noch einmal in Ruhe erklärt - mit den wichtigsten Merkmalen und einem Beispielsatz. Schau sie dir an, dann starte mit Teil 1.",
+    groups: [
+      {
+        groupTitle: "Diese Wortarten kannst du beugen (verändern)",
+        items: [
+          { name:"Nomen", subtitle:"Namenwort", examples:"der Tisch, die Blume, das Kind",
+            merkmale:["wird immer großgeschrieben","hat ein Geschlecht (Genus), eine Zahl (Numerus) und einen Fall (Kasus)","steht oft mit einem Artikel"],
+            satz:"Der <b>Hund</b> bellt laut.",
+            erklaerung:"„Hund“ ist das Nomen – großgeschrieben, mit Artikel „der“ davor." },
+          { name:"Verb", subtitle:"Tätigkeitswort", examples:"laufen, denken, sein",
+            merkmale:["kann konjugiert werden (ich laufe – du läufst)","bildet Zeitformen (Präsens, Präteritum, Perfekt, Futur)","hat einen Imperativ · bildet Aktiv und Passiv"],
+            satz:"Die Kinder <b>spielen</b> im Garten Fußball.",
+            erklaerung:"„spielen“ ist das Verb – man kann es konjugieren: ich spiele, du spielst …" },
+          { name:"Adjektiv", subtitle:"Eigenschaftswort", examples:"schnell, freundlich, blau",
+            merkmale:["kann dekliniert werden","ist steigerbar (schnell – schneller – am schnellsten)","beschreibt Eigenschaften von Nomen"],
+            satz:"Die <b>neugierige</b> Katze beobachtet den bunten Vogel.",
+            erklaerung:"„neugierige“ beschreibt die Katze näher – typisch für ein Adjektiv." },
+          { name:"Artikel", subtitle:"Begleiter", examples:"der, die, das, ein, eine",
+            merkmale:["steht meist direkt vor einem Nomen","zeigt dessen Geschlecht, Zahl und Fall an","kann dekliniert werden"],
+            satz:"Die Schülerin liest <b>ein</b> spannendes Buch.",
+            erklaerung:"„ein“ steht direkt vor dem Nomen „Buch“ und zeigt dessen Geschlecht an." },
+        ]
+      },
+      {
+        groupTitle: "Diese Fürwörter (Pronomen) gehören ebenfalls dazu",
+        items: [
+          { name:"Personalpronomen", subtitle:"persönliches Fürwort", examples:"ich, du, er, wir, sie",
+            merkmale:["steht stellvertretend für eine Person oder Sache","verändert sich nach Person, Zahl und Fall"],
+            satz:"Sie ruft <b>ihn</b> an.",
+            erklaerung:"„ihn“ steht stellvertretend für eine männliche Person (Akkusativ von „er“)." },
+          { name:"Possessivpronomen", subtitle:"besitzanzeigendes Fürwort", examples:"mein, dein, sein, ihr, unser",
+            merkmale:["zeigt Besitz oder Zugehörigkeit an","steht meist vor einem Nomen"],
+            satz:"Hast du <b>meinen</b> Stift gesehen?",
+            erklaerung:"„meinen“ zeigt, wem der Stift gehört." },
+          { name:"Demonstrativpronomen", subtitle:"hinweisendes Fürwort", examples:"dieser, jener, derselbe",
+            merkmale:["weist ganz bestimmt auf etwas oder jemanden hin"],
+            satz:"<b>Dieses</b> Buch gehört mir, jenes dort nicht.",
+            erklaerung:"„Dieses“ weist ganz bestimmt auf das Buch hin." },
+        ]
+      },
+      {
+        groupTitle: "Diese Wortarten bleiben immer gleich (nicht beugbar)",
+        items: [
+          { name:"Adverb", subtitle:"Umstandswort", examples:"heute, dort, sehr, leise",
+            merkmale:["lässt sich nicht beugen","gibt die Umstände einer Handlung an (Zeit, Ort, Art und Weise)"],
+            satz:"Er läuft <b>schnell</b>.",
+            erklaerung:"„schnell“ gibt an, WIE er läuft – unveränderlich, also ein Adverb." },
+          { name:"Präposition", subtitle:"Verhältniswort", examples:"auf, unter, mit, in, neben",
+            merkmale:["lässt sich nicht beugen","verlangt einen bestimmten Fall beim folgenden Wort"],
+            satz:"Die Katze sitzt <b>unter</b> dem Tisch.",
+            erklaerung:"„unter“ verlangt hier den Dativ („dem Tisch“)." },
+          { name:"Konjunktion", subtitle:"Bindewort", examples:"und, oder, weil, aber",
+            merkmale:["lässt sich nicht beugen","verbindet Wörter, Satzteile oder ganze Sätze"],
+            satz:"Ich bleibe zu Hause, <b>weil</b> es regnet.",
+            erklaerung:"„weil“ verbindet die beiden Satzteile und begründet." },
+        ]
+      },
+      {
+        groupTitle: "Weitere Wortarten",
+        items: [
+          { name:"Numerale", subtitle:"Zahlwort", examples:"eins, drei, viele",
+            merkmale:["gibt eine Anzahl oder Reihenfolge an"],
+            satz:"<b>Drei</b> Finger tun mir weh.",
+            erklaerung:"„Drei“ gibt eine genaue Anzahl an – ein Numerale." },
+          { name:"Interjektion", subtitle:"Ausrufewort", examples:"Aua!, Wow!, Na ja",
+            merkmale:["drückt ein spontanes Gefühl oder einen Ausruf aus","steht oft für sich allein, mit Ausrufezeichen"],
+            satz:"<b>Aua!</b> Das tut weh.",
+            erklaerung:"„Aua!“ ist ein spontaner Ausruf – eine Interjektion." },
+        ]
+      },
+    ],
+    tipp: "Kannst du das Wort verändern (beugen)? Dann ist es meist ein Nomen, Verb, Adjektiv, Artikel oder Pronomen. Bleibt das Wort immer gleich? Dann ist es meist ein Adverb, eine Präposition, eine Konjunktion, ein Numerale oder eine Interjektion."
+  }
+};
+
 /* ---------- Hilfsfunktionen ---------- */
 function h(strings, ...vals){ return strings.reduce((a,s,i)=>a+s+(vals[i]??""),""); }
 function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
@@ -5037,6 +5155,49 @@ function viewBuchLoesung(slug){
         </div>
       </div>
       ${items}
+    </div>
+  `;
+}
+
+/* Statische Erklärseite aus "lektionen" (siehe dort) - eine Karte pro Wortart, gruppiert wie auf
+   Manuels Infoblatt. Keine Fragen, kein Fortschritt/Speichern - reiner Lesestoff, deshalb viel
+   einfacher als viewExercise. Am Ende ein Link zurück zum Kapitel, wo die Übungen direkt darunter
+   stehen (siehe deutschWortartenTopics). */
+function viewLektion(slug){
+  const l = lektionen[slug];
+  if (!l) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Deutsch", href:"#/deutsch"}, {label:"Wortarten", href:"#/deutsch/wortarten"}, {label:"Lektion", href:"#/lektion/"+slug}]);
+  const groupsHtml = l.groups.map(g => {
+    const itemsHtml = g.items.map(it => `
+      <div class="lek-card">
+        <div class="lek-card-head">
+          <span class="lek-name">${esc(it.name)}</span>
+          <span class="lek-subtitle">${esc(it.subtitle)}</span>
+        </div>
+        <div class="lek-examples"><strong>Beispiele:</strong> ${esc(it.examples)}</div>
+        <ul class="lek-merkmale">${it.merkmale.map(m => `<li>${esc(m)}</li>`).join("")}</ul>
+        <div class="lek-beispielsatz">
+          <div class="lek-satz">${it.satz}</div>
+          <div class="lek-satz-erklaerung">${esc(it.erklaerung)}</div>
+        </div>
+      </div>
+    `).join("");
+    return `
+      <div class="section-label">${esc(g.groupTitle)}</div>
+      <div class="lek-grid">${itemsHtml}</div>
+    `;
+  }).join("");
+  return h`
+    <a class="backlink" href="${l.backHref}">← ${esc(l.backLabel)}</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">Lektion</span>
+      <h1>${esc(l.title)}</h1>
+      <p>${esc(l.intro)}</p>
+    </div>
+    ${groupsHtml}
+    <div class="lek-tipp"><strong>Tipp zum Bestimmen:</strong> ${esc(l.tipp)}</div>
+    <div style="margin-top:26px; text-align:center;">
+      <a class="practice-btn" href="${l.backHref}" style="padding:12px 24px; font-size:15px;">Weiter zu den Übungen →</a>
     </div>
   `;
 }
@@ -5527,7 +5688,9 @@ function viewDeutschChapter(slug){
       const locked = isLocked(set, t.practice);
       const done = set && !locked ? isEinstiegstestDone(t.practice) : false;
       let actionHtml = "";
-      if (set && locked){
+      if (t.lektion){
+        actionHtml = `<a class="practice-btn" href="#/lektion/${t.lektion}">Ansehen</a>`;
+      } else if (set && locked){
         actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
       } else if (set && done){
         actionHtml = `<span class="pill pill-soon" title="Dieser Einstiegstest lässt sich auf diesem Gerät nur einmal machen">erledigt</span>`;
@@ -8964,6 +9127,8 @@ function route(){
     html = viewSolution(parts[1]);
   } else if (parts[0] === "buchloesung" && parts.length === 2){
     html = viewBuchLoesung(parts[1]);
+  } else if (parts[0] === "lektion" && parts.length === 2){
+    html = viewLektion(parts[1]);
   } else {
     html = viewNotFound();
   }
