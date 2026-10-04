@@ -953,6 +953,24 @@
   .lek-deklinieren-beispiel b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
   .lek-deklinieren-beispiel-erklaerung{font-size:12.5px; color:var(--ink-soft);}
 
+  /* Regelheft-Popup vor "Weiter zur Übung" (showLektionRegelheftPopup): enthält den kompletten
+     Abschreibtext selbst, kann deshalb länger als der Bildschirm werden - eigener scrollbarer
+     Rahmen statt der Standard-.tm-popup-card-Höhe. */
+  .lek-popup{max-height:85vh; overflow-y:auto;}
+  .lek-popup-label{font-family:var(--font-display); font-weight:700; font-size:15.5px; margin-bottom:10px;}
+  .lek-popup-examples{font-size:13.5px; color:var(--ink-soft); margin-bottom:6px;}
+  .lek-popup-examples strong{color:var(--ink);}
+  .lek-popup-merkmale{margin:0 0 10px; padding-left:18px; font-size:13.5px; color:var(--ink-soft); display:flex; flex-direction:column; gap:3px;}
+  .lek-popup-satz{font-weight:600; font-size:14.5px; margin-bottom:3px;}
+  .lek-popup-satz b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
+  .lek-popup-satz-erklaerung{font-size:12.5px; color:var(--ink-soft); margin-bottom:4px;}
+  .lek-popup-sub-block{margin-top:12px; padding-top:10px; border-top:1px dashed var(--border);}
+  .lek-popup-sub-title{font-family:var(--font-display); font-weight:700; font-size:13.5px; margin-bottom:5px;}
+  .lek-popup-text{font-size:13px; color:var(--ink-soft); margin:0 0 6px;}
+  .lek-popup-stufen{font-size:13px; color:var(--ink); line-height:1.6;}
+  .lek-popup-stufe b{color:var(--ink);}
+  .lek-popup-tipp{margin-top:12px; padding:10px 12px; border-radius:var(--radius-sm); font-size:13px;}
+
   /* "markieren"-Aufgaben (Wörter in einem Satz ankreuzen, siehe q.kind==="markieren" weiter unten):
      jedes Wort ein eigener Chip zum Antippen, Satzzeichen als reiner Text ohne Lücke davor. */
   .mk-sentence{
@@ -3843,8 +3861,10 @@ const exerciseSets = {
      Fragen angelegt, nie als Text-Eintippen mit zwei gleich geschriebenen Kandidaten. */
 
   /* --- NOMEN --- */
+  /* Nomen: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip wie bei Adjektiv: mehr Fragen,
+     markieren-Aufgaben, Fachbegriffe wie Kasus/Genus explizit abgefragt). */
   "deutsch-wa-nomen-leicht": {
-    title: "Nomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Nomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Nomen – leicht", kind:"mc",
         text: "„Der Hund bellt laut.“ – welches Wort ist das Nomen?",
@@ -3858,10 +3878,22 @@ const exerciseSets = {
         text: "„Die Lehrerin lobt den fleißigen Schüler.“ – welches Wort ist ein Nomen?",
         options: ["lobt","fleißigen","Schüler","den"], correct: 2,
         explain: "„Schüler“ ist ein Nomen – großgeschrieben, mit Artikel „den“ davor." },
+      { section:"Nomen – leicht", kind:"mc",
+        text: "„Viele Besucher bestaunen die alte Burg.“ – welches Wort ist ein Nomen?",
+        options: ["Viele","Besucher","bestaunen","alte"], correct: 1,
+        explain: "„Besucher“ ist großgeschrieben und das Subjekt des Satzes – ein Nomen." },
+      { section:"Nomen – leicht", kind:"mc",
+        text: "Was bedeutet „Genus“ bei einem Nomen?",
+        options: ["das grammatische Geschlecht (maskulin, feminin, neutrum)","die Anzahl (Singular oder Plural)","der Fall (Kasus)","die Steigerungsform"], correct: 0,
+        explain: "Genus = das grammatische Geschlecht – erkennbar am Artikel (der/die/das)." },
+      { section:"Nomen – leicht", kind:"mc",
+        text: "Wie heißen die vier Fälle (Kasus) im Deutschen in der richtigen Reihenfolge?",
+        options: ["Nominativ – Genitiv – Dativ – Akkusativ","Präsens – Präteritum – Perfekt – Futur","Positiv – Komparativ – Superlativ – Elativ","Singular – Plural – Dual – Kollektiv"], correct: 0,
+        explain: "Die vier Fälle heißen Nominativ, Genitiv, Dativ und Akkusativ." },
     ]
   },
   "deutsch-wa-nomen-mittel": {
-    title: "Nomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Nomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Nomen – mittel", kind:"text",
         text: "Im Satz „Die Katze schläft auf dem Sofa.“ – wie heißt das Nomen, auf dem die Katze schläft?",
@@ -3875,10 +3907,27 @@ const exerciseSets = {
         text: "Im Satz „Meine Schwester sammelt bunte Muscheln am Strand.“ – wie heißt das Nomen, das die Muscheln sammelt?",
         accept: ["Schwester"], strict: true, placeholder: "Nomen eintippen",
         explain: "„Schwester“ ist das Nomen – großgeschrieben, mit Possessivpronomen „Meine“ davor." },
+      { section:"Nomen – mittel", kind:"markieren",
+        text: "Kreuze alle Nomen in diesem Satz an:",
+        tokens: ["Der","Lehrer","erklärt","den","Schülern","die","Hausaufgabe","."],
+        correctIndices: [1,4,6],
+        explain: "„Lehrer“, „Schülern“ und „Hausaufgabe“ sind großgeschrieben und stehen mit Artikel – alle drei sind Nomen." },
+      { section:"Nomen – mittel", kind:"text",
+        text: "Bilde den Plural von „das Kind“:",
+        accept: ["die Kinder","Kinder"], placeholder: "Pluralform eintippen",
+        explain: "Der Plural von „das Kind“ ist „die Kinder“." },
+      { section:"Nomen – mittel", kind:"text",
+        text: "Wie heißt der Fall, der nach „Wem?“ fragt (z. B. „dem Hund“)?",
+        accept: ["Dativ"], placeholder: "Fall eintippen",
+        explain: "Der Dativ fragt nach „Wem?“." },
+      { section:"Nomen – mittel", kind:"text",
+        text: "Wie heißt der Fall, der nach „Wessen?“ fragt (z. B. „des Hundes“)?",
+        accept: ["Genitiv"], placeholder: "Fall eintippen",
+        explain: "Der Genitiv fragt nach „Wessen?“." },
     ]
   },
   "deutsch-wa-nomen-schwer": {
-    title: "Nomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Nomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Nomen – schwer", kind:"text",
         text: "„Das Laufen hält ihn fit, doch heute läuft er nicht.“ – welches Wort ist hier ein Nomen (nicht das Verb)?",
@@ -3892,12 +3941,30 @@ const exerciseSets = {
         text: "„Das Gute daran ist, dass wir früher fertig sind.“ – welches Wort ist hier ein Nomen, obwohl es wie ein Adjektiv aussieht?",
         accept: ["Gute"], strict: true, placeholder: "Nomen eintippen",
         explain: "„Gute“ ist hier großgeschrieben und hat den Artikel „Das“ davor – ein nominalisiertes Adjektiv, also ein Nomen." },
+      { section:"Nomen – schwer", kind:"text",
+        text: "„Das Schreiben dieses Briefes dauert lange, deshalb schreibt sie jeden Tag ein wenig.“ – welches Wort ist hier ein Nomen (nicht das Verb)?",
+        accept: ["Schreiben"], strict: true, placeholder: "Nomen eintippen",
+        explain: "„Schreiben“ ist hier großgeschrieben und hat den Artikel „Das“ davor – ein nominalisiertes Verb, also ein Nomen." },
+      { section:"Nomen – schwer", kind:"text",
+        text: "Wie heißt der Fall, der nach „Wen oder was?“ fragt (z. B. „den Hund“)?",
+        accept: ["Akkusativ"], placeholder: "Fall eintippen",
+        explain: "Der Akkusativ fragt nach „Wen oder was?“." },
+      { section:"Nomen – schwer", kind:"markieren",
+        text: "Kreuze alle Nomen in diesem Satz an (auch nominalisierte Wörter zählen!):",
+        tokens: ["Das","Neue","an","der","Schule","gefällt","den","Lehrern","und","Schülern","."],
+        correctIndices: [1,4,7,9],
+        explain: "„Neue“ ist hier großgeschrieben und hat den Artikel „Das“ – ein nominalisiertes Adjektiv, also ein Nomen, genau wie „Schule“, „Lehrern“ und „Schülern“." },
+      { section:"Nomen – schwer", kind:"mc",
+        text: "Welcher Satz zeigt richtig, dass ein nominalisiertes Wort trotzdem ein Nomen ist?",
+        options: ["„Das Schwimmen macht Spaß.“ – „Schwimmen“ ist hier ein Nomen.","„Wir schwimmen gern.“ – „schwimmen“ ist hier ein Nomen.","„Das Schwimmen macht Spaß.“ – „Schwimmen“ ist hier ein Verb.","Nominalisierte Wörter sind nie Nomen."], correct: 0,
+        explain: "Mit Artikel davor und Großschreibung wird aus einem Verb (schwimmen) ein Nomen (das Schwimmen)." },
     ]
   },
 
   /* --- VERB --- */
+  /* Verb: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip wie bei Adjektiv/Nomen). */
   "deutsch-wa-verb-leicht": {
-    title: "Verb – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Verb – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Verb – leicht", kind:"mc",
         text: "„Die Kinder spielen im Garten Fußball.“ – welches Wort ist das Verb?",
@@ -3911,10 +3978,22 @@ const exerciseSets = {
         text: "„Die Sonne scheint den ganzen Tag.“ – welches Wort ist das Verb?",
         options: ["Sonne","scheint","ganzen","Tag"], correct: 1,
         explain: "„scheint“ lässt sich konjugieren: ich scheine, du scheinst … – ein Verb." },
+      { section:"Verb – leicht", kind:"mc",
+        text: "„Mein Onkel repariert gerne alte Autos.“ – welches Wort ist das Verb?",
+        options: ["Onkel","repariert","gerne","Autos"], correct: 1,
+        explain: "„repariert“ lässt sich konjugieren: ich repariere, du reparierst … – das Verb." },
+      { section:"Verb – leicht", kind:"mc",
+        text: "Wie heißen die vier wichtigsten Zeitformen eines Verbs?",
+        options: ["Präsens – Präteritum – Perfekt – Futur","Positiv – Komparativ – Superlativ – Elativ","Nominativ – Genitiv – Dativ – Akkusativ","Aktiv – Passiv – Imperativ – Konjunktiv"], correct: 0,
+        explain: "Die wichtigsten Zeitformen heißen Präsens, Präteritum, Perfekt und Futur." },
+      { section:"Verb – leicht", kind:"mc",
+        text: "Was bedeutet „konjugieren“ bei einem Verb?",
+        options: ["Die Verb-Endung passt sich an Person und Zahl an (ich/du/er …).","Die Endung passt sich an das Nomen an.","Das Verb wird gesteigert.","Das Verb wird großgeschrieben."], correct: 0,
+        explain: "Konjugieren heißt: Die Verb-Endung ändert sich je nach Person (ich spiele, du spielst, er spielt …)." },
     ]
   },
   "deutsch-wa-verb-mittel": {
-    title: "Verb – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Verb – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Verb – mittel", kind:"text",
         text: "Im Satz „Die Vögel singen am frühen Morgen.“ – wie heißt das Verb?",
@@ -3928,10 +4007,27 @@ const exerciseSets = {
         text: "Im Satz „Wir backen heute einen Kuchen für das Fest.“ – wie heißt das Verb?",
         accept: ["backen"], strict: true, placeholder: "Verb eintippen",
         explain: "„backen“ lässt sich konjugieren: ich backe, du bäckst … – das Verb." },
+      { section:"Verb – mittel", kind:"markieren",
+        text: "Kreuze alle Verben in diesem Satz an:",
+        tokens: ["Die","Kinder","lachen",",","weil","der","Clown","lustige","Witze","erzählt","."],
+        correctIndices: [2,9],
+        explain: "„lachen“ und „erzählt“ sind konjugierte Verbformen – beide sind Verben." },
+      { section:"Verb – mittel", kind:"text",
+        text: "Bilde die Präteritum-Form von „spielen“ (ich …):",
+        accept: ["spielte"], placeholder: "Präteritum eintippen",
+        explain: "Die Präteritum-Form von „spielen“ ist „ich spielte“." },
+      { section:"Verb – mittel", kind:"text",
+        text: "Bilde die Perfekt-Form von „spielen“ (ich habe …):",
+        accept: ["gespielt"], placeholder: "Partizip eintippen",
+        explain: "Die Perfekt-Form lautet „ich habe gespielt“." },
+      { section:"Verb – mittel", kind:"text",
+        text: "Bilde die Präsens-Form „er/sie/es …“ von „lesen“:",
+        accept: ["liest"], placeholder: "Präsens-Form eintippen",
+        explain: "„lesen“ wird unregelmäßig konjugiert: er/sie/es liest." },
     ]
   },
   "deutsch-wa-verb-schwer": {
-    title: "Verb – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Verb – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Verb – schwer", kind:"text",
         text: "„Das Schwimmen im See macht allen Spaß, deshalb schwimmen wir jeden Sommer dort.“ – welches Wort ist hier das Verb (nicht das Nomen)?",
@@ -3941,6 +4037,23 @@ const exerciseSets = {
         text: "„Er räumt jeden Abend sein Zimmer auf.“ – wie heißt das Verb in seiner Grundform (Infinitiv)?",
         accept: ["aufräumen"], strict: true, placeholder: "Verb (Infinitiv) eintippen",
         explain: "„räumt … auf“ gehört zusammen – das trennbare Verb „aufräumen“ (ich räume auf, du räumst auf …)." },
+      { section:"Verb – schwer", kind:"text",
+        text: "„Sie steht jeden Morgen früh auf.“ – wie heißt das Verb in der Grundform (Infinitiv)?",
+        accept: ["aufstehen"], strict: true, placeholder: "Verb (Infinitiv) eintippen",
+        explain: "„steht … auf“ gehört zusammen – das trennbare Verb „aufstehen“." },
+      { section:"Verb – schwer", kind:"markieren",
+        text: "Kreuze alle echten (konjugierten) Verben an – nicht das nominalisierte Verb!",
+        tokens: ["Das","Backen","von","Kuchen","dauert","lange",",","doch","sie","backt","trotzdem","jede","Woche","."],
+        correctIndices: [4,9],
+        explain: "„dauert“ und „backt“ sind konjugierte Verbformen. „Backen“ am Satzanfang ist großgeschrieben und hat den Artikel „Das“ – ein nominalisiertes Verb (Nomen)." },
+      { section:"Verb – schwer", kind:"mc",
+        text: "Welcher Satz zeigt den Imperativ (Befehlsform) eines Verbs?",
+        options: ["„Lauf schneller!“","„Er läuft schnell.“","„Das Laufen ist gesund.“","„der schnelle Läufer“"], correct: 0,
+        explain: "„Lauf schneller!“ ist ein Befehl – der Imperativ des Verbs „laufen“." },
+      { section:"Verb – schwer", kind:"mc",
+        text: "Was ist der Unterschied zwischen Aktiv und Passiv?",
+        options: ["Aktiv: das Subjekt handelt selbst – Passiv: mit dem Subjekt wird etwas getan","Aktiv ist die Vergangenheit, Passiv die Zukunft","Aktiv wird großgeschrieben, Passiv klein","Es gibt keinen Unterschied"], correct: 0,
+        explain: "Im Aktiv handelt das Subjekt selbst („Der Hund beißt“), im Passiv wird mit ihm etwas getan („Der Hund wird gestreichelt“)." },
       { section:"Verb – schwer", kind:"text",
         text: "„Das Lesen bereitet ihr Freude, deshalb liest sie jeden Abend ein Buch.“ – welches Wort ist hier das Verb?",
         accept: ["liest"], strict: true, placeholder: "Verb eintippen",
@@ -4096,8 +4209,9 @@ const exerciseSets = {
   },
 
   /* --- ARTIKEL --- */
+  /* Artikel: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip). */
   "deutsch-wa-artikel-leicht": {
-    title: "Artikel – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Artikel – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Artikel – leicht", kind:"mc",
         text: "„Die Schülerin liest ein spannendes Buch.“ – welches Wort ist der Artikel vor „Buch“?",
@@ -4111,10 +4225,22 @@ const exerciseSets = {
         text: "„Die Katze jagt die Maus durch den Garten.“ – welches Wort ist ein Artikel vor „Garten“?",
         options: ["Die","jagt","durch","den"], correct: 3,
         explain: "„den“ ist der Artikel vor „Garten“ (Akkusativ, maskulin)." },
+      { section:"Artikel – leicht", kind:"mc",
+        text: "„Die Katze jagt eine Maus.“ – welches Wort ist der unbestimmte Artikel?",
+        options: ["Die","Katze","jagt","eine"], correct: 3,
+        explain: "„eine“ ist der unbestimmte Artikel vor „Maus“." },
+      { section:"Artikel – leicht", kind:"mc",
+        text: "Was ist der Unterschied zwischen bestimmtem und unbestimmtem Artikel?",
+        options: ["Bestimmter Artikel (der/die/das) meint eine bekannte Sache, unbestimmter (ein/eine) eine unbekannte","Bestimmter Artikel steht immer nach dem Nomen","Unbestimmter Artikel wird immer großgeschrieben","Es gibt keinen Unterschied"], correct: 0,
+        explain: "Der bestimmte Artikel (der/die/das) meint etwas Bekanntes, der unbestimmte (ein/eine) etwas noch Unbekanntes." },
+      { section:"Artikel – leicht", kind:"mc",
+        text: "Welches Beispiel ist KEIN Artikel?",
+        options: ["der","eine","dieser","das"], correct: 2,
+        explain: "„dieser“ ist ein Demonstrativpronomen, kein Artikel." },
     ]
   },
   "deutsch-wa-artikel-mittel": {
-    title: "Artikel – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Artikel – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Artikel – mittel", kind:"text",
         text: "Im Satz „Ein Vogel sitzt auf dem Ast.“ – wie heißt der Artikel vor „Vogel“? (Achte auf die Schreibweise – klein oder groß?)",
@@ -4128,10 +4254,27 @@ const exerciseSets = {
         text: "Im Satz „Der Hund gräbt ein tiefes Loch im Garten.“ – wie heißt der Artikel vor „tiefes Loch“?",
         accept: ["ein"], strict: true, placeholder: "Artikel eintippen",
         explain: "„ein“ steht vor „tiefes Loch“ und zeigt das Geschlecht (sächlich) an – ein Artikel." },
+      { section:"Artikel – mittel", kind:"markieren",
+        text: "Kreuze alle Artikel in diesem Satz an:",
+        tokens: ["Ein","Junge","wirft","den","Ball","über","die","Mauer","."],
+        correctIndices: [0,3,6],
+        explain: "„Ein“, „den“ und „die“ begleiten jeweils ein Nomen – alle drei sind Artikel." },
+      { section:"Artikel – mittel", kind:"text",
+        text: "Setze den richtigen bestimmten Artikel ein: „___ Mond scheint hell.“ (männlich)",
+        accept: ["Der"], strict: true, placeholder: "Artikel eintippen",
+        explain: "„der Mond“ – maskulin, deshalb „Der“." },
+      { section:"Artikel – mittel", kind:"text",
+        text: "Setze den richtigen unbestimmten Artikel ein: „Das ist ___ Idee.“ (weiblich)",
+        accept: ["eine"], strict: true, placeholder: "Artikel eintippen",
+        explain: "„eine Idee“ – feminin, deshalb „eine“." },
+      { section:"Artikel – mittel", kind:"text",
+        text: "Im Satz „Das Kind spielt mit einem Ball.“ – wie heißt der Artikel vor „Ball“?",
+        accept: ["einem"], strict: true, placeholder: "Artikel eintippen",
+        explain: "„einem“ steht im Dativ vor „Ball“ – ein Artikel." },
     ]
   },
   "deutsch-wa-artikel-schwer": {
-    title: "Artikel – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Artikel – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Artikel – schwer", kind:"text",
         text: "„Wir gehen heute zur Schule.“ – welches Wort enthält eine Präposition, die mit dem Artikel verschmolzen ist?",
@@ -4145,12 +4288,30 @@ const exerciseSets = {
         text: "„Eine Schülerin vergisst ihr Heft, die andere Schülerin findet es.“ – welches Wort ist der Artikel direkt vor „andere Schülerin“?",
         accept: ["die"], strict: true, placeholder: "Artikel eintippen",
         explain: "„die“ steht direkt vor „andere Schülerin“ – ein Artikel (nicht „ihr“, das Possessivpronomen ist)." },
+      { section:"Artikel – schwer", kind:"markieren",
+        text: "Kreuze NUR die Artikel an (nicht das Possessivpronomen!):",
+        tokens: ["Der","Schüler","vergisst","sein","Buch",",","doch","die","Lehrerin","findet","es","."],
+        correctIndices: [0,7],
+        explain: "„Der“ und „die“ sind Artikel. „sein“ vor „Buch“ zeigt Besitz an – das ist ein Possessivpronomen, kein Artikel." },
+      { section:"Artikel – schwer", kind:"mc",
+        text: "Welche Verschmelzung aus Präposition + Artikel ist korrekt?",
+        options: ["zur = zu + der","zur = zu + die","zur = von + der","zur = in + der"], correct: 0,
+        explain: "„zur“ entsteht aus „zu“ + „der“." },
+      { section:"Artikel – schwer", kind:"text",
+        text: "Setze den richtigen bestimmten Artikel ein: „___ Blumen blühen im Mai.“ (Plural)",
+        accept: ["Die"], strict: true, placeholder: "Artikel eintippen",
+        explain: "Im Plural heißt der bestimmte Artikel immer „die“." },
+      { section:"Artikel – schwer", kind:"mc",
+        text: "Warum ist „ihr“ in „ihr Buch“ KEIN Artikel?",
+        options: ["Weil es Besitz anzeigt – das macht es zum Possessivpronomen","Weil es großgeschrieben ist","Weil es vor einem Nomen steht","Weil es ein Adjektiv ist"], correct: 0,
+        explain: "„ihr“ zeigt an, wem das Buch gehört – das ist typisch für ein Possessivpronomen, nicht für einen Artikel." },
     ]
   },
 
   /* --- PERSONALPRONOMEN --- */
+  /* Personalpronomen: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip). */
   "deutsch-wa-personalpronomen-leicht": {
-    title: "Personalpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Personalpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Personalpronomen – leicht", kind:"mc",
         text: "„Sie ruft ihn an.“ – welches Wort ist ein Personalpronomen, das für eine männliche Person steht?",
@@ -4164,10 +4325,22 @@ const exerciseSets = {
         text: "„Wir besuchen euch am Wochenende.“ – welches Wort ist ein Personalpronomen in der 1. Person Plural?",
         options: ["Wir","besuchen","euch","Wochenende"], correct: 0,
         explain: "„Wir“ steht für die sprechende Gruppe (1. Person Plural) – ein Personalpronomen." },
+      { section:"Personalpronomen – leicht", kind:"mc",
+        text: "Wie heißt die 3. Person Singular männlich im Nominativ?",
+        options: ["er","sie","es","ihr"], correct: 0,
+        explain: "„er“ ist die 3. Person Singular maskulin im Nominativ." },
+      { section:"Personalpronomen – leicht", kind:"mc",
+        text: "Welche Fallreihe zeigt „ich“ richtig dekliniert (Nominativ – Genitiv – Dativ – Akkusativ)?",
+        options: ["ich – meiner – mir – mich","ich – mein – mir – mich","ich – meiner – mich – mir","ich – mir – mich – meiner"], correct: 0,
+        explain: "Richtig dekliniert: ich – meiner – mir – mich." },
+      { section:"Personalpronomen – leicht", kind:"mc",
+        text: "„Wir treffen euch morgen.“ – welches Wort ist das Personalpronomen in der 1. Person Plural (Nominativ)?",
+        options: ["Wir","treffen","euch","morgen"], correct: 0,
+        explain: "„Wir“ ist die 1. Person Plural im Nominativ." },
     ]
   },
   "deutsch-wa-personalpronomen-mittel": {
-    title: "Personalpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Personalpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Personalpronomen – mittel", kind:"text",
         text: "Im Satz „Ich helfe dir gerne.“ – welches Wort ist das Personalpronomen in der 1. Person?",
@@ -4181,10 +4354,27 @@ const exerciseSets = {
         text: "Im Satz „Habt ihr das Spiel gewonnen?“ – welches Wort ist das Personalpronomen für die angesprochene Gruppe?",
         accept: ["ihr"], strict: true, placeholder: "Personalpronomen eintippen",
         explain: "„ihr“ steht hier für die angesprochenen Personen (2. Person Plural) – ein Personalpronomen." },
+      { section:"Personalpronomen – mittel", kind:"markieren",
+        text: "Kreuze alle Personalpronomen in diesem Satz an:",
+        tokens: ["Sie","ruft","ihn","an",",","weil","er","ihr","nicht","geantwortet","hat","."],
+        correctIndices: [0,2,6,7],
+        explain: "„Sie“, „ihn“, „er“ und „ihr“ stehen alle stellvertretend für Personen – alle vier sind Personalpronomen (kein Nomen folgt direkt danach)." },
+      { section:"Personalpronomen – mittel", kind:"text",
+        text: "Welchen Fall hat „mich“ in „Er sieht mich.“?",
+        accept: ["Akkusativ"], placeholder: "Fall eintippen",
+        explain: "„mich“ steht im Akkusativ." },
+      { section:"Personalpronomen – mittel", kind:"text",
+        text: "Welchen Fall hat „mir“ in „Er gibt mir das Buch.“?",
+        accept: ["Dativ"], placeholder: "Fall eintippen",
+        explain: "„mir“ steht im Dativ." },
+      { section:"Personalpronomen – mittel", kind:"mc",
+        text: "Welche Person und Zahl hat „ihr“ in „Kommt ihr mit?“?",
+        options: ["2. Person Plural","1. Person Plural","3. Person Singular","2. Person Singular"], correct: 0,
+        explain: "„ihr“ spricht mehrere Personen direkt an – 2. Person Plural." },
     ]
   },
   "deutsch-wa-personalpronomen-schwer": {
-    title: "Personalpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Personalpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Personalpronomen – schwer", kind:"text",
         text: "„Du hast dein Handy vergessen, aber ich habe dir meins mitgebracht.“ – welches Wort ist das Personalpronomen (nicht Besitz anzeigend)?",
@@ -4198,12 +4388,29 @@ const exerciseSets = {
         text: "„Wir treffen euch später, weil unser Bus Verspätung hat.“ – welches Wort ist das Personalpronomen (nicht Besitz anzeigend)?",
         accept: ["euch"], strict: true, placeholder: "Personalpronomen eintippen",
         explain: "„euch“ ist die Akkusativ-/Dativform von „ihr“ – ein Personalpronomen (nicht „unser“, das zeigt Besitz)." },
+      { section:"Personalpronomen – schwer", kind:"mc",
+        text: "Personalpronomen oder Possessivpronomen? „Das ist ihr Buch.“",
+        options: ["Possessivpronomen, weil es Besitz zeigt","Personalpronomen, weil es für eine Person steht","Artikel, weil es vor einem Nomen steht","Demonstrativpronomen"], correct: 0,
+        explain: "„ihr“ steht hier direkt vor dem Nomen „Buch“ und zeigt Besitz an – ein Possessivpronomen." },
+      { section:"Personalpronomen – schwer", kind:"mc",
+        text: "Personalpronomen oder Possessivpronomen? „Ich sehe sie.“",
+        options: ["Personalpronomen, weil es eine Person ersetzt (kein Nomen folgt)","Possessivpronomen, weil es Besitz zeigt","Artikel","Adverb"], correct: 0,
+        explain: "„sie“ steht hier für eine Person, ohne dass ein Nomen folgt – ein Personalpronomen." },
+      { section:"Personalpronomen – schwer", kind:"text",
+        text: "Ersetze „der Lehrer“ durch das passende Personalpronomen: „___ erklärt die Aufgabe.“",
+        accept: ["Er"], strict: true, placeholder: "Personalpronomen eintippen",
+        explain: "„der Lehrer“ ist maskulin – ersetzt durch „Er“." },
+      { section:"Personalpronomen – schwer", kind:"text",
+        text: "Ersetze „die Schülerin“ durch das passende Personalpronomen im Akkusativ: „Ich sehe ___.“",
+        accept: ["sie"], strict: true, placeholder: "Personalpronomen eintippen",
+        explain: "„die Schülerin“ ist feminin – im Akkusativ „sie“." },
     ]
   },
 
   /* --- POSSESSIVPRONOMEN --- */
+  /* Possessivpronomen: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip). */
   "deutsch-wa-possessivpronomen-leicht": {
-    title: "Possessivpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Possessivpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Possessivpronomen – leicht", kind:"mc",
         text: "„Hast du meinen Stift gesehen?“ – welches Wort zeigt hier Besitz an?",
@@ -4217,10 +4424,22 @@ const exerciseSets = {
         text: "„Unser Lehrer erklärt die Aufgabe genau.“ – welches Wort ist das Possessivpronomen?",
         options: ["Unser","Lehrer","erklärt","Aufgabe"], correct: 0,
         explain: "„Unser“ zeigt, wem der Lehrer „gehört“ (zu uns) – ein Possessivpronomen." },
+      { section:"Possessivpronomen – leicht", kind:"mc",
+        text: "Welches Possessivpronomen gehört zu „ich“?",
+        options: ["mein","dein","sein","ihr"], correct: 0,
+        explain: "Zu „ich“ gehört das Possessivpronomen „mein“." },
+      { section:"Possessivpronomen – leicht", kind:"mc",
+        text: "Welches Possessivpronomen gehört zu „wir“?",
+        options: ["unser","euer","ihr","mein"], correct: 0,
+        explain: "Zu „wir“ gehört das Possessivpronomen „unser“." },
+      { section:"Possessivpronomen – leicht", kind:"mc",
+        text: "„Euer Haus ist wirklich schön.“ – welches Wort ist das Possessivpronomen?",
+        options: ["Euer","Haus","ist","schön"], correct: 0,
+        explain: "„Euer“ zeigt, wem das Haus gehört (zu euch) – ein Possessivpronomen." },
     ]
   },
   "deutsch-wa-possessivpronomen-mittel": {
-    title: "Possessivpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Possessivpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Possessivpronomen – mittel", kind:"text",
         text: "Im Satz „Dein Fahrrad steht vor der Schule.“ – wie heißt das Possessivpronomen? (Achte auf die Schreibweise – klein oder groß?)",
@@ -4234,10 +4453,27 @@ const exerciseSets = {
         text: "Im Satz „Wir füttern jeden Morgen unsere Hühner.“ – wie heißt das Possessivpronomen?",
         accept: ["unsere"], strict: true, placeholder: "Possessivpronomen eintippen",
         explain: "„unsere“ zeigt Besitz an – ein Possessivpronomen." },
+      { section:"Possessivpronomen – mittel", kind:"markieren",
+        text: "Kreuze alle Possessivpronomen in diesem Satz an:",
+        tokens: ["Meine","Schwester","und","ihr","Freund","besuchen","unsere","Großeltern","."],
+        correctIndices: [0,3,6],
+        explain: "„Meine“, „ihr“ und „unsere“ stehen jeweils direkt vor einem Nomen und zeigen Besitz – alle drei sind Possessivpronomen." },
+      { section:"Possessivpronomen – mittel", kind:"text",
+        text: "Setze das passende Possessivpronomen ein: „Das ist ___ Hund.“ (zu „du“)",
+        accept: ["dein"], strict: true, placeholder: "Possessivpronomen eintippen",
+        explain: "Zu „du“ gehört „dein“." },
+      { section:"Possessivpronomen – mittel", kind:"mc",
+        text: "Possessivpronomen oder Artikel? „ein Hund“ und „mein Hund“",
+        options: ["„mein“ zeigt Besitz – deshalb Possessivpronomen, „ein“ dagegen Artikel","beide sind Artikel","beide sind Possessivpronomen","es gibt keinen Unterschied"], correct: 0,
+        explain: "„mein“ zeigt an, wem der Hund gehört (Possessivpronomen); „ein“ zeigt das nicht (Artikel)." },
+      { section:"Possessivpronomen – mittel", kind:"text",
+        text: "Setze das passende Possessivpronomen ein: „Das ist ___ Katze.“ (zu „sie“, eine Person)",
+        accept: ["ihre"], strict: true, placeholder: "Possessivpronomen eintippen",
+        explain: "Zu „sie“ (eine Person, feminin) gehört „ihre“ vor einem femininen Nomen." },
     ]
   },
   "deutsch-wa-possessivpronomen-schwer": {
-    title: "Possessivpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Possessivpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Possessivpronomen – schwer", kind:"text",
         text: "„Er mag sein neues Fahrrad lieber als seins vom letzten Jahr.“ – welches Wort ist das Possessivpronomen direkt vor einem Nomen?",
@@ -4251,12 +4487,29 @@ const exerciseSets = {
         text: "„Mein Bruder teilt sein Zimmer mit mir, aber meins ist größer.“ – welches Wort ist das Possessivpronomen direkt vor „Zimmer“?",
         accept: ["sein"], strict: true, placeholder: "Possessivpronomen eintippen",
         explain: "„sein“ steht direkt vor „Zimmer“ – ein Possessivpronomen (nicht zu verwechseln mit „meins“, das für „mein Zimmer“ steht)." },
+      { section:"Possessivpronomen – schwer", kind:"mc",
+        text: "Possessivpronomen oder Personalpronomen? „Sie hilft ihr.“",
+        options: ["Personalpronomen, weil kein Nomen folgt","Possessivpronomen, weil es Besitz zeigt","Artikel","Adverb"], correct: 0,
+        explain: "„ihr“ steht hier allein (kein Nomen folgt) und ersetzt eine Person – ein Personalpronomen, kein Possessivpronomen." },
+      { section:"Possessivpronomen – schwer", kind:"text",
+        text: "Setze das passende Possessivpronomen ein: „Das ist ___ Buch.“ (zu „er“)",
+        accept: ["sein"], strict: true, placeholder: "Possessivpronomen eintippen",
+        explain: "Zu „er“ gehört „sein“." },
+      { section:"Possessivpronomen – schwer", kind:"text",
+        text: "Setze das passende Possessivpronomen ein: „Das sind ___ Schuhe.“ (zu „ich“, Mehrzahl)",
+        accept: ["meine"], strict: true, placeholder: "Possessivpronomen eintippen",
+        explain: "Im Plural wird aus „mein“ die Form „meine“: meine Schuhe." },
+      { section:"Possessivpronomen – schwer", kind:"mc",
+        text: "Zu welcher Person gehört das Possessivpronomen „euer“?",
+        options: ["2. Person Plural (ihr)","1. Person Plural (wir)","3. Person Singular (er)","2. Person Singular (du)"], correct: 0,
+        explain: "„euer“ gehört zu „ihr“ (2. Person Plural)." },
     ]
   },
 
   /* --- DEMONSTRATIVPRONOMEN --- */
+  /* Demonstrativpronomen: 20 Fragen gesamt (Ausbau 4.10.2026, gleiches Prinzip). */
   "deutsch-wa-demonstrativpronomen-leicht": {
-    title: "Demonstrativpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Demonstrativpronomen – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Demonstrativpronomen – leicht", kind:"mc",
         text: "„Dieses Buch gehört mir, jenes dort nicht.“ – welche Wortart sind „Dieses“ und „jenes“ hier?",
@@ -4270,10 +4523,22 @@ const exerciseSets = {
         text: "„Diese Schuhe gefallen mir besser als jene im Schaufenster.“ – welches Wort ist ein Demonstrativpronomen?",
         options: ["Diese","gefallen","besser","Schaufenster"], correct: 0,
         explain: "„Diese“ weist ganz bestimmt auf die Schuhe hin – ein Demonstrativpronomen." },
+      { section:"Demonstrativpronomen – leicht", kind:"mc",
+        text: "Welches Beispiel ist KEIN Demonstrativpronomen?",
+        options: ["dieser","jener","derselbe","mein"], correct: 3,
+        explain: "„mein“ zeigt Besitz an – das ist ein Possessivpronomen, kein Demonstrativpronomen." },
+      { section:"Demonstrativpronomen – leicht", kind:"mc",
+        text: "Welches Demonstrativpronomen weist auf etwas NAHES hin?",
+        options: ["dieser","jener","derselbe","welcher"], correct: 0,
+        explain: "„dieser“ weist auf etwas Nahes hin." },
+      { section:"Demonstrativpronomen – leicht", kind:"mc",
+        text: "Welches Demonstrativpronomen weist auf etwas ENTFERNTES hin?",
+        options: ["jener","dieser","derselbe","welcher"], correct: 0,
+        explain: "„jener“ weist auf etwas Entferntes hin." },
     ]
   },
   "deutsch-wa-demonstrativpronomen-mittel": {
-    title: "Demonstrativpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Demonstrativpronomen – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Demonstrativpronomen – mittel", kind:"text",
         text: "Im Satz „Dieser Stift schreibt nicht mehr.“ – wie heißt das Demonstrativpronomen? (Achte auf die Schreibweise – klein oder groß?)",
@@ -4287,10 +4552,27 @@ const exerciseSets = {
         text: "Im Satz „Derselbe Fehler ist mir letzte Woche auch schon passiert.“ – wie heißt das Demonstrativpronomen?",
         accept: ["Derselbe"], strict: true, placeholder: "Demonstrativpronomen eintippen",
         explain: "„Derselbe“ weist ganz bestimmt auf genau diesen einen Fehler hin." },
+      { section:"Demonstrativpronomen – mittel", kind:"markieren",
+        text: "Kreuze alle Demonstrativpronomen in diesem Satz an:",
+        tokens: ["Dieser","Rucksack","gefällt","mir","besser","als","jener",",","aber","derselbe","in","Blau","wäre","am","besten","."],
+        correctIndices: [0,6,9],
+        explain: "„Dieser“, „jener“ und „derselbe“ weisen jeweils ganz bestimmt auf etwas hin – alle drei sind Demonstrativpronomen." },
+      { section:"Demonstrativpronomen – mittel", kind:"mc",
+        text: "Welches Demonstrativpronomen drückt aus, dass zwei Dinge GLEICH sind?",
+        options: ["derselbe","dieser","jener","welcher"], correct: 0,
+        explain: "„derselbe“ (dieselbe, dasselbe) drückt Gleichheit aus." },
+      { section:"Demonstrativpronomen – mittel", kind:"text",
+        text: "„Dieses Auto hier gefällt mir, jenes dort eher nicht.“ – welches Wort ist das Demonstrativpronomen, das auf etwas Entferntes hinweist?",
+        accept: ["jenes"], strict: true, placeholder: "Demonstrativpronomen eintippen",
+        explain: "„jenes“ weist auf das entferntere Auto hin." },
+      { section:"Demonstrativpronomen – mittel", kind:"text",
+        text: "„Nimm doch diesen Stift, der andere schreibt nicht.“ – welches Wort ist das Demonstrativpronomen?",
+        accept: ["diesen"], strict: true, placeholder: "Demonstrativpronomen eintippen",
+        explain: "„diesen“ weist ganz bestimmt auf den einen Stift hin." },
     ]
   },
   "deutsch-wa-demonstrativpronomen-schwer": {
-    title: "Demonstrativpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Demonstrativpronomen – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Demonstrativpronomen – schwer", kind:"text",
         text: "„Dieser Rucksack ist größer als seiner.“ – welches Wort ist das Demonstrativpronomen?",
@@ -4304,12 +4586,31 @@ const exerciseSets = {
         text: "„Jener Turm in der Ferne ist älter als dieser hier.“ – welches Wort (am Satzanfang) ist das Demonstrativpronomen?",
         accept: ["Jener"], strict: true, placeholder: "Demonstrativpronomen eintippen",
         explain: "„Jener“ weist auf etwas Entferntes hin – ein Demonstrativpronomen." },
+      { section:"Demonstrativpronomen – schwer", kind:"mc",
+        text: "Demonstrativpronomen oder Artikel? „Der Rucksack hier ist meiner.“ im Vergleich zu „Dieser Rucksack hier ist meiner.“",
+        options: ["„Dieser“ weist betont/bestimmt hin (Demonstrativpronomen), „Der“ ist der neutrale Artikel","beide sind Artikel","beide sind Demonstrativpronomen","kein Unterschied"], correct: 0,
+        explain: "„Dieser“ weist ganz gezielt hin, „Der“ ist hier der gewöhnliche, neutrale Artikel." },
+      { section:"Demonstrativpronomen – schwer", kind:"mc",
+        text: "„Mir ist dasselbe Missgeschick passiert wie dir.“ – welches Wort ist das Demonstrativpronomen?",
+        options: ["dasselbe","Missgeschick","passiert","dir"], correct: 0,
+        explain: "„dasselbe“ drückt aus, dass es genau das gleiche Missgeschick ist – ein Demonstrativpronomen." },
+      { section:"Demonstrativpronomen – schwer", kind:"mc",
+        text: "„Jene Wanderung letzten Sommer war anstrengend.“ – welches Wort ist das Demonstrativpronomen?",
+        options: ["Jene","Wanderung","letzten","anstrengend"], correct: 0,
+        explain: "„Jene“ weist ganz bestimmt auf eine bestimmte (vergangene) Wanderung hin." },
+      { section:"Demonstrativpronomen – schwer", kind:"mc",
+        text: "„Die Lösung dieses Rätsels ist einfacher als jene vom letzten Test.“ – welches Wort ist das Demonstrativpronomen direkt vor „Rätsels“?",
+        options: ["Die","dieses","einfacher","jene"], correct: 1,
+        explain: "„dieses“ steht direkt vor „Rätsels“ und weist bestimmt darauf hin – ein Demonstrativpronomen." },
     ]
   },
 
   /* --- ADVERB --- */
+  /* Adverb: 20 Fragen gesamt (Ausbau 4.10.2026). Direktes Gegenstück zu den Adjektiv-Übungen: hier
+     wird aus der Adverb-Perspektive nach dem unveränderten Wort gefragt (statt nach dem deklinierten
+     Adjektiv), bei gleichem Grundprinzip (exakte Strings bleiben unterscheidbar, keine Mehrdeutigkeit). */
   "deutsch-wa-adverb-leicht": {
-    title: "Adverb – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adverb – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Adverb – leicht", kind:"mc",
         text: "„Die Kinder spielen draußen.“ – welches Wort ist ein Adverb?",
@@ -4323,10 +4624,22 @@ const exerciseSets = {
         text: "„Wir kommen gleich nach.“ – welches Wort ist ein Adverb?",
         options: ["Wir","kommen","gleich","nach"], correct: 2,
         explain: "„gleich“ gibt die Zeit der Handlung an – ein Adverb. (Achtung: „nach“ ist hier Teil des trennbaren Verbs „nachkommen“.)" },
+      { section:"Adverb – leicht", kind:"mc",
+        text: "Welche Art von Adverb ist „heute“?",
+        options: ["Temporaladverb (Zeit)","Lokaladverb (Ort)","Modaladverb (Art und Weise)","Kausaladverb (Grund)"], correct: 0,
+        explain: "„heute“ gibt einen Zeitpunkt an – ein Temporaladverb." },
+      { section:"Adverb – leicht", kind:"mc",
+        text: "Welche Art von Adverb ist „dort“?",
+        options: ["Lokaladverb (Ort)","Temporaladverb (Zeit)","Modaladverb (Art und Weise)","Kausaladverb (Grund)"], correct: 0,
+        explain: "„dort“ gibt einen Ort an – ein Lokaladverb." },
+      { section:"Adverb – leicht", kind:"mc",
+        text: "„Der Zug kommt pünktlich an.“ – welches Wort ist ein Adverb?",
+        options: ["Zug","kommt","pünktlich","an"], correct: 2,
+        explain: "„pünktlich“ beschreibt, WIE der Zug ankommt – ein Adverb." },
     ]
   },
   "deutsch-wa-adverb-mittel": {
-    title: "Adverb – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adverb – Übung 2 (mittel)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 8 Minuten",
     questions: [
       { section:"Adverb – mittel", kind:"text",
         text: "Im Satz „Er antwortet leise.“ – wie heißt das Adverb?",
@@ -4340,10 +4653,27 @@ const exerciseSets = {
         text: "Im Satz „Sie wohnt dort schon seit Jahren.“ – wie heißt das Adverb, das den Ort angibt?",
         accept: ["dort"], strict: true, placeholder: "Adverb eintippen",
         explain: "„dort“ gibt den Ort an – ein Adverb." },
+      { section:"Adverb – mittel", kind:"mc",
+        text: "Welche Art von Adverb ist „gern“?",
+        options: ["Modaladverb (Art und Weise)","Lokaladverb (Ort)","Temporaladverb (Zeit)","Kausaladverb (Grund)"], correct: 0,
+        explain: "„gern“ beschreibt, WIE etwas gemacht wird – ein Modaladverb." },
+      { section:"Adverb – mittel", kind:"mc",
+        text: "Welche Art von Adverb ist „deshalb“?",
+        options: ["Kausaladverb (Grund)","Lokaladverb (Ort)","Temporaladverb (Zeit)","Modaladverb (Art und Weise)"], correct: 0,
+        explain: "„deshalb“ gibt einen Grund an – ein Kausaladverb." },
+      { section:"Adverb – mittel", kind:"markieren",
+        text: "Kreuze alle Adverbien in diesem Satz an:",
+        tokens: ["Heute","regnet","es","stark",",","deshalb","bleiben","wir","drinnen","."],
+        correctIndices: [0,3,5,8],
+        explain: "„Heute“ (Zeit), „stark“ (Art und Weise), „deshalb“ (Grund) und „drinnen“ (Ort) sind alle unveränderliche Adverbien." },
+      { section:"Adverb – mittel", kind:"text",
+        text: "„Morgen fahren wir in den Urlaub.“ – wie heißt das Temporaladverb?",
+        accept: ["Morgen"], strict: true, placeholder: "Adverb eintippen",
+        explain: "„Morgen“ gibt den Zeitpunkt an – ein Temporaladverb." },
     ]
   },
   "deutsch-wa-adverb-schwer": {
-    title: "Adverb – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 5 Minuten",
+    title: "Adverb – Übung 3 (schwer)", subject: "deutsch", chapterSlug: "wortarten", duration: "ca. 9 Minuten",
     questions: [
       { section:"Adverb – schwer", kind:"text",
         text: "„Die Gäste kommen schnell zur Party, weil sie pünktlich sein wollen.“ – welches Wort ist hier das Adverb (es beschreibt eine Handlung, nicht ein Nomen)?",
@@ -4357,6 +4687,22 @@ const exerciseSets = {
         text: "„Es regnet stark, trotzdem gehen wir spazieren.“ – welches Wort ist ein Adverb (keine Konjunktion)?",
         accept: ["trotzdem"], strict: true, placeholder: "Adverb eintippen",
         explain: "„trotzdem“ ist ein Adverb (kein Bindewort/Konjunktion wie „aber“) – es steht für sich und verändert die Satzstellung (trotzdem gehen wir)." },
+      { section:"Adverb – schwer", kind:"text",
+        text: "„Die schnelle Katze läuft schnell durch den Garten.“ – welches Wort ist hier das ADVERB (nicht das Adjektiv)?",
+        accept: ["schnell"], strict: true, placeholder: "Adverb eintippen",
+        explain: "„schnell“ (ohne Endung) beschreibt hier das Verb „läuft“ – ein Adverb. „schnelle“ ist dagegen dekliniert und beschreibt die Katze – ein Adjektiv." },
+      { section:"Adverb – schwer", kind:"text",
+        text: "„Der laute Presslufthammer dröhnt laut durch die Straße.“ – welches Wort ist hier das ADVERB (nicht das Adjektiv)?",
+        accept: ["laut"], strict: true, placeholder: "Adverb eintippen",
+        explain: "„laut“ (ohne Endung) beschreibt hier das Verb „dröhnt“ – ein Adverb. „laute“ ist dekliniert und beschreibt den Presslufthammer – ein Adjektiv." },
+      { section:"Adverb – schwer", kind:"mc",
+        text: "Adverb oder Adjektiv? „Sie singt schön.“",
+        options: ["Adverb, weil es ein Verb beschreibt und nicht dekliniert ist","Adjektiv, weil es ein Nomen beschreibt","Artikel","Nomen"], correct: 0,
+        explain: "„schön“ beschreibt hier das Verb „singt“ und bleibt unverändert – ein Adverb." },
+      { section:"Adverb – schwer", kind:"mc",
+        text: "Warum ist „schnell“ in „Er läuft schnell.“ ein Adverb und kein Adjektiv?",
+        options: ["Weil es unverändert bleibt und das Verb beschreibt (keine Deklination)","Weil es großgeschrieben ist","Weil es vor einem Nomen steht","Weil es steigerbar ist"], correct: 0,
+        explain: "Ein Adjektiv vor einem Nomen würde dekliniert (der schnelle Läufer) – ein Adverb bleibt dagegen immer in der Grundform." },
     ]
   },
 
@@ -4376,6 +4722,18 @@ const exerciseSets = {
         text: "„Das Geschenk liegt neben der Tür.“ – welches Wort ist die Präposition?",
         options: ["Das","liegt","neben","Tür"], correct: 2,
         explain: "„neben“ verlangt hier den Dativ („der Tür“) – eine Präposition." },
+      { section:"Präposition – leicht", kind:"mc",
+        text: "Welche Präposition verlangt den Dativ?",
+        options: ["mit","für","durch","ohne"], correct: 0,
+        explain: "„mit“ ist eine Dativ-Präposition (mit dem Auto)." },
+      { section:"Präposition – leicht", kind:"mc",
+        text: "Welche Präposition verlangt den Akkusativ?",
+        options: ["bei","nach","für","von"], correct: 2,
+        explain: "„für“ ist eine Akkusativ-Präposition (für den Hund)." },
+      { section:"Präposition – leicht", kind:"mc",
+        text: "„Der Ball rollt unter den Tisch.“ – warum steht hier der Akkusativ nach „unter“?",
+        options: ["weil „unter“ hier eine Richtung/Bewegung (wohin?) beschreibt","weil „unter“ immer den Akkusativ verlangt","weil „Tisch“ ein Nomen ist","weil der Satz eine Frage ist"], correct: 0,
+        explain: "„unter“ gehört zu den Wechselpräpositionen: bei Richtung (wohin?) steht der Akkusativ, bei Ort (wo?) der Dativ." },
     ]
   },
   "deutsch-wa-praeposition-mittel": {
@@ -4393,6 +4751,23 @@ const exerciseSets = {
         text: "Im Satz „Sie legt das Buch in die Schublade.“ – wie heißt die Präposition?",
         accept: ["in"], strict: true, placeholder: "Präposition eintippen",
         explain: "„in“ verlangt hier den Akkusativ (die Schublade) – eine Präposition." },
+      { section:"Präposition – mittel", kind:"markieren",
+        text: "Kreuze alle Präpositionen in diesem Satz an:",
+        tokens: ["Nach","der","Schule","gehen","wir","mit","Lena","zum","Schwimmbad","."],
+        correctIndices: [0,5,7],
+        explain: "„Nach“, „mit“ und „zum“ (= zu + dem) sind Präpositionen." },
+      { section:"Präposition – mittel", kind:"text",
+        text: "Im Satz „Er wartet seit einer Stunde auf den Bus.“ – wie heißt die erste Präposition?",
+        accept: ["seit"], strict: true, placeholder: "Präposition eintippen",
+        explain: "„seit“ verlangt den Dativ (einer Stunde) – eine Präposition." },
+      { section:"Präposition – mittel", kind:"text",
+        text: "Im Satz „Sie geht durch den Park nach Hause.“ – welche Präposition verlangt hier den Akkusativ?",
+        accept: ["durch"], strict: true, placeholder: "Präposition eintippen",
+        explain: "„durch“ ist immer eine Akkusativ-Präposition (durch den Park)." },
+      { section:"Präposition – mittel", kind:"mc",
+        text: "Was bedeutet „Rektion“ bei einer Präposition?",
+        options: ["Sie bestimmt, welchen Fall (Kasus) das folgende Nomen/Pronomen bekommt","Sie bestimmt die Zeitform des Verbs","Sie bestimmt, ob ein Wort groß- oder kleingeschrieben wird","Sie bestimmt die Mehrzahl des Nomens"], correct: 0,
+        explain: "„Rektion“ nennt man die Eigenschaft von Präpositionen, einen bestimmten Fall beim folgenden Wort zu verlangen – z.B. verlangt „mit“ immer den Dativ." },
     ]
   },
   "deutsch-wa-praeposition-schwer": {
@@ -4410,6 +4785,23 @@ const exerciseSets = {
         text: "„Wegen des schlechten Wetters fällt der Sportunterricht aus.“ – wie heißt die Präposition am Satzanfang?",
         accept: ["Wegen"], strict: true, placeholder: "Präposition eintippen",
         explain: "„Wegen“ verlangt hier den Genitiv (des schlechten Wetters) – eine Präposition." },
+      { section:"Präposition – schwer", kind:"text",
+        text: "„Die Katze springt auf den Schrank.“ – welchen Fall verlangt „auf“ hier?",
+        accept: ["Akkusativ"], strict: true, placeholder: "Fall eintippen",
+        explain: "Weil eine Richtung (wohin?) gemeint ist, verlangt die Wechselpräposition „auf“ hier den Akkusativ. Bei einem Ort (wo? – auf dem Schrank) wäre es der Dativ." },
+      { section:"Präposition – schwer", kind:"text",
+        text: "„Die Katze sitzt auf dem Schrank.“ – welchen Fall verlangt „auf“ hier?",
+        accept: ["Dativ"], strict: true, placeholder: "Fall eintippen",
+        explain: "Weil hier ein Ort (wo?) gemeint ist, verlangt „auf“ den Dativ. Bei einer Richtung (wohin? – auf den Schrank) wäre es der Akkusativ." },
+      { section:"Präposition – schwer", kind:"mc",
+        text: "Wie nennt man Präpositionen wie „in, an, auf, unter, über, vor, hinter, neben, zwischen“, die je nach Bedeutung (Ort oder Richtung) den Dativ ODER den Akkusativ verlangen?",
+        options: ["Wechselpräpositionen","Reflexivpräpositionen","Konjunktionalpräpositionen","Modalpräpositionen"], correct: 0,
+        explain: "Wechselpräpositionen können je nach Fragewort (wo? → Dativ, wohin? → Akkusativ) zwei Fälle verlangen." },
+      { section:"Präposition – schwer", kind:"markieren",
+        text: "Kreuze alle Präpositionen in diesem Satz an:",
+        tokens: ["Trotz","des","Regens","liefen","wir","durch","den","Wald","bis","zur","Hütte","."],
+        correctIndices: [0,5,8,9],
+        explain: "„Trotz“, „durch“, „bis“ und „zur“ (= zu + der) sind Präpositionen." },
     ]
   },
 
@@ -4429,6 +4821,18 @@ const exerciseSets = {
         text: "„Wir gehen schwimmen, obwohl es kalt ist.“ – welches Wort ist die Konjunktion?",
         options: ["Wir","gehen","obwohl","kalt"], correct: 2,
         explain: "„obwohl“ verbindet die beiden Satzteile – eine Konjunktion." },
+      { section:"Konjunktion – leicht", kind:"mc",
+        text: "Welches Beispiel ist KEINE Konjunktion?",
+        options: ["und","oder","unter","aber"], correct: 2,
+        explain: "„unter“ ist eine Präposition, keine Konjunktion." },
+      { section:"Konjunktion – leicht", kind:"mc",
+        text: "„Er mag Fußball, aber sie mag Basketball.“ – welche Konjunktion verbindet hier zwei gleichrangige Sätze (nebenordnend)?",
+        options: ["aber","dass","weil","obwohl"], correct: 0,
+        explain: "„aber“ ist eine nebenordnende Konjunktion – sie verbindet zwei gleichrangige Hauptsätze." },
+      { section:"Konjunktion – leicht", kind:"mc",
+        text: "„Ich glaube, dass er recht hat.“ – welche Konjunktion leitet hier einen Nebensatz ein (unterordnend)?",
+        options: ["dass","und","oder","sondern"], correct: 0,
+        explain: "„dass“ ist eine unterordnende Konjunktion – sie leitet einen Nebensatz ein." },
     ]
   },
   "deutsch-wa-konjunktion-mittel": {
@@ -4446,6 +4850,23 @@ const exerciseSets = {
         text: "Im Satz „Er ist müde, aber er lernt trotzdem weiter.“ – wie heißt die Konjunktion?",
         accept: ["aber"], strict: true, placeholder: "Konjunktion eintippen",
         explain: "„aber“ verbindet die beiden Satzteile – eine Konjunktion." },
+      { section:"Konjunktion – mittel", kind:"markieren",
+        text: "Kreuze alle Konjunktionen in diesem Satz an:",
+        tokens: ["Wir","bleiben","zu","Hause",",","weil","es","regnet",",","aber","morgen","gehen","wir","wieder","raus","."],
+        correctIndices: [5,9],
+        explain: "„weil“ und „aber“ verbinden hier Satzteile bzw. Sätze – beide sind Konjunktionen." },
+      { section:"Konjunktion – mittel", kind:"mc",
+        text: "Wie nennt man Konjunktionen wie „und, oder, aber“, die zwei gleichrangige Sätze oder Satzteile verbinden?",
+        options: ["nebenordnende Konjunktionen","unterordnende Konjunktionen","Wechselkonjunktionen","Reflexivkonjunktionen"], correct: 0,
+        explain: "Nebenordnende Konjunktionen verbinden Gleichrangiges, ohne die Wortstellung zu verändern." },
+      { section:"Konjunktion – mittel", kind:"text",
+        text: "Im Satz „Sie trinkt weder Kaffee noch Tee.“ – wie heißt die erste Konjunktion?",
+        accept: ["weder"], strict: true, placeholder: "Konjunktion eintippen",
+        explain: "„weder … noch“ ist eine zweiteilige Konjunktion – „weder“ ist ihr erster Teil." },
+      { section:"Konjunktion – mittel", kind:"text",
+        text: "Im Satz „Nicht nur Mathe, sondern auch Deutsch macht ihm Spaß.“ – wie heißt die Konjunktion nach dem Komma?",
+        accept: ["sondern"], strict: true, placeholder: "Konjunktion eintippen",
+        explain: "„sondern“ ist hier Teil von „nicht nur … sondern auch“ – eine nebenordnende Konjunktion." },
     ]
   },
   "deutsch-wa-konjunktion-schwer": {
@@ -4463,6 +4884,23 @@ const exerciseSets = {
         text: "„Wir bleiben zu Hause, denn es regnet in Strömen.“ – wie heißt die Konjunktion?",
         accept: ["denn"], strict: true, placeholder: "Konjunktion eintippen",
         explain: "„denn“ verbindet die beiden Sätze und begründet (wie „weil“) – eine Konjunktion." },
+      { section:"Konjunktion – schwer", kind:"mc",
+        text: "Wie nennt man Konjunktionen wie „weil, dass, obwohl, wenn“, die einen Nebensatz einleiten (bei dem das Verb ans Ende rückt)?",
+        options: ["unterordnende Konjunktionen","nebenordnende Konjunktionen","Modalkonjunktionen","Personalkonjunktionen"], correct: 0,
+        explain: "Unterordnende Konjunktionen leiten einen Nebensatz ein – das Verb steht dann am Satzende." },
+      { section:"Konjunktion – schwer", kind:"mc",
+        text: "„Es regnet, deshalb bleiben wir zu Hause.“ – welche Wortart ist „deshalb“?",
+        options: ["Adverb (nicht Konjunktion), weil es wie ein Satzglied auf Position 1 stehen kann","Konjunktion, weil es einen Grund ausdrückt","Präposition, weil es vor einem Nomen steht","Interjektion, weil es ein Ausruf ist"], correct: 0,
+        explain: "„deshalb“ ist ein Adverb – es kann wie ein Satzglied auf Position 1 stehen, wodurch das Subjekt „wir“ hinter das Verb rückt. Eine echte Konjunktion wie „weil“ würde stattdessen einen Nebensatz mit Verb am Ende einleiten." },
+      { section:"Konjunktion – schwer", kind:"text",
+        text: "„Ich weiß nicht, ob er kommt.“ – wie heißt die Konjunktion?",
+        accept: ["ob"], strict: true, placeholder: "Konjunktion eintippen",
+        explain: "„ob“ leitet einen Nebensatz ein (Verb am Ende: „ob er kommt“) – eine unterordnende Konjunktion." },
+      { section:"Konjunktion – schwer", kind:"markieren",
+        text: "Kreuze alle Konjunktionen in diesem Satz an:",
+        tokens: ["Obwohl","es","regnet",",","gehen","wir","spazieren",",","weil","wir","uns","bewegen","wollen","."],
+        correctIndices: [0,8],
+        explain: "„Obwohl“ und „weil“ leiten je einen Nebensatz ein – beide sind (unterordnende) Konjunktionen." },
     ]
   },
 
@@ -4482,6 +4920,18 @@ const exerciseSets = {
         text: "„Er hat zwei Geschwister und einen Hund.“ – welches Wort ist ein Numerale?",
         options: ["Er","hat","zwei","Hund"], correct: 2,
         explain: "„zwei“ gibt eine genaue Anzahl an – ein Numerale." },
+      { section:"Numerale – leicht", kind:"mc",
+        text: "Wie nennt man Zahlwörter wie „eins, zwei, drei“, die eine genaue Anzahl angeben?",
+        options: ["Kardinalzahlen","Ordinalzahlen","Bruchzahlen","Wiederholungszahlen"], correct: 0,
+        explain: "Kardinalzahlen geben eine genaue Anzahl an." },
+      { section:"Numerale – leicht", kind:"mc",
+        text: "Wie nennt man Zahlwörter wie „erste, zweite, dritte“, die eine Reihenfolge angeben?",
+        options: ["Ordinalzahlen","Kardinalzahlen","Mengenzahlen","Vervielfältigungszahlen"], correct: 0,
+        explain: "Ordinalzahlen (Ordnungszahlen) geben eine Reihenfolge an." },
+      { section:"Numerale – leicht", kind:"mc",
+        text: "„Sie isst die Hälfte des Kuchens.“ – welches Wort ist hier ein Numerale?",
+        options: ["Sie","isst","Hälfte","Kuchens"], correct: 2,
+        explain: "„Hälfte“ ist eine Bruchzahl – ein Numerale." },
     ]
   },
   "deutsch-wa-numerale-mittel": {
@@ -4499,6 +4949,23 @@ const exerciseSets = {
         text: "Im Satz „Beide Mannschaften kämpfen hart um den Sieg.“ – wie heißt das Numerale?",
         accept: ["Beide"], strict: true, placeholder: "Numerale eintippen",
         explain: "„Beide“ gibt eine genaue Anzahl (zwei) an – ein Numerale." },
+      { section:"Numerale – mittel", kind:"markieren",
+        text: "Kreuze alle Numerale in diesem Satz an:",
+        tokens: ["Drei","Kinder","teilen","sich","zwei","Pizzen","und","bekommen","jeweils","die","Hälfte","."],
+        correctIndices: [0,4,10],
+        explain: "„Drei“, „zwei“ und „Hälfte“ geben jeweils eine Anzahl an – alle drei sind Numerale." },
+      { section:"Numerale – mittel", kind:"text",
+        text: "Im Satz „Das dritte Tor fällt erst in der letzten Minute.“ – wie heißt das Numerale?",
+        accept: ["dritte"], strict: true, placeholder: "Numerale eintippen",
+        explain: "„dritte“ gibt eine Reihenfolge an – ein Numerale (Ordinalzahl)." },
+      { section:"Numerale – mittel", kind:"text",
+        text: "Im Satz „Wir treffen uns zum zweiten Mal in dieser Woche.“ – wie heißt das Numerale?",
+        accept: ["zweiten"], strict: true, placeholder: "Numerale eintippen",
+        explain: "„zweiten“ gibt eine Reihenfolge an – ein Numerale." },
+      { section:"Numerale – mittel", kind:"mc",
+        text: "Welches Numerale ist eine Kardinalzahl (genaue Anzahl), kein Ordinale?",
+        options: ["vier","vierte","viertel","viertens"], correct: 0,
+        explain: "„vier“ gibt eine genaue Anzahl an – eine Kardinalzahl. Die anderen sind Ordinal- bzw. Bruchzahl-Formen." },
     ]
   },
   "deutsch-wa-numerale-schwer": {
@@ -4516,6 +4983,23 @@ const exerciseSets = {
         text: "„Im zwanzigsten Jahrhundert gab es viele Erfindungen.“ – wie heißt das Numerale?",
         accept: ["zwanzigsten"], strict: true, placeholder: "Numerale eintippen",
         explain: "„zwanzigsten“ gibt eine Reihenfolge an (das zwanzigste Jahrhundert) – ein Numerale." },
+      { section:"Numerale – schwer", kind:"mc",
+        text: "„Er bekommt den dritten Preis, weil sein Projekt originell war.“ – warum ist „dritten“ hier ein Numerale und kein normales Adjektiv?",
+        options: ["weil es eine Reihenfolge/Position angibt, keine Eigenschaft","weil es dekliniert wird","weil es großgeschrieben werden könnte","weil es nach einem Artikel steht"], correct: 0,
+        explain: "„dritten“ gibt eine Reihenfolge an (Ordinalzahl) – das ist das typische Merkmal eines Numerale, nicht einer beschreibenden Eigenschaft." },
+      { section:"Numerale – schwer", kind:"text",
+        text: "„Ein Viertel der Klasse war krank.“ – wie heißt das Numerale?",
+        accept: ["Viertel"], strict: true, placeholder: "Numerale eintippen",
+        explain: "„Viertel“ ist eine Bruchzahl – ein Numerale." },
+      { section:"Numerale – schwer", kind:"markieren",
+        text: "Kreuze alle Numerale in diesem Satz an (Vorsicht, ein Artikel ist auch dabei!):",
+        tokens: ["Zwei","Mannschaften","kämpften","hart",",","aber","nur","die","ersten","drei","Läufer","bekamen","einen","Preis","."],
+        correctIndices: [0,8,9],
+        explain: "„Zwei“, „ersten“ und „drei“ geben Anzahl bzw. Reihenfolge an – Numerale. „einen“ ist hier der unbestimmte Artikel (nicht gezählt, sondern „a prize“), kein Numerale." },
+      { section:"Numerale – schwer", kind:"mc",
+        text: "Was unterscheidet eine Kardinalzahl von einer Ordinalzahl?",
+        options: ["Kardinalzahl = Anzahl (eins, zwei, drei), Ordinalzahl = Reihenfolge (erste, zweite, dritte)","Kardinalzahl = Reihenfolge, Ordinalzahl = Anzahl","Kardinalzahl wird immer großgeschrieben, Ordinalzahl klein","Es gibt keinen Unterschied"], correct: 0,
+        explain: "Kardinalzahlen zählen (Anzahl), Ordinalzahlen ordnen (Reihenfolge)." },
     ]
   },
 
@@ -4535,6 +5019,18 @@ const exerciseSets = {
         text: "„Hurra, wir haben gewonnen!“ – welches Wort ist die Interjektion?",
         options: ["Hurra","wir","haben","gewonnen"], correct: 0,
         explain: "„Hurra“ drückt spontane Freude aus – eine Interjektion." },
+      { section:"Interjektion – leicht", kind:"mc",
+        text: "Welches Merkmal trifft NICHT auf Interjektionen zu?",
+        options: ["Sie lassen sich steigern wie Adjektive","Sie drücken oft ein spontanes Gefühl aus","Sie stehen oft allein oder mit Ausrufezeichen","Sie verändern ihre Form nicht (unveränderlich)"], correct: 0,
+        explain: "Interjektionen sind unveränderlich und nicht steigerbar – anders als Adjektive." },
+      { section:"Interjektion – leicht", kind:"mc",
+        text: "„Igitt, das schmeckt aber eklig!“ – welches Wort ist die Interjektion?",
+        options: ["Igitt","das","schmeckt","eklig"], correct: 0,
+        explain: "„Igitt“ drückt spontanen Ekel aus – eine Interjektion." },
+      { section:"Interjektion – leicht", kind:"mc",
+        text: "„Au, das tut weh!“ – welches Wort ist die Interjektion?",
+        options: ["Au","das","tut","weh"], correct: 0,
+        explain: "„Au“ drückt spontanen Schmerz aus – eine Interjektion." },
     ]
   },
   "deutsch-wa-interjektion-mittel": {
@@ -4552,6 +5048,23 @@ const exerciseSets = {
         text: "Im Satz „Pssst, die Vorstellung beginnt gleich!“ – wie heißt die Interjektion?",
         accept: ["Pssst"], strict: true, placeholder: "Interjektion eintippen",
         explain: "„Pssst“ fordert spontan zur Ruhe auf – eine Interjektion." },
+      { section:"Interjektion – mittel", kind:"markieren",
+        text: "Kreuze alle Interjektionen in diesem Satz an:",
+        tokens: ["Oh",",","schau","mal",",","pssst",",","die","Katze","schläft","!"],
+        correctIndices: [0,5],
+        explain: "„Oh“ und „pssst“ drücken spontane Reaktionen aus – beide sind Interjektionen." },
+      { section:"Interjektion – mittel", kind:"text",
+        text: "Im Satz „Hoppla, fast wäre ich gestolpert!“ – wie heißt die Interjektion?",
+        accept: ["Hoppla"], strict: true, placeholder: "Interjektion eintippen",
+        explain: "„Hoppla“ drückt einen spontanen Schreck aus – eine Interjektion." },
+      { section:"Interjektion – mittel", kind:"text",
+        text: "Im Satz „Na, wie war dein Tag?“ – wie heißt die Interjektion?",
+        accept: ["Na"], strict: true, placeholder: "Interjektion eintippen",
+        explain: "„Na“ leitet hier spontan eine Frage ein – eine Interjektion." },
+      { section:"Interjektion – mittel", kind:"mc",
+        text: "Wozu dienen Interjektionen hauptsächlich?",
+        options: ["sie drücken Gefühle, Empfindungen oder spontane Reaktionen aus","sie verbinden zwei Sätze miteinander","sie geben den Fall des folgenden Nomens an","sie geben eine Anzahl an"], correct: 0,
+        explain: "Interjektionen sind spontane Ausrufe für Gefühle und Empfindungen." },
     ]
   },
   "deutsch-wa-interjektion-schwer": {
@@ -4569,6 +5082,23 @@ const exerciseSets = {
         text: "„Mann, ist das aber kalt heute!“ – welches Wort wird hier nicht als Nomen, sondern als spontaner Ausruf gebraucht (also als Interjektion)?",
         accept: ["Mann"], strict: true, placeholder: "Interjektion eintippen",
         explain: "„Mann“ wird hier nicht als Nomen (ein Mann), sondern als spontaner Ausruf des Erstaunens gebraucht – eine Interjektion." },
+      { section:"Interjektion – schwer", kind:"mc",
+        text: "„Er sagte nur ‚ach‘ und ging weiter.“ – warum ist „ach“ hier trotzdem eine Interjektion, obwohl es in einem ganzen Satz steht?",
+        options: ["weil es weiterhin als eigenständiger, unveränderlicher Gefühlsausdruck steht, auch wenn es zitiert wird","weil es großgeschrieben ist","weil es nach einem Komma steht","weil es ein Verb begleitet"], correct: 0,
+        explain: "Auch als Zitat in einem Satz bleibt „ach“ ein eigenständiger, unveränderlicher Gefühlsausdruck – eine Interjektion." },
+      { section:"Interjektion – schwer", kind:"text",
+        text: "„Beim Public Viewing hörte man immer wieder ein lautes ‚Olé‘ aus der Menge.“ – wie heißt die Interjektion?",
+        accept: ["Olé"], strict: true, placeholder: "Interjektion eintippen",
+        explain: "„Olé“ ist ein spontaner Ausruf – eine Interjektion, auch wenn sie hier wie ein Nomen in Anführungszeichen steht." },
+      { section:"Interjektion – schwer", kind:"mc",
+        text: "„Na gut, dann machen wir es so.“ – welche Wortart ist „Na“ hier am ehesten?",
+        options: ["Interjektion, weil es eine spontane (zögernde) Reaktion einleitet","Adverb, weil es eine Zeit angibt","Konjunktion, weil es zwei Sätze verbindet","Nomen, weil es großgeschrieben ist"], correct: 0,
+        explain: "„Na“ leitet spontan eine zögernde Zustimmung ein – eine Interjektion." },
+      { section:"Interjektion – schwer", kind:"markieren",
+        text: "Kreuze alle Interjektionen in diesem Satz an (Vorsicht, ein Nomen klingt ähnlich wie ein Ausruf!):",
+        tokens: ["Hui",",","der","Mann","rief","laut","Hurra",",","als","das","Boot","losfuhr","."],
+        correctIndices: [0,6],
+        explain: "„Hui“ und „Hurra“ sind spontane Ausrufe – Interjektionen. „Mann“ ist hier ein echtes Nomen (eine Person), keine Interjektion." },
     ]
   },
 
@@ -5440,6 +5970,20 @@ const lektionen = {
     satz: "Der <b>Hund</b> bellt laut.",
     erklaerung: "„Hund“ ist das Nomen – großgeschrieben, mit Artikel „der“ davor.",
     tipp: "Steht ein Artikel davor und ist es großgeschrieben? Dann ist es meist ein Nomen.",
+    color: "#2C5FA8", colorBg: "#E3EBFA",
+    extraBlocks: [
+      { type: "row", title: "Die vier Fälle (Kasus)",
+        intro: "Nomen stehen immer in einem von vier Fällen. Du erkennst sie an der Frage:",
+        items: [
+          { label: "Nominativ", value: "der Hund", note: "wer oder was? – der Grundfall" },
+          { label: "Genitiv", value: "des Hundes", note: "wessen? – zeigt Besitz/Zugehörigkeit" },
+          { label: "Dativ", value: "dem Hund", note: "wem? – meist bei Dativ-Präpositionen/-Verben" },
+          { label: "Akkusativ", value: "den Hund", note: "wen oder was? – meist das direkte Objekt" },
+        ] },
+      { type: "text", title: "Was bedeutet „Genus“?",
+        text: "Genus = das grammatische Geschlecht eines Nomens (männlich, weiblich oder sächlich).",
+        beispielsatz: "<b>der</b> Tisch (maskulin) · <b>die</b> Blume (feminin) · <b>das</b> Kind (neutrum)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-nomen-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5450,6 +5994,20 @@ const lektionen = {
     satz: "Die Kinder <b>spielen</b> im Garten Fußball.",
     erklaerung: "„spielen“ ist das Verb – man kann es konjugieren: ich spiele, du spielst …",
     tipp: "Kannst du das Wort konjugieren (ich/du/er + Endung)? Dann ist es ein Verb.",
+    color: "#1F7A52", colorBg: "#DFF3E9",
+    extraBlocks: [
+      { type: "row", title: "Die Zeitformen (Tempus)",
+        intro: "Verben bilden verschiedene Zeitformen:",
+        items: [
+          { label: "Präsens", value: "ich spiele", note: "Gegenwart" },
+          { label: "Präteritum", value: "ich spielte", note: "einfache Vergangenheit (meist im Erzähltext)" },
+          { label: "Perfekt", value: "ich habe gespielt", note: "vollendete Gegenwart (meist im Gespräch)" },
+          { label: "Futur", value: "ich werde spielen", note: "Zukunft" },
+        ] },
+      { type: "text", title: "Was bedeutet „konjugieren“?",
+        text: "Konjugieren = die Verbform an Person und Zahl anpassen (ich spiele, du spielst, er spielt …).",
+        beispielsatz: "ich spiele · du spielst · er/sie/es spielt · wir spielen" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-verb-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5465,19 +6023,23 @@ const lektionen = {
        viewLektion()) sowie zwei zusätzliche Erklärblöcke, die er ausdrücklich ergänzt haben wollte:
        die drei Steigerungsstufen mit Fachbegriff, und eine Erklärung von "deklinieren" mit Beispiel. */
     color: "#9A3B7A", colorBg: "#F6E3EF",
-    steigerung: {
-      intro: "Adjektive lassen sich in drei Stufen steigern. Jede Stufe hat einen eigenen Fachbegriff:",
-      stufen: [
-        { name: "Positiv", beispiel: "schnell", erklaerung: "die Grundform – ohne Vergleich" },
-        { name: "Komparativ", beispiel: "schneller", erklaerung: "die gesteigerte Form – vergleicht zwei Dinge (mit „als“)" },
-        { name: "Superlativ", beispiel: "am schnellsten", erklaerung: "die höchste Steigerungsform – der Spitzenwert (mit „am … -sten“)" },
-      ]
-    },
-    deklinieren: {
-      erklaerung: "„Deklinieren“ bedeutet: Die Endung des Adjektivs passt sich an das Nomen an – je nachdem, ob es männlich, weiblich oder sächlich ist, in der Einzahl oder Mehrzahl steht und in welchem Fall es steht.",
-      beispielsatz: "ein <b>schneller</b> Roller · eine <b>schnelle</b> Straßenbahn · ein <b>schnelles</b> Fahrrad · viele <b>schnelle</b> Fahrräder",
-      beispielerklaerung: "Immer dasselbe Adjektiv „schnell“ – aber mit unterschiedlicher Endung, je nach Nomen."
-    },
+    /* Generisches Zusatzblock-Format (ersetzt die früheren, Adjektiv-spezifischen Felder l.steigerung/
+       l.deklinieren - siehe renderLekBlockPage()/renderLekBlockPopup()): jede Lektion kann 0-2
+       l.extraBlocks haben, je entweder type:"row" (Kärtchen-Reihe wie die Steigerungsstufen) oder
+       type:"text" (Erklärung + Beispielsatz wie "deklinieren"). Wird sowohl auf der Lektionsseite
+       selbst als auch im Regelheft-Popup gerendert (gleiche Daten, zwei Render-Stile). */
+    extraBlocks: [
+      { type: "row", title: "Die drei Steigerungsstufen",
+        intro: "Adjektive lassen sich in drei Stufen steigern. Jede Stufe hat einen eigenen Fachbegriff:",
+        items: [
+          { label: "Positiv", value: "schnell", note: "die Grundform – ohne Vergleich" },
+          { label: "Komparativ", value: "schneller", note: "die gesteigerte Form – vergleicht zwei Dinge (mit „als“)" },
+          { label: "Superlativ", value: "am schnellsten", note: "die höchste Steigerungsform – der Spitzenwert (mit „am … -sten“)" },
+        ] },
+      { type: "text", title: "Was bedeutet „deklinieren“?",
+        text: "Deklinieren = die Endung passt sich an das Nomen an (Geschlecht, Zahl, Fall).",
+        beispielsatz: "ein <b>schneller</b> Roller · eine <b>schnelle</b> Straßenbahn · ein <b>schnelles</b> Fahrrad · viele <b>schnelle</b> Fahrräder" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-adjektiv-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5488,6 +6050,18 @@ const lektionen = {
     satz: "Die Schülerin liest <b>ein</b> spannendes Buch.",
     erklaerung: "„ein“ steht direkt vor dem Nomen „Buch“ und zeigt dessen Geschlecht an.",
     tipp: "Steht das Wort direkt vor einem Nomen und begleitet es (der/die/das, ein/eine)? Dann ist es ein Artikel.",
+    color: "#0F7A6C", colorBg: "#DCF0EC",
+    extraBlocks: [
+      { type: "row", title: "Bestimmter und unbestimmter Artikel",
+        intro: "Es gibt zwei Arten von Artikeln:",
+        items: [
+          { label: "bestimmt", value: "der, die, das", note: "meint etwas Bekanntes/Bestimmtes" },
+          { label: "unbestimmt", value: "ein, eine", note: "meint etwas Unbestimmtes/Neues" },
+        ] },
+      { type: "text", title: "Artikel oder Pronomen?",
+        text: "Ein Artikel steht direkt vor einem Nomen und begleitet es. Ohne Nomen danach ist dasselbe Wort oft ein Pronomen.",
+        beispielsatz: "Das ist <b>ein</b> Buch. (Artikel, vor Nomen) – Das ist <b>meins</b>. (Pronomen, kein Nomen danach)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-artikel-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5498,6 +6072,19 @@ const lektionen = {
     satz: "Sie ruft <b>ihn</b> an.",
     erklaerung: "„ihn“ steht stellvertretend für eine männliche Person (Akkusativ von „er“).",
     tipp: "Ersetzt das Wort eine Person oder Sache, ohne Besitz zu zeigen? Dann ist es ein Personalpronomen.",
+    color: "#C2630B", colorBg: "#FBE7D4",
+    extraBlocks: [
+      { type: "row", title: "Personalpronomen in den Fällen",
+        intro: "Personalpronomen verändern sich je nach Fall:",
+        items: [
+          { label: "Nominativ", value: "er", note: "wer oder was? (er kommt)" },
+          { label: "Akkusativ", value: "ihn", note: "wen oder was? (sie sieht ihn)" },
+          { label: "Dativ", value: "ihm", note: "wem? (sie hilft ihm)" },
+        ] },
+      { type: "text", title: "Personal- oder Possessivpronomen?",
+        text: "Ein Personalpronomen ersetzt eine Person/Sache, ein Possessivpronomen zeigt dagegen Besitz an.",
+        beispielsatz: "<b>Er</b> hilft ihr. (Personalpronomen) – <b>Sein</b> Buch liegt hier. (Possessivpronomen)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-personalpronomen-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5508,6 +6095,19 @@ const lektionen = {
     satz: "Hast du <b>meinen</b> Stift gesehen?",
     erklaerung: "„meinen“ zeigt, wem der Stift gehört.",
     tipp: "Zeigt das Wort, wem etwas gehört (mein, dein, sein …)? Dann ist es ein Possessivpronomen.",
+    color: "#A6780A", colorBg: "#FAF0D6",
+    extraBlocks: [
+      { type: "row", title: "Possessivpronomen je Person",
+        intro: "Jede Person hat ihr eigenes Possessivpronomen:",
+        items: [
+          { label: "ich", value: "mein", note: "mein Buch" },
+          { label: "du", value: "dein", note: "dein Buch" },
+          { label: "er/sie/es", value: "sein / ihr", note: "sein Buch / ihr Buch" },
+        ] },
+      { type: "text", title: "Possessivpronomen oder Artikel?",
+        text: "Possessivpronomen stehen wie Artikel vor einem Nomen, zeigen aber zusätzlich Besitz an.",
+        beispielsatz: "<b>mein</b> Buch (Possessivpronomen, zeigt Besitz) – <b>das</b> Buch (bestimmter Artikel, zeigt keinen Besitz)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-possessivpronomen-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5518,6 +6118,19 @@ const lektionen = {
     satz: "<b>Dieses</b> Buch gehört mir, jenes dort nicht.",
     erklaerung: "„Dieses“ weist ganz bestimmt auf das Buch hin.",
     tipp: "Zeigt das Wort ganz bestimmt auf etwas (dieser, jener)? Dann ist es ein Demonstrativpronomen.",
+    color: "#A3401F", colorBg: "#FAE2D8",
+    extraBlocks: [
+      { type: "row", title: "Häufige Demonstrativpronomen",
+        intro: "Die wichtigsten Arten:",
+        items: [
+          { label: "dieser/diese/dieses", value: "dieser Hund", note: "weist auf etwas Nahes hin" },
+          { label: "jener/jene/jenes", value: "jener Hund", note: "weist auf etwas Entferntes hin (eher schriftlich)" },
+          { label: "derselbe/dieselbe/dasselbe", value: "derselbe Hund", note: "zeigt Identität (genau der/dieselbe)" },
+        ] },
+      { type: "text", title: "Demonstrativpronomen oder Artikel?",
+        text: "Demonstrativpronomen weisen betont auf etwas hin, Artikel begleiten ein Nomen neutral, ohne besonders hinzuweisen.",
+        beispielsatz: "<b>Dieses</b> Buch meine ich! (Demonstrativpronomen, betont) – <b>Das</b> Buch liegt dort. (Artikel, neutral)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-demonstrativpronomen-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5528,6 +6141,20 @@ const lektionen = {
     satz: "Er läuft <b>schnell</b>.",
     erklaerung: "„schnell“ gibt an, WIE er läuft – unveränderlich, also ein Adverb.",
     tipp: "Beschreibt das Wort eine Handlung näher (wann/wo/wie) und bleibt immer gleich? Dann ist es ein Adverb.",
+    color: "#4A4FB0", colorBg: "#E6E7F8",
+    extraBlocks: [
+      { type: "row", title: "Die wichtigsten Adverbarten",
+        intro: "Adverbien geben verschiedene Umstände an:",
+        items: [
+          { label: "Temporal", value: "heute", note: "gibt die Zeit an (wann?)" },
+          { label: "Lokal", value: "dort", note: "gibt den Ort an (wo?)" },
+          { label: "Modal", value: "gern", note: "gibt die Art und Weise an (wie?)" },
+          { label: "Kausal", value: "deshalb", note: "gibt den Grund an (warum?)" },
+        ] },
+      { type: "text", title: "Adverb oder Adjektiv?",
+        text: "Ein Adverb beschreibt ein Verb, Adjektiv oder einen ganzen Satz und bleibt dabei unverändert (keine Endung). Ein Adjektiv bei einem Nomen wird dagegen dekliniert (bekommt eine Endung).",
+        beispielsatz: "Die <b>schnelle</b> Katze läuft <b>schnell</b>. (schnelle = Adjektiv, dekliniert; schnell = Adverb, unverändert)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-adverb-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5538,6 +6165,19 @@ const lektionen = {
     satz: "Die Katze sitzt <b>unter</b> dem Tisch.",
     erklaerung: "„unter“ verlangt hier den Dativ („dem Tisch“).",
     tipp: "Steht das Wort vor einem Nomen/Pronomen und bestimmt dessen Fall? Dann ist es eine Präposition.",
+    color: "#1C7293", colorBg: "#DCEEF4",
+    extraBlocks: [
+      { type: "row", title: "Welchen Fall verlangt die Präposition? (Rektion)",
+        intro: "Jede Präposition verlangt einen bestimmten Fall:",
+        items: [
+          { label: "Akkusativ", value: "für, durch, gegen, ohne, um", note: "immer Akkusativ" },
+          { label: "Dativ", value: "mit, nach, bei, seit, von, zu, aus", note: "immer Dativ" },
+          { label: "Genitiv", value: "wegen, trotz, während", note: "meist Genitiv" },
+        ] },
+      { type: "text", title: "Was sind Wechselpräpositionen?",
+        text: "Wechselpräpositionen (in, an, auf, unter, über, vor, hinter, neben, zwischen) verlangen den Akkusativ bei einer Richtung (wohin?) und den Dativ bei einem Ort (wo?).",
+        beispielsatz: "Die Katze springt <b>auf den</b> Schrank. (wohin? → Akkusativ) – Die Katze sitzt <b>auf dem</b> Schrank. (wo? → Dativ)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-praeposition-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5548,6 +6188,18 @@ const lektionen = {
     satz: "Ich bleibe zu Hause, <b>weil</b> es regnet.",
     erklaerung: "„weil“ verbindet die beiden Satzteile und begründet.",
     tipp: "Verbindet das Wort zwei Wörter, Satzteile oder Sätze? Dann ist es eine Konjunktion.",
+    color: "#B23368", colorBg: "#FAE1EB",
+    extraBlocks: [
+      { type: "row", title: "Nebenordnend oder unterordnend?",
+        intro: "Es gibt zwei Arten von Konjunktionen:",
+        items: [
+          { label: "nebenordnend", value: "und, oder, aber, denn, sondern", note: "verbindet Gleichrangiges" },
+          { label: "unterordnend", value: "weil, dass, obwohl, wenn", note: "leitet einen Nebensatz ein" },
+        ] },
+      { type: "text", title: "Woran erkennst du eine unterordnende Konjunktion?",
+        text: "Nach einer unterordnenden Konjunktion steht das Verb am Ende des Nebensatzes.",
+        beispielsatz: "Ich bleibe zu Hause, <b>weil</b> es regnet. (Verb „regnet“ am Satzende)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-konjunktion-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5558,6 +6210,19 @@ const lektionen = {
     satz: "<b>Drei</b> Finger tun mir weh.",
     erklaerung: "„Drei“ gibt eine genaue Anzahl an – ein Numerale.",
     tipp: "Gibt das Wort eine Anzahl oder Reihenfolge an? Dann ist es ein Numerale.",
+    color: "#5E7A1F", colorBg: "#ECF2DC",
+    extraBlocks: [
+      { type: "row", title: "Arten von Numeralia",
+        intro: "Zahlwörter gibt es in verschiedenen Formen:",
+        items: [
+          { label: "Kardinalzahl", value: "eins, zwei, drei", note: "genaue Anzahl" },
+          { label: "Ordinalzahl", value: "erste, zweite, dritte", note: "Reihenfolge" },
+          { label: "Bruchzahl", value: "Viertel, Hälfte", note: "Teilmenge" },
+        ] },
+      { type: "text", title: "Kardinalzahl oder Ordinalzahl?",
+        text: "Kardinalzahlen zählen eine genaue Anzahl, Ordinalzahlen geben eine Position/Reihenfolge an.",
+        beispielsatz: "<b>drei</b> Äpfel (Kardinalzahl) – der <b>dritte</b> Apfel (Ordinalzahl)" },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-numerale-leicht", nextLabel: "Weiter zur Übung →"
   },
@@ -5568,6 +6233,19 @@ const lektionen = {
     satz: "<b>Aua!</b> Das tut weh.",
     erklaerung: "„Aua!“ ist ein spontaner Ausruf – eine Interjektion.",
     tipp: "Ist das Wort ein spontaner Ausruf, der für sich allein stehen kann? Dann ist es eine Interjektion.",
+    color: "#C23B3B", colorBg: "#FBE1E1",
+    extraBlocks: [
+      { type: "row", title: "Arten von Interjektionen",
+        intro: "Interjektionen drücken ganz unterschiedliche Dinge aus:",
+        items: [
+          { label: "Gefühlsausdruck", value: "Aua!, Juhu!, Ach!", note: "drückt Schmerz, Freude, Bedauern aus" },
+          { label: "Aufforderung", value: "Pssst!, Hoppla!", note: "fordert spontan zu etwas auf" },
+          { label: "Reaktion", value: "Na, Na ja", note: "leitet eine spontane, oft zögernde Reaktion ein" },
+        ] },
+      { type: "text", title: "Worauf musst du achten?",
+        text: "Interjektionen sind unveränderlich (keine Konjugation, keine Deklination) und stehen oft, aber nicht immer, allein mit Ausrufezeichen.",
+        beispielsatz: "<b>Aua!</b> Das tut weh. – Er rief nur „<b>Aua</b>“, sonst nichts." },
+    ],
     backHref: "#/deutsch/wortarten", backLabel: "Zurück zum Kapitel",
     nextHref: "#/uebung/deutsch-wa-interjektion-leicht", nextLabel: "Weiter zur Übung →"
   }
@@ -5902,35 +6580,9 @@ function viewLektion(slug){
   const tippStyle = l.color ? `background:${l.colorBg}; border-color:color-mix(in srgb, ${l.color} 30%, transparent);` : "";
   const tippStrongStyle = l.color ? `style="color:${l.color};"` : "";
 
-  /* Neu 4.10.2026 (Rückmeldung Manuel): Steigerungsformen mit Fachbegriffen (Positiv/Komparativ/
-     Superlativ) als eigener, farbig abgesetzter Block - nur gerendert, wenn die Lektion l.steigerung
-     definiert (aktuell nur Adjektiv). */
-  const steigerungHtml = l.steigerung ? `
-    <div class="lek-steigerung" style="${l.color ? `border-color:${l.color};` : ""}">
-      <div class="lek-steigerung-title" ${l.color ? `style="color:${l.color};"` : ""}>Die drei Steigerungsstufen</div>
-      <p class="lek-steigerung-intro">${esc(l.steigerung.intro)}</p>
-      <div class="lek-steigerung-row">
-        ${l.steigerung.stufen.map(s => `
-          <div class="lek-stufe" style="${l.colorBg ? `background:${l.colorBg};` : ""}">
-            <div class="lek-stufe-name" ${l.color ? `style="color:${l.color};"` : ""}>${esc(s.name)}</div>
-            <div class="lek-stufe-beispiel">${esc(s.beispiel)}</div>
-            <div class="lek-stufe-erklaerung">${esc(s.erklaerung)}</div>
-          </div>
-        `).join("")}
-      </div>
-    </div>
-  ` : "";
-
-  /* Neu 4.10.2026 (Rückmeldung Manuel): eigener Block "Was bedeutet deklinieren?" mit Beispielsatz -
-     nur gerendert, wenn l.deklinieren definiert ist (aktuell nur Adjektiv). */
-  const deklinierenHtml = l.deklinieren ? `
-    <div class="lek-deklinieren" style="${l.color ? `border-left-color:${l.color};` : ""}">
-      <div class="lek-deklinieren-title" ${l.color ? `style="color:${l.color};"` : ""}>Was bedeutet „deklinieren“?</div>
-      <p class="lek-deklinieren-text">${esc(l.deklinieren.erklaerung)}</p>
-      <div class="lek-deklinieren-beispiel">${l.deklinieren.beispielsatz}</div>
-      <div class="lek-deklinieren-beispiel-erklaerung">${esc(l.deklinieren.beispielerklaerung)}</div>
-    </div>
-  ` : "";
+  /* Generische Zusatzblöcke (l.extraBlocks, siehe lektionen.adjektiv für das Datenformat) - bis zu
+     2 pro Lektion, je type:"row" (Kärtchen-Reihe) oder type:"text" (Erklärung+Beispielsatz). */
+  const extraBlocksHtml = (l.extraBlocks || []).map(b => renderLekBlockPage(b, l.color, l.colorBg)).join("");
 
   return h`
     <a class="backlink" href="${l.backHref}">← ${esc(l.backLabel)}</a>
@@ -5953,13 +6605,68 @@ function viewLektion(slug){
         </div>
       </div>
     </div>
-    ${steigerungHtml}
-    ${deklinierenHtml}
+    ${extraBlocksHtml}
     <div class="lek-tipp" style="${tippStyle}"><strong ${tippStrongStyle}>Tipp zum Bestimmen:</strong> ${esc(l.tipp)}</div>
     <div style="margin-top:26px; text-align:center;">
       <button type="button" id="lekNextBtn" class="practice-btn" style="padding:12px 24px; font-size:15px; border:none;" data-next-href="${l.nextHref}" data-next-label="${esc(l.nextLabel)}">${esc(l.nextLabel)}</button>
     </div>
   `;
+}
+
+/* Rendert einen einzelnen l.extraBlocks-Eintrag für die Lektionsseite selbst (große, farbig
+   abgesetzte Box) - siehe renderLekBlockPopup() für die kompaktere Popup-Variante derselben Daten. */
+function renderLekBlockPage(b, color, colorBg){
+  if (b.type === "row"){
+    return `
+      <div class="lek-steigerung" style="${color ? `border-color:${color};` : ""}">
+        <div class="lek-steigerung-title" ${color ? `style="color:${color};"` : ""}>${esc(b.title)}</div>
+        ${b.intro ? `<p class="lek-steigerung-intro">${esc(b.intro)}</p>` : ""}
+        <div class="lek-steigerung-row">
+          ${b.items.map(it => `
+            <div class="lek-stufe" style="${colorBg ? `background:${colorBg};` : ""}">
+              <div class="lek-stufe-name" ${color ? `style="color:${color};"` : ""}>${esc(it.label)}</div>
+              <div class="lek-stufe-beispiel">${esc(it.value)}</div>
+              ${it.note ? `<div class="lek-stufe-erklaerung">${esc(it.note)}</div>` : ""}
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+  if (b.type === "text"){
+    return `
+      <div class="lek-deklinieren" style="${color ? `border-left-color:${color};` : ""}">
+        <div class="lek-deklinieren-title" ${color ? `style="color:${color};"` : ""}>${esc(b.title)}</div>
+        <p class="lek-deklinieren-text">${esc(b.text)}</p>
+        ${b.beispielsatz ? `<div class="lek-deklinieren-beispiel">${b.beispielsatz}</div>` : ""}
+        ${b.beispielerklaerung ? `<div class="lek-deklinieren-beispiel-erklaerung">${esc(b.beispielerklaerung)}</div>` : ""}
+      </div>
+    `;
+  }
+  return "";
+}
+
+/* Rendert einen einzelnen l.extraBlocks-Eintrag fürs Regelheft-Popup (kompakter als auf der
+   Lektionsseite, da der Platz im Popup begrenzter ist) - siehe showLektionRegelheftPopup(). */
+function renderLekBlockPopup(b, color){
+  if (b.type === "row"){
+    return `
+      <div class="lek-popup-sub-block">
+        <div class="lek-popup-sub-title" style="color:${color};">${esc(b.title)}</div>
+        <div class="lek-popup-stufen">${b.items.map(it => `<span class="lek-popup-stufe"><b>${esc(it.label)}:</b> ${esc(it.value)}</span>`).join(" · ")}</div>
+      </div>
+    `;
+  }
+  if (b.type === "text"){
+    return `
+      <div class="lek-popup-sub-block">
+        <div class="lek-popup-sub-title" style="color:${color};">${esc(b.title)}</div>
+        <p class="lek-popup-text">${esc(b.text)}</p>
+        ${b.beispielsatz ? `<div class="lek-popup-satz">${b.beispielsatz}</div>` : ""}
+      </div>
+    `;
+  }
+  return "";
 }
 
 /* Neu 4.10.2026 (Rückmeldung Manuel: "muss nach dem Button, weiter zur Übung nochmal das Fenster
@@ -5969,16 +6676,32 @@ function viewLektion(slug){
    Lektionsseite und erinnert daran, den Infotext erst abzuschreiben, bevor es weitergeht. Erst der
    Klick auf den Button IM Popup navigiert tatsächlich zur Übung (location.hash). */
 function showLektionRegelheftPopup(l, nextHref, nextLabel){
+  /* Korrektur 4.10.2026 (Rückmeldung Manuel: "man sieht ihn nicht mehr, er wird von dem Fenster
+     überdeckt"): das Popup verweist nicht mehr nur auf den Text WEITER OBEN (der dahinter verdeckt
+     ist), sondern enthält den kompletten Abschreibtext selbst - genau wie beim Regelheft-Popup bei
+     den Vergangenheiten (renderRegelheftPopup in window.__startVergangenheitenUebung), das den
+     Zeitstrahl/Satz/Regeln ebenfalls direkt IM Popup zeigt statt nur darauf zu verweisen.
+     max-height+overflow-y, weil der komplette Lektionsinhalt (inkl. optionaler Zusatzblöcke wie
+     Steigerung/Deklinieren) länger als ein Bildschirm sein kann. */
   const overlay = document.createElement("div");
   overlay.className = "tm-popup-overlay";
   const borderStyle = l.color ? `border-left:8px solid ${l.color};` : "";
   const bgStyle = l.colorBg ? `background:${l.colorBg};` : "";
+  const accentColor = l.color || "var(--accent)";
+
+  const extraBlocksHtml = (l.extraBlocks || []).map(b => renderLekBlockPopup(b, accentColor)).join("");
+
   overlay.innerHTML = `
-    <div class="tm-popup-card text-content" style="max-width:420px; ${borderStyle} ${bgStyle}">
-      <h3 ${l.color ? `style="color:${l.color};"` : ""}>✏️ Erst ins Regelheft!</h3>
-      <p>Übertrage den Infotext oben zu <strong>${esc(l.title)}</strong> – Erklärung, Beispiele, Merkmale und den Tipp – in dein Regelheft.</p>
-      <p>Wenn du fertig abgeschrieben hast, geht es hier weiter zur Übung.</p>
-      <div class="qactions" style="margin-top:16px; justify-content:center;">
+    <div class="tm-popup-card text-content lek-popup" style="max-width:480px; ${borderStyle} ${bgStyle}">
+      <div class="lek-popup-label" style="color:${accentColor};">✏️ Regelheft-Eintrag · ${esc(l.title)} (${esc(l.subtitle)})</div>
+      <div class="lek-popup-examples"><strong>Beispiele:</strong> ${esc(l.examples)}</div>
+      <ul class="lek-popup-merkmale">${l.merkmale.map(m => `<li>${esc(m)}</li>`).join("")}</ul>
+      <div class="lek-popup-satz">${l.satz}</div>
+      <div class="lek-popup-satz-erklaerung">${esc(l.erklaerung)}</div>
+      ${extraBlocksHtml}
+      <div class="lek-popup-tipp" style="background:${l.colorBg || "var(--warm-soft)"};"><strong style="color:${accentColor};">Tipp:</strong> ${esc(l.tipp)}</div>
+      <p class="lek-popup-note">✏️ Übertrage diesen Eintrag in dein Regelheft. Wenn du fertig bist, geht's weiter:</p>
+      <div class="qactions" style="margin-top:14px; justify-content:center;">
         <button class="next-btn show" id="lekPopupNext">${esc(nextLabel)}</button>
       </div>
     </div>
