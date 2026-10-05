@@ -1101,6 +1101,7 @@
      window.__startInfektionserkrankungen). Alles andere nutzt bestehende Klassen (.qcard, .qtext,
      .qmeta, .we-textarea, .check-btn, .next-btn, .feedback, .tm-popup-overlay/.tm-popup-card). */
   .ik-illustration{display:flex; justify-content:center; margin:4px 0 18px;}
+  .ik-illustration img{width:100%; max-width:420px; border-radius:var(--radius-md); display:block; box-shadow:0 1px 0 var(--border);}
   .ik-story-text{font-size:15.5px; line-height:1.65; color:var(--ink); margin:0;}
   .ik-freitext-group{display:grid; gap:16px; margin:4px 0 4px;}
   .ik-freitext-item{display:grid; gap:8px;}
@@ -10962,37 +10963,65 @@ window.__startVergangenheitenUebung = function(slug){
    Selbstkontrolle (Musterlösung zum Vergleichen statt Richtig/Falsch), 5 Abschluss mit
    Heftaufschrieb-Popup. Der Lesetext in Schritt 3 ist bewusst ein EIGENER Text und keine Abschrift
    des Schulbuchs (Urheberrecht) - er deckt inhaltlich alles ab, was für die drei Abschlussfragen
-   gebraucht wird. Das Bild in Schritt 0/2 ist aus demselben Grund eine eigene, einfache
-   Strichzeichnung (ikSickIllustration) statt des Buchfotos - analog zu vgThemeIcon/vgTimelineSvg
-   oben, die aus demselben Grund schon eigene Grafiken statt Buch-Abbildungen verwenden.
-   Alle freien Antworten werden über reportFreitext() gemeldet (neues Tabellenblatt
-   "Freitextantworten" in Code.gs) und erscheinen im Dashboard in der neuen Karte
+   gebraucht wird. Das Bild in Schritt 0/2 ist bewusst eine eigene Illustration (ikSickIllustration)
+   statt eines echten Fotos - auch eines lizenzfreien Stockfotos oder eines von Manuel bereit-
+   gestellten Fotos -, weil ein echtes, identifizierbares Foto eines Kindes dauerhaft in dieser
+   geteilten, wiederholt gezeigten App unangebracht wäre (Kinderschutz, nicht nur Urheberrecht;
+   Rückmeldung an Manuel am 05.10.2026). Nach Kritik, die erste Strichzeichnung wirke zu karg
+   ("Strichmännchen"), am 05.10.2026 durch eine ausführlichere, farbige Illustration ersetzt
+   (Mutter am Bett, Kind mit Teddy, Nachttisch) - eigene Komposition, keine Nachzeichnung eines
+   bestimmten Fotos. Alle freien Antworten werden über reportFreitext() gemeldet (neues
+   Tabellenblatt "Freitextantworten" in Code.gs) und erscheinen im Dashboard in der neuen Karte
    "Freitextantworten" - NICHT in der normalen "Auswertung pro Übung" (die basiert auf
    reportResult()/Richtig-Falsch, was es hier bewusst nicht gibt, siehe exerciseSets-Kommentar
    bei "nt-infektionserkrankungen"). */
 function ikSickIllustration(){
   return `
-    <svg width="190" height="146" viewBox="0 0 190 146" role="img" aria-hidden="true">
-      <rect x="18" y="92" width="152" height="13" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
-      <rect x="12" y="58" width="13" height="58" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
-      <path d="M32 104 Q96 76 164 104 L164 114 Q96 90 32 114 Z" fill="var(--accent)" opacity=".16"/>
-      <path d="M32 104 Q96 76 164 104" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
-      <ellipse cx="54" cy="93" rx="30" ry="12" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
-      <circle cx="98" cy="90" r="9" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.6"/>
-      <circle cx="91" cy="82" r="4" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.4"/>
-      <circle cx="105" cy="82" r="4" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.4"/>
-      <ellipse cx="99" cy="104" rx="13" ry="11" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.6"/>
-      <circle cx="95" cy="89" r="1.3" fill="var(--ink-faint)"/>
-      <circle cx="101" cy="89" r="1.3" fill="var(--ink-faint)"/>
-      <circle cx="59" cy="76" r="17" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="2"/>
-      <path d="M52 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M63 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
-      <path d="M38 38 Q49 51 55 63" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
-      <ellipse cx="53" cy="62" rx="9" ry="6" fill="var(--surface)" stroke="var(--ink-faint)" stroke-width="1.8" transform="rotate(-20 53 62)"/>
-      <rect x="128" y="66" width="22" height="16" rx="3" fill="var(--surface)" stroke="var(--ink-faint)" stroke-width="2"/>
-      <path d="M150 70q8 0 8 6t-8 6" fill="none" stroke="var(--ink-faint)" stroke-width="2"/>
-      <path d="M133 60q3-6 0-10" fill="none" stroke="var(--ink-faint)" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M141 60q3-6 0-10" fill="none" stroke="var(--ink-faint)" stroke-width="1.6" stroke-linecap="round"/>
+    <svg width="300" height="196" viewBox="0 0 300 196" role="img" aria-hidden="true">
+      <rect x="0" y="0" width="300" height="196" rx="16" fill="var(--surface-2)"/>
+      <rect x="0" y="150" width="300" height="46" fill="#E4D9C4" opacity=".55"/>
+      <rect x="174" y="34" width="17" height="128" rx="5" fill="#C9A27E"/>
+      <rect x="168" y="150" width="120" height="16" rx="6" fill="#C9A27E"/>
+      <rect x="168" y="150" width="120" height="6" rx="3" fill="#B98E68"/>
+      <ellipse cx="236" cy="96" rx="46" ry="19" fill="#FBF8F2" stroke="#E7DECB" stroke-width="2"/>
+      <path d="M190 118 Q236 94 284 118 L284 150 Q236 128 190 150 Z" fill="#8FB8E8"/>
+      <path d="M190 118 Q236 94 284 118" fill="none" stroke="#6E9BD6" stroke-width="2.5"/>
+      <g fill="#fff" opacity=".75">
+        <circle cx="206" cy="128" r="2.6"/><circle cx="224" cy="123" r="2.6"/><circle cx="242" cy="130" r="2.6"/>
+        <circle cx="260" cy="123" r="2.6"/><circle cx="274" cy="133" r="2.6"/><circle cx="214" cy="140" r="2.6"/>
+        <circle cx="252" cy="142" r="2.6"/><circle cx="270" cy="146" r="2.6"/>
+      </g>
+      <ellipse cx="256" cy="100" rx="13" ry="11" fill="#C98B4B"/>
+      <circle cx="247" cy="90" r="5" fill="#C98B4B"/>
+      <circle cx="265" cy="90" r="5" fill="#C98B4B"/>
+      <circle cx="247" cy="90" r="2.3" fill="#A86E35"/>
+      <circle cx="265" cy="90" r="2.3" fill="#A86E35"/>
+      <circle cx="251" cy="98" r="1.4" fill="#6B4423"/>
+      <circle cx="261" cy="98" r="1.4" fill="#6B4423"/>
+      <path d="M253 104q3 2 6 0" fill="none" stroke="#6B4423" stroke-width="1.3" stroke-linecap="round"/>
+      <circle cx="222" cy="88" r="23" fill="#F3C9A6"/>
+      <path d="M200 84q2-22 22-23q21-1 24 17q-9-7-22-6q-15 1-19 14q-3-1-5-2Z" fill="#D9A85C"/>
+      <ellipse cx="208" cy="95" rx="5" ry="3.6" fill="#F2A9A0" opacity=".8"/>
+      <ellipse cx="236" cy="95" rx="5" ry="3.6" fill="#F2A9A0" opacity=".8"/>
+      <path d="M212 85q5 3 9 0" fill="none" stroke="#8A5A33" stroke-width="2" stroke-linecap="round"/>
+      <path d="M228 85q5 3 9 0" fill="none" stroke="#8A5A33" stroke-width="2" stroke-linecap="round"/>
+      <rect x="40" y="130" width="46" height="34" rx="4" fill="#D8C7A8"/>
+      <rect x="44" y="112" width="6" height="20" rx="2" fill="#B9A179"/>
+      <rect x="76" y="112" width="6" height="20" rx="2" fill="#B9A179"/>
+      <rect x="47" y="118" width="32" height="6" rx="2" fill="#fff" stroke="#E0D4B8" stroke-width="1"/>
+      <circle cx="79" cy="146" r="6.5" fill="#fff" stroke="#D8362B" stroke-width="2"/>
+      <rect x="77.3" y="134" width="3.4" height="13" rx="1.7" fill="#fff" stroke="#D8362B" stroke-width="1.6"/>
+      <rect x="78.4" y="140" width="1.2" height="6" fill="#D8362B"/>
+      <path d="M46 72 Q40 118 60 150 Q78 170 108 166" fill="none" stroke="#B8A27C" stroke-width="10" stroke-linecap="round"/>
+      <ellipse cx="46" cy="60" rx="20" ry="22" fill="#F3C9A6"/>
+      <path d="M26 58q-2-30 22-32q26-2 28 22q1 9-3 15q-2-16-16-19q-16-3-23 10q-5-7-8 4Z" fill="#4A3528"/>
+      <path d="M36 60q4 3 8 0" fill="none" stroke="#7A4E2E" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M52 60q4 3 8 0" fill="none" stroke="#7A4E2E" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M40 70q6 4 12 0" fill="none" stroke="#B5775A" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M46 92 Q38 108 44 130" fill="none" stroke="#EDE3D3" stroke-width="30" stroke-linecap="round"/>
+      <path d="M62 150 Q86 158 110 150 L116 160 Q88 172 58 162 Z" fill="#EDE3D3"/>
+      <path d="M103 148 Q110 138 118 148 L118 164 L100 164 Z" fill="#fff" stroke="#E7DECB" stroke-width="1.6"/>
+      <rect x="99" y="162" width="20" height="5" rx="2" fill="#F2A33D"/>
     </svg>
   `;
 }
