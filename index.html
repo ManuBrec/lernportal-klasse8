@@ -1096,6 +1096,45 @@
   .vg-regelheft-note{
     font-size:12.5px; font-weight:700; text-align:center; margin:0 0 14px; color:var(--rh-mark, var(--ink-faint));
   }
+
+  /* Natur und Technik: Übung "Infektionserkrankungen" - eigene, additive Stile (siehe
+     window.__startInfektionserkrankungen). Alles andere nutzt bestehende Klassen (.qcard, .qtext,
+     .qmeta, .we-textarea, .check-btn, .next-btn, .feedback, .tm-popup-overlay/.tm-popup-card). */
+  .ik-illustration{display:flex; justify-content:center; margin:4px 0 18px;}
+  .ik-story-text{font-size:15.5px; line-height:1.65; color:var(--ink); margin:0;}
+  .ik-freitext-group{display:grid; gap:16px; margin:4px 0 4px;}
+  .ik-freitext-item{display:grid; gap:8px;}
+  .ik-freitext-label{font-size:14px; font-weight:700; color:var(--ink);}
+  .ik-text-input{
+    width:100%; padding:11px 14px; border-radius:var(--radius-md); border:1.5px solid var(--border);
+    background:var(--surface-2); color:var(--ink); font-size:15px; font-family:inherit; box-sizing:border-box;
+  }
+  .ik-text-input:focus-visible{outline:3px solid var(--accent); outline-offset:1px;}
+  .ik-tooltip-btn{
+    display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;
+    border-radius:50%; border:1.5px solid var(--accent); color:var(--accent); background:var(--surface-2);
+    font-size:12px; font-weight:800; cursor:pointer; margin-left:6px; vertical-align:middle;
+    font-family:inherit; line-height:1; padding:0;
+  }
+  .ik-tooltip-box{
+    display:none; margin-top:10px; padding:12px 14px; background:var(--surface-2);
+    border-left:3px solid var(--accent); border-radius:var(--radius-md); font-size:13.5px;
+    color:var(--ink-soft); line-height:1.5;
+  }
+  .ik-tooltip-box.show{display:block;}
+  .ik-lesetext h3{font-size:16px; margin:22px 0 8px; color:var(--ink);}
+  .ik-lesetext h3:first-child{margin-top:0;}
+  .ik-lesetext p{font-size:15px; line-height:1.65; color:var(--ink); margin:0 0 12px;}
+  .ik-lesetext ul, .ik-lesetext ol{margin:0 0 14px; padding-left:22px;}
+  .ik-lesetext li{font-size:14.5px; line-height:1.6; color:var(--ink); margin-bottom:5px;}
+  .ik-musterloesung{
+    display:none; margin-top:14px; padding:14px 16px; background:var(--success-soft);
+    border-radius:var(--radius-md); font-size:14px; color:var(--success); line-height:1.55;
+    white-space:pre-line;
+  }
+  .ik-musterloesung.show{display:block;}
+  .ik-heft-list{list-style:none; margin:0 0 16px; padding:0; display:grid; gap:7px;}
+  .ik-heft-list li{font-size:14.5px; line-height:1.5; color:var(--ink);}
 </style>
 
 <div class="topbar no-print" id="topbar">
@@ -1299,6 +1338,7 @@ const naturtechnikMikroorganismenTopics = [
   { tag:"lernen", label:"Vielfältige Mikroorganismen", practice:"nt-mikroorganismen-vielfalt" },
   { tag:"lernen", label:"Die Bedeutung der Mikroorganismen", practice:"nt-mikroorganismen-bedeutung" },
   { tag:"lernen", label:"Bakterien – genauer betrachtet", practice:"nt-bakterien-genauer-betrachtet" },
+  { tag:"lernen", label:"Infektionserkrankungen", practice:"nt-infektionserkrankungen" },
 ];
 
 /* Informatik: neues Fach, Kapitel wie im Inhaltsverzeichnis des Schulbuchs (Informatik Mittelschule
@@ -3335,6 +3375,24 @@ const exerciseSets = {
         correct: 3,
         explain: "Richtig – Nahrungsmangel, das Immunsystem und die Konkurrenz untereinander (und auch ungünstige Bedingungen wie Kälte oder Trockenheit) bremsen das Wachstum, sonst wäre die Zahl schon nach kurzer Zeit unvorstellbar groß." }
     ]
+  },
+  /* Infektionserkrankungen: eigener, mehrteiligiger Ablauf statt der generischen Ein-Frage-
+     nach-der-anderen-Ansicht (siehe window.__startInfektionserkrankungen, custom:"infektionserkrankungen").
+     Statt einer festen Fragenliste gibt es hier: Einstiegs-Geschichte, drei freie Interessensfragen,
+     eine freie Symptom-Vermutung, einen Lesetext (eigener Text statt Buch-Original, siehe Kommentar
+     dort) und drei Abschlussfragen mit Selbstkontrolle (keine automatische Bewertung) - entsprechend
+     "questions" hier bewusst leer. Alle freien Antworten werden über reportFreitext() ans Sheets-
+     Backend gemeldet (neues Tabellenblatt "Freitextantworten", siehe Code.gs) und erscheinen im
+     Dashboard in der neuen Karte "Freitextantworten" - NICHT in der normalen "Auswertung pro Übung"
+     (die basiert auf reportResult()/richtig-falsch, was es hier bewusst nicht gibt). */
+  "nt-infektionserkrankungen": {
+    title: "Infektionserkrankungen",
+    subject: "naturtechnik",
+    chapterSlug: "mikroorganismen",
+    duration: "ca. 20 Minuten",
+    locked: true,
+    custom: "infektionserkrankungen",
+    questions: []
   },
   /* ---------- WiB: Wie arbeiten Betriebe? (S. 8-9) ---------- */
   "wib-was-ist-ein-betrieb": {
@@ -7820,6 +7878,23 @@ function viewExercise(slug){
     `;
   }
 
+  /* set.custom === "infektionserkrankungen": eigener Ablauf (siehe
+     window.__startInfektionserkrankungen) - Einstieg, freie Fragen/Vermutungen, Lesetext,
+     Abschlussfragen mit Selbstkontrolle, Heftaufschrieb-Popup. Kein "X Aufgaben"-Hinweis, da es
+     keine feste Fragenliste mit Richtig/Falsch gibt. */
+  if (set.custom === "infektionserkrankungen"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>6 Schritte${set.duration ? " · " + esc(set.duration) : ""}: Einstieg, eigene Fragen/Vermutungen, Lesetext und Abschlussfragen mit Selbstkontrolle. Am Ende gibt es den Heftaufschrieb zum Übernehmen.</p>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="exerciseHost"></div>
+    `;
+  }
+
   return h`
     <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
     <div class="hero" style="padding-top:0;">
@@ -10827,6 +10902,251 @@ window.__startVergangenheitenUebung = function(slug){
   renderQuestion();
 };
 
+/* ---------- Natur und Technik: "Infektionserkrankungen" (custom:"infektionserkrankungen") ----------
+   Eigener, additiver Ablauf aus 6 Schritten, bewusst OHNE automatische Bewertung (Rückmeldung
+   Manuel, 05.10.2026): Schritt 0 Einstieg/Geschichte, 1 drei eigene Interessensfragen, 2 freie
+   Symptom-Vermutung (mit Begriffs-Tooltip "Symptom"), 3 Lesetext, 4 drei Abschlussfragen mit
+   Selbstkontrolle (Musterlösung zum Vergleichen statt Richtig/Falsch), 5 Abschluss mit
+   Heftaufschrieb-Popup. Der Lesetext in Schritt 3 ist bewusst ein EIGENER Text und keine Abschrift
+   des Schulbuchs (Urheberrecht) - er deckt inhaltlich alles ab, was für die drei Abschlussfragen
+   gebraucht wird. Das Bild in Schritt 0/2 ist aus demselben Grund eine eigene, einfache
+   Strichzeichnung (ikSickIllustration) statt des Buchfotos - analog zu vgThemeIcon/vgTimelineSvg
+   oben, die aus demselben Grund schon eigene Grafiken statt Buch-Abbildungen verwenden.
+   Alle freien Antworten werden über reportFreitext() gemeldet (neues Tabellenblatt
+   "Freitextantworten" in Code.gs) und erscheinen im Dashboard in der neuen Karte
+   "Freitextantworten" - NICHT in der normalen "Auswertung pro Übung" (die basiert auf
+   reportResult()/Richtig-Falsch, was es hier bewusst nicht gibt, siehe exerciseSets-Kommentar
+   bei "nt-infektionserkrankungen"). */
+function ikSickIllustration(){
+  return `
+    <svg width="190" height="146" viewBox="0 0 190 146" role="img" aria-hidden="true">
+      <rect x="18" y="92" width="152" height="13" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
+      <rect x="12" y="58" width="13" height="58" rx="4" fill="var(--surface-2)" stroke="var(--border)" stroke-width="2"/>
+      <path d="M32 104 Q96 76 164 104 L164 114 Q96 90 32 114 Z" fill="var(--accent)" opacity=".16"/>
+      <path d="M32 104 Q96 76 164 104" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+      <ellipse cx="54" cy="93" rx="30" ry="12" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+      <circle cx="59" cy="76" r="17" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="2"/>
+      <path d="M52 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M63 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
+      <rect x="128" y="66" width="22" height="16" rx="3" fill="var(--surface)" stroke="var(--ink-faint)" stroke-width="2"/>
+      <path d="M150 70q8 0 8 6t-8 6" fill="none" stroke="var(--ink-faint)" stroke-width="2"/>
+      <path d="M133 60q3-6 0-10" fill="none" stroke="var(--ink-faint)" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M141 60q3-6 0-10" fill="none" stroke="var(--ink-faint)" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+const IK_STORY_TEXT = "Seit heute Morgen liegt Levent im Bett. Dabei war der Montag noch ganz normal: Er war mit seinem Kumpel Finn auf dem Pausenhof, der ständig geschnieft und gehustet hat. Levent hat sich nichts dabei gedacht. Doch am Abend kratzte plötzlich sein Hals, die Nase wurde immer dichter – und heute Morgen hat seine Mutter 38,2 °C Fieber gemessen. Jetzt liegt Levent eingemummelt im Bett, trinkt heißen Tee und hat zu nichts Lust. Dabei hat er Finn doch gar nicht direkt angefasst – wie konnte er sich da bloß anstecken?";
+
+const IK_SYMPTOM_TOOLTIP = "Ein Symptom ist ein Anzeichen, an dem man erkennen kann, dass jemand krank ist – zum Beispiel Fieber, Husten oder Kopfschmerzen.";
+
+const IK_LESETEXT_HTML = `
+  <h3>Krankheitserreger</h3>
+  <p>Manche Krankheiten werden durch sehr kleine Erreger ausgelöst, zum Beispiel durch Bakterien, Viren oder Pilze. Man nennt sie dann Infektionserkrankungen. Diese Erreger sind überall: in der Luft, im Wasser, im Boden und auf vielen Gegenständen, die wir täglich anfassen, etwa auf Türklinken oder Handys.</p>
+  <h3>Drei Wege in den Körper</h3>
+  <p>Damit eine Infektion entsteht, müssen die Erreger erst in den Körper gelangen. Das kann auf drei Wegen passieren:</p>
+  <ul>
+    <li><b>Tröpfcheninfektion:</b> Beim Husten oder Niesen versprüht man feinste Flüssigkeitströpfchen mit Krankheitserregern in die Luft. Atmet eine andere Person diese Tröpfchen ein, können die Erreger so in ihren Körper gelangen – auch ohne direkten Körperkontakt.</li>
+    <li><b>Schmier- oder Kontaktinfektion:</b> Hier werden Erreger durch Berühren übertragen, zum Beispiel über Türklinken, Geländer oder Hände. Gelangen die Erreger von der Hand an Mund, Nase oder Augen, können sie in den Körper eindringen.</li>
+    <li><b>Infektion durch Tiere:</b> Manche Erreger werden durch den Stich oder Biss von Insekten oder Spinnentieren (zum Beispiel Mücken oder Zecken) direkt ins Blut übertragen.</li>
+  </ul>
+  <h3>Sich vor einer Tröpfcheninfektion schützen</h3>
+  <ul>
+    <li>Beim Husten oder Niesen von anderen Personen wegdrehen</li>
+    <li>Ein Taschentuch benutzen oder in die Armbeuge husten/niesen</li>
+    <li>Regelmäßig und gründlich die Hände waschen</li>
+    <li>Abstand zu erkrankten Personen halten</li>
+  </ul>
+  <h3>Die vier Phasen einer Infektionserkrankung</h3>
+  <ol>
+    <li><b>Infektion:</b> Krankheitserreger dringen in den Körper ein.</li>
+    <li><b>Inkubation:</b> Die Zeit zwischen der Ansteckung und dem Ausbruch der Krankheit. Die Erreger vermehren sich im Körper, meist sind noch keine Symptome zu spüren.</li>
+    <li><b>Krankheit:</b> Der Körper reagiert auf die Erreger, es treten Symptome auf, zum Beispiel Fieber, Husten, Schnupfen oder Gliederschmerzen.</li>
+    <li><b>Gesundung:</b> Der Körper bekämpft die Erreger erfolgreich, die Symptome gehen zurück und man wird wieder gesund.</li>
+  </ol>
+`;
+
+const IK_FINAL_QUESTIONS = [
+  {
+    key: "frage-infektionswege",
+    text: "Nenne die drei dargestellten Infektionswege.",
+    placeholder: "Deine Antwort ...",
+    musterloesung: "Schmierinfektion, Tröpfcheninfektion, Tierinfektion"
+  },
+  {
+    key: "frage-verhalten-troepfchen",
+    text: "Nenne wirksame Verhaltensweisen, um eine Tröpfcheninfektion zu vermeiden.",
+    placeholder: "Deine Antwort ...",
+    musterloesung: "Zum Beispiel: beim Husten/Niesen wegdrehen, ein Taschentuch benutzen oder in die Armbeuge husten/niesen, Abstand halten, regelmäßig Hände waschen."
+  },
+  {
+    key: "frage-phasen",
+    text: "Welche Phasen einer Infektionserkrankung gibt es?",
+    placeholder: "Deine Antwort ...",
+    musterloesung: "1. Phase: Infektion durch eingedrungene Krankheitserreger.\n2. Phase: Inkubation: Vermehrung der Krankheitserreger. Bei einem grippalen Infekt etwa 3 Tage.\n3. Phase: Krankheit. Symptome eines grippalen Infekts sind Fieber, Frösteln, Kopf- und Gliederschmerzen, Husten und Schnupfen.\n4. Phase: Gesundung: Vernichtung der Krankheitserreger. Bei einem grippalen Infekt sind die Symptome nach etwa einer Woche wieder verschwunden."
+  }
+];
+
+const IK_HEFTAUFSCHRIEB_HTML = `
+  <p style="font-weight:700; margin-bottom:10px;">Infektionswege: Schmierinfektion, Tröpfcheninfektion, Tierinfektion</p>
+  <ol class="ik-heft-list">
+    <li><b>1. Phase: Infektion</b> durch eingedrungene Krankheitserreger.</li>
+    <li><b>2. Phase: Inkubation:</b> Vermehrung der Krankheitserreger. Bei einem grippalen Infekt etwa 3 Tage.</li>
+    <li><b>3. Phase: Krankheit.</b> Symptome eines grippalen Infekts sind Fieber, Frösteln, Kopf- und Gliederschmerzen, Husten und Schnupfen.</li>
+    <li><b>4. Phase: Gesundung:</b> Vernichtung der Krankheitserreger. Bei einem grippalen Infekt sind die Symptome nach etwa einer Woche wieder verschwunden.</li>
+  </ol>
+`;
+
+window.__startInfektionserkrankungen = function(slug){
+  const set = exerciseSets[slug];
+  if (!set) return;
+  const host = document.getElementById("exerciseHost");
+  const fill = document.getElementById("progressFill");
+  if (!host) return;
+
+  let partIdx = 0; // 0 Einstieg, 1 Interessensfragen, 2 Symptom-Vermutung, 3 Lesetext, 4 Abschlussfragen, 5 Fertig
+
+  function setProgress(){
+    if (fill) fill.style.width = Math.round((partIdx / 6) * 100) + "%";
+  }
+  function goToPart(n){
+    partIdx = n;
+    setProgress();
+    render();
+  }
+
+  /* ---------- Schritt 0: Einstieg mit Bild und Geschichte ---------- */
+  function renderIntro(){
+    host.innerHTML = `
+      <div class="qcard">
+        <div class="ik-illustration">${ikSickIllustration()}</div>
+        <div class="qtext" style="text-align:center;">Levent fühlt sich elend.</div>
+        <p class="ik-story-text">${esc(IK_STORY_TEXT)}</p>
+        <div class="qactions" style="margin-top:20px;"><button class="next-btn show" id="ikNext0">Weiter</button></div>
+      </div>
+    `;
+    document.getElementById("ikNext0").addEventListener("click", ()=> goToPart(1));
+  }
+
+  /* ---------- Schritt 1: drei eigene Interessensfragen ---------- */
+  function renderInteresse(){
+    host.innerHTML = `
+      <div class="qcard">
+        <div class="qtext">Was interessiert dich an diesem Thema? Schreibe drei Fragen auf, die du zu Infektionserkrankungen hast.</div>
+        <div class="ik-freitext-group">
+          <div class="ik-freitext-item"><div class="ik-freitext-label">Frage 1</div><input type="text" class="ik-text-input" id="ikInt1" placeholder="Deine Frage ..." autocomplete="off"></div>
+          <div class="ik-freitext-item"><div class="ik-freitext-label">Frage 2</div><input type="text" class="ik-text-input" id="ikInt2" placeholder="Deine Frage ..." autocomplete="off"></div>
+          <div class="ik-freitext-item"><div class="ik-freitext-label">Frage 3</div><input type="text" class="ik-text-input" id="ikInt3" placeholder="Deine Frage ..." autocomplete="off"></div>
+        </div>
+        <div class="qactions" style="margin-top:20px;"><button class="check-btn" id="ikIntSubmit">Absenden</button></div>
+      </div>
+    `;
+    document.getElementById("ikIntSubmit").addEventListener("click", ()=>{
+      reportFreitext(slug, "interesse-frage-1", "Eigene Frage 1 zum Thema Infektionserkrankungen", document.getElementById("ikInt1").value);
+      reportFreitext(slug, "interesse-frage-2", "Eigene Frage 2 zum Thema Infektionserkrankungen", document.getElementById("ikInt2").value);
+      reportFreitext(slug, "interesse-frage-3", "Eigene Frage 3 zum Thema Infektionserkrankungen", document.getElementById("ikInt3").value);
+      goToPart(2);
+    });
+  }
+
+  /* ---------- Schritt 2: Bild erneut + Symptom-Vermutung (mit Begriffs-Tooltip) ---------- */
+  function renderSymptome(){
+    host.innerHTML = `
+      <div class="qcard">
+        <div class="ik-illustration">${ikSickIllustration()}</div>
+        <div class="qtext">Was glaubst du: Welche Symptome<button type="button" class="ik-tooltip-btn" id="ikTtBtn" aria-label="Was ist ein Symptom?">?</button> treten bei einer Infektion auf?</div>
+        <div class="ik-tooltip-box" id="ikTtBox">${esc(IK_SYMPTOM_TOOLTIP)}</div>
+        <textarea class="we-textarea" id="ikSymptomInput" placeholder="Deine Vermutung ..."></textarea>
+        <div class="qactions" style="margin-top:14px;"><button class="check-btn" id="ikSymptomSubmit">Absenden</button></div>
+      </div>
+    `;
+    document.getElementById("ikTtBtn").addEventListener("click", ()=>{
+      document.getElementById("ikTtBox").classList.toggle("show");
+    });
+    document.getElementById("ikSymptomSubmit").addEventListener("click", ()=>{
+      reportFreitext(slug, "symptome-vermutung", "Vermutung: Symptome bei einer Infektion", document.getElementById("ikSymptomInput").value);
+      goToPart(3);
+    });
+  }
+
+  /* ---------- Schritt 3: Lesetext (eigener Text statt Buch-Original) ---------- */
+  function renderLesetext(){
+    host.innerHTML = `
+      <div class="qcard">
+        <div class="qtext">Lies dir den Text genau durch – die folgenden Fragen beziehen sich darauf.</div>
+        <div class="ik-lesetext">${IK_LESETEXT_HTML}</div>
+        <div class="qactions" style="margin-top:8px;"><button class="next-btn show" id="ikNext3">Weiter</button></div>
+      </div>
+    `;
+    document.getElementById("ikNext3").addEventListener("click", ()=> goToPart(4));
+  }
+
+  /* ---------- Schritt 4: drei Abschlussfragen mit Selbstkontrolle (keine automatische Bewertung) ---------- */
+  let finalPos = 0;
+  function renderFinalQuestion(){
+    const q = IK_FINAL_QUESTIONS[finalPos];
+    host.innerHTML = `
+      <div class="qcard">
+        <div class="qmeta">Frage ${finalPos+1} von ${IK_FINAL_QUESTIONS.length}</div>
+        <div class="qtext">${esc(q.text)}</div>
+        <textarea class="we-textarea" id="ikFinalInput" placeholder="${esc(q.placeholder)}"></textarea>
+        <div class="qactions" style="margin-top:14px;"><button class="check-btn" id="ikFinalCheck">Mit Musterlösung vergleichen</button></div>
+        <div class="ik-musterloesung" id="ikFinalMuster">${esc(q.musterloesung)}</div>
+        <div class="qactions" style="margin-top:14px;"><button class="next-btn" id="ikFinalNext">Weiter</button></div>
+      </div>
+    `;
+    document.getElementById("ikFinalCheck").addEventListener("click", ()=>{
+      reportFreitext(slug, q.key, q.text, document.getElementById("ikFinalInput").value);
+      document.getElementById("ikFinalMuster").classList.add("show");
+      document.getElementById("ikFinalNext").classList.add("show");
+      document.getElementById("ikFinalCheck").disabled = true;
+    });
+    document.getElementById("ikFinalNext").addEventListener("click", ()=>{
+      finalPos++;
+      if (finalPos >= IK_FINAL_QUESTIONS.length) goToPart(5); else renderFinalQuestion();
+    });
+  }
+
+  /* ---------- Schritt 5: Abschluss mit Heftaufschrieb-Popup ---------- */
+  function renderFinish(){
+    if (fill) fill.style.width = "100%";
+    host.innerHTML = `
+      <div class="qcard result">
+        <p style="font-weight:700;">Geschafft! Du hast alle Schritte zu den Infektionserkrankungen bearbeitet.</p>
+        <div class="qactions" style="margin-top:14px; justify-content:center;"><button class="next-btn show" id="ikShowHeft">Heftaufschrieb anzeigen</button></div>
+      </div>
+    `;
+    document.getElementById("ikShowHeft").addEventListener("click", showHeftaufschriebPopup);
+    showHeftaufschriebPopup();
+  }
+
+  function showHeftaufschriebPopup(){
+    const overlay = document.createElement("div");
+    overlay.className = "tm-popup-overlay";
+    overlay.innerHTML = `
+      <div class="tm-popup-card text-content" style="max-width:460px;">
+        <h3>Heftaufschrieb: Infektionserkrankungen</h3>
+        ${IK_HEFTAUFSCHRIEB_HTML}
+        <button type="button" class="tm-popup-close">Schließen</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
+  }
+
+  function render(){
+    if (partIdx === 0) renderIntro();
+    else if (partIdx === 1) renderInteresse();
+    else if (partIdx === 2) renderSymptome();
+    else if (partIdx === 3) renderLesetext();
+    else if (partIdx === 4) renderFinalQuestion();
+    else renderFinish();
+  }
+
+  setProgress();
+  render();
+};
+
 /* Wortarten-Trainer (custom:"wortarten-trainer", siehe exerciseSets["deutsch-wortarten-trainer"]):
    set.sentences wird als Kartenstapel verwendet (zufällig gemischt, erst neu gemischt wenn der
    Stapel leer ist) - pro Runde werden daraus 10 Sätze gezogen, daher auch bei vielen Wiederholungen
@@ -11184,6 +11504,8 @@ function route(){
       window.__startWortartenTrainer(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "vergangenheiten"){
       window.__startVergangenheitenUebung(parts[1]);
+    } else if (exerciseSets[parts[1]].custom === "infektionserkrankungen"){
+      window.__startInfektionserkrankungen(parts[1]);
     } else {
       window.__startExercise(parts[1]);
     }
@@ -11360,6 +11682,34 @@ function reportResult(exerciseSlug, questionIndex, status, attempts){
         question: questionIndex,
         status: status,
         attempts: attempts
+      })
+    }).catch(function(){ /* ignorieren - darf Schüler nie stören */ });
+  } catch(e){ /* ignorieren */ }
+}
+
+/* Meldet eine freie Texteingabe ohne Richtig/Falsch (z.B. eigene Fragen, Vermutungen,
+   Antworten mit Selbstkontrolle statt automatischer Bewertung - siehe
+   window.__startInfektionserkrankungen). Gleiches fire-and-forget-Prinzip wie reportResult():
+   wird NICHT in "Ergebnisse"/dashGetSummary ausgewertet, sondern landet in einem eigenen
+   Tabellenblatt "Freitextantworten" und erscheint im Dashboard in der Karte
+   "Freitextantworten" (siehe Code.gs: doPost type:"freitext", dashGetFreitext). */
+function reportFreitext(exerciseSlug, frageKey, frageLabel, antwort){
+  if (!APPS_SCRIPT_URL) return;
+  const text = String(antwort == null ? "" : antwort).trim();
+  if (!text) return;
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      keepalive: true,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        type: "freitext",
+        code: getMyCode(),
+        exercise: exerciseSlug,
+        frageKey: frageKey,
+        frageLabel: frageLabel,
+        antwort: text
       })
     }).catch(function(){ /* ignorieren - darf Schüler nie stören */ });
   } catch(e){ /* ignorieren */ }
