@@ -8415,11 +8415,21 @@ window.__startExercise = function(slug){
         const t = String(s).trim().replace(/\s+/g," ");
         return q.strict ? t : t.toLowerCase();
       };
+      /* Kulanz-Fallback (Rückmeldung Manuel 5.10.2026): wird nach einer Verbform gefragt (z.B.
+         "Bilde die Präteritum-Form von spielen (ich …)") und tippt ein Schüler zusätzlich das
+         Personalpronomen mit ein ("ich spielte" statt nur "spielte"), ist das inhaltlich richtig
+         und wird jetzt auch akzeptiert: schlägt der direkte Vergleich fehl, wird zusätzlich geprüft,
+         ob die Antwort nach Entfernen eines vorangestellten Personalpronomens (ich/du/er/sie/es/wir/
+         ihr) exakt zu einem accept-Wert passt. Gilt für alle "text"-Aufgaben site-weit, nicht nur
+         bei den Wortarten-Verb-Übungen. */
+      const PRONOUN_PREFIX = /^(ich|du|er|sie|es|wir|ihr)\s+/i;
+      const matchesAccept = val => val !== "" && q.accept.some(a => normalizeText(a) === val);
       const check = ()=>{
         if (solved) return;
         attempts++;
-        const val = normalizeText(input.value);
-        const ok = val !== "" && q.accept.some(a => normalizeText(a) === val);
+        const raw = normalizeText(input.value);
+        let ok = matchesAccept(raw);
+        if (!ok && PRONOUN_PREFIX.test(raw)) ok = matchesAccept(raw.replace(PRONOUN_PREFIX, ""));
         if (ok){
           input.disabled = true;
           document.getElementById("checkBtn").disabled = true;
