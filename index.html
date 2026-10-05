@@ -8415,21 +8415,36 @@ window.__startExercise = function(slug){
         const t = String(s).trim().replace(/\s+/g," ");
         return q.strict ? t : t.toLowerCase();
       };
-      /* Kulanz-Fallback (Rückmeldung Manuel 5.10.2026): wird nach einer Verbform gefragt (z.B.
-         "Bilde die Präteritum-Form von spielen (ich …)") und tippt ein Schüler zusätzlich das
-         Personalpronomen mit ein ("ich spielte" statt nur "spielte"), ist das inhaltlich richtig
-         und wird jetzt auch akzeptiert: schlägt der direkte Vergleich fehl, wird zusätzlich geprüft,
-         ob die Antwort nach Entfernen eines vorangestellten Personalpronomens (ich/du/er/sie/es/wir/
-         ihr) exakt zu einem accept-Wert passt. Gilt für alle "text"-Aufgaben site-weit, nicht nur
-         bei den Wortarten-Verb-Übungen. */
-      const PRONOUN_PREFIX = /^(ich|du|er|sie|es|wir|ihr)\s+/i;
+      /* Kulanz-Fallback (Rückmeldung Manuel 5.10.2026, erweitert nach Perfekt-Beispiel - "sei
+         insgesamt bei allen Aufgaben kulanter"): bei Fragen wie "Bilde die Präteritum-Form von
+         spielen (ich …)" oder "... (ich habe …)" bzw. "Präsens-Form „er/sie/es …“" wird aus dem
+         Hinweis in Klammern/Anführungszeichen (dem Text direkt vor "…"/"...") automatisch das
+         erwartete Vorwort ermittelt (z.B. "ich", "ich habe", "er/sie/es" - Schrägstrich-Varianten
+         werden alle einzeln akzeptiert). Tippt ein Schüler dieses Vorwort mit ein ("ich habe
+         gespielt" statt nur "gespielt", "er liest" statt nur "liest"), wird das jetzt zusätzlich
+         als richtig gewertet. Zusätzlich (als generelles Netz, auch ohne passenden Hinweistext im
+         Fragetext) wird ein einzelnes vorangestelltes Personalpronomen (ich/du/er/sie/es/wir/ihr)
+         ebenfalls toleriert. Schlägt der direkte Vergleich fehl, wird die Antwort nach Entfernen
+         dieses Vorworts erneut gegen die accept-Werte geprüft. Gilt für alle "text"-Aufgaben
+         site-weit, nicht nur bei den Wortarten-Verb-Übungen. */
+      const hintMatch = q.text.match(/[„"(]\s*([a-zäöüß\/ ]+?)\s*(?:…|\.\.\.)\s*[“")]/i);
+      let hintPrefixRe = null;
+      if (hintMatch){
+        const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+        const words = hintMatch[1].trim().split(/\s+/).filter(Boolean).map(w =>
+          w.includes("/") ? "(?:" + w.split("/").map(esc).join("|") + ")" : esc(w)
+        );
+        if (words.length) hintPrefixRe = new RegExp("^" + words.join("\\s+") + "\\s+", "i");
+      }
+      const GENERIC_PRONOUN_PREFIX = /^(ich|du|er|sie|es|wir|ihr)\s+/i;
       const matchesAccept = val => val !== "" && q.accept.some(a => normalizeText(a) === val);
       const check = ()=>{
         if (solved) return;
         attempts++;
         const raw = normalizeText(input.value);
         let ok = matchesAccept(raw);
-        if (!ok && PRONOUN_PREFIX.test(raw)) ok = matchesAccept(raw.replace(PRONOUN_PREFIX, ""));
+        if (!ok && hintPrefixRe && hintPrefixRe.test(raw)) ok = matchesAccept(raw.replace(hintPrefixRe, ""));
+        if (!ok && GENERIC_PRONOUN_PREFIX.test(raw)) ok = matchesAccept(raw.replace(GENERIC_PRONOUN_PREFIX, ""));
         if (ok){
           input.disabled = true;
           document.getElementById("checkBtn").disabled = true;
