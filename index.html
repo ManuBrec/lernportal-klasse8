@@ -7198,6 +7198,18 @@ function viewDeutschChapter(slug){
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       const done = set && !locked ? isEinstiegstestDone(t.practice) : false;
+      let progressHtml = "";
+      if (set && !locked && !set.custom){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const progDone = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${progDone ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
       let actionHtml = "";
       if (t.lektion){
         actionHtml = `<a class="practice-btn" href="#/lektion/${t.lektion}">Ansehen</a>`;
@@ -7212,6 +7224,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
+          ${progressHtml}
           ${actionHtml}
         </div>
       `;
