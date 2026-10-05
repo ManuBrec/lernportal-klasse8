@@ -1229,6 +1229,8 @@ const deutschWortartenTopics = [
   { tag:"lernen", label:"Abschlusstest Teil 1: Fehlersuche gemischt", practice:"deutsch-wortarten-teil4-fehlersuche" },
   { tag:"abschluss", label:"Abschlusstest Teil 2: Große Mischung – alles bestimmen", practice:"deutsch-wortarten-teil5-mischung" },
 
+  { tag:"lernen", label:"Wortarten-Trainer: Sätze bestimmen (leicht/schwer)", practice:"deutsch-wortarten-trainer" },
+
   { tag:"lernen", label:"Die Vergangenheiten: Präteritum, Perfekt, Plusquamperfekt", practice:"deutsch-vergangenheiten" },
   { tag:"lernen", label:"Verben in die Vergangenheit setzen", practice:"deutsch-vergangenheiten-verbformen" },
   { tag:"lernen", label:"Verben in die Vergangenheit setzen (Teil 2)", practice:"deutsch-vergangenheiten-verbformen-2" },
@@ -5242,6 +5244,112 @@ const exerciseSets = {
     ]
   },
 
+  /* Wortarten-Trainer (custom:"wortarten-trainer", siehe window.__startWortartenTrainer weiter unten):
+     anders als die Übungen oben KEINE feste Fragenliste, sondern ein Vorrat an "sentences" (Satz +
+     eine flexible Auswahl markierter Zielwörter mit ihrer Wortart), aus dem pro Runde 10 zufällige
+     Sätze ohne Wiederholung gezogen werden (Kartenstapel-Prinzip, siehe Motor). Leicht/Schwer ist
+     dabei NUR ein Umschalter für die Antwort-Eingabe desselben Satz-Vorrats (Leicht = Multiple-Choice-
+     Buttons mit allen 12 Wortarten, Schwer = Wortart selbst eintippen, geprüft gegen Synonyme wie
+     beim Einstiegstest Teil 1, siehe part1Targets dort). Beliebig oft wiederholbar, daher wie der
+     Rechenweg-Trainer bei Mathe OHNE Sheets-Reporting (kein reportResult()) - deshalb auch keine
+     Eintragung in Code.gs/Admin.html nötig. Startet gesperrt (locked:true), bis Manuel ihn getestet
+     und im Code freigeschaltet hat. */
+  "deutsch-wortarten-trainer": {
+    title: "Wortarten-Trainer",
+    subject: "deutsch",
+    chapterSlug: "wortarten",
+    duration: "ca. 10 Minuten pro Runde",
+    locked: true,
+    custom: "wortarten-trainer",
+    questions: [],
+    sentences: [
+  { text: "Der kleine Hund bellt laut, weil ein Fremder vor der Tür steht.",
+    words: [{word:"Der",answer:"Artikel"},{word:"Hund",answer:"Nomen"},{word:"bellt",answer:"Verb"},{word:"laut",answer:"Adjektiv"},{word:"weil",answer:"Konjunktion"},{word:"vor",answer:"Präposition"}] },
+  { text: "Gestern sind wir mit unserem Fahrrad zum See gefahren und dort geschwommen.",
+    words: [{word:"Gestern",answer:"Adverb"},{word:"wir",answer:"Personalpronomen"},{word:"unserem",answer:"Possessivpronomen"},{word:"gefahren",answer:"Verb"},{word:"und",answer:"Konjunktion"},{word:"dort",answer:"Adverb"}] },
+  { text: "Meine Schwester backt heute einen Kuchen, denn morgen feiert sie Geburtstag.",
+    words: [{word:"Meine",answer:"Possessivpronomen"},{word:"Schwester",answer:"Nomen"},{word:"backt",answer:"Verb"},{word:"heute",answer:"Adverb"},{word:"einen",answer:"Artikel"},{word:"denn",answer:"Konjunktion"},{word:"sie",answer:"Personalpronomen"}] },
+  { text: "Dieser Film war wirklich spannend, aber das Ende hat mich enttäuscht.",
+    words: [{word:"Dieser",answer:"Demonstrativpronomen"},{word:"spannend",answer:"Adjektiv"},{word:"aber",answer:"Konjunktion"},{word:"mich",answer:"Personalpronomen"},{word:"enttäuscht",answer:"Verb"}] },
+  { text: "Oh, wie schön dieses Gemälde ist! Es hängt schon seit Jahren in unserem Flur.",
+    words: [{word:"Oh",answer:"Interjektion"},{word:"dieses",answer:"Demonstrativpronomen"},{word:"Gemälde",answer:"Nomen"},{word:"Es",answer:"Personalpronomen"},{word:"in",answer:"Präposition"},{word:"unserem",answer:"Possessivpronomen"}] },
+  { text: "Zwei Mannschaften kämpften hart, doch am Ende gewann die bessere.",
+    words: [{word:"Zwei",answer:"Numerale"},{word:"kämpften",answer:"Verb"},{word:"hart",answer:"Adjektiv"},{word:"doch",answer:"Konjunktion"},{word:"gewann",answer:"Verb"}] },
+  { text: "Hast du schon einmal die dritte Strophe dieses Liedes gehört?",
+    words: [{word:"du",answer:"Personalpronomen"},{word:"dritte",answer:"Numerale"},{word:"Strophe",answer:"Nomen"},{word:"dieses",answer:"Demonstrativpronomen"},{word:"gehört",answer:"Verb"}] },
+  { text: "Aua! Ich bin mit dem Fuß gegen den Tisch gestoßen.",
+    words: [{word:"Aua",answer:"Interjektion"},{word:"Ich",answer:"Personalpronomen"},{word:"mit",answer:"Präposition"},{word:"Fuß",answer:"Nomen"},{word:"gestoßen",answer:"Verb"}] },
+  { text: "Wir sollten schnell losgehen, weil wir sonst den Bus verpassen.",
+    words: [{word:"Wir",answer:"Personalpronomen"},{word:"schnell",answer:"Adverb"},{word:"losgehen",answer:"Verb"},{word:"weil",answer:"Konjunktion"},{word:"den",answer:"Artikel"},{word:"Bus",answer:"Nomen"}] },
+  { text: "Der alte Mann erzählt gern spannende Geschichten aus seiner Jugend.",
+    words: [{word:"Der",answer:"Artikel"},{word:"Mann",answer:"Nomen"},{word:"erzählt",answer:"Verb"},{word:"spannende",answer:"Adjektiv"},{word:"seiner",answer:"Possessivpronomen"}] },
+  { text: "Diese Aufgabe ist schwieriger, als ich zuerst dachte.",
+    words: [{word:"Diese",answer:"Demonstrativpronomen"},{word:"schwieriger",answer:"Adjektiv"},{word:"als",answer:"Konjunktion"},{word:"ich",answer:"Personalpronomen"},{word:"dachte",answer:"Verb"}] },
+  { text: "Hurra, wir haben das Spiel mit drei Toren Vorsprung gewonnen!",
+    words: [{word:"Hurra",answer:"Interjektion"},{word:"wir",answer:"Personalpronomen"},{word:"Spiel",answer:"Nomen"},{word:"drei",answer:"Numerale"},{word:"gewonnen",answer:"Verb"}] },
+  { text: "Obwohl es stark regnete, gingen die Kinder fröhlich zur Schule.",
+    words: [{word:"Obwohl",answer:"Konjunktion"},{word:"es",answer:"Personalpronomen"},{word:"regnete",answer:"Verb"},{word:"fröhlich",answer:"Adjektiv"},{word:"zur",answer:"Präposition"}] },
+  { text: "Unser Lehrer erklärt die Regeln immer sehr geduldig und deutlich.",
+    words: [{word:"Unser",answer:"Possessivpronomen"},{word:"Lehrer",answer:"Nomen"},{word:"erklärt",answer:"Verb"},{word:"die",answer:"Artikel"},{word:"immer",answer:"Adverb"},{word:"geduldig",answer:"Adjektiv"}] },
+  { text: "Jener Turm dort hinten ist schon über hundert Jahre alt.",
+    words: [{word:"Jener",answer:"Demonstrativpronomen"},{word:"Turm",answer:"Nomen"},{word:"dort",answer:"Adverb"},{word:"hundert",answer:"Numerale"},{word:"alt",answer:"Adjektiv"}] },
+  { text: "Psst, sei leise, sonst wachen die Babys im Nebenzimmer auf.",
+    words: [{word:"Psst",answer:"Interjektion"},{word:"leise",answer:"Adjektiv"},{word:"wachen",answer:"Verb"},{word:"Babys",answer:"Nomen"},{word:"im",answer:"Präposition"}] },
+  { text: "Bevor wir essen, müssen wir noch den Tisch decken.",
+    words: [{word:"Bevor",answer:"Konjunktion"},{word:"wir",answer:"Personalpronomen"},{word:"essen",answer:"Verb"},{word:"noch",answer:"Adverb"},{word:"Tisch",answer:"Nomen"}] },
+  { text: "Mein Onkel hat sich letztes Jahr ein neues Auto gekauft.",
+    words: [{word:"Mein",answer:"Possessivpronomen"},{word:"Onkel",answer:"Nomen"},{word:"neues",answer:"Adjektiv"},{word:"Auto",answer:"Nomen"},{word:"gekauft",answer:"Verb"}] },
+  { text: "Diese Jacke hier gefällt mir viel besser als die andere.",
+    words: [{word:"Diese",answer:"Demonstrativpronomen"},{word:"Jacke",answer:"Nomen"},{word:"gefällt",answer:"Verb"},{word:"mir",answer:"Personalpronomen"},{word:"besser",answer:"Adjektiv"}] },
+  { text: "Wow, dieser Sonnenuntergang sieht heute wirklich unglaublich aus!",
+    words: [{word:"Wow",answer:"Interjektion"},{word:"dieser",answer:"Demonstrativpronomen"},{word:"Sonnenuntergang",answer:"Nomen"},{word:"heute",answer:"Adverb"},{word:"unglaublich",answer:"Adjektiv"}] },
+  { text: "Fünf Schüler haben die Matheaufgabe schon vollständig gelöst.",
+    words: [{word:"Fünf",answer:"Numerale"},{word:"Schüler",answer:"Nomen"},{word:"die",answer:"Artikel"},{word:"vollständig",answer:"Adjektiv"},{word:"gelöst",answer:"Verb"}] },
+  { text: "Ich habe ihr gestern mein Lieblingsbuch geliehen.",
+    words: [{word:"Ich",answer:"Personalpronomen"},{word:"ihr",answer:"Personalpronomen"},{word:"gestern",answer:"Adverb"},{word:"mein",answer:"Possessivpronomen"},{word:"geliehen",answer:"Verb"}] },
+  { text: "Obwohl die Prüfung schwer war, haben fast alle Schüler bestanden.",
+    words: [{word:"Obwohl",answer:"Konjunktion"},{word:"schwer",answer:"Adjektiv"},{word:"fast",answer:"Adverb"},{word:"Schüler",answer:"Nomen"},{word:"bestanden",answer:"Verb"}] },
+  { text: "Trotz des Regens sind wir noch eine Runde joggen gegangen.",
+    words: [{word:"Trotz",answer:"Präposition"},{word:"wir",answer:"Personalpronomen"},{word:"noch",answer:"Adverb"},{word:"Runde",answer:"Nomen"},{word:"gegangen",answer:"Verb"}] },
+  { text: "Och, jetzt habe ich meinen Schlüssel schon wieder verloren.",
+    words: [{word:"Och",answer:"Interjektion"},{word:"jetzt",answer:"Adverb"},{word:"meinen",answer:"Possessivpronomen"},{word:"Schlüssel",answer:"Nomen"},{word:"verloren",answer:"Verb"}] },
+  { text: "Zehn Minuten vor dem Unterricht klingelt schon der Wecker.",
+    words: [{word:"Zehn",answer:"Numerale"},{word:"vor",answer:"Präposition"},{word:"Unterricht",answer:"Nomen"},{word:"klingelt",answer:"Verb"},{word:"der",answer:"Artikel"},{word:"Wecker",answer:"Nomen"}] },
+  { text: "Sie backt jeden Sonntag frische Brötchen für die ganze Familie.",
+    words: [{word:"Sie",answer:"Personalpronomen"},{word:"backt",answer:"Verb"},{word:"frische",answer:"Adjektiv"},{word:"für",answer:"Präposition"},{word:"die",answer:"Artikel"},{word:"Familie",answer:"Nomen"}] },
+  { text: "Dieses Rätsel konnte bisher noch niemand aus unserer Klasse lösen.",
+    words: [{word:"Dieses",answer:"Demonstrativpronomen"},{word:"Rätsel",answer:"Nomen"},{word:"noch",answer:"Adverb"},{word:"unserer",answer:"Possessivpronomen"},{word:"lösen",answer:"Verb"}] },
+  { text: "Er rannte so schnell, dass er fast über den Zaun gestolpert wäre.",
+    words: [{word:"Er",answer:"Personalpronomen"},{word:"rannte",answer:"Verb"},{word:"schnell",answer:"Adjektiv"},{word:"dass",answer:"Konjunktion"},{word:"über",answer:"Präposition"}] },
+  { text: "Acht Mannschaften spielen dieses Jahr im Turnier mit.",
+    words: [{word:"Acht",answer:"Numerale"},{word:"Mannschaften",answer:"Nomen"},{word:"spielen",answer:"Verb"},{word:"dieses",answer:"Demonstrativpronomen"},{word:"Turnier",answer:"Nomen"}] },
+  { text: "Kaum zu glauben: unser Außenseiter hat das Rennen gewonnen!",
+    words: [{word:"Kaum",answer:"Adverb"},{word:"unser",answer:"Possessivpronomen"},{word:"Außenseiter",answer:"Nomen"},{word:"Rennen",answer:"Nomen"},{word:"gewonnen",answer:"Verb"}] },
+  { text: "Bitte, hilf mir kurz beim Tragen dieser schweren Kiste.",
+    words: [{word:"Bitte",answer:"Interjektion"},{word:"mir",answer:"Personalpronomen"},{word:"dieser",answer:"Demonstrativpronomen"},{word:"schweren",answer:"Adjektiv"},{word:"Kiste",answer:"Nomen"}] },
+  { text: "Nachdem wir gegessen hatten, räumten wir gemeinsam die Küche auf.",
+    words: [{word:"Nachdem",answer:"Konjunktion"},{word:"wir",answer:"Personalpronomen"},{word:"räumten",answer:"Verb"},{word:"gemeinsam",answer:"Adverb"},{word:"Küche",answer:"Nomen"}] },
+  { text: "Dreißig Grad im Schatten – das ist heute wirklich ungewöhnlich heiß.",
+    words: [{word:"Dreißig",answer:"Numerale"},{word:"Schatten",answer:"Nomen"},{word:"heute",answer:"Adverb"},{word:"ungewöhnlich",answer:"Adverb"},{word:"heiß",answer:"Adjektiv"}] },
+  { text: "Igitt, dieser Pilz hier sieht wirklich giftig aus.",
+    words: [{word:"Igitt",answer:"Interjektion"},{word:"dieser",answer:"Demonstrativpronomen"},{word:"Pilz",answer:"Nomen"},{word:"wirklich",answer:"Adverb"},{word:"giftig",answer:"Adjektiv"}] },
+  { text: "Seine Mutter arbeitet seit zwölf Jahren als Krankenschwester im Krankenhaus.",
+    words: [{word:"Seine",answer:"Possessivpronomen"},{word:"Mutter",answer:"Nomen"},{word:"arbeitet",answer:"Verb"},{word:"zwölf",answer:"Numerale"},{word:"im",answer:"Präposition"}] },
+  { text: "Du bist jetzt wirklich schrecklich wütend auf deinen kleinen Bruder.",
+    words: [{word:"Du",answer:"Personalpronomen"},{word:"wirklich",answer:"Adverb"},{word:"wütend",answer:"Adjektiv"},{word:"deinen",answer:"Possessivpronomen"},{word:"Bruder",answer:"Nomen"}] },
+  { text: "In der zweiten Halbzeit hat unsere Mannschaft noch ein Tor erzielt.",
+    words: [{word:"In",answer:"Präposition"},{word:"zweiten",answer:"Numerale"},{word:"unsere",answer:"Possessivpronomen"},{word:"Mannschaft",answer:"Nomen"},{word:"erzielt",answer:"Verb"}] },
+  { text: "Ach, jetzt habe ich schon wieder meine Hausaufgaben vergessen!",
+    words: [{word:"Ach",answer:"Interjektion"},{word:"jetzt",answer:"Adverb"},{word:"meine",answer:"Possessivpronomen"},{word:"Hausaufgaben",answer:"Nomen"},{word:"vergessen",answer:"Verb"}] },
+  { text: "Im Klassenzimmer konnte die schwierige Frage nicht sofort beantwortet werden.",
+    words: [{word:"Im",answer:"Präposition"},{word:"schwierige",answer:"Adjektiv"},{word:"Frage",answer:"Nomen"},{word:"sofort",answer:"Adverb"},{word:"beantwortet",answer:"Verb"}] },
+  { text: "Unsere Nachbarn haben letzte Woche einen riesigen Baum im Garten gefällt.",
+    words: [{word:"Unsere",answer:"Possessivpronomen"},{word:"Nachbarn",answer:"Nomen"},{word:"einen",answer:"Artikel"},{word:"riesigen",answer:"Adjektiv"},{word:"im",answer:"Präposition"},{word:"gefällt",answer:"Verb"}] },
+  { text: "Hoppla, beinahe wäre mir die ganze Suppe heruntergefallen.",
+    words: [{word:"Hoppla",answer:"Interjektion"},{word:"beinahe",answer:"Adverb"},{word:"mir",answer:"Personalpronomen"},{word:"Suppe",answer:"Nomen"},{word:"heruntergefallen",answer:"Verb"}] }
+    ]
+  },
+
   /* Deutsch, Kapitel "Wortarten": Übung zu den drei Vergangenheitszeiten (Präteritum, Perfekt,
      Plusquamperfekt). Anders als der Einstiegstest oben bewusst NICHT gesperrt und beliebig oft
      wiederholbar (Lern-/Übungsaufgabe, kein einmaliger Diagnosetest) - siehe
@@ -7666,6 +7774,20 @@ function viewExercise(slug){
         <p>5 Teile${set.duration ? " · " + esc(set.duration) : ""}. Dieser Einstiegstest lässt sich auf diesem Gerät nur einmal machen – am Ende siehst du dein Ergebnis.</p>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="exerciseHost"></div>
+    `;
+  }
+
+  /* set.custom === "wortarten-trainer": ebenfalls eigener Ablauf (siehe
+     window.__startWortartenTrainer), beliebig oft wiederholbar wie der Rechenweg-Trainer. */
+  if (set.custom === "wortarten-trainer"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>Immer wieder neue Sätze${set.duration ? " · " + esc(set.duration) : ""}. Klicke ein unterstrichenes Wort an und bestimme seine Wortart – du kannst zwischen „leicht“ (Auswahl) und „schwer“ (selbst eintippen) wechseln.</p>
+      </div>
       <div id="exerciseHost"></div>
     `;
   }
@@ -10680,6 +10802,304 @@ window.__startVergangenheitenUebung = function(slug){
   renderQuestion();
 };
 
+/* Wortarten-Trainer (custom:"wortarten-trainer", siehe exerciseSets["deutsch-wortarten-trainer"]):
+   set.sentences wird als Kartenstapel verwendet (zufällig gemischt, erst neu gemischt wenn der
+   Stapel leer ist) - pro Runde werden daraus 10 Sätze gezogen, daher auch bei vielen Wiederholungen
+   keine Wiederholung innerhalb eines Durchgangs. Leicht/Schwer (Pille oben, in localStorage
+   gemerkt) ändert NUR die Antwort-Eingabe für das gerade angeklickte, unterstrichene Zielwort:
+   Leicht = Multiple-Choice mit allen 12 Wortarten, Schwer = Wortart selbst eintippen (Synonym-
+   tolerant geprüft - Begriffe von exerciseSets["deutsch-wortarten-einstiegstest"].part1Targets
+   übernommen, siehe dort). Läuft wie der Rechenweg-Trainer in einem Shadow-DOM (CSS-Variablen
+   erben trotzdem ins Shadow-DOM hinein); KEIN Sheets-Reporting, da die Sätze zufällig/beliebig oft
+   wiederholbar gezogen werden - daher auch keine Eintragung in Code.gs/Admin.html nötig. */
+window.__startWortartenTrainer = function(slug){
+const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
+const set = exerciseSets[slug];
+const root = host.attachShadow({mode:"open"});
+
+const WORTARTEN = ["Nomen","Verb","Adjektiv","Artikel","Personalpronomen","Possessivpronomen","Demonstrativpronomen","Adverb","Präposition","Konjunktion","Numerale","Interjektion"];
+const TERMS_BY_LABEL = {};
+(exerciseSets["deutsch-wortarten-einstiegstest"] && exerciseSets["deutsch-wortarten-einstiegstest"].part1Targets || []).forEach(t => { TERMS_BY_LABEL[t.label] = t.terms; });
+
+const MODE_KEY = "lernportal:wortarten-trainer:mode";
+let mode = (localStorage.getItem(MODE_KEY) === "schwer") ? "schwer" : "leicht";
+
+const ROUND_LEN = 10;
+const MAX_ATTEMPTS = 4;
+
+root.innerHTML = `<style>
+:host{display:block;font-family:var(--font-body);color:var(--ink);line-height:1.5}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;text-wrap:balance}
+button{font-family:inherit}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink-soft)}
+.pill b{color:var(--accent);font-family:var(--font-mono)}
+.shell{display:flex;flex-direction:column;gap:16px}
+.track{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden;border:1px solid var(--border)}
+.track div{height:100%;background:var(--accent);width:0;transition:width .3s ease}
+.modes{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:4px}
+.mode-btn{border:none;background:transparent;color:var(--ink-soft);font-weight:700;font-size:13px;padding:7px 14px;border-radius:999px;cursor:pointer}
+.mode-btn.active{background:var(--accent);color:var(--accent-ink)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+.sentence{font-size:20px;font-weight:600;line-height:1.75;text-wrap:pretty}
+.word{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-thickness:2px;text-decoration-color:var(--accent);text-underline-offset:4px;border-radius:5px;padding:1px 3px;transition:background .15s ease}
+.word:hover{background:var(--accent-soft)}
+.word.active{background:var(--accent-soft);color:var(--accent)}
+.word.solved{text-decoration:none;background:var(--success-soft);color:var(--success);cursor:default;font-weight:700}
+.word.revealed{text-decoration:none;background:var(--danger-soft);color:var(--danger);cursor:default;font-weight:700}
+.hint{font-size:13px;color:var(--ink-faint);margin-top:10px}
+.answer{margin-top:18px;border-top:1px solid var(--border);padding-top:18px}
+.answer-q{font-size:15.5px;font-weight:700;margin-bottom:12px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink);border-radius:12px;padding:9px 14px;font-size:14.5px;font-weight:600;cursor:pointer}
+.opt:hover{border-color:var(--accent)}
+.opt.right{background:var(--success-soft);border-color:var(--success);color:var(--success)}
+.opt.wrong{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+.opt:disabled{cursor:default}
+.textrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.textin{flex:1;min-width:160px;max-width:280px;padding:10px 14px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink);font:inherit;font-size:15px}
+.textin.bad{border-color:var(--danger);background:var(--danger-soft);color:var(--danger)}
+.btn{border:none;border-radius:999px;padding:11px 20px;font-weight:700;font-size:14.5px;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn[hidden]{display:none!important}
+.feedback{border-radius:14px;padding:12px 16px;font-size:14.5px;line-height:1.45;margin-top:14px}
+.feedback[hidden]{display:none!important}
+.feedback.good{background:var(--success-soft);color:var(--success)}
+.feedback.bad{background:var(--danger-soft);color:var(--danger)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;margin-top:18px}
+.result-score{font-family:var(--font-mono);font-size:54px;font-weight:600;color:var(--accent);line-height:1;margin:6px 0}
+.result-msg{color:var(--ink-soft);font-size:16px;max-width:52ch}
+.list{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:12px}
+.list-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--border);font-size:14px}
+.list-row:last-child{border-bottom:none}
+.list-row .grow{flex:1;min-width:0}
+.dots{display:flex;gap:4px;flex:none;flex-wrap:wrap;max-width:140px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--danger-soft);border:1.5px solid var(--danger)}
+.dot.on{background:var(--success);border-color:var(--success)}
+@media (max-width:480px){.card{padding:16px}.sentence{font-size:18px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="shell">
+  <div class="toprow">
+    <span class="pill">Satz <b id="nr">1</b>/<span id="total">${ROUND_LEN}</span></span>
+    <div class="modes" id="modes">
+      <button type="button" class="mode-btn" data-mode="leicht">leicht</button>
+      <button type="button" class="mode-btn" data-mode="schwer">schwer</button>
+    </div>
+    <span class="pill">Richtig <b id="score" class="num">0</b></span>
+  </div>
+  <div class="track"><div id="bar"></div></div>
+
+  <div id="game" style="display:contents">
+    <section class="card">
+      <div class="eyebrow">Welche Wortart?</div>
+      <div class="sentence" id="sentence"></div>
+      <p class="hint">Klicke eines der unterstrichenen Wörter an.</p>
+      <div class="answer" id="answerBox" hidden></div>
+      <div class="feedback" id="fb" hidden></div>
+      <div class="actions"><button class="btn" id="nextBtn" hidden>Nächster Satz</button></div>
+    </section>
+  </div>
+
+  <section class="card" id="end" hidden>
+    <div class="eyebrow">Geschafft</div>
+    <h2>Deine Auswertung</h2>
+    <div class="result-score num" id="endScore"></div>
+    <p class="result-msg" id="endMsg"></p>
+    <div class="list" id="endList"></div>
+    <div class="actions"><button class="btn" id="restartBtn">Neue Runde</button></div>
+  </section>
+</div>`;
+
+const $ = s => root.querySelector(s);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function normalizeAnswer(s){ return String(s||"").trim().toLowerCase().replace(/[.;:!?,]+$/,""); }
+function isCorrectText(input, wortart){
+  const norm = normalizeAnswer(input);
+  if (!norm) return false;
+  const terms = TERMS_BY_LABEL[wortart] || [wortart.toLowerCase()];
+  return terms.includes(norm);
+}
+
+/* Kartenstapel: Sätze werden gemischt gezogen; erst wenn der Stapel leer ist, wird neu gemischt -
+   so gibt es innerhalb eines Durchgangs durch alle Sätze keine Wiederholung. */
+let deck = [];
+function drawSentenceIdx(){
+  if (deck.length === 0) deck = shuffle(set.sentences.map((_, i) => i));
+  return deck.pop();
+}
+
+let roundIdxs = [], pos = 0, score = 0, totalWords = 0, wordStates = [], activeWordIdx = null, resultsLog = [];
+
+function currentSentence(){ return set.sentences[roundIdxs[pos]]; }
+
+function startRound(){
+  roundIdxs = []; for (let i = 0; i < ROUND_LEN; i++) roundIdxs.push(drawSentenceIdx());
+  pos = 0; score = 0; totalWords = 0; resultsLog = [];
+  $("#end").hidden = true; $("#game").style.display = "contents";
+  renderSentence();
+}
+
+function renderSentence(){
+  const s = currentSentence();
+  if (!s._spans) s._spans = locateWordsInOrder(s.text, s.words.map(w => w.word));
+  wordStates = s.words.map(() => ({ status: "unsolved", attempts: 0 }));
+  activeWordIdx = null;
+
+  $("#nr").textContent = String(pos + 1);
+  $("#bar").style.width = Math.round((pos / ROUND_LEN) * 100) + "%";
+  $("#score").textContent = String(score);
+  $("#answerBox").hidden = true; $("#answerBox").innerHTML = "";
+  $("#fb").hidden = true; $("#fb").textContent = "";
+  $("#nextBtn").hidden = true;
+
+  drawSentenceHtml();
+}
+
+function drawSentenceHtml(){
+  const s = currentSentence();
+  let out = "", cursor = 0;
+  s._spans.forEach((sp, i) => {
+    out += esc(s.text.slice(cursor, sp.start));
+    const st = wordStates[i].status;
+    const cls = "word" + (i === activeWordIdx ? " active" : "") + (st === "solved" ? " solved" : "") + (st === "revealed" ? " revealed" : "");
+    out += `<span class="${cls}" data-idx="${i}">${esc(s.text.slice(sp.start, sp.end))}</span>`;
+    cursor = sp.end;
+  });
+  out += esc(s.text.slice(cursor));
+  $("#sentence").innerHTML = out;
+  $("#sentence").querySelectorAll(".word").forEach(el => {
+    el.addEventListener("click", () => {
+      const idx = Number(el.dataset.idx);
+      if (wordStates[idx].status !== "unsolved") return;
+      activeWordIdx = idx;
+      drawSentenceHtml();
+      renderAnswerBox();
+    });
+  });
+}
+
+function renderAnswerBox(){
+  const s = currentSentence();
+  const w = s.words[activeWordIdx];
+  const box = $("#answerBox");
+  box.hidden = false;
+  $("#fb").hidden = true;
+  if (mode === "schwer"){
+    box.innerHTML = `
+      <div class="answer-q">Welche Wortart ist „${esc(w.word)}“?</div>
+      <div class="textrow">
+        <input type="text" class="textin" id="wtInput" autocomplete="off" placeholder="Wortart eintippen …">
+        <button class="btn" id="wtCheck">Prüfen</button>
+      </div>
+    `;
+    const input = $("#wtInput");
+    input.focus();
+    input.addEventListener("keydown", e => { if (e.key === "Enter") checkAnswer(null); });
+    $("#wtCheck").addEventListener("click", () => checkAnswer(null));
+  } else {
+    box.innerHTML = `
+      <div class="answer-q">Welche Wortart ist „${esc(w.word)}“?</div>
+      <div class="opts" id="wtOpts">
+        ${WORTARTEN.map(o => `<button type="button" class="opt" data-opt="${esc(o)}">${esc(o)}</button>`).join("")}
+      </div>
+    `;
+    box.querySelectorAll(".opt").forEach(btn => btn.addEventListener("click", () => checkAnswer(btn)));
+  }
+}
+
+function checkAnswer(btn){
+  const s = currentSentence();
+  const w = s.words[activeWordIdx];
+  const ws = wordStates[activeWordIdx];
+  let correct;
+  if (mode === "schwer"){
+    correct = isCorrectText($("#wtInput").value, w.answer);
+  } else {
+    correct = btn.dataset.opt === w.answer;
+  }
+  const fb = $("#fb");
+  fb.hidden = false;
+  if (correct){
+    ws.status = "solved";
+    score++;
+    fb.className = "feedback good"; fb.textContent = "Richtig!";
+    if (mode === "leicht" && btn) btn.classList.add("right");
+    advanceAfterWord();
+  } else {
+    ws.attempts++;
+    if (ws.attempts >= MAX_ATTEMPTS){
+      ws.status = "revealed";
+      fb.className = "feedback bad"; fb.textContent = `Kein Problem – die richtige Antwort ist „${esc(w.answer)}“.`;
+      advanceAfterWord();
+    } else {
+      fb.className = "feedback bad"; fb.textContent = `Leider nicht richtig – versuch's nochmal. (Versuch ${ws.attempts} von ${MAX_ATTEMPTS})`;
+      if (mode === "leicht" && btn){ btn.classList.add("wrong"); btn.disabled = true; }
+      if (mode === "schwer"){ const input = $("#wtInput"); input.classList.add("bad"); setTimeout(() => input.classList.remove("bad"), 400); }
+    }
+  }
+}
+
+function advanceAfterWord(){
+  const doneIdx = activeWordIdx;
+  activeWordIdx = null;
+  drawSentenceHtml();
+  const allDone = wordStates.every(w => w.status !== "unsolved");
+  if (allDone){
+    $("#answerBox").hidden = true;
+    totalWords += wordStates.length;
+    resultsLog.push({
+      text: currentSentence().text,
+      solved: wordStates.filter(w => w.status === "solved").length,
+      total: wordStates.length
+    });
+    $("#nextBtn").hidden = false;
+    $("#nextBtn").textContent = (pos + 1 >= ROUND_LEN) ? "Ergebnis ansehen" : "Nächster Satz";
+  } else {
+    setTimeout(() => { if (activeWordIdx === null) $("#answerBox").hidden = true; }, 900);
+  }
+  void doneIdx;
+}
+
+function showEnd(){
+  $("#game").style.display = "none";
+  $("#end").hidden = false;
+  $("#bar").style.width = "100%";
+  $("#endScore").textContent = score + " / " + totalWords;
+  const pct = totalWords ? Math.round(score / totalWords * 100) : 0;
+  $("#endMsg").textContent = pct === 100
+    ? "Perfekt – alle Wortarten richtig bestimmt!"
+    : (pct >= 70 ? "Starke Runde – weiter so!" : "Gar nicht schlecht – noch eine Runde für mehr Übung?");
+  $("#endList").innerHTML = resultsLog.map(r => `
+    <div class="list-row">
+      <span class="grow">${esc(r.text)}</span>
+      <span class="dots">${Array.from({length:r.total}).map((_,i) => `<span class="dot${i < r.solved ? " on" : ""}"></span>`).join("")}</span>
+    </div>
+  `).join("");
+}
+
+$("#nextBtn").addEventListener("click", () => {
+  pos++;
+  if (pos >= ROUND_LEN){ showEnd(); } else { renderSentence(); }
+});
+$("#restartBtn").addEventListener("click", startRound);
+
+function setMode(m){
+  mode = m;
+  try { localStorage.setItem(MODE_KEY, m); } catch(e){}
+  $("#modes").querySelectorAll(".mode-btn").forEach(b => b.classList.toggle("active", b.dataset.mode === m));
+  if (activeWordIdx !== null) renderAnswerBox();
+}
+$("#modes").querySelectorAll(".mode-btn").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+setMode(mode);
+
+startRound();
+};
+
 /* ---------- Router ---------- */
 function route(){
   const hash = location.hash.replace(/^#/, "") || "/";
@@ -10735,6 +11155,8 @@ function route(){
       window.__startWortartenEinstiegstest(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "rechenweg-trainer"){
       window.__startRechenwegTrainer();
+    } else if (exerciseSets[parts[1]].custom === "wortarten-trainer"){
+      window.__startWortartenTrainer(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "vergangenheiten"){
       window.__startVergangenheitenUebung(parts[1]);
     } else {
