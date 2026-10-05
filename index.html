@@ -1135,6 +1135,8 @@
   .ik-musterloesung.show{display:block;}
   .ik-heft-list{list-style:none; margin:0 0 16px; padding:0; display:grid; gap:7px;}
   .ik-heft-list li{font-size:14.5px; line-height:1.5; color:var(--ink);}
+  .ik-heft-subhead{font-weight:700; font-size:14.5px; margin:0 0 6px; color:var(--ink);}
+  .ik-heft-wege{font-size:14.5px; line-height:1.5; color:var(--ink); margin:0 0 16px;}
 </style>
 
 <div class="topbar no-print" id="topbar">
@@ -1332,12 +1334,18 @@ const gpgFolders = [
    erscheint bis dahin als Themenpunkt ohne "Jetzt üben"-Knopf. */
 const naturtechnikChapters = [
   { slug:"mikroorganismen", nr:1, title:"Mikroorganismen", status:"aktuell" },
+  { slug:"infektionserkrankungen", nr:2, title:"Infektionserkrankungen", status:"aktuell" },
 ];
 
 const naturtechnikMikroorganismenTopics = [
   { tag:"lernen", label:"Vielfältige Mikroorganismen", practice:"nt-mikroorganismen-vielfalt" },
   { tag:"lernen", label:"Die Bedeutung der Mikroorganismen", practice:"nt-mikroorganismen-bedeutung" },
   { tag:"lernen", label:"Bakterien – genauer betrachtet", practice:"nt-bakterien-genauer-betrachtet" },
+];
+
+/* Infektionserkrankungen: eigenes, neues Kapitel (nicht mehr Teil von Mikroorganismen) - auf
+   Wunsch von Manuel am 05.10. aus dem Mikroorganismen-Kapitel herausgelöst. */
+const naturtechnikInfektionserkrankungenTopics = [
   { tag:"lernen", label:"Infektionserkrankungen", practice:"nt-infektionserkrankungen" },
 ];
 
@@ -3388,7 +3396,7 @@ const exerciseSets = {
   "nt-infektionserkrankungen": {
     title: "Infektionserkrankungen",
     subject: "naturtechnik",
-    chapterSlug: "mikroorganismen",
+    chapterSlug: "infektionserkrankungen",
     duration: "ca. 20 Minuten",
     locked: true,
     custom: "infektionserkrankungen",
@@ -7488,6 +7496,51 @@ function viewNaturtechnikChapter(slug){
     `;
   }
 
+  if (slug === "infektionserkrankungen"){
+    const rows = naturtechnikInfektionserkrankungenTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/naturtechnik">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">${esc(c.title)}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Wie es zu einer Infektion kommt und was im Körper passiert. Weitere Themen folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Bereich</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
   return h`
     <a class="backlink" href="#/naturtechnik">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
@@ -10925,9 +10978,17 @@ function ikSickIllustration(){
       <path d="M32 104 Q96 76 164 104 L164 114 Q96 90 32 114 Z" fill="var(--accent)" opacity=".16"/>
       <path d="M32 104 Q96 76 164 104" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
       <ellipse cx="54" cy="93" rx="30" ry="12" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+      <circle cx="98" cy="90" r="9" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.6"/>
+      <circle cx="91" cy="82" r="4" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.4"/>
+      <circle cx="105" cy="82" r="4" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.4"/>
+      <ellipse cx="99" cy="104" rx="13" ry="11" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="1.6"/>
+      <circle cx="95" cy="89" r="1.3" fill="var(--ink-faint)"/>
+      <circle cx="101" cy="89" r="1.3" fill="var(--ink-faint)"/>
       <circle cx="59" cy="76" r="17" fill="var(--surface-2)" stroke="var(--ink-faint)" stroke-width="2"/>
       <path d="M52 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
       <path d="M63 75q4 3 8 0" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
+      <path d="M38 38 Q49 51 55 63" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="53" cy="62" rx="9" ry="6" fill="var(--surface)" stroke="var(--ink-faint)" stroke-width="1.8" transform="rotate(-20 53 62)"/>
       <rect x="128" y="66" width="22" height="16" rx="3" fill="var(--surface)" stroke="var(--ink-faint)" stroke-width="2"/>
       <path d="M150 70q8 0 8 6t-8 6" fill="none" stroke="var(--ink-faint)" stroke-width="2"/>
       <path d="M133 60q3-6 0-10" fill="none" stroke="var(--ink-faint)" stroke-width="1.6" stroke-linecap="round"/>
@@ -10936,7 +10997,7 @@ function ikSickIllustration(){
   `;
 }
 
-const IK_STORY_TEXT = "Seit heute Morgen liegt Levent im Bett. Dabei war der Montag noch ganz normal: Er war mit seinem Kumpel Finn auf dem Pausenhof, der ständig geschnieft und gehustet hat. Levent hat sich nichts dabei gedacht. Doch am Abend kratzte plötzlich sein Hals, die Nase wurde immer dichter – und heute Morgen hat seine Mutter 38,2 °C Fieber gemessen. Jetzt liegt Levent eingemummelt im Bett, trinkt heißen Tee und hat zu nichts Lust. Dabei hat er Finn doch gar nicht direkt angefasst – wie konnte er sich da bloß anstecken?";
+const IK_STORY_TEXT = "Seit heute Morgen liegt Milla im Bett. Dabei war der Montag noch ganz normal: Sie war mit ihrer Freundin Finja auf dem Pausenhof, die ständig geschnieft und gehustet hat. Milla hat sich nichts dabei gedacht. Doch am Abend kratzte plötzlich ihr Hals, die Nase wurde immer dichter – und heute Morgen hat ihre Mutter 38,2 °C Fieber gemessen. Jetzt liegt Milla eingemummelt im Bett, trinkt heißen Tee und hat zu nichts Lust. Ihre Mutter kümmert sich um sie. Dabei hat Milla Finja doch gar nicht direkt angefasst – wie konnte sie sich da bloß anstecken?";
 
 const IK_SYMPTOM_TOOLTIP = "Ein Symptom ist ein Anzeichen, an dem man erkennen kann, dass jemand krank ist – zum Beispiel Fieber, Husten oder Kopfschmerzen.";
 
@@ -10988,7 +11049,9 @@ const IK_FINAL_QUESTIONS = [
 ];
 
 const IK_HEFTAUFSCHRIEB_HTML = `
-  <p style="font-weight:700; margin-bottom:10px;">Infektionswege: Schmierinfektion, Tröpfcheninfektion, Tierinfektion</p>
+  <p class="ik-heft-subhead">Welche Wege einer Infektion gibt es:</p>
+  <p class="ik-heft-wege">Schmierinfektion, Tröpfcheninfektion, Tierinfektion</p>
+  <p class="ik-heft-subhead">Phasen einer Infektion:</p>
   <ol class="ik-heft-list">
     <li><b>1. Phase: Infektion</b> durch eingedrungene Krankheitserreger.</li>
     <li><b>2. Phase: Inkubation:</b> Vermehrung der Krankheitserreger. Bei einem grippalen Infekt etwa 3 Tage.</li>
@@ -11020,7 +11083,7 @@ window.__startInfektionserkrankungen = function(slug){
     host.innerHTML = `
       <div class="qcard">
         <div class="ik-illustration">${ikSickIllustration()}</div>
-        <div class="qtext" style="text-align:center;">Levent fühlt sich elend.</div>
+        <div class="qtext" style="text-align:center;">Milla fühlt sich elend.</div>
         <p class="ik-story-text">${esc(IK_STORY_TEXT)}</p>
         <div class="qactions" style="margin-top:20px;"><button class="next-btn show" id="ikNext0">Weiter</button></div>
       </div>
@@ -11125,7 +11188,7 @@ window.__startInfektionserkrankungen = function(slug){
     overlay.className = "tm-popup-overlay";
     overlay.innerHTML = `
       <div class="tm-popup-card text-content" style="max-width:460px;">
-        <h3>Heftaufschrieb: Infektionserkrankungen</h3>
+        <h3>Infektionserkrankungen</h3>
         ${IK_HEFTAUFSCHRIEB_HTML}
         <button type="button" class="tm-popup-close">Schließen</button>
       </div>
