@@ -478,6 +478,16 @@
   .tm-popup-card.table-content{max-width:560px;}
   .tm-popup-card.table-content .tm-table{text-align:left; font-size:12.5px;}
   .tm-popup-card.table-content .tm-table th, .tm-popup-card.table-content .tm-table td{padding:7px 8px;}
+  /* Variante mit Bild + Text pro Zeile, mehrere Zeilen untereinander (z.B. "Bewässerungsarten":
+     Bild links, Bezeichnung + Merkmale rechts) - siehe q.popupShowImages bei kind:"map-match". */
+  .tm-popup-card.image-content{max-width:560px; text-align:left;}
+  .ic-popup-row{display:flex; gap:12px; align-items:flex-start; margin:0 0 16px;}
+  .ic-popup-row:last-of-type{margin-bottom:4px;}
+  .ic-popup-img{width:92px; flex:none; border-radius:8px; overflow:hidden; background:var(--surface-2);}
+  .ic-popup-img svg{width:100%; height:100%; display:block;}
+  .ic-popup-text h4{font-family:var(--font-display); font-size:14.5px; font-weight:800; color:var(--ink); margin:2px 0 6px;}
+  .ic-popup-text ul{margin:0; padding-left:18px;}
+  .ic-popup-text li{font-size:12.5px; font-weight:500; line-height:1.5; color:var(--ink-soft); margin-bottom:3px;}
   .tm-popup-close{
     background:var(--accent); color:var(--accent-ink); border:none; border-radius:999px;
     padding:11px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
@@ -556,6 +566,25 @@
   .cc-slots{display:flex; flex-wrap:wrap; gap:8px;}
   .cc-slots .mm-tile{min-width:84px; flex:1 1 84px;}
   .cc-slots .mm-tile.tile-wide{flex-basis:100%;}
+
+  /* Bild-Karten (map-match mit q.layout==="image-cards", z.B. "Bewässerungsarten" bei GPG): wie die
+     Kategorie-Karten oben, aber mit einem eigenen, selbst gezeichneten SVG-Bild (q.categories[].image)
+     als Kartenkopf statt Emoji-Icon + Text - das Bild ist hier der eigentliche "Begriff", den man
+     wiedererkennen muss. Dieselbe matchBy:"group"-Zieh-Logik wie bei den Kategorie-Karten. */
+  .ic-board{display:grid; grid-template-columns:repeat(auto-fit, minmax(170px,1fr)); gap:14px; margin:4px 0 18px;}
+  .ic-card{
+    border-radius:var(--radius-lg); padding:12px; border:2px solid var(--cc-color, var(--border));
+    background:var(--cc-soft, var(--surface-2));
+  }
+  .ic-card-image{
+    width:100%; aspect-ratio:10/7; border-radius:10px; overflow:hidden; background:var(--surface);
+    margin-bottom:8px;
+  }
+  .ic-card-image svg{width:100%; height:100%; display:block;}
+  .ic-card-label{
+    font-weight:800; font-size:13.5px; text-align:center; margin-bottom:10px; color:var(--cc-color, var(--ink));
+  }
+  .ic-slots{display:flex; flex-direction:column; gap:8px;}
 
   /* Waage-Sortierung (map-match mit q.layout==="balance-sort", z.B. Vorteile/Nachteile der
      digitalen Kommunikation): dieselbe matchBy:"group"-Zieh-Logik wie bei den Kategorie-Karten,
@@ -1317,6 +1346,7 @@ const landwirtschaftTopics = [
   { tag:"lernen", label:"Grundlagen der Landwirtschaft", page:200, practice:"gpg-landwirtschaft-grundlagen" },
   { tag:"lernen", label:"Der Gäuboden", page:202 },
   { tag:"lernen", label:"Das Knoblauchsland", page:204 },
+  { tag:"lernen", label:"Bewässerungsarten", practice:"gpg-bewaesserungsarten" },
   { tag:"lernen", label:"Konventionelle Landwirtschaft", page:206 },
   { tag:"lernen", label:"Ökologische Landwirtschaft", page:208 },
   { tag:"lernen", label:"Wahlseite: Landwirtschaftliche Maschinen", page:210 },
@@ -1759,6 +1789,79 @@ const NUTZUNG_TILES = [
   { id:"cloud",               label:"Dateien auf einem Server im Internet speichern und abrufen",     col:2, row:2, alwaysLabel:true },
 ];
 const NUTZUNG_LABELS = { kommunikation:"Kommunikation", lernen:"E-Learning", berufsorientierung:"Berufsorientierung", cloud:"Cloud-Speicher" };
+
+/* "Bewässerungsarten" (GPG, Landwirtschaft): drei eigene, selbst gezeichnete SVG-Bilder (KEINE
+   Buchgrafiken - bewusst eigene, andere Darstellung als die Vorlage, auf der Manuels Fotos
+   beruhen) für q.layout==="image-cards". Merkmale (Bewässerungsart_TILES) sind eigene, neu
+   formulierte Sätze - Fakten (Prozentangaben) stammen sinngemäß aus den Buch-/Arbeitsblatt-Fotos,
+   der Wortlaut ist aber komplett neu. */
+const BEWAESSERUNG_SVG_SPRINKLER = `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="0" y="0" width="200" height="140" fill="#EAF4FB"/>
+  <rect x="0" y="110" width="200" height="30" fill="#CDA368"/>
+  <rect x="0" y="106" width="200" height="6" fill="#B38A52"/>
+  <line x1="100" y1="110" x2="100" y2="44" stroke="#8B95A1" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="100" cy="40" r="8" fill="#5C6670"/>
+  <path d="M100 40 C 64 18, 32 34, 20 66" stroke="#3B82C4" stroke-width="3" fill="none" stroke-dasharray="4 6" stroke-linecap="round"/>
+  <path d="M100 40 C 136 18, 168 34, 180 66" stroke="#3B82C4" stroke-width="3" fill="none" stroke-dasharray="4 6" stroke-linecap="round"/>
+  <g fill="#3B82C4">
+    <circle cx="30" cy="58" r="3"/><circle cx="50" cy="42" r="3"/>
+    <circle cx="150" cy="42" r="3"/><circle cx="170" cy="58" r="3"/>
+  </g>
+  <g fill="#4F9D5D">
+    <ellipse cx="38" cy="104" rx="16" ry="10"/><ellipse cx="100" cy="98" rx="13" ry="9"/><ellipse cx="162" cy="104" rx="16" ry="10"/>
+  </g>
+</svg>`;
+const BEWAESSERUNG_SVG_TROPFCHEN = `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="0" y="0" width="200" height="140" fill="#EAF4FB"/>
+  <rect x="0" y="110" width="200" height="30" fill="#CDA368"/>
+  <rect x="0" y="106" width="200" height="6" fill="#B38A52"/>
+  <line x1="20" y1="100" x2="180" y2="100" stroke="#5C6670" stroke-width="4" stroke-linecap="round"/>
+  <g fill="#4F9D5D">
+    <ellipse cx="40" cy="88" rx="12" ry="20"/><ellipse cx="100" cy="84" rx="12" ry="22"/><ellipse cx="160" cy="88" rx="12" ry="20"/>
+  </g>
+  <g fill="#5C6670">
+    <circle cx="40" cy="100" r="3"/><circle cx="100" cy="100" r="3"/><circle cx="160" cy="100" r="3"/>
+  </g>
+  <g fill="#3B82C4">
+    <path d="M40 105 C 36 110, 36 116, 40 120 C 44 116, 44 110, 40 105 Z"/>
+    <path d="M100 105 C 96 110, 96 116, 100 120 C 104 116, 104 110, 100 105 Z"/>
+    <path d="M160 105 C 156 110, 156 116, 160 120 C 164 116, 164 110, 160 105 Z"/>
+  </g>
+</svg>`;
+const BEWAESSERUNG_SVG_GRABEN = `<svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="0" y="0" width="200" height="140" fill="#F1E6C9"/>
+  <rect x="10" y="16" width="180" height="14" rx="6" fill="#8FC3E8"/>
+  <rect x="10" y="54" width="180" height="14" rx="6" fill="#8FC3E8"/>
+  <rect x="10" y="92" width="180" height="14" rx="6" fill="#8FC3E8"/>
+  <path d="M14 23 q9 -5 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0" stroke="#2E6FA6" stroke-width="2" fill="none"/>
+  <path d="M14 61 q9 -5 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0" stroke="#2E6FA6" stroke-width="2" fill="none"/>
+  <path d="M14 99 q9 -5 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0" stroke="#2E6FA6" stroke-width="2" fill="none"/>
+  <g fill="#4F9D5D">
+    <ellipse cx="40" cy="8" rx="9" ry="6"/><ellipse cx="100" cy="8" rx="9" ry="6"/><ellipse cx="160" cy="8" rx="9" ry="6"/>
+    <ellipse cx="40" cy="46" rx="9" ry="6"/><ellipse cx="100" cy="46" rx="9" ry="6"/><ellipse cx="160" cy="46" rx="9" ry="6"/>
+    <ellipse cx="40" cy="84" rx="9" ry="6"/><ellipse cx="100" cy="84" rx="9" ry="6"/><ellipse cx="160" cy="84" rx="9" ry="6"/>
+    <ellipse cx="40" cy="122" rx="9" ry="6"/><ellipse cx="100" cy="122" rx="9" ry="6"/><ellipse cx="160" cy="122" rx="9" ry="6"/>
+  </g>
+</svg>`;
+const BEWAESSERUNG_CATEGORIES = [
+  { id:"sprinkler",  label:"Sprinklerbewässerung",            color:"#3454D1", image: BEWAESSERUNG_SVG_SPRINKLER },
+  { id:"troepfchen", label:"Tröpfchenbewässerung",             color:"#237A4B", image: BEWAESSERUNG_SVG_TROPFCHEN },
+  { id:"graben",     label:"Graben- und Furchenbewässerung",   color:"#C97A2B", image: BEWAESSERUNG_SVG_GRABEN },
+];
+const BEWAESSERUNG_TILES = [
+  { id:"spr-1", label:"Das Wasser wird wie Regen durch die Luft versprüht.", group:"sprinkler" },
+  { id:"spr-2", label:"Dünger und Pflanzenschutzmittel können dem Wasser beigemischt werden.", group:"sprinkler" },
+  { id:"spr-3", label:"Die nötigen Pumpen sind sehr teuer.", group:"sprinkler" },
+  { id:"spr-4", label:"Etwa 20 bis 40 % des Wassers gehen durch Verdunstung und Wind verloren.", group:"sprinkler" },
+  { id:"tro-1", label:"Das Wasser läuft durch dünne Schläuche direkt zu den Pflanzen.", group:"troepfchen" },
+  { id:"tro-2", label:"Es wird nur tropfenweise an die Pflanzen abgegeben.", group:"troepfchen" },
+  { id:"tro-3", label:"Die Wassermenge lässt sich dabei sehr genau dosieren.", group:"troepfchen" },
+  { id:"tro-4", label:"Nur etwa 5 bis 10 % des Wassers gehen verloren.", group:"troepfchen" },
+  { id:"gra-1", label:"Das Wasser fließt durch offene Gräben über das Feld.", group:"graben" },
+  { id:"gra-2", label:"In flachen Furchen versickert das Wasser bei den Pflanzenreihen.", group:"graben" },
+  { id:"gra-3", label:"Die Methode ist arbeitsaufwendig, aber kostengünstig.", group:"graben" },
+  { id:"gra-4", label:"Bis zu 80 % des Wassers gehen dabei verloren.", group:"graben" },
+];
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
 /* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
@@ -3148,6 +3251,30 @@ const exerciseSets = {
           ]}
         ],
         explain: "Richtig – alle Begriffe und Erklärungen sind den richtigen Kreisen zugeordnet!" }
+    ]
+  },
+  /* Neuer Punkt "Bewässerungsarten" (Wunsch von Manuel, nach "Das Knoblauchsland" einsortiert, ohne
+     Seitenzahl - siehe landwirtschaftTopics): eigene Bilder zu Sprinkler-/Tröpfchen-/Graben- und
+     Furchenbewässerung (siehe BEWAESSERUNG_SVG_*, keine Buchgrafiken) statt der drei Foto-Vorlagen.
+     layout:"image-cards" (neu, siehe CSS .ic-board/.ic-card und render-Code bei kind:"map-match"):
+     die Schüler ordnen jedes Merkmal/jede Erklärung dem passenden Bild zu. Nach vollständig
+     richtiger Zuordnung erscheint (q.popupShowImages) ein Pop-up, das die drei Bilder mit
+     Bezeichnung und allen Merkmalen noch einmal zeigt - genau das, was laut Manuel ins Heft
+     übernommen werden soll (Bild links einkleben, Erklärung rechts dazuschreiben). */
+  "gpg-bewaesserungsarten": {
+    title: "Bewässerungsarten",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 10 Minuten",
+    questions: [
+      { kind:"map-match", layout:"image-cards", matchBy:"group",
+        text: "In trockeneren Regionen werden Felder künstlich bewässert. Es gibt dabei verschiedene Bewässerungsarten mit jeweils eigenen Vor- und Nachteilen. Ordne jedes Merkmal dem passenden Bild zu.",
+        categories: BEWAESSERUNG_CATEGORIES,
+        tiles: BEWAESSERUNG_TILES,
+        explain: "Bei der Sprinklerbewässerung wird das Wasser wie Regen versprüht, bei der Tröpfchenbewässerung tropft es genau dosiert direkt an die Pflanzen, und bei der Graben- und Furchenbewässerung fließt es offen über das Feld. Je nachdem, wie das Wasser verteilt wird, geht unterschiedlich viel davon verloren.",
+        popupText: "Klebe die drei Bilder mit ihrer Bezeichnung in dein Heft und schreibe die Merkmale dazu auf.",
+        popupShowImages: true }
     ]
   },
   "bauernhof-suchsel": {
@@ -8520,6 +8647,34 @@ window.__startExercise = function(slug){
         <p class="gap-hint">Tippe einen Begriff an, halte ihn gedrückt und ziehe ihn in die passende Kategorie.</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
+    } else if (q.kind === "map-match" && q.layout === "image-cards"){
+      /* Bild-Karten statt Text-/Icon-Kategorien (siehe CSS-Kommentar bei .ic-board): pro Kategorie
+         ein eigenes SVG-Bild (q.categories[].image) - sonst dieselbe matchBy:"group"-Zieh-Logik wie
+         der normale map-match weiter unten, nur der Body wird anders gebaut. Zuerst genutzt bei
+         "Bewässerungsarten" (GPG): drei selbst gezeichnete Bilder (Sprinkler-/Tröpfchen-/Graben- und
+         Furchenbewässerung), Merkmale werden als Kärtchen auf das passende Bild gezogen. */
+      const icCardsHtml = q.categories.map(cat => {
+        const catTiles = q.tiles.filter(t => t.group === cat.id);
+        const slotsHtml = catTiles.map(t =>
+          `<div class="mm-tile tile-wide" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
+        ).join("");
+        return `
+          <div class="ic-card" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
+            <div class="ic-card-image">${cat.image}</div>
+            <div class="ic-card-label">${esc(cat.label)}</div>
+            <div class="ic-slots">${slotsHtml}</div>
+          </div>`;
+      }).join("");
+      const icChips = q.tiles.map(t => ({ value:t.id, label:t.label }));
+      const icChipList = shuffled(icChips);
+      const icChipsHtml = icChipList.map((chip,idx) =>
+        `<button type="button" class="mm-chip chip-wide" data-value="${esc(chip.value)}" id="chip_${idx}">${esc(chip.label)}</button>`
+      ).join("");
+      body = `
+        <div class="ic-board" id="mmBoard">${icCardsHtml}</div>
+        <p class="gap-hint">Tippe ein Merkmal an, halte es gedrückt und ziehe es zum passenden Bild.</p>
+        <div class="chip-tray" id="chipTray">${icChipsHtml}</div>
+      `;
     } else if (q.kind === "map-match" && q.layout === "balance-sort"){
       /* Waage als Bild-Metapher (siehe balanceScaleSvg() und CSS-Kommentar bei .bal-wrap), sonst
          dieselbe matchBy:"group"-Zieh-Logik wie der normale map-match weiter unten. */
@@ -9386,11 +9541,24 @@ window.__startExercise = function(slug){
           if (skipBtn) skipBtn.style.display = "none";
           lockQuestion("correct", q.explain, "correct");
           /* q.popupText (optional): wie beim table-match ein Pop-up, das zum Übernehmen ins Heft
-             auffordert - muss aktiv geschlossen werden, damit es wirklich wahrgenommen wird. */
+             auffordert - muss aktiv geschlossen werden, damit es wirklich wahrgenommen wird.
+             q.popupShowImages (optional, zusätzlich, nur bei layout:"image-cards"): statt nur der
+             Aufforderung werden die Bilder direkt im Pop-up noch einmal gezeigt - Bild links,
+             Bezeichnung + die zugehörigen Merkmale (q.tiles mit passendem group) rechts, pro
+             Kategorie eine Zeile - genau das, was ins Heft übernommen werden soll (siehe
+             Heftaufschrieb "Bewässerungsarten"). */
           if (q.popupText){
             const overlay = document.createElement("div");
             overlay.className = "tm-popup-overlay";
-            overlay.innerHTML = `<div class="tm-popup-card"><p>${esc(q.popupText)}</p><button type="button" class="tm-popup-close">Schließen</button></div>`;
+            let extraHtml = "";
+            if (q.popupShowImages && q.categories){
+              extraHtml = q.categories.map(cat => {
+                const items = q.tiles.filter(t => t.group === cat.id)
+                  .map(t => `<li>${esc(t.label)}</li>`).join("");
+                return `<div class="ic-popup-row"><div class="ic-popup-img">${cat.image}</div><div class="ic-popup-text"><h4>${esc(cat.label)}</h4><ul>${items}</ul></div></div>`;
+              }).join("");
+            }
+            overlay.innerHTML = `<div class="tm-popup-card${q.popupShowImages ? " image-content" : ""}"><p>${esc(q.popupText)}</p>${extraHtml}<button type="button" class="tm-popup-close">Schließen</button></div>`;
             document.body.appendChild(overlay);
             overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
           }
@@ -12171,5 +12339,6 @@ function initGate(){
 }
 initGate();
 </script>
+
 </body>
 </html>
