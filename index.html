@@ -1,4 +1,7 @@
-<!doctype html><html lang="de"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lernportal Klasse 8</title>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1139,6 +1142,8 @@
   .ik-heft-subhead{font-weight:700; font-size:14.5px; margin:0 0 6px; color:var(--ink);}
   .ik-heft-wege{font-size:14.5px; line-height:1.5; color:var(--ink); margin:0 0 16px;}
 </style>
+</head>
+<body>
 
 <div class="topbar no-print" id="topbar">
   <a class="brand" href="#/">
@@ -1348,6 +1353,9 @@ const naturtechnikMikroorganismenTopics = [
    Wunsch von Manuel am 05.10. aus dem Mikroorganismen-Kapitel herausgelöst. */
 const naturtechnikInfektionserkrankungenTopics = [
   { tag:"lernen", label:"Infektionserkrankungen", practice:"nt-infektionserkrankungen" },
+  { tag:"abschluss", label:"Infektionskrankheiten im Überblick", practice:"nt-infektionskrankheiten-ueberblick" },
+  { tag:"lernen", label:"Vermehrung der Viren – Erklärung", practice:"nt-vermehrung-viren-erklaerung" },
+  { tag:"abschluss", label:"Vermehrung der Viren – Abfrage", practice:"nt-vermehrung-viren-abfrage" },
 ];
 
 /* Informatik: neues Fach, Kapitel wie im Inhaltsverzeichnis des Schulbuchs (Informatik Mittelschule
@@ -1364,8 +1372,8 @@ const informatikChapters = [
 const informatikInformationssystemeTopics = [
   { tag:"lernen", label:"Vorwissen: Kommunikationssysteme", page:6, practice:"informatik-kommunikationssysteme" },
   { tag:"lernen", label:"Kommunikationsdienste: Apps, Vor-/Nachteile & Mail-Merkmale", page:6, practice:"informatik-kommunikationsdienste-uebung" },
-  { tag:"lernen", label:"Aufbau digitaler Informationssysteme", page:8 },
-  { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10 },
+  { tag:"lernen", label:"Aufbau digitaler Informationssysteme", page:8, practice:"informatik-aufbau-informationssysteme" },
+  { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10, practice:"informatik-nutzung-informationssysteme" },
   { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12 },
   { tag:"lernen", label:"Datenschutz", page:14 },
   { tag:"lernen", label:"Big Data", page:16 },
@@ -1716,6 +1724,41 @@ const MIKRO_TABELLE_TILES = [
   { id:"technik-biogas",       label:"Biogas",                 group:"technik", col:3, row:5 },
   { id:"technik-bergbau",      label:"Bergbau",                group:"technik", col:3, row:6 },
 ];
+
+/* Lückentext "Aufbau digitaler Informationssysteme" - eigens formulierter Text (Informatik, Kapitel
+   Informationssysteme und Datenschutz), fasst die vier Bausteine Hardware/Software/Daten/Netzwerk
+   und das Client-Server-Prinzip in eigenen Worten zusammen. */
+const AUFBAU_LUECKENTEXT = {
+  template: "Ein digitales Informationssystem besteht aus mehreren Bausteinen. Die Geräte wie Computer, Server oder Smartphones nennt man die %%. Die Programme, die darauf laufen, zum Beispiel eine App oder eine Webseite, heißen %%. Die gespeicherten Informationen, etwa Texte, Bilder oder Zahlen, werden %% genannt. Damit Geräte untereinander Daten austauschen können, braucht man ein %%. Fragt ein Gerät wie ein Smartphone Daten an, spricht man von einem %%. Das Gerät, das die Anfrage beantwortet und die Daten bereitstellt, heißt %%. Dieses Zusammenspiel wird auch %%-Prinzip genannt.",
+  answers: ["Hardware","Software","Daten","Netzwerk","Client","Server","Client-Server"],
+};
+
+/* Begriffe <-> Beschreibung zu den vier Bausteinen eines Informationssystems - text-only-Variante
+   (ohne Icons), analog zu MIKRO_MERKMAL_TILES. */
+const AUFBAU_BAUSTEIN_TILES = [
+  { id:"hardware", label:"Geräte wie Computer, Server und Smartphones",      col:1, row:1, alwaysLabel:true },
+  { id:"software", label:"Programme, die auf den Geräten laufen",            col:2, row:1, alwaysLabel:true },
+  { id:"daten",     label:"Gespeicherte Informationen wie Texte oder Bilder", col:1, row:2, alwaysLabel:true },
+  { id:"netzwerk",  label:"Verbindung, über die Geräte Daten austauschen",   col:2, row:2, alwaysLabel:true },
+];
+const AUFBAU_BAUSTEIN_LABELS = { hardware:"Hardware", software:"Software", daten:"Daten", netzwerk:"Netzwerk" };
+
+/* Lückentext "Nutzung digitaler Informationssysteme" - eigens formulierter Text zu den im Buch
+   genannten Einsatzbereichen (Kommunikation, mebis/E-Learning, Berufsinformationsportale,
+   Cloud-Speicher, Datenschutz). */
+const NUTZUNG_LUECKENTEXT = {
+  template: "Digitale Informationssysteme werden im Alltag für ganz unterschiedliche Zwecke genutzt. Über Chat, Mail oder Videotelefonie dient ein Informationssystem der %%. Mit Erklärvideos und digitalen Übungen auf Lernplattformen wie mebis kann man im eigenen Tempo %%. Wer sich über Ausbildungsberufe informieren möchte, nutzt dafür ein %%. Werden Fotos, Videos oder Dokumente nicht lokal, sondern auf fremden Servern im Internet gespeichert, spricht man von einem %%-Speicher. Damit man dabei nicht zu viele persönliche Daten weitergibt, muss man außerdem immer auf den %% achten.",
+  answers: ["Kommunikation","lernen","Berufsinformationsportal","Cloud","Datenschutz"],
+};
+
+/* Nutzungsarten <-> Beschreibung, text-only-Variante. */
+const NUTZUNG_TILES = [
+  { id:"kommunikation",      label:"Nachrichten schreiben und Videotelefonate führen",               col:1, row:1, alwaysLabel:true },
+  { id:"lernen",              label:"Erklärvideos ansehen und digitale Übungen bearbeiten",            col:2, row:1, alwaysLabel:true },
+  { id:"berufsorientierung", label:"Sich über Ausbildungsberufe informieren",                         col:1, row:2, alwaysLabel:true },
+  { id:"cloud",               label:"Dateien auf einem Server im Internet speichern und abrufen",     col:2, row:2, alwaysLabel:true },
+];
+const NUTZUNG_LABELS = { kommunikation:"Kommunikation", lernen:"E-Learning", berufsorientierung:"Berufsorientierung", cloud:"Cloud-Speicher" };
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
 /* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
@@ -3399,9 +3442,142 @@ const exerciseSets = {
     subject: "naturtechnik",
     chapterSlug: "infektionserkrankungen",
     duration: "ca. 20 Minuten",
-    locked: true,
+    locked: false,
     custom: "infektionserkrankungen",
     questions: []
+  },
+  /* "Infektionskrankheiten im Überblick": reine Anzeige-Seite ohne Fragen (Wunsch von Manuel,
+     06.10.2026) - stellt vier konkrete Beispiele für Infektionskrankheiten vor (FSME, Borreliose,
+     Masern, Pilzinfektion), passend zu den bereits behandelten Infektionswegen/-phasen. Eigens
+     formulierte Tabelle (keine Buch-Abschrift), custom:"note-page" wird in viewExercise() direkt
+     als doc-card gerendert - kein #exerciseHost, kein window.__start...-Einstieg nötig (siehe
+     route()-Dispatcher, der für "note-page" bewusst nichts weiter tut). */
+  "nt-infektionskrankheiten-ueberblick": {
+    title: "Infektionskrankheiten im Überblick",
+    subject: "naturtechnik",
+    chapterSlug: "infektionserkrankungen",
+    locked: false,
+    custom: "note-page",
+    questions: [],
+    noteHtml: `
+      <p>Infektionskrankheiten werden durch unterschiedliche Erreger ausgelöst – zum Beispiel durch Bakterien, Viren oder Pilze – und stecken andere Menschen auf unterschiedlichen Wegen an.</p>
+      <table class="tm-table">
+        <thead>
+          <tr><th>Erkrankung</th><th>Erreger</th><th>Infektionsweg</th><th>Symptome</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>FSME</b></td><td>FSME-Virus</td><td>Zeckenstich (Tierinfektion)</td><td>Fieber, Schmerzen, Lähmungen</td></tr>
+          <tr><td><b>Borreliose</b></td><td>Bakterien</td><td>Zeckenstich (Tierinfektion)</td><td>Entzündung an Haut, Gelenken und Nerven</td></tr>
+          <tr><td><b>Masern</b></td><td>Virus</td><td>Tröpfcheninfektion</td><td>Fieber, roter Hautausschlag</td></tr>
+          <tr><td><b>Pilzinfektion (z. B. Fußpilz)</b></td><td>Pilz</td><td>Kontaktinfektion</td><td>Juckreiz, Hautrötung</td></tr>
+        </tbody>
+      </table>
+      <p>FSME und Borreliose werden also beide durch einen Zeckenstich übertragen, haben aber unterschiedliche Erreger (Virus bzw. Bakterien) und unterschiedliche Symptome.</p>
+    `
+  },
+  /* "Vermehrung der Viren – Erklärung": reine Anzeige-Seite ohne Fragen (Wunsch von Manuel,
+     06.10.2026, custom:"note-page", gleiches Muster wie "nt-infektionskrankheiten-ueberblick") -
+     bewusst OHNE nachgezeichnetes Diagramm (anders als die Bakterienformen-Abbildung): der
+     Vermehrungskreislauf wird stattdessen - wie schon bei "Die vier Phasen einer
+     Infektionserkrankung" in IK_LESETEXT_HTML - rein als Fließtext/Liste erklärt, eigens
+     formuliert statt aus dem Buch übernommen. Gehört inhaltlich zur direkt danach folgenden Abfrage
+     "nt-vermehrung-viren-abfrage". */
+  "nt-vermehrung-viren-erklaerung": {
+    title: "Vermehrung der Viren – Erklärung",
+    subject: "naturtechnik",
+    chapterSlug: "infektionserkrankungen",
+    locked: false,
+    custom: "note-page",
+    questions: [],
+    noteHtml: `
+      <p>Lebewesen können wachsen, sich bewegen und sich selbstständig fortpflanzen. Viren können das nicht aus eigener Kraft – deshalb zählt man sie nicht zu den Lebewesen. Um sich zu vermehren, brauchen Viren immer eine lebende Zelle, die ihnen die nötigen Bausteine liefert: eine sogenannte Wirtszelle.</p>
+      <h3>Wirtszellen</h3>
+      <p>Jedes Virus befällt ganz bestimmte Wirtszellen. Grippeviren zum Beispiel befallen vor allem Schleimhautzellen, etwa in der Nase. Deshalb kündigt sich eine Grippe oft zuerst durch ein Kribbeln in der Nase an – dort beginnt die Vermehrung meist als Erstes, noch bevor andere Symptome wie Fieber auftreten.</p>
+      <h3>Der Vermehrungskreislauf</h3>
+      <p>Die Vermehrung eines Virus läuft immer in denselben sechs Schritten ab:</p>
+      <ol>
+        <li><b>A – Anheften:</b> Das Virus heftet sich an eine gesunde Wirtszelle an.</li>
+        <li><b>B – Eindringen:</b> Das Virus dringt in die Wirtszelle ein und wird von ihr aufgenommen.</li>
+        <li><b>C – Freisetzen:</b> Die Erbsubstanz des Virus wird in der Zelle freigesetzt.</li>
+        <li><b>D – Produzieren:</b> Die Wirtszelle stellt – gesteuert von der Erbsubstanz des Virus – neue Virus-Bausteine her (Erbsubstanz und Eiweißhüllen).</li>
+        <li><b>E – Freisetzen der neuen Viren:</b> Die Wirtszelle platzt auf und setzt die neu gebildeten Viren frei.</li>
+        <li><b>F – Weiterverbreiten:</b> Die neuen Viren befallen weitere Wirtszellen – der Kreislauf beginnt von vorn.</li>
+      </ol>
+      <h3>Die Vermehrungskurve</h3>
+      <p>Zu Beginn ist erst eine einzige Wirtszelle befallen, daher steigt die Zahl der Viren zunächst nur langsam an. Sobald die ersten Wirtszellen neue Viren freisetzen, können aber gleichzeitig immer mehr weitere Zellen befallen werden – die Vermehrung beschleunigt sich dadurch immer stärker, bis die Kurve sehr steil ansteigt. Erst wenn sich das Immunsystem erfolgreich wehrt oder kaum noch unbefallene Wirtszellen übrig sind, flacht die Kurve wieder ab.</p>
+      <p>Bakterien dagegen sind eigenständige Lebewesen: Sie vermehren sich durch einfache Zellteilung aus eigener Kraft und brauchen dafür keine Wirtszelle. Deshalb wachsen sie von Anfang an kontinuierlich – ohne die anfängliche Verzögerung, die bei Viren durch das erste Befallen einer einzelnen Wirtszelle entsteht.</p>
+    `
+  },
+  /* "Vermehrung der Viren – Abfrage": normale Übung (generischer Ein-Frage-nach-der-anderen-Motor),
+     fragt den Inhalt von "nt-vermehrung-viren-erklaerung" ab - bewusst als mc-Fragen statt freier
+     Texteingabe für die eher erklärungslastigen Fragen (Kurvenverlauf/-begründung/Vergleich zu
+     Bakterien), damit sie wie der Rest der App automatisch auswertbar sind. */
+  "nt-vermehrung-viren-abfrage": {
+    title: "Vermehrung der Viren – Abfrage",
+    subject: "naturtechnik",
+    chapterSlug: "infektionserkrankungen",
+    duration: "ca. 10 Minuten",
+    locked: false,
+    questions: [
+      { kind:"mc",
+        text: "Warum zählt man Viren nicht zu den Lebewesen?",
+        options: [
+          "Weil sie zu klein sind, um sie mit dem bloßen Auge zu sehen",
+          "Weil sie sich nicht selbstständig bewegen, wachsen und vermehren können, sondern dafür immer eine Wirtszelle brauchen",
+          "Weil sie keine Erbsubstanz besitzen",
+          "Weil sie nur in der Luft vorkommen"
+        ], correct:1,
+        explain: "Lebewesen können wachsen, sich bewegen und sich selbstständig fortpflanzen. Viren können das nicht aus eigener Kraft – sie benötigen dafür immer eine lebende Wirtszelle, die ihnen die nötigen Bausteine liefert." },
+      { kind:"map-match",
+        text: "Ordne den Phasen A–F die passende Beschreibung zu.",
+        cols:2, rows:3,
+        chipLabels: { a:"A", b:"B", c:"C", d:"D", e:"E", f:"F" },
+        tiles: [
+          { id:"a", label:"Das Virus heftet sich an eine gesunde Wirtszelle an.", col:1, row:1, alwaysLabel:true },
+          { id:"b", label:"Das Virus dringt in die Wirtszelle ein und wird von ihr aufgenommen.", col:2, row:1, alwaysLabel:true },
+          { id:"c", label:"Die Erbsubstanz des Virus wird in der Zelle freigesetzt.", col:1, row:2, alwaysLabel:true },
+          { id:"d", label:"Die Wirtszelle stellt neue Virus-Bausteine her (Erbsubstanz und Eiweißhüllen).", col:2, row:2, alwaysLabel:true },
+          { id:"e", label:"Die Wirtszelle platzt auf und setzt die neuen Viren frei.", col:1, row:3, alwaysLabel:true },
+          { id:"f", label:"Die neuen Viren befallen weitere Wirtszellen.", col:2, row:3, alwaysLabel:true }
+        ],
+        explain: "So läuft die Vermehrung eines Virus ab: A Anheften, B Eindringen, C Freisetzen der Erbsubstanz, D Herstellen neuer Virus-Bausteine, E Platzen der Wirtszelle, F Befallen weiterer Wirtszellen." },
+      { kind:"mc",
+        text: "Eine Grippe kündigt sich oft durch ein Kribbeln in der Nase an. Wie lässt sich das erklären?",
+        options: [
+          "Das Grippevirus befällt zuerst die Schleimhautzellen der Nase, bevor es sich im Körper weiter ausbreitet",
+          "Das Kribbeln hat nichts mit dem Virus zu tun, sondern kommt nur von kalter Luft",
+          "Das Immunsystem zerstört das Virus sofort in der Nase, danach passiert nichts mehr",
+          "Das Grippevirus kann die Nase gar nicht befallen"
+        ], correct:0,
+        explain: "Grippeviren befallen bestimmte Wirtszellen, zum Beispiel Schleimhautzellen in der Nase. Dort beginnt die Vermehrung zuerst – das macht sich oft als erstes Anzeichen bemerkbar, noch bevor weitere Symptome wie Fieber auftreten." },
+      { kind:"mc",
+        text: "Wie verläuft die Vermehrungskurve der Viren über die Zeit?",
+        options: [
+          "Von Anfang an gleichmäßig und linear ansteigend",
+          "Zunächst nur langsam ansteigend, dann sehr stark (fast sprunghaft) ansteigend, bevor sie sich wieder abflacht",
+          "Sofort sehr hoch, danach die ganze Zeit konstant",
+          "Ständig auf und ab schwankend, ohne erkennbares Muster"
+        ], correct:1,
+        explain: "Zu Beginn sind erst wenige Wirtszellen befallen, daher steigt die Virenzahl erst langsam an. Sobald immer mehr Zellen gleichzeitig neue Viren produzieren, steigt die Zahl sehr schnell an – bis die Vermehrung sich wieder abflacht." },
+      { kind:"mc",
+        text: "Warum steigt die Zahl der Viren anfangs nur langsam und dann plötzlich sehr stark an?",
+        options: [
+          "Weil anfangs nur eine einzelne Wirtszelle befallen ist; sobald diese neue Viren freisetzt, können gleichzeitig immer mehr weitere Zellen befallen werden – die Vermehrung beschleunigt sich dadurch immer stärker",
+          "Weil die Viren am Anfang absichtlich langsamer wachsen wollen",
+          "Weil der Körper am Anfang mehr Viren produziert als später",
+          "Weil es reiner Zufall ist und keinen erkennbaren Grund dafür gibt"
+        ], correct:0,
+        explain: "Jede befallene Wirtszelle setzt am Ende viele neue Viren frei, die wiederum weitere Zellen befallen können. Dadurch wächst die Zahl der befallenen Zellen – und damit auch die Virenzahl – immer schneller, bis die Kurve sehr steil ansteigt." },
+      { kind:"mc",
+        text: "Warum sieht die Vermehrungskurve von Bakterien anders aus als die von Viren?",
+        options: [
+          "Bakterien vermehren sich durch einfache Zellteilung selbstständig, ohne eine Wirtszelle zu benötigen – sie wachsen daher von Anfang an kontinuierlich, ohne die anfängliche Verzögerung der Viren",
+          "Bakterien vermehren sich gar nicht",
+          "Bakterien brauchen für ihre Vermehrung ebenfalls eine Wirtszelle, genau wie Viren",
+          "Bakterien und Viren haben exakt dieselbe Vermehrungskurve"
+        ], correct:0,
+        explain: "Bakterien sind eigenständige Lebewesen und vermehren sich durch Zellteilung aus eigener Kraft – sie benötigen dafür keine Wirtszelle. Deshalb wachsen sie von Beginn an kontinuierlich, während Viren erst eine Wirtszelle befallen müssen, bevor ihre Vermehrung in Schwung kommt." }
+    ]
   },
   /* ---------- WiB: Wie arbeiten Betriebe? (S. 8-9) ---------- */
   "wib-was-ist-ein-betrieb": {
@@ -3746,6 +3922,131 @@ const exerciseSets = {
         explain: "Spam-Mails erkennt man z. B. an unerwarteten Absendern, merkwürdigen Adressen oder reißerischen Betreffs. Phishing-Mails wollen gezielt an persönliche Daten gelangen – oft mit dringlichem Handlungsbedarf, Sprach-/Rechtschreibfehlern und Aufforderungen, Links anzuklicken oder Dateien zu öffnen.",
         popupText: "Übernimm die Tabelle schriftlich in dein Heft:",
         popupShowTable: true }
+    ]
+  },
+  "informatik-aufbau-informationssysteme": {
+    title: "Aufbau digitaler Informationssysteme",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { kind:"mc",
+        text: "Welche vier Bausteine bilden zusammen ein digitales Informationssystem?",
+        options: [
+          "Hardware, Software, Daten und ein Netzwerk zur Verbindung",
+          "Nur ein Computer und eine Tastatur",
+          "Ausschließlich das Internet",
+          "Nur die gespeicherten Daten, ohne weitere Technik"
+        ], correct:0,
+        explain: "Ein digitales Informationssystem besteht immer aus Hardware (Geräte), Software (Programme), Daten und einem Netzwerk, über das Daten ausgetauscht werden." },
+      { kind:"mc",
+        text: "Du rufst auf deinem Smartphone eine Banking-App auf und gibst deine Kontodaten ein. Wo werden deine Daten tatsächlich dauerhaft gespeichert und verarbeitet?",
+        options: [
+          "Nur auf deinem eigenen Smartphone",
+          "Auf einem Server der Bank, mit dem die App über das Internet verbunden ist",
+          "Nirgendwo, die Daten verschwinden nach dem Schließen der App",
+          "Ausschließlich auf der SIM-Karte"
+        ], correct:1,
+        explain: "Die App auf deinem Smartphone ist der sogenannte Client. Die eigentlichen Daten liegen auf einem Server der Bank, der die Anfragen über das Internet beantwortet – das nennt man Client-Server-Prinzip." },
+      { kind:"mc",
+        text: "Was ist beim Client-Server-Prinzip die Aufgabe des Clients?",
+        options: [
+          "Er speichert dauerhaft alle Daten aller Nutzer",
+          "Er fragt Daten oder Dienste an und zeigt die Antwort des Servers an",
+          "Er verteilt das Internet an alle Server",
+          "Er ersetzt die Software vollständig"
+        ], correct:1,
+        explain: "Der Client (z. B. Browser oder App) stellt eine Anfrage an den Server. Der Server verarbeitet diese Anfrage und schickt eine Antwort zurück, die der Client anzeigt." },
+      { kind:"mc",
+        text: "Welches Beispiel beschreibt am besten ein digitales Informationssystem aus dem Alltag?",
+        options: [
+          "Ein Taschenrechner ohne Internetverbindung",
+          "Eine Mediathek, in der Nutzer über das Internet auf gespeicherte Videos einer Datenbank zugreifen",
+          "Ein Blatt Papier mit handschriftlichen Notizen",
+          "Eine Uhr ohne Display"
+        ], correct:1,
+        explain: "Eine Mediathek verbindet Hardware (Server, Endgeräte), Software (die Mediathek-App bzw. -Webseite), gespeicherte Daten (die Videos in einer Datenbank) und ein Netzwerk – also alle Bausteine eines digitalen Informationssystems." },
+      { kind:"text",
+        text: "Wie nennt man den zentralen Rechner, auf dem die Daten eines Informationssystems gespeichert werden und der Anfragen von Nutzergeräten beantwortet?",
+        placeholder: "Begriff eintippen",
+        accept: ["Server", "der Server", "ein Server"],
+        explain: "Richtig – der Server speichert die Daten und beantwortet die Anfragen der Clients (z. B. Smartphones oder Computer der Nutzer)." },
+      { kind:"map-match",
+        chipLabels: AUFBAU_BAUSTEIN_LABELS,
+        text: "Ordne jeder Beschreibung den passenden Baustein zu.",
+        cols:2, rows:2,
+        tiles: AUFBAU_BAUSTEIN_TILES,
+        explain: "Hardware, Software, Daten und Netzwerk sind die vier Grundbausteine jedes digitalen Informationssystems." },
+      /* Letzte Frage der Übung, bewusst typeIn:true (statt Wortbank wie sonst bei dieser
+         Lückentext-Vorlage) - nur die typeIn-Variante unterstützt das Pop-up mit q.popupText
+         (Überschrift) + q.popupBody (eigener Merksatz-Text, "¶" trennt Absätze), siehe
+         Event-Wiring bei q.kind==="gapfill" mit typeIn. Wunsch von Manuel, 06.10.2026: Aufschrieb
+         fürs Heft am Ende dieser Übung. */
+      { kind:"gapfill", typeIn:true, text: "Fülle die Lücken zum Aufbau eines digitalen Informationssystems.",
+        template: AUFBAU_LUECKENTEXT.template, answers: AUFBAU_LUECKENTEXT.answers,
+        explain: "Hardware, Software, Daten und Netzwerk sind die vier Grundbausteine – und das Zusammenspiel von anfragendem Client und antwortendem Server heißt Client-Server-Prinzip.",
+        popupText: "Merksatz – Aufbau eines digitalen Informationssystems",
+        popupBody: "Ein digitales Informationssystem besteht aus vier Bausteinen: Hardware (die Geräte), Software (die Programme), Daten (die gespeicherten Informationen) und einem Netzwerk, über das die Geräte miteinander verbunden sind.¶Fragt ein Gerät (Client) Daten an, antwortet ein Server, der diese Daten bereitstellt. Dieses Zusammenspiel nennt man Client-Server-Prinzip." }
+    ]
+  },
+  "informatik-nutzung-informationssysteme": {
+    title: "Nutzung digitaler Informationssysteme",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { kind:"mc",
+        text: "Mika sucht ein Video, das ihm Schritt für Schritt erklärt, wie man einen Bruch kürzt. Welches Angebot nutzt er damit am sinnvollsten?",
+        options: [
+          "Ein Erklärvideo auf einer Lernplattform wie mebis",
+          "Eine Wettervorhersage-App",
+          "Ein Online-Banking-Portal",
+          "Eine Routenplaner-App"
+        ], correct:0,
+        explain: "Erklärvideos auf Lernplattformen wie mebis sind genau für solche Lerninhalte gemacht – man kann sie außerdem beliebig oft anschauen und an beliebiger Stelle anhalten." },
+      { kind:"mc",
+        text: "Welchen Vorteil bietet digitales, orts- und zeitunabhängiges Lernen (E-Learning) gegenüber einem klassischen Lehrbuch?",
+        options: [
+          "Es ist grundsätzlich immer fehlerfrei",
+          "Man kann Inhalte im eigenen Tempo wiederholen, pausieren und oft interaktiv üben",
+          "Man braucht dafür keine Internetverbindung",
+          "Es ersetzt vollständig den Unterricht in der Schule"
+        ], correct:1,
+        explain: "Beim E-Learning kann man Inhalte im eigenen Tempo bearbeiten, Videos pausieren oder wiederholen und häufig interaktive Übungen direkt mit Rückmeldung nutzen." },
+      { kind:"mc",
+        text: "Lea überlegt, welchen Ausbildungsberuf sie ergreifen möchte. Welches Angebot hilft ihr dabei am ehesten?",
+        options: [
+          "Ein Berufsinformationsportal mit Beschreibungen verschiedener Ausbildungsberufe",
+          "Ein Online-Shop für Kleidung",
+          "Eine Mediathek mit Spielfilmen",
+          "Eine Wetter-App"
+        ], correct:0,
+        explain: "Berufsinformationsportale stellen Informationen zu Ausbildungsberufen, Anforderungen und Einstiegsmöglichkeiten bereit und helfen so bei der Berufsorientierung." },
+      { kind:"mc",
+        text: "Welche Aussage zur Nutzung digitaler Informationssysteme trifft zu?",
+        options: [
+          "Wer Daten in der Cloud speichert, muss nie auf den Datenschutz achten",
+          "Digitale Informationssysteme werden heute u. a. zur Kommunikation, zum Lernen, zur Berufsorientierung und zum Einkaufen genutzt",
+          "Digitale Informationssysteme dienen ausschließlich der Unterhaltung",
+          "Man kann digitale Informationssysteme nur mit einem Computer, nie mit einem Smartphone nutzen"
+        ], correct:1,
+        explain: "Digitale Informationssysteme werden heute in ganz unterschiedlichen Lebensbereichen genutzt – von der Kommunikation über das Lernen bis zur Berufsorientierung und zum Einkaufen." },
+      { kind:"text",
+        text: "Wie nennt man eine Internetseite oder App, die gezielt über Ausbildungsberufe informiert und bei der Berufswahl unterstützt?",
+        placeholder: "Begriff eintippen",
+        accept: ["Berufsinformationsportal", "Berufsinformationsportale", "ein Berufsinformationsportal"],
+        explain: "Richtig – ein Berufsinformationsportal liefert gezielt Informationen zu Ausbildungsberufen und unterstützt bei der Berufswahl." },
+      { kind:"gapfill", text: "Fülle die Lücken zur Nutzung digitaler Informationssysteme.",
+        template: NUTZUNG_LUECKENTEXT.template, answers: NUTZUNG_LUECKENTEXT.answers,
+        explain: "Digitale Informationssysteme werden u. a. zur Kommunikation, zum Lernen, zur Berufsorientierung und als Cloud-Speicher genutzt – dabei sollte man immer auf den Datenschutz achten." },
+      { kind:"map-match",
+        chipLabels: NUTZUNG_LABELS,
+        text: "Ordne jeder Nutzung digitaler Informationssysteme den passenden Begriff zu.",
+        cols:2, rows:2,
+        tiles: NUTZUNG_TILES,
+        explain: "Digitale Informationssysteme werden u. a. zur Kommunikation, zum Lernen, zur Berufsorientierung und als Cloud-Speicher genutzt." }
     ]
   },
   /* Deutsch, Kapitel "Wortarten": diagnostischer Einstiegstest in 5 Teilen (vor der eigentlichen
@@ -7501,23 +7802,16 @@ function viewNaturtechnikChapter(slug){
     const rows = naturtechnikInfektionserkrankungenTopics.map(t => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
-      let progressHtml = "";
-      if (set && !locked){
-        const prog = exerciseProgress(t.practice);
-        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
-        const done = !!prog && prog.correct === prog.total;
-        progressHtml = `
-          <span class="topic-progress" title="${pct}% richtig gelöst">
-            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
-            <span class="topic-progress-pct num">${pct}%</span>
-          </span>
-        `;
-      }
+      /* Kein Fortschrittsbalken hier: "Infektionserkrankungen" hat keine Richtig/Falsch-Fragen
+         (questions:[], siehe exerciseSets-Kommentar), ein "x% richtig" würde also nie zutreffen. */
+      const progressHtml = "";
       let actionHtml = "";
       if (t.practice && locked){
         actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
       } else if (set){
-        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+        /* "note-page" ist eine reine Anzeige-Seite ohne Fragen - "Ansehen" statt "Jetzt üben",
+           analog zum Lösungsseiten-Knopf bei den Mathe-Arbeitsblättern. */
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">${set.custom === "note-page" ? "Ansehen" : "Jetzt üben"}</a>`;
       } else {
         actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
       }
@@ -7946,6 +8240,24 @@ function viewExercise(slug){
       </div>
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
       <div id="exerciseHost"></div>
+    `;
+  }
+
+  /* set.custom === "note-page": reine Anzeige-Seite ohne Fragen (set.noteHtml ist bereits
+     fertiges HTML) - kein Fortschritt, kein exerciseHost, keine qnav, siehe exerciseSets-
+     Kommentar bei "nt-infektionskrankheiten-ueberblick". */
+  if (set.custom === "note-page"){
+    return h`
+      <a class="backlink no-print" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="doc-card">
+        <div class="doc-head">
+          <div>
+            <h2>${esc(set.title)}</h2>
+            <div class="doc-sub">Übernimm diese Übersicht in dein Heft.</div>
+          </div>
+        </div>
+        ${set.noteHtml}
+      </div>
     `;
   }
 
@@ -11598,6 +11910,9 @@ function route(){
       window.__startVergangenheitenUebung(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "infektionserkrankungen"){
       window.__startInfektionserkrankungen(parts[1]);
+    } else if (exerciseSets[parts[1]].custom === "note-page"){
+      /* reine Anzeige-Seite (set.noteHtml), schon komplett in viewExercise() gerendert - nichts
+         zu initialisieren. */
     } else {
       window.__startExercise(parts[1]);
     }
@@ -11856,5 +12171,5 @@ function initGate(){
 }
 initGate();
 </script>
-
-</body></html>
+</body>
+</html>
