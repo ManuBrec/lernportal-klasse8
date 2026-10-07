@@ -1836,19 +1836,58 @@ const BEWAESSERUNG_CATEGORIES = [
   { id:"troepfchen", label:"Tröpfchenbewässerung",             color:"#237A4B", image: BEWAESSERUNG_SVG_TROPFCHEN },
   { id:"graben",     label:"Graben- und Furchenbewässerung",   color:"#C97A2B", image: BEWAESSERUNG_SVG_GRABEN },
 ];
-const BEWAESSERUNG_TILES = [
-  { id:"spr-1", label:"Das Wasser wird wie Regen durch die Luft versprüht.", group:"sprinkler" },
-  { id:"spr-2", label:"Dünger und Pflanzenschutzmittel können dem Wasser beigemischt werden.", group:"sprinkler" },
-  { id:"spr-3", label:"Die nötigen Pumpen sind sehr teuer.", group:"sprinkler" },
-  { id:"spr-4", label:"Etwa 20 bis 40 % des Wassers gehen durch Verdunstung und Wind verloren.", group:"sprinkler" },
-  { id:"tro-1", label:"Das Wasser läuft durch dünne Schläuche direkt zu den Pflanzen.", group:"troepfchen" },
-  { id:"tro-2", label:"Es wird nur tropfenweise an die Pflanzen abgegeben.", group:"troepfchen" },
-  { id:"tro-3", label:"Die Wassermenge lässt sich dabei sehr genau dosieren.", group:"troepfchen" },
-  { id:"tro-4", label:"Nur etwa 5 bis 10 % des Wassers gehen verloren.", group:"troepfchen" },
-  { id:"gra-1", label:"Das Wasser fließt durch offene Gräben über das Feld.", group:"graben" },
-  { id:"gra-2", label:"In flachen Furchen versickert das Wasser bei den Pflanzenreihen.", group:"graben" },
-  { id:"gra-3", label:"Die Methode ist arbeitsaufwendig, aber kostengünstig.", group:"graben" },
-  { id:"gra-4", label:"Bis zu 80 % des Wassers gehen dabei verloren.", group:"graben" },
+const BEWAESSERUNG_HEADINGS = [
+  { id:"head-sprinkler",  label:"Sprinklerbewässerung",            group:"sprinkler" },
+  { id:"head-troepfchen", label:"Tröpfchenbewässerung",             group:"troepfchen" },
+  { id:"head-graben",     label:"Graben- und Furchenbewässerung",   group:"graben" },
+];
+const BEWAESSERUNG_BEGRIFFE = [
+  { id:"beg-spr-1", label:"Wassertank", group:"sprinkler" },
+  { id:"beg-spr-2", label:"Sockel", group:"sprinkler" },
+  { id:"beg-spr-3", label:"Ventil", group:"sprinkler" },
+  { id:"beg-spr-4", label:"Hauptleitung", group:"sprinkler" },
+  { id:"beg-spr-5", label:"Verteilerrohr", group:"sprinkler" },
+  { id:"beg-spr-6", label:"Regner / Sprinkler", group:"sprinkler" },
+  { id:"beg-tro-1", label:"Wassertank", group:"troepfchen" },
+  { id:"beg-tro-2", label:"Sockel", group:"troepfchen" },
+  { id:"beg-tro-3", label:"Ventil / Hahn", group:"troepfchen" },
+  { id:"beg-tro-4", label:"Hauptleitung", group:"troepfchen" },
+  { id:"beg-tro-5", label:"Tropfschlauch", group:"troepfchen" },
+  { id:"beg-tro-6", label:"Tropfer / Düse", group:"troepfchen" },
+  { id:"beg-gra-1", label:"Wasserspeicher / Staubecken", group:"graben" },
+  { id:"beg-gra-2", label:"Schleuse", group:"graben" },
+  { id:"beg-gra-3", label:"Hauptkanal", group:"graben" },
+  { id:"beg-gra-4", label:"Bewässerungskanal", group:"graben" },
+  { id:"beg-gra-5", label:"Abflusskanal", group:"graben" },
+  { id:"beg-gra-6", label:"Feld / Anbaufläche", group:"graben" },
+];
+const BEWAESSERUNG_VORNACHTEILE = [
+  { id:"vn-spr-1", label:"Dünger und Pflanzenschutzmittel können dem Wasser beigemischt werden.", group:"sprinkler" },
+  { id:"vn-spr-2", label:"Große Flächen lassen sich gleichmäßig bewässern.", group:"sprinkler" },
+  { id:"vn-spr-3", label:"Die nötigen Pumpen sind in der Anschaffung teuer.", group:"sprinkler" },
+  { id:"vn-spr-4", label:"Etwa 20 bis 40 % des Wassers gehen durch Verdunstung und Wind verloren.", group:"sprinkler" },
+  { id:"vn-tro-1", label:"Die Wassermenge lässt sich sehr genau dosieren.", group:"troepfchen" },
+  { id:"vn-tro-2", label:"Nur etwa 5 bis 10 % des Wassers gehen verloren.", group:"troepfchen" },
+  { id:"vn-tro-3", label:"Die Tropfer und Schläuche können verstopfen.", group:"troepfchen" },
+  { id:"vn-tro-4", label:"Die Anschaffung ist teurer als bei der Graben- und Furchenbewässerung.", group:"troepfchen" },
+  { id:"vn-gra-1", label:"Die Methode ist einfach und kostengünstig.", group:"graben" },
+  { id:"vn-gra-2", label:"Bis zu 80 % des Wassers gehen dabei verloren.", group:"graben" },
+  { id:"vn-gra-3", label:"Das Anlegen und Pflegen der Gräben ist arbeitsaufwendig.", group:"graben" },
+  { id:"vn-gra-4", label:"Ohne ausreichenden Abfluss droht eine Versalzung der Böden.", group:"graben" },
+];
+const BEWAESSERUNG_ERWEITERUNG = [
+  { id:"erw-spr-1", label:"Sprühnebel", group:"sprinkler" },
+  { id:"erw-spr-2", label:"Hohe Verdunstung", group:"sprinkler" },
+  { id:"erw-spr-3", label:"Windabdrift", group:"sprinkler" },
+  { id:"erw-spr-4", label:"Wasserverbrauch", group:"sprinkler" },
+  { id:"erw-tro-1", label:"Lupe / Vergrößerung", group:"troepfchen" },
+  { id:"erw-tro-2", label:"Feuchte Stelle an der Wurzel", group:"troepfchen" },
+  { id:"erw-tro-3", label:"Wassersparend", group:"troepfchen" },
+  { id:"erw-tro-4", label:"Geringe Verdunstung", group:"troepfchen" },
+  { id:"erw-gra-1", label:"Fließrichtung des Wassers (Pfeil)", group:"graben" },
+  { id:"erw-gra-2", label:"Damm / Feldrand", group:"graben" },
+  { id:"erw-gra-3", label:"Bewässerungsfeldbau", group:"graben" },
+  { id:"erw-gra-4", label:"Versalzung (als Gefahr, wenn das Abwasser fehlt)", group:"graben" },
 ];
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
@@ -3256,13 +3295,28 @@ const exerciseSets = {
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 10 Minuten",
     questions: [
-      { kind:"map-match", layout:"image-cards", matchBy:"group",
-        text: "In trockeneren Regionen werden Felder künstlich bewässert. Es gibt dabei verschiedene Bewässerungsarten mit jeweils eigenen Vor- und Nachteilen. Ordne jedes Merkmal dem passenden Bild zu.",
+      { kind:"map-match", layout:"image-cards", matchBy:"group", hideCardLabel:true,
+        text: "Welches Bild gehört zu welcher Bewässerungsart? Ordne die drei Bezeichnungen den passenden Bildern zu.",
         categories: BEWAESSERUNG_CATEGORIES,
-        tiles: BEWAESSERUNG_TILES,
-        explain: "Bei der Sprinklerbewässerung wird das Wasser wie Regen versprüht, bei der Tröpfchenbewässerung tropft es genau dosiert direkt an die Pflanzen, und bei der Graben- und Furchenbewässerung fließt es offen über das Feld. Je nachdem, wie das Wasser verteilt wird, geht unterschiedlich viel davon verloren.",
-        popupText: "Klebe die drei Bilder mit ihrer Bezeichnung in dein Heft und schreibe die Merkmale dazu auf.",
-        popupShowImages: true }
+        tiles: BEWAESSERUNG_HEADINGS,
+        explain: "Bei der Sprinklerbewässerung (Beregnung) wird das Wasser über Regner versprüht, bei der Tröpfchenbewässerung tropft es dosiert an die Pflanzen, und bei der Graben- und Furchenbewässerung fließt es offen über das Feld." },
+      { kind:"map-match", layout:"image-cards", matchBy:"group",
+        text: "Beschrifte jedes Bild: Ordne die Begriffe der passenden Bewässerungsart zu.",
+        categories: BEWAESSERUNG_CATEGORIES,
+        tiles: BEWAESSERUNG_BEGRIFFE,
+        explain: "Sprinkler- und Tröpfchenbewässerung brauchen beide einen erhöhten Wassertank, damit genug Druck entsteht. Bei der Graben- und Furchenbewässerung kommt das Wasser dagegen direkt aus einem Stausee oder Fluss über Kanäle und eine Schleuse." },
+      { kind:"map-match", layout:"image-cards", matchBy:"group",
+        text: "In trockeneren Regionen werden Felder künstlich bewässert. Jede Bewässerungsart hat eigene Vor- und Nachteile. Ordne die Aussagen der passenden Bewässerungsart zu.",
+        categories: BEWAESSERUNG_CATEGORIES,
+        tiles: BEWAESSERUNG_VORNACHTEILE,
+        explain: "Je genauer das Wasser direkt an die Pflanze kommt (Tröpfchenbewässerung), desto weniger geht verloren - dafür ist die Technik aufwendiger und teurer. Je einfacher die Technik (Graben- und Furchenbewässerung), desto mehr Wasser versickert oder verdunstet ungenutzt.",
+        popupText: "Klebe die drei Bilder mit ihrer Bezeichnung in dein Heft, beschrifte sie richtig und schreibe jeweils die Vor- und Nachteile dazu.",
+        popupShowImages: true },
+      { kind:"map-match", layout:"image-cards", matchBy:"group",
+        text: "Zusatzaufgabe (anspruchsvoller): Ordne diese Begriffe den passenden Bildern zu.",
+        categories: BEWAESSERUNG_CATEGORIES,
+        tiles: BEWAESSERUNG_ERWEITERUNG,
+        explain: "Fließrichtung, Damm und Bewässerungsfeldbau gehören zur Graben- und Furchenbewässerung - ohne ausreichenden Abfluss des überschüssigen Wassers kann der Boden auf Dauer versalzen. Bei der Tröpfchenbewässerung zeigt die Lupe, wie genau dosiert das Wasser an die Wurzel kommt, dadurch verdunstet kaum etwas. Bei der Beregnung dagegen geht durch Sprühnebel, Wind und Verdunstung viel Wasser verloren." }
     ]
   },
   "bauernhof-suchsel": {
@@ -8649,7 +8703,7 @@ window.__startExercise = function(slug){
         return `
           <div class="ic-card" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
             <div class="ic-card-image">${cat.image}</div>
-            <div class="ic-card-label">${esc(cat.label)}</div>
+            ${q.hideCardLabel ? "" : `<div class="ic-card-label">${esc(cat.label)}</div>`}
             <div class="ic-slots">${slotsHtml}</div>
           </div>`;
       }).join("");
