@@ -572,9 +572,10 @@
      Kategorie-Karten oben, aber mit einem eigenen, selbst gezeichneten SVG-Bild (q.categories[].image)
      als Kartenkopf statt Emoji-Icon + Text - das Bild ist hier der eigentliche "Begriff", den man
      wiedererkennen muss. Dieselbe matchBy:"group"-Zieh-Logik wie bei den Kategorie-Karten. */
-  .ic-board{display:grid; grid-template-columns:repeat(auto-fit, minmax(170px,1fr)); gap:14px; margin:4px 0 18px; max-width:980px;}
+  .ic-board{display:grid; grid-template-columns:repeat(auto-fit, minmax(170px,1fr)); gap:14px; margin:4px 0 18px;}
+  .qcard.qcard-wide{max-width:1040px;}
   @media (min-width:860px){
-    .ic-board{width:min(92vw, 980px); margin-left:50%; transform:translateX(-50%);}
+    .qcard.qcard-wide{width:min(94vw, 1040px); margin-left:50%; transform:translateX(-50%);}
   }
   .ic-card{
     border-radius:var(--radius-lg); padding:12px; border:2px solid var(--cc-color, var(--border));
@@ -9271,7 +9272,7 @@ window.__startExercise = function(slug){
          erst, ob der Button überhaupt existiert. */
       const skipBtnHtml = q.noSkip ? "" : `<button class="skip-btn" id="skipBtn">Überspringen</button>`;
       host.innerHTML = `
-        <div class="qcard">
+        <div class="qcard${q.layout === "image-cards" ? " qcard-wide" : ""}">
           ${head(q)}
           ${body}
           <div class="feedback" id="fb"></div>
