@@ -1439,6 +1439,13 @@ const wibBetriebeTopics = [
   { tag:"lernen", label:"Wie wird die Ökologie im Betrieb beachtet?", page:12, practice:"wib-oekologie-grundfunktionen" },
   { tag:"lernen", label:"Welchen Stellenwert haben die Arbeitsplätze in einem Betrieb?", page:13, practice:"wib-stellenwert-arbeitsplaetze" },
 ];
+const kunstChapters = [
+  { slug:"fluchtpunktperspektive", nr:1, title:"Fluchtpunktperspektive", status:"aktuell" },
+];
+
+const kunstFluchtpunktTopics = [
+  { tag:"lernen", label:"Fluchtpunkt-Trainer: Linien zeichnen", practice:"kunst-fluchtpunkt-trainer" },
+];
 
 const SUBJECT_META = {
   mathe:        { label:"Mathematik",                       homeHref:"#/mathe",        chapters: chapters },
@@ -1447,6 +1454,7 @@ const SUBJECT_META = {
   naturtechnik: { label:"Natur und Technik",                homeHref:"#/naturtechnik", chapters: naturtechnikChapters },
   informatik:   { label:"Informatik",                       homeHref:"#/informatik",   chapters: informatikChapters },
   wib:          { label:"Wirtschaft im Beruf",              homeHref:"#/wib",          chapters: wibChapters },
+kunst:        { label:"Kunst",                             homeHref:"#/kunst",        chapters: kunstChapters },
 };
 
 const prozentTopics = [
@@ -2188,6 +2196,15 @@ const exerciseSets = {
     duration: "ca. 20 Minuten",
     locked: false,
     custom: "rechenweg-trainer",
+    questions: [],
+  },
+  "kunst-fluchtpunkt-trainer": {
+    title: "Fluchtpunkt-Trainer: Linien zeichnen",
+    subject: "kunst",
+    chapterSlug: "fluchtpunktperspektive",
+    duration: "ca. 15 Minuten",
+    locked: false,
+    custom: "fluchtpunkt-trainer",
     questions: [],
   },
   "prozentrechnung-formeldreieck": {
@@ -8047,6 +8064,13 @@ function viewHome(){
           <span class="subject-sub">WiB · Klasse 8</span>
         </span>
       </a>
+      <a class="subject-card card active" href="#/kunst">
+        <span class="subject-icon">🎨</span>
+        <span>
+          <span class="subject-title">Kunst</span><br>
+          <span class="subject-sub">Fluchtpunktperspektive · Klasse 8</span>
+        </span>
+      </a>
     </div>
   `;
 }
@@ -8736,6 +8760,88 @@ function viewGpgChapter(folderSlug, slug){
   `;
 }
 
+function viewKunst(){
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Kunst", href:"#/kunst"}]);
+  const rows = kunstChapters.map(c => `
+    <a class="chapter-row linkable" href="#/kunst/${c.slug}">
+      <span class="chapter-nr num">${String(c.nr).padStart(2,"0")}</span>
+      <span class="chapter-main">
+        <span class="chapter-title">${esc(c.title)}</span>
+      </span>
+      <span class="status ${statusClass(c.status)}">${statusLabel(c.status)}</span>
+    </a>
+  `).join("");
+  return h`
+    <div class="hero" style="padding-top:28px;">
+      <span class="eyebrow">Kunst</span>
+      <h1>Fluchtpunktperspektive.</h1>
+      <p>Übungen rund um die Fluchtpunktperspektive – als Vorbereitung auf euer "tolle Wohnung"-Projekt auf DIN A3.</p>
+    </div>
+    <div class="chapter-list">${rows}</div>
+  `;
+}
+
+function viewKunstChapter(slug){
+  const c = kunstChapters.find(x => x.slug === slug);
+  if (!c) return viewNotFound();
+  setCrumbs([{label:"Start", href:"#/"}, {label:"Kunst", href:"#/kunst"}, {label:c.title, href:"#/kunst/"+slug}]);
+
+  if (slug === "fluchtpunktperspektive"){
+    const rows = kunstFluchtpunktTopics.map(t => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
+      return `
+        <div class="topic-row">
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${pageHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/kunst">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Bevor ihr eure "tolle Wohnung" auf DIN A3 zeichnet, übt ihr hier mit dem Stift, wie die Fluchtpunktperspektive aufgebaut wird.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  return h`
+    <a class="backlink" href="#/kunst">← Zur Übersicht</a>
+    <div class="hero" style="padding-top:0;">
+      <span class="eyebrow">${esc(c.title)}</span>
+      <h1>${esc(c.title)}</h1>
+      <p>Dieser Bereich ist noch nicht dran. Die Übungen dazu werden freigeschaltet, sobald wir im Unterricht so weit sind.</p>
+    </div>
+  `;
+}
 function viewExercise(slug){
   const set = exerciseSets[slug];
   if (!set) return viewNotFound();
@@ -8821,6 +8927,17 @@ function viewExercise(slug){
     `;
   }
 
+  if (set.custom === "fluchtpunkt-trainer"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>Zeichne mit dem Stift (oder der Maus) die Fluchtlinien nach und erlebe live, wie ein Bild in Fluchtpunktperspektive entsteht – in 3 Schritten, inkl. Bonus-Schritt zur Treppe.</p>
+      </div>
+      <div id="exerciseHost"></div>
+    `;
+  }
   if (set.custom === "vergangenheiten"){
     return h`
       <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
@@ -11784,6 +11901,339 @@ new ResizeObserver(resize).observe(pad);
 start();
 };
 
+
+/* Fluchtpunkt-Trainer: eigene, interaktive Zeichen-Übung für Kunst (Einführung Fluchtpunktperspektive).
+   Schüler zeichnen mit dem Stift (Pointer Events, wie beim Rechenweg-Trainer-Schmierzettel) Fluchtlinien
+   auf einem Guide-Hintergrund (responsives SVG, viewBox 0 0 1000 625) nach; die Striche werden gegen
+   Ziel-Strecken geprüft (mittlerer Abstand zur Strecke + Endpunkt-Nähe). 3 Schritte: Fluchtlinien ->
+   Rückwand/fertiger Raum -> Bonus: Treppe andeuten (gleiche Geometrie wie im Einführungs-Dokument).
+   Läuft in einem Shadow-DOM, wie der Rechenweg-Trainer. Kein Sheets-Reporting. */
+window.__startFluchtpunktTrainer = function(){
+const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
+const root = host.attachShadow({mode:"open"});
+root.innerHTML = `<style>
+:host{display:block;font-family:var(--font-body);color:var(--ink);line-height:1.5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;text-wrap:balance}
+button{font-family:inherit}
+.shell{display:flex;flex-direction:column;gap:16px}
+.stats{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.pill{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink-soft)}
+.pill b{color:var(--accent);font-family:var(--font-mono)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px}
+.steptitle{font-size:19px;font-weight:700;margin:0 0 6px}
+.stepinstr{color:var(--ink-soft);font-size:15px;max-width:62ch}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tool{border:1.5px solid var(--border);background:var(--surface-2);color:var(--ink-soft);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.tool[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.tool:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.board{position:relative;width:100%;aspect-ratio:1000/625;border-radius:14px;border:1px solid var(--border);overflow:hidden;background:var(--surface-2);touch-action:none}
+.board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.board canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.seg-target{stroke:var(--ink-faint);stroke-width:3;stroke-dasharray:7 7;fill:none}
+.seg-target.done{stroke:var(--success);stroke-dasharray:none;stroke-width:4}
+.seg-ref{stroke:var(--success);stroke-width:2.5;fill:none;opacity:.55}
+.dot-corner{fill:var(--surface);stroke:var(--ink-soft);stroke-width:2}
+.dot-vp{fill:var(--danger)}
+.lbl-vp{font-size:26px;font-family:var(--font-body);font-weight:700;fill:var(--danger)}
+.fillpoly{fill:var(--accent);opacity:0;transition:opacity .6s ease}
+.fillpoly.show{opacity:.14}
+.fillpoly.dark.show{opacity:.26}
+.stairpoly{fill:var(--surface);stroke:var(--ink-soft);stroke-width:2;opacity:0;transition:opacity .5s ease}
+.stairpoly.show{opacity:1}
+.stairpoly.side{fill:var(--border)}
+.feedback{border-radius:14px;padding:13px 16px;font-size:15px;line-height:1.45;margin-top:14px}
+.feedback.good{background:var(--success-soft);color:var(--success)}
+.feedback.help{background:var(--warm-soft);color:var(--warm)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;margin-top:14px}
+.btn{border:none;border-radius:999px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;border:1.5px solid var(--border);color:var(--ink-soft)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn[hidden]{display:none!important}
+.end-card{text-align:center;padding:40px 24px}
+.end-card .big{font-size:44px;margin-bottom:8px}
+.end-card p{max-width:48ch;margin:10px auto 0;color:var(--ink-soft)}
+@media (max-width:480px){.card{padding:16px}}
+</style>
+<div class="shell">
+  <div class="stats"><span class="pill">Schritt <b id="stepNr">1</b>/3</span></div>
+  <section class="card" id="stepCard">
+    <div class="eyebrow">Fluchtpunkt-Trainer</div>
+    <h2 class="steptitle" id="stepTitle"></h2>
+    <p class="stepinstr" id="stepInstr"></p>
+  </section>
+  <section class="card" id="drawCard">
+    <div class="toolbar">
+      <button class="tool" id="t-pen" aria-pressed="true">Stift</button>
+      <button class="tool" id="t-eraser" aria-pressed="false">Radierer</button>
+      <button class="tool" id="t-undo">Rückgängig</button>
+      <button class="tool" id="t-clear">Alles löschen</button>
+    </div>
+    <div class="board">
+      <svg id="guide" viewBox="0 0 1000 625" preserveAspectRatio="none"></svg>
+      <canvas id="pad"></canvas>
+    </div>
+    <div class="feedback" id="fb" hidden></div>
+    <div class="actions">
+      <button class="btn ghost" id="btnCheck">Prüfen</button>
+      <button class="btn" id="btnNext" hidden>Weiter →</button>
+    </div>
+  </section>
+  <section class="card end-card" id="endCard" hidden>
+    <div class="big">🎉</div>
+    <h2>Geschafft!</h2>
+    <p>Du hast gesehen: Alles, was im Bild in die Tiefe geht, läuft auf den Fluchtpunkt zu – Fluchtlinien, Räume, auch eine Treppe. Genau dieses Prinzip nutzt du gleich für deine eigene Zeichnung.</p>
+    <div class="actions" style="justify-content:center;margin-top:18px">
+      <button class="btn ghost" id="btnRestart">Noch einmal üben</button>
+      <a class="btn" id="btnBack" href="#/kunst/fluchtpunktperspektive">Zur Übersicht</a>
+    </div>
+  </section>
+</div>`;
+
+const $ = sel => root.querySelector(sel);
+
+/* ---------- Geometrie der 3 Schritte (Referenzraum 1000x625, wie das SVG-viewBox) ---------- */
+const VP1 = [500,300];
+const FRAME = { tl:[60,40], tr:[940,40], br:[940,560], bl:[60,560] };
+function lerp(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t]; }
+const T = 0.45;
+const Q = { tl: lerp(FRAME.tl,VP1,T), tr: lerp(FRAME.tr,VP1,T), br: lerp(FRAME.br,VP1,T), bl: lerp(FRAME.bl,VP1,T) };
+
+const VP3 = [860,140];
+const P_L0 = [140,560], P_R0 = [430,560];
+const RISER_H = 90;
+const STAIR_W0 = P_R0[0]-P_L0[0];
+const STAIR_R = 0.76;
+const STAIR_N = 5;
+function stairStep(i){
+  const q = [ VP3[0]+Math.pow(STAIR_R,i)*(P_L0[0]-VP3[0]), VP3[1]+Math.pow(STAIR_R,i)*(P_L0[1]-VP3[1]) ];
+  return { x:q[0], y:q[1], w: STAIR_W0*Math.pow(STAIR_R,i), h: RISER_H*Math.pow(STAIR_R,i) };
+}
+function seg(x1,y1,x2,y2){ return {x1,y1,x2,y2,done:false}; }
+
+const STEPS = [
+  {
+    title: "Schritt 1 · Fluchtlinien zeichnen",
+    instr: "Zieh mit dem Stift von jeder der 4 Bildecken eine gerade Linie zum roten Fluchtpunkt. So entsteht der Blick in einen Raum.",
+    vp: VP1,
+    targets: [ seg(FRAME.tl[0],FRAME.tl[1],VP1[0],VP1[1]), seg(FRAME.tr[0],FRAME.tr[1],VP1[0],VP1[1]), seg(FRAME.br[0],FRAME.br[1],VP1[0],VP1[1]), seg(FRAME.bl[0],FRAME.bl[1],VP1[0],VP1[1]) ],
+  },
+  {
+    title: "Schritt 2 · Rückwand einzeichnen",
+    instr: "Die 4 Fluchtlinien von eben sind schon eingezeichnet. Verbinde jetzt die 4 Punkte auf den Linien zu einem kleinen Rechteck – das wird die Rückwand des Raums.",
+    vp: VP1,
+    refLines: [ seg(FRAME.tl[0],FRAME.tl[1],VP1[0],VP1[1]), seg(FRAME.tr[0],FRAME.tr[1],VP1[0],VP1[1]), seg(FRAME.br[0],FRAME.br[1],VP1[0],VP1[1]), seg(FRAME.bl[0],FRAME.bl[1],VP1[0],VP1[1]) ],
+    targets: [ seg(Q.tl[0],Q.tl[1],Q.tr[0],Q.tr[1]), seg(Q.tr[0],Q.tr[1],Q.br[0],Q.br[1]), seg(Q.br[0],Q.br[1],Q.bl[0],Q.bl[1]), seg(Q.bl[0],Q.bl[1],Q.tl[0],Q.tl[1]) ],
+    reveal: "room",
+  },
+  {
+    title: "Schritt 3 · Bonus: Treppe andeuten",
+    instr: "Eine Treppe ist eine der schwierigsten Aufgaben. Zieh zuerst die beiden äußeren Fluchtlinien zum Fluchtpunkt, dann zeichne die vorderste Stufe nach (erst die senkrechte, dann die waagrechte Kante).",
+    vp: VP3,
+    targets: [
+      seg(P_L0[0],P_L0[1],VP3[0],VP3[1]),
+      seg(P_R0[0],P_R0[1],VP3[0],VP3[1]),
+      seg(P_L0[0],P_L0[1], P_L0[0],P_L0[1]-RISER_H),
+      seg(P_L0[0],P_L0[1]-RISER_H, P_R0[0],P_R0[1]-RISER_H),
+    ],
+    reveal: "stairs",
+  },
+];
+
+let stepIdx = 0;
+let strokes = [], cur = null, tool = "pen", penSeen = false;
+
+function svgLine(cls, s, id){
+  return `<line class="${cls}" data-id="${id}" x1="${s.x1}" y1="${s.y1}" x2="${s.x2}" y2="${s.y2}"></line>`;
+}
+function poly(pts){ return pts.map(p=>p.join(",")).join(" "); }
+
+function renderGuide(){
+  const st = STEPS[stepIdx];
+  let parts = [];
+  if (stepIdx === 0 || stepIdx === 1){
+    parts.push(`<rect x="${FRAME.tl[0]}" y="${FRAME.tl[1]}" width="${FRAME.tr[0]-FRAME.tl[0]}" height="${FRAME.bl[1]-FRAME.tl[1]}" fill="none" stroke="var(--border)" stroke-width="2"></rect>`);
+  }
+  if (st.reveal === "room"){
+    parts.push(`<polygon class="fillpoly dark${st._revealed?" show":""}" points="${poly([FRAME.bl,FRAME.br,Q.br,Q.bl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tl,FRAME.tr,Q.tr,Q.tl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tl,FRAME.bl,Q.bl,Q.tl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tr,FRAME.br,Q.br,Q.tr])}"></polygon>`);
+  }
+  if (st.reveal === "stairs" && st._revealed){
+    for(let i=0;i<STAIR_N;i++){
+      const a = stairStep(i), b = stairStep(i+1);
+      const tread = [[a.x,a.y-a.h],[a.x+a.w,a.y-a.h],[b.x+b.w,b.y-b.h],[b.x,b.y-b.h]];
+      const riser = [[a.x,a.y],[a.x+a.w,a.y],[a.x+a.w,a.y-a.h],[a.x,a.y-a.h]];
+      parts.push(`<polygon class="stairpoly show" points="${poly(tread)}"></polygon>`);
+      parts.push(`<polygon class="stairpoly side show" points="${poly(riser)}"></polygon>`);
+    }
+  }
+  if (st.refLines){ st.refLines.forEach((s,i)=> parts.push(svgLine("seg-ref", s, "ref"+i)) ); }
+  st.targets.forEach((s,i)=> parts.push(svgLine("seg-target"+(s.done?" done":""), s, "t"+i)) );
+  if (stepIdx === 0){ Object.values(FRAME).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="9"></circle>`)); }
+  if (stepIdx === 1){ Object.values(Q).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="8"></circle>`)); }
+  if (stepIdx === 2){
+    parts.push(`<circle class="dot-corner" cx="${P_L0[0]}" cy="${P_L0[1]}" r="8"></circle>`);
+    parts.push(`<circle class="dot-corner" cx="${P_R0[0]}" cy="${P_R0[1]}" r="8"></circle>`);
+  }
+  parts.push(`<circle class="dot-vp" cx="${st.vp[0]}" cy="${st.vp[1]}" r="7"></circle>`);
+  parts.push(`<text class="lbl-vp" x="${st.vp[0]+12}" y="${st.vp[1]-10}">F</text>`);
+  $("#guide").innerHTML = parts.join("");
+}
+
+function loadStep(i){
+  stepIdx = i;
+  const st = STEPS[i];
+  st.targets.forEach(t=> t.done=false);
+  st._revealed = false;
+  strokes = []; cur = null;
+  $("#stepNr").textContent = String(i+1);
+  $("#stepTitle").textContent = st.title;
+  $("#stepInstr").textContent = st.instr;
+  $("#fb").hidden = true;
+  $("#btnNext").hidden = true;
+  renderGuide();
+  redraw();
+}
+
+/* ---------- Zeichenfläche (Stift, wie beim Rechenweg-Trainer-Schmierzettel, aber in
+   Referenz-Koordinaten gespeichert, damit Striche beim Resize mit dem Guide mitskalieren) ---------- */
+const pad = $("#pad"), ctx2 = pad.getContext("2d");
+function accentColor(){ return getComputedStyle(host).getPropertyValue("--accent").trim() || "#1C2F8A"; }
+function toRefPt(clientX, clientY, pressure){
+  const r = pad.getBoundingClientRect();
+  const scale = 1000 / r.width;
+  return [ (clientX-r.left)*scale, (clientY-r.top)*scale, pressure||.5 ];
+}
+function toPx(rx,ry){
+  const r = pad.getBoundingClientRect();
+  const scale = r.width/1000;
+  return [ rx*scale, ry*scale ];
+}
+function resize(){
+  const r = pad.getBoundingClientRect(), d = window.devicePixelRatio||1;
+  pad.width = Math.round(r.width*d); pad.height = Math.round(r.height*d);
+  ctx2.setTransform(d,0,0,d,0,0);
+  redraw();
+}
+function drawStroke(s){
+  if (s.pts.length<1) return;
+  ctx2.save();
+  ctx2.globalCompositeOperation = s.tool==="eraser" ? "destination-out" : "source-over";
+  const col = accentColor();
+  ctx2.strokeStyle = col; ctx2.fillStyle = col;
+  ctx2.lineCap = "round"; ctx2.lineJoin = "round";
+  for(let i=1;i<s.pts.length;i++){
+    const [x0,y0] = toPx(s.pts[i-1][0], s.pts[i-1][1]);
+    const [x1,y1] = toPx(s.pts[i][0], s.pts[i][1]);
+    const pr = s.pts[i][2];
+    ctx2.lineWidth = s.tool==="eraser" ? 22 : 2 + 2.4*(pr||.5);
+    ctx2.beginPath(); ctx2.moveTo(x0,y0); ctx2.lineTo(x1,y1); ctx2.stroke();
+  }
+  if (s.pts.length===1 && s.tool!=="eraser"){ const [x,y]=toPx(s.pts[0][0], s.pts[0][1]); ctx2.beginPath(); ctx2.arc(x,y,2.2,0,Math.PI*2); ctx2.fill(); }
+  ctx2.restore();
+}
+function redraw(){
+  const r = pad.getBoundingClientRect();
+  ctx2.clearRect(0,0,r.width,r.height);
+  strokes.forEach(drawStroke);
+}
+function clearPad(){ strokes=[]; cur=null; redraw(); }
+
+pad.addEventListener("pointerdown", e=>{
+  if (e.pointerType==="pen") penSeen = true;
+  if (penSeen && e.pointerType==="touch") return;
+  e.preventDefault(); pad.setPointerCapture(e.pointerId);
+  cur = { tool, pts:[toRefPt(e.clientX,e.clientY,e.pressure)], id:e.pointerId };
+  strokes.push(cur); drawStroke(cur);
+});
+pad.addEventListener("pointermove", e=>{
+  if (!cur || e.pointerId!==cur.id) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  evs.forEach(ev=>{ cur.pts.push(toRefPt(ev.clientX,ev.clientY,ev.pressure)); drawStroke({tool:cur.tool, pts:cur.pts.slice(-2)}); });
+});
+["pointerup","pointercancel","pointerleave"].forEach(n=> pad.addEventListener(n, e=>{ if(cur && e.pointerId===cur.id) cur=null; }));
+
+function setTool(t){ tool=t; $("#t-pen").setAttribute("aria-pressed", t==="pen"); $("#t-eraser").setAttribute("aria-pressed", t==="eraser"); }
+$("#t-pen").addEventListener("click", ()=>setTool("pen"));
+$("#t-eraser").addEventListener("click", ()=>setTool("eraser"));
+$("#t-undo").addEventListener("click", ()=>{ strokes.pop(); redraw(); });
+$("#t-clear").addEventListener("click", clearPad);
+new ResizeObserver(resize).observe(pad);
+
+/* ---------- Prüfung: Strich gegen Ziel-Strecke (mittlerer Abstand + Endpunkt-Nähe) ---------- */
+function distToSeg(px,py,x1,y1,x2,y2){
+  const dx=x2-x1, dy=y2-y1;
+  const len2 = dx*dx+dy*dy;
+  let t = len2 ? ((px-x1)*dx+(py-y1)*dy)/len2 : 0;
+  t = Math.max(0, Math.min(1,t));
+  const cx = x1+t*dx, cy = y1+t*dy;
+  return Math.hypot(px-cx, py-cy);
+}
+const LINE_TOL = 34, END_TOL = 60;
+function strokeMatchesTarget(pts, s){
+  if (pts.length<2) return false;
+  let sum=0;
+  for (const p of pts) sum += distToSeg(p[0],p[1], s.x1,s.y1,s.x2,s.y2);
+  if (sum/pts.length > LINE_TOL) return false;
+  const a=pts[0], b=pts[pts.length-1];
+  const dA = Math.hypot(a[0]-s.x1,a[1]-s.y1), dB = Math.hypot(b[0]-s.x2,b[1]-s.y2);
+  const dC = Math.hypot(a[0]-s.x2,a[1]-s.y2), dD = Math.hypot(b[0]-s.x1,b[1]-s.y1);
+  const orientOk = (dA<END_TOL && dB<END_TOL) || (dC<END_TOL && dD<END_TOL);
+  if (!orientOk) return false;
+  const segLen = Math.hypot(s.x2-s.x1, s.y2-s.y1);
+  const span = Math.hypot(b[0]-a[0], b[1]-a[1]);
+  return span > segLen*0.45;
+}
+
+function checkStep(){
+  const st = STEPS[stepIdx];
+  const penStrokes = strokes.filter(s=> s.tool==="pen" && s.pts.length>1);
+  let matched = 0;
+  st.targets.forEach(t=>{
+    if (!t.done){ t.done = penStrokes.some(s=> strokeMatchesTarget(s.pts, t)); }
+    if (t.done) matched++;
+  });
+  renderGuide();
+  const total = st.targets.length;
+  const fb = $("#fb"); fb.hidden = false;
+  if (matched === total){
+    fb.className = "feedback good";
+    fb.textContent = "Stark! Alle Linien erkannt.";
+    $("#btnNext").hidden = false;
+    if (st.reveal){ st._revealed = true; renderGuide(); }
+  } else if (matched === 0){
+    fb.className = "feedback help";
+    fb.textContent = "Noch keine Linie erkannt. Fahr mit dem Stift genau von einem markierten Punkt zum nächsten.";
+  } else {
+    fb.className = "feedback help";
+    fb.textContent = matched + " von " + total + " Linien erkannt – weiter so!";
+  }
+}
+$("#btnCheck").addEventListener("click", checkStep);
+$("#btnNext").addEventListener("click", ()=>{
+  if (stepIdx < STEPS.length-1){
+    loadStep(stepIdx+1);
+  } else {
+    $("#stepCard").hidden = true;
+    $("#drawCard").hidden = true;
+    $("#endCard").hidden = false;
+  }
+});
+$("#btnRestart").addEventListener("click", ()=>{
+  $("#endCard").hidden = true;
+  $("#stepCard").hidden = false;
+  $("#drawCard").hidden = false;
+  loadStep(0);
+});
+
+loadStep(0);
+};
+
+
 window.__startVergangenheitenUebung = function(slug){
   const set = exerciseSets[slug];
   if (!set) return;
@@ -12532,6 +12982,10 @@ function route(){
     html = viewWib();
   } else if (parts[0] === "wib" && parts.length === 2){
     html = viewWibChapter(parts[1]);
+  } else if (parts[0] === "kunst" && parts.length === 1){
+    html = viewKunst();
+  } else if (parts[0] === "kunst" && parts.length === 2){
+    html = viewKunstChapter(parts[1]);
   } else if (parts[0] === "uebung" && parts.length === 2){
     html = viewExercise(parts[1]);
   } else if (parts[0] === "loesung" && parts.length === 2){
@@ -12553,6 +13007,8 @@ function route(){
       window.__startWortartenEinstiegstest(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "rechenweg-trainer"){
       window.__startRechenwegTrainer();
+    } else if (exerciseSets[parts[1]].custom === "fluchtpunkt-trainer"){
+      window.__startFluchtpunktTrainer();
     } else if (exerciseSets[parts[1]].custom === "wortarten-trainer"){
       window.__startWortartenTrainer(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "vergangenheiten"){
