@@ -2155,15 +2155,15 @@ const BEWAESSERUNG_ERWEITERUNG = [
   { id:"erw-spr-1", label:"Sprühnebel", group:"sprinkler" },
   { id:"erw-spr-2", label:"Hohe Verdunstung", group:"sprinkler" },
   { id:"erw-spr-3", label:"Windabdrift", group:"sprinkler" },
-  { id:"erw-spr-4", label:"Wasserverbrauch", group:"sprinkler" },
-  { id:"erw-tro-1", label:"Lupe / Vergrößerung", group:"troepfchen" },
+  { id:"erw-spr-4", label:"Wasserverbrauch geringer als bei Grabenbewässerung, aber mehr als bei Tröpfchenbewässerung", group:"sprinkler" },
   { id:"erw-tro-2", label:"Feuchte Stelle an der Wurzel", group:"troepfchen" },
   { id:"erw-tro-3", label:"Wassersparend", group:"troepfchen" },
   { id:"erw-tro-4", label:"Geringe Verdunstung", group:"troepfchen" },
-  { id:"erw-gra-1", label:"Fließrichtung des Wassers (Pfeil)", group:"graben" },
+  { id:"erw-tro-5", label:"Sehr kostenintensiv", group:"troepfchen" },
   { id:"erw-gra-2", label:"Damm / Feldrand", group:"graben" },
   { id:"erw-gra-3", label:"Bewässerungsfeldbau", group:"graben" },
   { id:"erw-gra-4", label:"Versalzung (als Gefahr, wenn das Abwasser fehlt)", group:"graben" },
+  { id:"erw-gra-5", label:"Hoher Wasserverbrauch", group:"graben" },
 ];
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
@@ -3601,7 +3601,7 @@ const exerciseSets = {
         text: "Zusatzaufgabe (anspruchsvoller): Ordne diese Begriffe den passenden Bildern zu.",
         categories: BEWAESSERUNG_CATEGORIES,
         tiles: BEWAESSERUNG_ERWEITERUNG,
-        explain: "Fließrichtung, Damm und Bewässerungsfeldbau gehören zur Graben- und Furchenbewässerung - ohne ausreichenden Abfluss des überschüssigen Wassers kann der Boden auf Dauer versalzen. Bei der Tröpfchenbewässerung zeigt die Lupe, wie genau dosiert das Wasser an die Wurzel kommt, dadurch verdunstet kaum etwas. Bei der Beregnung dagegen geht durch Sprühnebel, Wind und Verdunstung viel Wasser verloren." }
+        explain: "Bei der Graben- und Furchenbewässerung braucht man einen Damm am Feldrand und eigenen Bewässerungsfeldbau; weil so viel Wasser ungenutzt versickert oder verdunstet, ist hier der Wasserverbrauch am höchsten - ohne ausreichenden Abfluss droht außerdem eine Versalzung des Bodens. Tröpfchenbewässerung hält die Stelle an der Wurzel feucht und spart dadurch viel Wasser, ist aber in der Anschaffung sehr kostenintensiv. Bei der Sprinklerbewässerung geht durch Sprühnebel, Wind (Windabdrift) und hohe Verdunstung ebenfalls einiges an Wasser verloren - ihr Wasserverbrauch liegt zwischen den beiden anderen Methoden." }
     ]
   },
   "bauernhof-suchsel": {
