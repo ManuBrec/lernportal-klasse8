@@ -2207,71 +2207,15 @@ const BEWAESSERUNG_ERWEITERUNG = [
   { id:"erw-gra-5", label:"Hoher Wasserverbrauch", group:"graben" },
 ];
 
-/* "Vermehrung der Viren - Abfrage" (Naturtechnik): eigene, neu gezeichnete SVG-Bilder für die 6
-   Phasen A-F des Vermehrungskreislaufs (Wunsch von Manuel, nach seinem hochgeladenen Lehrbuchbild -
-   KEINE Buchgrafik übernommen, eigener, einfacher Stil: gelbe Zelle mit pinker Zellkern-Ellipse,
-   türkise Virus-Partikel mit rotem Erbsubstanz-Schnörkel). Pro Phase ein eigenes kleines Bild
-   (layout:"image-cards", wie schon bei "Bewässerungsarten" etabliert) statt nur Text-Kästchen, damit
-   die Zuordnungsaufgabe den Kreislauf wirklich illustriert. q.popupShowImages zeigt nach richtiger
-   Lösung alle 6 Bilder mit den zugehörigen Erklärungen - genau das, was laut Manuel als Zeichnung
-   erscheinen und danach sauber+farbig ins Heft übernommen werden soll. */
-function vkVirus(cx, cy, r){
-  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#8FD3C6" stroke="#2F7A6B" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2F7A6B" stroke-width="2" stroke-dasharray="2 4"/><path d="M${cx-r*0.55},${cy} Q${cx},${cy-r*0.55} ${cx+r*0.55},${cy} Q${cx},${cy+r*0.55} ${cx-r*0.55},${cy}" fill="none" stroke="#D1495B" stroke-width="2.5"/>`;
-}
-const VK_CELL = `<path d="M70,15 Q15,15 15,70 Q15,125 70,125 L230,125 Q285,125 285,70 Q285,15 230,15 Z" fill="#FDE9A0" stroke="#D9A82B" stroke-width="4"/>`;
-const VK_NUCLEUS = `<ellipse cx="150" cy="70" rx="28" ry="20" fill="#E0457B"/>`;
-
-const VK_SVG_A = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>${VK_CELL}${VK_NUCLEUS}${vkVirus(18,55,14)}</svg>`;
-
-const VK_SVG_B = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>${VK_CELL}${VK_NUCLEUS}${vkVirus(42,55,13)}</svg>`;
-
-const VK_SVG_C = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>${VK_CELL}${VK_NUCLEUS}<path d="M90,60 Q110,48 130,60 Q110,72 90,60" fill="none" stroke="#D1495B" stroke-width="3"/></svg>`;
-
-const VK_SVG_D = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>${VK_CELL}${VK_NUCLEUS}
-<circle cx="60" cy="40" r="6" fill="#8FD3C6" stroke="#2F7A6B" stroke-width="2"/>
-<circle cx="75" cy="100" r="6" fill="#8FD3C6" stroke="#2F7A6B" stroke-width="2"/>
-<circle cx="185" cy="35" r="6" fill="#8FD3C6" stroke="#2F7A6B" stroke-width="2"/>
-<path d="M180,95 Q192,88 205,95 Q192,102 180,95" fill="none" stroke="#D1495B" stroke-width="2.5"/>
-<path d="M55,75 Q66,68 78,75 Q66,82 55,75" fill="none" stroke="#D1495B" stroke-width="2.5"/>
-</svg>`;
-
-const VK_SVG_E = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>
-<path d="M70,15 Q15,15 15,70 Q15,125 70,125 L170,125 L180,108 L195,125 L230,125 Q250,125 262,115 L248,100 L268,92 L248,80 L264,65 Q285,45 275,25 Q265,15 230,15 Z" fill="#FDE9A0" stroke="#D9A82B" stroke-width="4"/>
-${VK_NUCLEUS}
-${vkVirus(250,40,13)}
-${vkVirus(275,70,12)}
-${vkVirus(255,105,12)}
-${vkVirus(220,118,11)}
-</svg>`;
-
-const VK_SVG_F = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="640" height="280"><rect width="100%" height="100%" fill="white"/>
-<defs><marker id="vkArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2F7A6B"/></marker></defs>
-<ellipse cx="255" cy="40" rx="45" ry="28" fill="none" stroke="#D9A82B" stroke-width="3" stroke-dasharray="5 5"/>
-<ellipse cx="255" cy="105" rx="45" ry="28" fill="none" stroke="#D9A82B" stroke-width="3" stroke-dasharray="5 5"/>
-${vkVirus(90,40,13)}
-${vkVirus(95,105,13)}
-${vkVirus(55,70,12)}
-<path d="M108,43 L195,40" stroke="#2F7A6B" stroke-width="2" marker-end="url(#vkArrow)"/>
-<path d="M112,100 L195,100" stroke="#2F7A6B" stroke-width="2" marker-end="url(#vkArrow)"/>
-<path d="M72,78 L160,95" stroke="#2F7A6B" stroke-width="2" marker-end="url(#vkArrow)"/>
-</svg>`;
-
-const VK_CATEGORIES = [
-  { id:"a", label:"A", color:"#3454D1", image: VK_SVG_A },
-  { id:"b", label:"B", color:"#3454D1", image: VK_SVG_B },
-  { id:"c", label:"C", color:"#3454D1", image: VK_SVG_C },
-  { id:"d", label:"D", color:"#3454D1", image: VK_SVG_D },
-  { id:"e", label:"E", color:"#3454D1", image: VK_SVG_E },
-  { id:"f", label:"F", color:"#3454D1", image: VK_SVG_F },
-];
-const VK_TILES = [
-  { id:"t-a", label:"Das Virus heftet sich an eine gesunde Wirtszelle an.", group:"a" },
-  { id:"t-b", label:"Das Virus dringt in die Wirtszelle ein und wird von ihr aufgenommen.", group:"b" },
-  { id:"t-c", label:"Die Erbsubstanz des Virus wird in der Zelle freigesetzt.", group:"c" },
-  { id:"t-d", label:"Die Wirtszelle stellt neue Virus-Bausteine her (Erbsubstanz und Eiweißhüllen).", group:"d" },
-  { id:"t-e", label:"Die Wirtszelle platzt auf und setzt die neuen Viren frei.", group:"e" },
-  { id:"t-f", label:"Die neuen Viren befallen weitere Wirtszellen.", group:"f" },
-];
+/* "Vermehrung der Viren - Abfrage": EIN einziges, zusammenhängendes eigenes SVG-Bild des ganzen
+   Kreislaufs (Wunsch von Manuel nach seinem hochgeladenen Lehrbuchbild: "nimm die gleichen Bilder,
+   oder zeichne komplett genaue Zeichnungen nach" - KEINE Buchgrafik 1:1 übernommen, aber Aufbau/
+   Ablauf so genau wie möglich nachgebaut: eine Wirtszelle durchläuft im Kreis die Stationen A-F
+   (Virus heftet an → dringt ein → Erbsubstanz wird frei → neue Bausteine werden produziert → Zelle
+   platzt auf → neue Viren befallen weitere Zellen), mit Beschriftung Virus/Wirtszelle/Zellkern wie
+   im Original. Als Data-URI eingebettet (q.image, wie schon bei "Bakterien - genauer betrachtet"
+   etabliert), damit es über jedem Fragetyp per head() automatisch angezeigt wird. */
+const IMG_VIRUS_KREISLAUF = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii05MCAwIDEwNjAgNjQwIiB3aWR0aD0iMjEyMCIgaGVpZ2h0PSIxMjgwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIvPjxkZWZzPjxtYXJrZXIgaWQ9InZjQXJyb3ciIG1hcmtlcldpZHRoPSI5IiBtYXJrZXJIZWlnaHQ9IjkiIHJlZlg9IjciIHJlZlk9IjMuNSIgb3JpZW50PSJhdXRvIj48cGF0aCBkPSJNMCwwIEw3LDMuNSBMMCw3IFoiIGZpbGw9IiMyRjdBNkIiLz48L21hcmtlcj48L2RlZnM+PGVsbGlwc2UgY3g9IjE0MCIgY3k9IjQ4MCIgcng9IjcwIiByeT0iNTUiIGZpbGw9IiNGREU5QTAiIHN0cm9rZT0iI0Q5QTgyQiIgc3Ryb2tlLXdpZHRoPSI0Ii8+PGVsbGlwc2UgY3g9IjE1NSIgY3k9IjQ4MCIgcng9IjIyIiByeT0iMTYiIGZpbGw9IiNFMDQ1N0IiLz48Y2lyY2xlIGN4PSI2NSIgY3k9IjQ1NSIgcj0iMTUiIGZpbGw9IiM4RkQzQzYiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iNjUiIGN5PSI0NTUiIHI9IjE1IiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+PHBhdGggZD0iTTU2Ljc1LDQ1NSBRNjUsNDQ2Ljc1IDczLjI1LDQ1NSBRNjUsNDYzLjI1IDU2Ljc1LDQ1NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iNDI1IiByPSIxNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMkYzQTRCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjx0ZXh0IHg9IjQwIiB5PSI0MzAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzJGM0E0QiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPkE8L3RleHQ+PHBhdGggZD0iTTMwLDM4MCBMMTAwLDQ0NSIgc3Ryb2tlPSIjMkYzQTRCIiBzdHJva2Utd2lkdGg9IjEuMyIvPjx0ZXh0IHg9IjI4IiB5PSIzNzUiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyRjNBNEIiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5WaXJ1czwvdGV4dD48cGF0aCBkPSJNMzAsNTYwIEwxMjAsNTE1IiBzdHJva2U9IiMyRjNBNEIiIHN0cm9rZS13aWR0aD0iMS4zIi8+PHRleHQgeD0iMjgiIHk9IjU2NSIgdGV4dC1hbmNob3I9ImVuZCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9IjcwMCIgZmlsbD0iIzJGM0E0QiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPldpcnRzemVsbGU8L3RleHQ+PHBhdGggZD0iTTMwLDYwMCBMMTUzLDQ4MiIgc3Ryb2tlPSIjMkYzQTRCIiBzdHJva2Utd2lkdGg9IjEuMyIvPjx0ZXh0IHg9IjI4IiB5PSI2MDUiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyRjNBNEIiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5aZWxsa2VybjwvdGV4dD48cGF0aCBkPSJNIDEyNSw0MjggQyA3MCwzMzAgNzAsMzAwIDEyNSwyMDIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI3ZjQXJyb3cpIi8+PGNpcmNsZSBjeD0iNDAiIGN5PSIzMTUiIHI9IjE1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyRjNBNEIiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHRleHQgeD0iNDAiIHk9IjMyMC41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMkYzQTRCIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+QjwvdGV4dD48ZWxsaXBzZSBjeD0iMTQwIiBjeT0iMTUwIiByeD0iNzAiIHJ5PSI1NSIgZmlsbD0iI0ZERTlBMCIgc3Ryb2tlPSIjRDlBODJCIiBzdHJva2Utd2lkdGg9IjQiLz48ZWxsaXBzZSBjeD0iMTU1IiBjeT0iMTUwIiByeD0iMjIiIHJ5PSIxNiIgZmlsbD0iI0UwNDU3QiIvPjxjaXJjbGUgY3g9Ijg1IiBjeT0iMTM1IiByPSIxNCIgZmlsbD0iIzhGRDNDNiIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI4NSIgY3k9IjEzNSIgcj0iMTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz48cGF0aCBkPSJNNzcuMywxMzUgUTg1LDEyNy4zIDkyLjcsMTM1IFE4NSwxNDIuNyA3Ny4zLDEzNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0gMjA1LDExMCBDIDMwMCw4MCAzMjAsODUgMzk1LDkyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMyIgbWFya2VyLWVuZD0idXJsKCN2Y0Fycm93KSIvPjxjaXJjbGUgY3g9IjMwMCIgY3k9IjYwIiByPSIxNSIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMkYzQTRCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjx0ZXh0IHg9IjMwMCIgeT0iNjUuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzJGM0E0QiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPkM8L3RleHQ+PGVsbGlwc2UgY3g9IjQ2MCIgY3k9IjkwIiByeD0iNzAiIHJ5PSI1NSIgZmlsbD0iI0ZERTlBMCIgc3Ryb2tlPSIjRDlBODJCIiBzdHJva2Utd2lkdGg9IjQiLz48ZWxsaXBzZSBjeD0iNDc1IiBjeT0iOTAiIHJ4PSIyMiIgcnk9IjE2IiBmaWxsPSIjRTA0NTdCIi8+PHBhdGggZD0iTTQyNSw5NSBRNDQ1LDgwIDQ2NSw5NSBRNDQ1LDExMCA0MjUsOTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0QxNDk1QiIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTSA1MjUsOTIgQyA2MDAsODUgNjIwLDgwIDcxNSwxMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIzIiBtYXJrZXItZW5kPSJ1cmwoI3ZjQXJyb3cpIi8+PGNpcmNsZSBjeD0iNjIwIiBjeT0iNjAiIHI9IjE1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyRjNBNEIiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHRleHQgeD0iNjIwIiB5PSI2NS41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMkYzQTRCIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+RDwvdGV4dD48ZWxsaXBzZSBjeD0iNzgwIiBjeT0iMTUwIiByeD0iNzAiIHJ5PSI1NSIgZmlsbD0iI0ZERTlBMCIgc3Ryb2tlPSIjRDlBODJCIiBzdHJva2Utd2lkdGg9IjQiLz48ZWxsaXBzZSBjeD0iNzk1IiBjeT0iMTUwIiByeD0iMjIiIHJ5PSIxNiIgZmlsbD0iI0UwNDU3QiIvPjxjaXJjbGUgY3g9Ijc0NSIgY3k9IjEyNSIgcj0iNiIgZmlsbD0iIzhGRDNDNiIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSI3NjAiIGN5PSIxNzUiIHI9IjYiIGZpbGw9IiM4RkQzQzYiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iODIwIiBjeT0iMTIyIiByPSI2IiBmaWxsPSIjOEZEM0M2IiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik03OTUsMTcyIFE4MDcsMTY1IDgxOSwxNzIgUTgwNywxNzkgNzk1LDE3MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik03MjUsMTQ4IFE3MzUsMTQxIDc0NSwxNDggUTczNSwxNTUgNzI1LDE0OCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik0gODQ1LDE5NSBDIDk0MCwzMDAgOTQwLDMzMCA4NDUsNDM1IiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMyIgbWFya2VyLWVuZD0idXJsKCN2Y0Fycm93KSIvPjxjaXJjbGUgY3g9Ijg2MiIgY3k9IjMxNSIgcj0iMTUiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzJGM0E0QiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48dGV4dCB4PSI4NjIiIHk9IjMyMC41IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE2IiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjMkYzQTRCIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+RTwvdGV4dD48cGF0aCBkPSJNIDcxMCw0MjUgUSA2NDAsNDI1IDY0MCw0ODAgUSA2NDAsNTM1IDcxMCw1MzUgTCA3NzAsNTM1IEwgNzgwLDUxNSBMIDc5OCw1MzUgTCA4MTUsNTM1IFEgODM1LDUzMCA4NDUsNTE1IEwgODI1LDQ5NSBMIDg0OCw0ODAgTCA4MjIsNDYyIFEgODUwLDQzNSA4MjUsNDI1IFEgODAwLDQyNSA3MTAsNDI1IiBmaWxsPSIjRkRFOUEwIiBzdHJva2U9IiNEOUE4MkIiIHN0cm9rZS13aWR0aD0iNCIvPjxlbGxpcHNlIGN4PSI3MjUiIGN5PSI0ODAiIHJ4PSIyMiIgcnk9IjE2IiBmaWxsPSIjRTA0NTdCIi8+PGNpcmNsZSBjeD0iODM1IiBjeT0iNDQ1IiByPSIxMyIgZmlsbD0iIzhGRDNDNiIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI4MzUiIGN5PSI0NDUiIHI9IjEzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+PHBhdGggZD0iTTgyNy44NSw0NDUgUTgzNSw0MzcuODUgODQyLjE1LDQ0NSBRODM1LDQ1Mi4xNSA4MjcuODUsNDQ1IiBmaWxsPSJub25lIiBzdHJva2U9IiNEMTQ5NUIiIHN0cm9rZS13aWR0aD0iMi41Ii8+PGNpcmNsZSBjeD0iODY1IiBjeT0iNDg1IiByPSIxMiIgZmlsbD0iIzhGRDNDNiIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI4NjUiIGN5PSI0ODUiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+PHBhdGggZD0iTTg1OC40LDQ4NSBRODY1LDQ3OC40IDg3MS42LDQ4NSBRODY1LDQ5MS42IDg1OC40LDQ4NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxjaXJjbGUgY3g9Ijg0MCIgY3k9IjUyNSIgcj0iMTIiIGZpbGw9IiM4RkQzQzYiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iODQwIiBjeT0iNTI1IiByPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPjxwYXRoIGQ9Ik04MzMuNCw1MjUgUTg0MCw1MTguNCA4NDYuNiw1MjUgUTg0MCw1MzEuNiA4MzMuNCw1MjUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0QxNDk1QiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48cGF0aCBkPSJNODcwLDQyMCBMODQ1LDQzNSIgc3Ryb2tlPSIjMkYzQTRCIiBzdHJva2Utd2lkdGg9IjEuMyIvPjx0ZXh0IHg9Ijg3NSIgeT0iNDE4IiB0ZXh0LWFuY2hvcj0ic3RhcnQiIGZvbnQtc2l6ZT0iMTQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiMyRjNBNEIiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIj5WaXJ1czwvdGV4dD48cGF0aCBkPSJNIDY5MCw1MzUgQyA1MzAsNjAwIDM5MCw2MDAgMjMwLDUzNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjMiIG1hcmtlci1lbmQ9InVybCgjdmNBcnJvdykiLz48Y2lyY2xlIGN4PSI2MjAiIGN5PSI1NzUiIHI9IjEyIiBmaWxsPSIjOEZEM0M2IiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMyIvPjxjaXJjbGUgY3g9IjYyMCIgY3k9IjU3NSIgcj0iMTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIyIDQiLz48cGF0aCBkPSJNNjEzLjQsNTc1IFE2MjAsNTY4LjQgNjI2LjYsNTc1IFE2MjAsNTgxLjYgNjEzLjQsNTc1IiBmaWxsPSJub25lIiBzdHJva2U9IiNEMTQ5NUIiIHN0cm9rZS13aWR0aD0iMi41Ii8+PGNpcmNsZSBjeD0iNDYwIiBjeT0iNTkwIiByPSIxMiIgZmlsbD0iIzhGRDNDNiIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjMiLz48Y2lyY2xlIGN4PSI0NjAiIGN5PSI1OTAiIHI9IjEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMyRjdBNkIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMiA0Ii8+PHBhdGggZD0iTTQ1My40LDU5MCBRNDYwLDU4My40IDQ2Ni42LDU5MCBRNDYwLDU5Ni42IDQ1My40LDU5MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRDE0OTVCIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxjaXJjbGUgY3g9IjMxMCIgY3k9IjU3NSIgcj0iMTIiIGZpbGw9IiM4RkQzQzYiIHN0cm9rZT0iIzJGN0E2QiIgc3Ryb2tlLXdpZHRoPSIzIi8+PGNpcmNsZSBjeD0iMzEwIiBjeT0iNTc1IiByPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMkY3QTZCIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjIgNCIvPjxwYXRoIGQ9Ik0zMDMuNCw1NzUgUTMxMCw1NjguNCAzMTYuNiw1NzUgUTMxMCw1ODEuNiAzMDMuNCw1NzUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0QxNDk1QiIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48Y2lyY2xlIGN4PSI0NjAiIGN5PSI1NDUiIHI9IjE1IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyRjNBNEIiIHN0cm9rZS13aWR0aD0iMi41Ii8+PHRleHQgeD0iNDYwIiB5PSI1NTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNiIgZm9udC13ZWlnaHQ9IjgwMCIgZmlsbD0iIzJGM0E0QiIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPkY8L3RleHQ+PC9zdmc+";
 
 /* Eigene, neu formulierte Übungsaufgaben (keine Buchaufgaben) */
 /* "locked:true" blendet eine Übung aus dem Kapitel aus (nur Hinweis "bald verfügbar", nicht anklickbar) -
@@ -4704,13 +4648,21 @@ const exerciseSets = {
           "Weil sie nur in der Luft vorkommen"
         ], correct:1,
         explain: "Lebewesen können wachsen, sich bewegen und sich selbstständig fortpflanzen. Viren können das nicht aus eigener Kraft – sie benötigen dafür immer eine lebende Wirtszelle, die ihnen die nötigen Bausteine liefert." },
-      { kind:"map-match", layout:"image-cards", matchBy:"group",
-        text: "Hier siehst du die sechs Phasen A–F der Virus-Vermehrung. Ordne jeder Phase die passende Beschreibung zu.",
-        categories: VK_CATEGORIES,
-        tiles: VK_TILES,
+      { kind:"map-match",
+        image: IMG_VIRUS_KREISLAUF, imageAlt: "Kreislauf der Virus-Vermehrung mit den Stationen A bis F",
+        text: "Ordne den Phasen A–F die passende Beschreibung zu.",
+        cols:2, rows:3,
+        chipLabels: { a:"A", b:"B", c:"C", d:"D", e:"E", f:"F" },
+        tiles: [
+          { id:"a", label:"Das Virus heftet sich an eine gesunde Wirtszelle an.", col:1, row:1, alwaysLabel:true },
+          { id:"b", label:"Das Virus dringt in die Wirtszelle ein und wird von ihr aufgenommen.", col:2, row:1, alwaysLabel:true },
+          { id:"c", label:"Die Erbsubstanz des Virus wird in der Zelle freigesetzt.", col:1, row:2, alwaysLabel:true },
+          { id:"d", label:"Die Wirtszelle stellt neue Virus-Bausteine her (Erbsubstanz und Eiweißhüllen).", col:2, row:2, alwaysLabel:true },
+          { id:"e", label:"Die Wirtszelle platzt auf und setzt die neuen Viren frei.", col:1, row:3, alwaysLabel:true },
+          { id:"f", label:"Die neuen Viren befallen weitere Wirtszellen.", col:2, row:3, alwaysLabel:true }
+        ],
         explain: "So läuft die Vermehrung eines Virus ab: A Anheften, B Eindringen, C Freisetzen der Erbsubstanz, D Herstellen neuer Virus-Bausteine, E Platzen der Wirtszelle, F Befallen weiterer Wirtszellen.",
-        popupText: "Übernimm diese Zeichnung mit den passenden Erklärungen in dein Heft – achte auf eine saubere, ordentliche Darstellung und hebe die Abläufe farbig hervor.",
-        popupShowImages: true },
+        popupText: "Übernimm diese Zeichnung mit den passenden Erklärungen in dein Heft – achte auf eine saubere, ordentliche Darstellung und hebe die Abläufe farbig hervor." },
       { kind:"mc",
         text: "Eine Grippe kündigt sich oft durch ein Kribbeln in der Nase an. Wie lässt sich das erklären?",
         options: [
