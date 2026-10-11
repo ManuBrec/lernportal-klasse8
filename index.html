@@ -874,6 +874,7 @@
   .doc-head{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; margin-bottom:22px;}
   .doc-head h2{font-size:21px;}
   .doc-head .doc-sub{font-size:13.5px; color:var(--ink-faint); margin-top:4px;}
+  .doc-card mark{background:var(--mark-soft); color:var(--mark); font-weight:800; border-radius:4px; padding:0 3px;}
   .badge-demo{
     flex:none; font-size:11.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
     background:var(--warm-soft); color:var(--warm); padding:5px 10px; border-radius:999px;
@@ -1227,6 +1228,8 @@ const deutschChapters = [
 
 const deutschGetrenntZusammenTopics = [
   { tag:"lernen", label:"Einstiegstest: Getrennt- oder Zusammenschreibung", practice:"deutsch-gz-einstiegstest" },
+
+  { tag:"lernen", label:"Wortbausteine: Wortarten kombinieren", practice:"deutsch-gz-wortbausteine" },
 
   { tag:"lernen", label:"1. Verben mit Vorsilben – Regel", practice:"deutsch-gz-vorsilben-regel" },
   { tag:"lernen", label:"1. Verben mit Vorsilben – Übung 1 (leicht)", practice:"deutsch-gz-vorsilben-leicht" },
@@ -2217,7 +2220,7 @@ const exerciseSets = {
   "deutsch-gz-verbverb-schwer": {
     title: "5. Wortverbindungen aus Verben – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Wortverbindungen aus Verben – schwer", kind:"gapfill", typeIn:true,
+      { section:"Wortverbindungen aus Verben – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form des Verbs.", noBookHint:true,
         template:"Wenn du so weitermachst, bleibst du dieses Jahr %%! (sitzenbleiben, übertragen)", answers:["sitzen"],
         explain:"„sitzenbleiben“ (übertragen = die Klasse wiederholen) wird in der konjugierten Form „bleibst du … sitzen“ am Satzende getrennt geschrieben, im Infinitiv/Partizip aber zusammen (sitzenbleiben, sitzengeblieben)." },
       { section:"Wortverbindungen aus Verben – schwer", kind:"text", text:"Wie heißt das Partizip II von „kennenlernen“ (zusammengeschriebene Form)?",
@@ -2226,7 +2229,7 @@ const exerciseSets = {
       { section:"Wortverbindungen aus Verben – schwer", kind:"mc", text:"Warum schreibt man „spazieren gehen“ getrennt, aber „sitzenbleiben“ (übertragen) zusammen?",
         options:["Bei „spazieren gehen“ behalten beide Verben ihre wörtliche Bedeutung, bei „sitzenbleiben“ entsteht eine neue, übertragene Bedeutung","„Spazieren“ ist kein richtiges Verb","„Sitzenbleiben“ gibt es nur im Perfekt","Es gibt keinen Unterschied, beides ist richtig"], correct:0,
         explain:"Entscheidend ist, ob eine neue Gesamtbedeutung entsteht (dann zusammen) oder beide Verben ihren eigenen Sinn behalten (dann getrennt)." },
-      { section:"Wortverbindungen aus Verben – schwer", kind:"gapfill", typeIn:true,
+      { section:"Wortverbindungen aus Verben – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form des Verbs.", noBookHint:true,
         template:"Die beiden haben sich letztes Jahr im Schullandheim %%. (kennenlernen, Perfekt)", answers:["kennengelernt"],
         explain:"„kennengelernt“ wird als ein Wort geschrieben.",
         popupText:"Merksatz: Wortverbindungen aus Verben",
@@ -2258,7 +2261,7 @@ const exerciseSets = {
       { section:"Adjektiv+Verb – schwer", kind:"mc", text:"„Er hat die Prüfung klargemacht.“ Was bedeutet der Satz hier am ehesten?",
         options:["Er hat bei der Prüfung alles organisiert/geregelt (übertragen) – zusammen richtig","Er hat die Prüfung sehr deutlich/klar formuliert – dann müsste es getrennt heißen","Beide Schreibweisen bedeuten exakt dasselbe","Der Satz ist so nie richtig"], correct:0,
         explain:"„klarmachen“ im Sinn von „organisieren/regeln“ ist eine feste, übertragene Bedeutung – zusammen." },
-      { section:"Adjektiv+Verb – schwer", kind:"gapfill", typeIn:true,
+      { section:"Adjektiv+Verb – schwer", kind:"gapfill", typeIn:true, text:"Ergänze das passende Wort.", noBookHint:true,
         template:"Kannst du mir kurz %%, wie das Spiel funktioniert? (klarmachen = erklären)", answers:["klarmachen"],
         explain:"„klarmachen“ (= erklären) ist eine feste, übertragene Bedeutung – zusammen." },
       { section:"Adjektiv+Verb – schwer", kind:"text", text:"Nenne EIN weiteres Adjektiv-Verb-Paar, das wegen übertragener Bedeutung zusammengeschrieben wird (außer schwarzfahren/freisprechen/klarmachen).",
@@ -2293,7 +2296,7 @@ const exerciseSets = {
   "deutsch-gz-nomenpartizip-schwer": {
     title: "7. Nomen- und Partizip-Verbindungen – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Nomen+Partizip – schwer", kind:"gapfill", typeIn:true,
+      { section:"Nomen+Partizip – schwer", kind:"gapfill", typeIn:true, text:"Ergänze das passende Adjektiv.", noBookHint:true,
         template:"Löwen sind %% Tiere. (Fleisch + fressend)", answers:["fleischfressende"],
         explain:"„fleischfressend“ ist ein festes Kompositum aus Nomen + Partizip – zusammen." },
       { section:"Nomen+Partizip – schwer", kind:"text", text:"Nenne EIN weiteres Nomen-Partizip-Adjektiv (außer aufsehenerregend, fleischfressend, schwindelerregend).",
@@ -2302,7 +2305,7 @@ const exerciseSets = {
       { section:"Nomen+Partizip – schwer", kind:"mc", text:"Welcher Satz ist richtig?",
         options:["Die Flüchtlinge suchten hilfesuchend nach einer Unterkunft.","Die Flüchtlinge suchten Hilfe suchend nach einer Unterkunft.","Die Flüchtlinge suchten hilfe-suchend nach einer Unterkunft.","Die Flüchtlinge suchten Hilfesuchend nach einer Unterkunft."], correct:0,
         explain:"„hilfesuchend“ ist ein festes zusammengesetztes Adjektiv – klein und zusammen." },
-      { section:"Nomen+Partizip – schwer", kind:"gapfill", typeIn:true,
+      { section:"Nomen+Partizip – schwer", kind:"gapfill", typeIn:true, text:"Ergänze das passende Adjektiv.", noBookHint:true,
         template:"Der Sturm hinterließ eine %% Verwüstung. (existenzbedrohend)", answers:["existenzbedrohende"],
         explain:"„existenzbedrohend“ wird als ein Wort geschrieben.",
         popupText:"Merksatz: Nomen- und Partizip-Verbindungen",
@@ -2334,10 +2337,10 @@ const exerciseSets = {
   "deutsch-gz-anwendung-schwer": {
     title: "8. Anwendung: Lesetext – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 9 Minuten",
     questions: [
-      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true,
+      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true, text:"Ergänze das passende Wort.", noBookHint:true,
         template:"Der Zug fährt pünktlich %%. (losfahren, trennbares Verb)", answers:["los"],
         explain:"„losfahren“ ist trennbar – „los“ steht im Aussagesatz am Satzende." },
-      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true,
+      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true, text:"Ergänze das passende Wort.", noBookHint:true,
         template:"Diese Pflanze reagiert extrem %% auf Berührung. (Geräusch? nein – Berührung + empfindlich)", answers:["berührungsempfindlich"],
         explain:"„berührungsempfindlich“ ist eine feste Nomen-Adjektiv-Verbindung – zusammen geschrieben (mit Fugen-s)." },
       { section:"Anwendung – schwer", kind:"mc", text:"„Der Anblick der zerstörten Stadt war herzzerreißend.“ Wie ist „herzzerreißend“ aufgebaut und geschrieben?",
@@ -2346,7 +2349,7 @@ const exerciseSets = {
       { section:"Anwendung – schwer", kind:"text", text:"Nenne EIN Wort aus dem Lesetext-Stil, das ein trennbares Verb ist (z. B. aus „auftauchen“, „wiederfinden“, „hinaufschwimmen“).",
         accept:["auftauchen","wiederfinden","hinaufschwimmen","auftaucht","wiederfindet","hinaufgeschwommen"], strict:false, placeholder:"Wort eintippen",
         explain:"Zum Beispiel: auftauchen, wiederfinden, hinaufschwimmen – alles trennbare Verben." },
-      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true,
+      { section:"Anwendung – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form des Verbs.", noBookHint:true,
         template:"Nach Stunden hat die Seehundmutter ihr Junges endlich %%. (wiederfinden, Perfekt)", answers:["wiedergefunden"],
         explain:"„wiedergefunden“ – trennbares Verb, im Partizip II zusammen mit „ge“ in der Mitte.",
         popupText:"Merksatz: Anwendung",
@@ -2374,7 +2377,7 @@ const exerciseSets = {
   "deutsch-gz-komposita-schwer": {
     title: "4. Komposita und Bindestrich – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Komposita/Bindestrich – schwer", kind:"gapfill", typeIn:true,
+      { section:"Komposita/Bindestrich – schwer", kind:"gapfill", typeIn:true, text:"Ergänze den passenden Wortteil.", noBookHint:true,
         template:"Er schreibt gern über das %%leben der Musiker. (Musiker + Leben, gemeint: wie Musiker leben)", answers:["Musiker-"],
         explain:"„Musiker-Leben“ braucht hier einen Bindestrich, sonst würde man es als „Musik-Erleben“ missverstehen können." },
       { section:"Komposita/Bindestrich – schwer", kind:"text", text:"Nenne einen Grund, warum man bei einem Kompositum einen Bindestrich setzen kann (außer bei gleichen Buchstaben).",
@@ -2412,10 +2415,10 @@ const exerciseSets = {
   "deutsch-gz-wortgruppe-schwer": {
     title: "3. Wortgruppe oder Zusammensetzung – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Wortgruppe/Zusammensetzung – schwer", kind:"gapfill", typeIn:true,
+      { section:"Wortgruppe/Zusammensetzung – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die feste Fügung.", noBookHint:true,
         template:"Er hat sich etwas %% kommen lassen, als er log. (zuschulden)", answers:["zuschulden"],
         explain:"„sich etwas zuschulden kommen lassen“ ist eine feste Fügung – „zuschulden“ wird zusammengeschrieben." },
-      { section:"Wortgruppe/Zusammensetzung – schwer", kind:"gapfill", typeIn:true,
+      { section:"Wortgruppe/Zusammensetzung – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die feste Fügung.", noBookHint:true,
         template:"Bei der Abstimmung standen alle Lehrer %% der Schüler. (aufseiten)", answers:["aufseiten","auf Seiten"],
         explain:"„aufseiten“ (auch „auf Seiten“) kann laut Duden zusammen oder getrennt geschrieben werden." },
       { section:"Wortgruppe/Zusammensetzung – schwer", kind:"text", text:"Nenne EINE feste Fügung mit „zu“, die immer zusammengeschrieben wird (außer den schon genannten Beispielen zumute/zugrunde/zustande).",
@@ -2450,10 +2453,10 @@ const exerciseSets = {
   "deutsch-gz-infinitiv-zu-schwer": {
     title: "2. Infinitiv mit zu – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Infinitiv mit zu – schwer", kind:"gapfill", typeIn:true,
+      { section:"Infinitiv mit zu – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form mit zu-Infinitiv.", noBookHint:true,
         template:"Er hat keine Zeit, morgen früh %%. (aufstehen, mit zu)", answers:["aufzustehen"],
         explain:"Trennbares Verb + zu-Infinitiv: „zu“ rutscht zwischen Vorsilbe und Verb, alles EIN Wort: „aufzustehen“." },
-      { section:"Infinitiv mit zu – schwer", kind:"gapfill", typeIn:true,
+      { section:"Infinitiv mit zu – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form des Verbs.", noBookHint:true,
         template:"Er will nach dem Essen sofort %%. (zumachen = den Laden schließen)", answers:["zumachen"],
         explain:"Reiner Infinitiv ohne „zu“-Infinitivmarker (z. B. nach einem Modalverb) – „zumachen“ bleibt zusammen." },
       { section:"Infinitiv mit zu – schwer", kind:"mc", text:"Welcher Satz ist richtig geschrieben?",
@@ -2486,43 +2489,109 @@ const exerciseSets = {
   },
 
   "deutsch-gz-vorsilben-schwer": {
-    title: "1. Verben mit Vorsilben – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
+    title: "1. Verben mit Vorsilben – Übung 2 (schwer)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 9 Minuten",
     questions: [
-      { section:"Vorsilben – schwer", kind:"gapfill", typeIn:true,
-        template:"Ich hole meine Oma vom Bahnhof %%.", answers:["ab"],
-        explain:"„abholen“ ist trennbar – im Aussagesatz steht „ab“ am Satzende." },
-      { section:"Vorsilben – schwer", kind:"text", text:"Nenne EINE unbetonte, untrennbare Vorsilbe.",
-        accept:["be","ge","er","ent","ver","zer","emp","miss"], strict:false, placeholder:"Vorsilbe eintippen",
-        explain:"Zum Beispiel: be-, ge-, er-, ent-, ver-, zer-, emp-, miss-." },
+      { section:"Vorsilben – schwer", kind:"table-match",
+        text:"Ordne die Verben in die passende Spalte ein: trennbar oder untrennbar?",
+        columns: ["", "Verben"],
+        rows: [
+          { label:"trennbar",   accept:["einsammeln","vorstellen","zurueckkommen"] },
+          { label:"untrennbar", accept:["bewundern","zerstoeren","missachten"] },
+        ],
+        chips: [
+          { id:"einsammeln", label:"einsammeln" }, { id:"vorstellen", label:"vorstellen" }, { id:"zurueckkommen", label:"zurückkommen" },
+          { id:"bewundern", label:"bewundern" }, { id:"zerstoeren", label:"zerstören" }, { id:"missachten", label:"missachten" },
+        ],
+        popupText: "Trage diese Einteilung in dein Heft ein.",
+        explain: "einsammeln, vorstellen, zurückkommen haben betonte, trennbare Vorsilben (ein-, vor-, zurück-). bewundern, zerstören, missachten haben unbetonte, untrennbare Vorsilben (be-, zer-, miss-)." },
       { section:"Vorsilben – schwer", kind:"mc", text:"„Er umfährt den Stau großräumig.“ Welche Bedeutung hat „umfahren“ hier?",
         options:["Untrennbar (betont auf „fahren“): er fährt im Bogen um den Stau herum","Trennbar (betont auf „um“): er fährt über den Stau drüber","Beide Bedeutungen passen hier gleich gut","Es ist kein Vorsilben-Verb"], correct:0,
         explain:"Hier ist „im Bogen herumfahren“ gemeint – untrennbar, Betonung auf „fahren“." },
-      { section:"Vorsilben – schwer", kind:"gapfill", typeIn:true,
+      { section:"Vorsilben – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die fehlende Vorsilbe.", noBookHint:true,
         template:"Pass auf, das Auto fährt den Fußgänger sonst noch %%!", answers:["um"],
         explain:"Hier ist „umfahren“ im Sinn von „über jemanden drüberfahren“ gemeint – trennbar, Betonung auf „um“.",
         popupText:"Merksatz: Vorsilben",
         popupBody:"Unbetonte Vorsilben (be-, ge-, er-, ent-, ver-, zer-, emp-, miss-) sind immer untrennbar.¶Betonte Vorsilben (ab-, an-, auf-, aus-, ein-, mit-, vor-, zu-, los-, weg- …) sind meist trennbar: im Aussagesatz getrennt, im Infinitiv/Partizip zusammen.¶Manche Verben gibt es doppelt – die Betonung entscheidet (úmfahren/umfáhren)." },
+      { section:"Vorsilben – schwer", kind:"mc", text:"„Mia übersetzt den Text ins Deutsche.“ Welche Bedeutung und Schreibweise hat „übersetzen“ hier?",
+        options:["Untrennbar (betont auf „setzen“): einen Text in eine andere Sprache übertragen – richtig hier","Trennbar (betont auf „über“): mit einem Boot ans andere Ufer fahren","Beide Bedeutungen passen hier gleich gut","Es ist kein Vorsilben-Verb"], correct:0,
+        explain:"„übersetzen“ im Sinn von „in eine andere Sprache übertragen“ ist untrennbar, Betonung auf „setzen“: sie übersetzt, hat übersetzt." },
+      { section:"Vorsilben – schwer", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form von „übersetzen“.", noBookHint:true,
+        template:"Der Fährmann %% die Wanderer ans andere Ufer %%. (übersetzen = mit dem Boot ans Ufer bringen)", answers:["setzt","über"],
+        explain:"Hier ist „übersetzen“ im Sinn von „mit einem Boot ans andere Ufer bringen“ gemeint – trennbar, Betonung auf „über“: er setzt über, hat übergesetzt." },
+      { section:"Vorsilben – schwer", kind:"text", text:"Manche Wortbausteine sind keine eigenständigen Wörter, zum Beispiel „irgend-“. Nenne EIN Wort, das mit „irgend-“ gebildet wird.",
+        accept:["irgendein","irgendwann","irgendwie","irgendwo","irgendwas","irgendetwas","irgendjemand","irgendwelche"], strict:false, placeholder:"Wort eintippen",
+        explain:"Zum Beispiel: irgendein, irgendwann, irgendwie, irgendwo, irgendetwas, irgendjemand – „irgend-“ kann nicht allein stehen und wird deshalb immer zusammengeschrieben." },
     ]
   },
 
   "deutsch-gz-vorsilben-leicht": {
-    title: "1. Verben mit Vorsilben – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 7 Minuten",
+    title: "1. Verben mit Vorsilben – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 8 Minuten",
     questions: [
-      { section:"Vorsilben – leicht", kind:"mc", text:"Welcher Satz zeigt ein trennbares Verb richtig?",
-        options:["Ich packe meinen Koffer aus.","Ich auspacke meinen Koffer.","Ich packe aus meinen Koffer.","Ich packe meinen Koffer ausaus."], correct:0,
-        explain:"„auspacken“ trennt sich im Aussagesatz: „aus“ wandert ans Satzende." },
+      { section:"Vorsilben – leicht", kind:"table-match",
+        text:"Ordne die Verben in die passende Spalte ein: trennbar oder untrennbar?",
+        columns: ["", "Verben"],
+        rows: [
+          { label:"trennbar",   accept:["aufwachen","mitspielen","loslaufen"] },
+          { label:"untrennbar", accept:["verschwinden","entscheiden","zerbrechen"] },
+        ],
+        chips: [
+          { id:"aufwachen", label:"aufwachen" }, { id:"mitspielen", label:"mitspielen" }, { id:"loslaufen", label:"loslaufen" },
+          { id:"verschwinden", label:"verschwinden" }, { id:"entscheiden", label:"entscheiden" }, { id:"zerbrechen", label:"zerbrechen" },
+        ],
+        popupText: "Trage diese Einteilung in dein Heft ein.",
+        explain: "aufwachen, mitspielen, loslaufen haben betonte, trennbare Vorsilben (auf-, mit-, los-). verschwinden, entscheiden, zerbrechen haben unbetonte, untrennbare Vorsilben (ver-, ent-, zer-)." },
+      { section:"Vorsilben – leicht", kind:"gapfill", typeIn:true, text:"Ergänze die passende Form von „aufwachen“.", noBookHint:true,
+        template:"Jeden Morgen %% ich um sieben Uhr %%. (aufwachen)", answers:["wache","auf"],
+        explain:"„aufwachen“ ist trennbar: die konjugierte Form bleibt vorn, „auf“ wandert ans Satzende." },
       { section:"Vorsilben – leicht", kind:"mc", text:"Welches Verb ist trennbar (die Vorsilbe kann sich abtrennen)?",
         options:["erfahren","aufräumen","verlieren","bestehen"], correct:1,
         explain:"„auf-“ ist eine betonte, trennbare Vorsilbe." },
-      { section:"Vorsilben – leicht", kind:"mc", text:"Welches Verb ist untrennbar?",
-        options:["mitnehmen","loslassen","gewinnen","einpacken"], correct:2,
-        explain:"„ge-“ gehört zu den unbetonten, untrennbaren Vorsilben." },
       { section:"Vorsilben – leicht", kind:"mc", text:"Welcher Satz ist richtig geschrieben?",
         options:["Sie kommt morgen bei uns vorbei.","Sie vorbeikommt morgen bei uns.","Sie kommt morgen vorbeibei uns.","Sie kommtvorbei morgen bei uns."], correct:0,
         explain:"„vorbeikommen“ ist trennbar – „vorbei“ steht im Aussagesatz am Satzende." },
       { section:"Vorsilben – leicht", kind:"mc", text:"Im Satz „Weil ich früh aufstehe, bin ich müde.“ – warum bleibt „aufstehe“ hier zusammen?",
         options:["Weil das Verb im Nebensatz am Satzende steht und nicht getrennt wird","Weil „aufstehen“ untrennbar ist","Weil es sich um die Vergangenheit handelt","Weil „auf“ hier kein Vorsilbe ist"], correct:0,
         explain:"Im Nebensatz steht das ganze Verb zusammen am Satzende, deshalb keine Trennung." },
+      { section:"Vorsilben – leicht", kind:"text", text:"Nenne EIN Verb mit einer unbetonten, untrennbaren Vorsilbe (be-, ge-, er-, ent-, ver-, zer-, emp-, miss-) – außer den schon genannten Beispielen.",
+        accept:["bewundern","gewinnen","erzaehlen","entscheiden","verstehen","zerstoeren","empfehlen","misstrauen","beginnen","erfahren"], strict:false, placeholder:"Verb eintippen",
+        explain:"Zum Beispiel: bewundern, gewinnen, erzählen, verstehen, zerstören, empfehlen, misstrauen." },
+    ]
+  },
+
+/* === Neue Einstiegsaufgabe "Wortbausteine" (Wunsch Manuel): direkt nach dem Einstiegstest,
+   vor der ersten Regel. Angelehnt an die Buchseite 48 "Wortzusammensetzungen" (Puzzleteile-
+   Aufgabe), aber mit komplett neu erfundenen Beispielwörtern (nicht aus dem Buch übernommen -
+   Urheberrecht). table-match-Aufgabe: 7 Wortart-Kombinationen als Zeilen (Ergebniswortart +
+   Partnerwortart, z.B. "Verb + Partikel" = ein neues Verb aus Partikel+Verb wie "vorbereiten"),
+   darunter alle 21 Beispielwörter gemischt als Kärtchen - jedes Wort passt in genau eine Zeile.
+   Führt inhaltlich zur Vorsilben-Regel: Verb+Partikel-Zusammensetzungen sind genau die trennbaren/
+   untrennbaren Verben, um die es direkt im Anschluss geht. */
+"deutsch-gz-wortbausteine": {
+    title: "Wortbausteine: Wortarten kombinieren", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 10 Minuten",
+    questions: [
+      { kind:"table-match", section:"Wortzusammensetzungen",
+        text:"Aus zwei Wörtern wird oft ein ganz neues Wort. Ordne jedes der 21 Wörter unten der passenden Wortart-Kombination zu (z. B. gehört „Haustür“ zu „Nomen + Nomen“, weil Nomen + Nomen zusammen ein neues Nomen ergeben).",
+        columns: ["Wortart-Kombination", "Beispielwörter"],
+        rows: [
+          { label:"Nomen + Nomen",              accept:["haustuer","kuechentisch","fensterbank"] },
+          { label:"Nomen + Adjektiv/Partizip",   accept:["hochhaus","kleinkind","frischluft"] },
+          { label:"Nomen + Partikel",            accept:["ausgang","vorname","eingang"] },
+          { label:"Adjektiv + Nomen",            accept:["bildschoen","steinreich","schneeweiss"] },
+          { label:"Verb + Nomen",                accept:["teilnehmen","staubsaugen","kopfstehen"] },
+          { label:"Verb + Adjektiv",             accept:["frohlocken","totschlagen","liebkosen"] },
+          { label:"Verb + Partikel",             accept:["vorbereiten","untergehen","nachdenken"] },
+        ],
+        chips: [
+          { id:"haustuer", label:"Haustür" }, { id:"kuechentisch", label:"Küchentisch" }, { id:"fensterbank", label:"Fensterbank" },
+          { id:"hochhaus", label:"Hochhaus" }, { id:"kleinkind", label:"Kleinkind" }, { id:"frischluft", label:"Frischluft" },
+          { id:"ausgang", label:"Ausgang" }, { id:"vorname", label:"Vorname" }, { id:"eingang", label:"Eingang" },
+          { id:"bildschoen", label:"bildschön" }, { id:"steinreich", label:"steinreich" }, { id:"schneeweiss", label:"schneeweiß" },
+          { id:"teilnehmen", label:"teilnehmen" }, { id:"staubsaugen", label:"staubsaugen" }, { id:"kopfstehen", label:"kopfstehen" },
+          { id:"frohlocken", label:"frohlocken" }, { id:"totschlagen", label:"totschlagen" }, { id:"liebkosen", label:"liebkosen" },
+          { id:"vorbereiten", label:"vorbereiten" }, { id:"untergehen", label:"untergehen" }, { id:"nachdenken", label:"nachdenken" },
+        ],
+        popupText: "Übernimm diese Tabelle in dein Heft – so hast du alle 7 Wortart-Kombinationen auf einen Blick.",
+        explain: "Wortzusammensetzungen gibt es nicht nur bei Nomen: Aus zwei Wörtern kann ein neues Nomen, Adjektiv oder Verb entstehen. Entscheidend ist, welche Wortart am Ende herauskommt (Nomen, Adjektiv oder Verb) und mit welcher Wortart sie verbunden wurde. Besonders wichtig für dieses Kapitel: Verb + Partikel (wie „vorbereiten“) – genau solche Verben schauen wir uns jetzt in Teil 1 genauer an, denn bei ihnen entscheidet sich, ob sie trennbar oder untrennbar sind." },
     ]
   },
 
@@ -2538,9 +2607,10 @@ const exerciseSets = {
     custom: "note-page",
     questions: [],
     noteHtml: `
-      <p><b>Unbetonte Vorsilben</b> (be-, ge-, er-, ent-, ver-, zer-, emp-, miss-) sind <b>immer untrennbar</b> – sie schreibst du immer zusammen: <i>besuchen, verstehen, entdecken</i>.</p>
-      <p><b>Betonte Vorsilben</b> (ab-, an-, auf-, aus-, ein-, mit-, vor-, zu-, los-, weg- …) sind meist <b>trennbar</b>: im einfachen Satz getrennt (<i>Ich stehe auf.</i>), im Infinitiv und Partizip zusammen (<i>aufstehen, aufgestanden</i>).</p>
-      <p><b>Merke:</b> Manche Verben gibt es doppelt – die Betonung entscheidet: <i>úmfahren</i> (trennbar, drüberfahren) – <i>umfáhren</i> (untrennbar, Umweg fahren).</p>
+      <p>👉 Bei vielen Verben entscheidet die <mark>Vorsilbe</mark>, ob du sie <mark>zusammen</mark> oder <mark>getrennt</mark> schreibst. Zwei Gruppen helfen dir dabei:</p>
+      <p><b>Unbetonte Vorsilben</b> (<i>be-, ge-, er-, ent-, ver-, zer-, emp-, miss-</i>) sind <mark>immer untrennbar</mark> – du schreibst sie immer zusammen: <i>besuchen, verstehen, entdecken</i>.</p>
+      <p><b>Betonte Vorsilben</b> (<i>ab-, an-, auf-, aus-, ein-, mit-, vor-, zu-, los-, weg- …</i>) sind meist <mark>trennbar</mark>: im einfachen Satz stehen sie getrennt am Satzende (<i>Ich stehe auf.</i>), im Infinitiv und Partizip stehen sie wieder zusammen (<i>aufstehen, aufgestanden</i>).</p>
+      <div class="callout"><strong>Merke:</strong> Manche Verben gibt es doppelt – die <mark>Betonung</mark> entscheidet: <i>úmfahren</i> (trennbar, betont auf „fahren“: im Bogen <b>drüberfahren</b>) – <i>umfáhren</i> (untrennbar, betont auf „um“: einen <b>Umweg fahren</b>).</div>
     ` },
 
   "deutsch-gz-infinitiv-zu-regel": {
@@ -10074,7 +10144,7 @@ window.__startExercise = function(slug){
           esc(seg).split("¶").join("<br><br>") + (idx < gapParts.length - 1 ? `<input type="text" class="lt-type-input" id="ltInput_${idx}" data-idx="${idx}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">` : "")
         ).join("");
         body = `
-          <p class="ws-instruction">👉 Tippe die fehlenden Wörter in die Lücken – nutze dazu den Text im Buch.</p>
+          <p class="ws-instruction">👉 Tippe die fehlenden Wörter in die Lücken${q.noBookHint ? "." : " – nutze dazu den Text im Buch."}</p>
           <div class="lt-text" id="ltText">${textHtml}</div>
           <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
         `;
