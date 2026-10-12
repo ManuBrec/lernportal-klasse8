@@ -1434,6 +1434,7 @@ const naturtechnikInfektionserkrankungenTopics = [
   { tag:"abschluss", label:"Infektionskrankheiten im Überblick", practice:"nt-infektionskrankheiten-ueberblick" },
   { tag:"lernen", label:"Vermehrung der Viren – Erklärung", practice:"nt-vermehrung-viren-erklaerung" },
   { tag:"abschluss", label:"Vermehrung der Viren – Abfrage", practice:"nt-vermehrung-viren-abfrage" },
+  { tag:"lernen", label:"Abwehrmaßnahmen des Körpers – Erklärung", practice:"nt-abwehr-erklaerung" },
   { tag:"lernen", label:"Abwehrmaßnahmen: Die Fresszelle (unspezifische Abwehr)", practice:"nt-abwehr-fresszelle" },
   { tag:"lernen", label:"Abwehrmaßnahmen: Antikörperbildung (spezifische Abwehr)", practice:"nt-abwehr-antikoerper" },
   { tag:"lernen", label:"Abwehrmaßnahmen: Die Killerzelle (spezifische Abwehr)", practice:"nt-abwehr-killerzelle" },
@@ -4762,6 +4763,37 @@ const exerciseSets = {
         ], correct:0,
         explain: "Bakterien sind eigenständige Lebewesen und vermehren sich durch Zellteilung aus eigener Kraft – sie benötigen dafür keine Wirtszelle. Deshalb wachsen sie von Beginn an kontinuierlich, während Viren erst eine Wirtszelle befallen müssen, bevor ihre Vermehrung in Schwung kommt." }
     ]
+  },
+  /* "Abwehrmaßnahmen des Körpers – Erklärung": reine Anzeige-Seite ohne Fragen (Wunsch Manuel,
+     12.10.2026, "einen guten Aufschrieb ... wo Erste Schutzmaßnahme, Unspezifische und Spezifische
+     Immunabwehr, Antikörper und Killerzellen erklärt wird"), custom:"note-page", gleiches Muster wie
+     "nt-vermehrung-viren-erklaerung". Inhalt eigens formuliert (Struktur an Manuels hochgeladenen
+     Buchseiten orientiert, aber NICHT der Buchtext selbst - Urheberrecht), die beiden "Merke"-Sätze
+     in <div class="callout"> fassen die zwei Kernaussagen der Buchseite zusammen. Gehört inhaltlich
+     vor die 3 danach folgenden Beschriftungsaufgaben nt-abwehr-fresszelle/-antikoerper/-killerzelle. */
+  "nt-abwehr-erklaerung": {
+    title: "Abwehrmaßnahmen des Körpers – Erklärung",
+    subject: "naturtechnik",
+    chapterSlug: "infektionserkrankungen",
+    locked: false,
+    custom: "note-page",
+    questions: [],
+    noteHtml: `
+      <p>Im Alltag sind wir laufend Krankheitserregern ausgesetzt – beim Händeschütteln, wenn jemand in der Nähe niest oder wenn wir ungewaschenes Obst essen. Trotzdem werden wir nur selten krank, weil der Körper mehrere Abwehrmaßnahmen hintereinandergeschaltet hat.</p>
+      <h3>Erste Schutzmaßnahmen</h3>
+      <p>Die wichtigste Barriere ist die Haut: Solange sie nicht verletzt ist, bildet sie eine wirksame Schutzmauer gegen fast alle Krankheitserreger. Ihr Säureschutzmantel verhindert zusätzlich, dass sich Erreger auf der Haut ansiedeln und vermehren können.</p>
+      <p>An Stellen, an denen keine Haut, sondern Schleimhaut liegt – etwa in Mund, Nase oder im Bereich der Geschlechtsorgane – übernimmt ein zähflüssiger Schleim diese Aufgabe: Er macht viele Erreger unschädlich, bevor sie überhaupt tiefer in den Körper gelangen. Auch der saure Magensaft gehört zu diesen ersten Schutzmaßnahmen: Er tötet viele Krankheitserreger ab, die zusammen mit der Nahrung aufgenommen wurden.</p>
+      <h3>Unspezifische Immunabwehr</h3>
+      <p>Schaffen es Erreger trotzdem, in den Körper einzudringen, greifen weitere Abwehrmaßnahmen: besondere weiße Blutzellen, die sogenannten <b>Fresszellen</b>. Sie erkennen eingedrungene Krankheitserreger, umschließen sie und vernichten sie. Da Fresszellen dabei nicht auf einen bestimmten Erreger spezialisiert sind, sondern ganz unterschiedliche Erreger auf dieselbe Art bekämpfen, nennt man diese Form der Abwehr <b>unspezifisch</b>.</p>
+      <div class="callout"><strong>Merke:</strong> Bei der unspezifischen Immunabwehr werden unterschiedliche Krankheitserreger von Fresszellen bekämpft – unabhängig davon, um welchen Erreger es sich genau handelt.</div>
+      <h3>Spezifische Immunabwehr</h3>
+      <p>Gelingt es den Fresszellen nicht, alle Erreger zu vernichten, setzt eine gezielte, <b>spezifische</b> Bekämpfung der einzelnen Erreger ein. Dafür stehen dem Körper zwei weitere Werkzeuge zur Verfügung:</p>
+      <ol>
+        <li><b>Antikörper:</b> Jeder Krankheitserreger trägt auf seiner Oberfläche ganz bestimmte, für ihn typische Strukturen. Gelangt ein Erreger ins Blut, stellen besondere weiße Blutzellen passende Abwehrstoffe her – die Antikörper. Sie passen zur Oberfläche des Erregers wie ein Schlüssel zu seinem Schloss, setzen sich dort fest und machen ihn dadurch unschädlich. Mehrere Antikörper fügen zudem viele Erreger desselben Typs zu größeren Klumpen zusammen, die anschließend von Fresszellen vernichtet werden.</li>
+        <li><b>Killerzellen:</b> Manche Erreger entkommen Antikörpern und Fresszellen, indem sie in körpereigene Zellen eindringen und sich dort vermehren. Eine weitere Art weißer Blutzellen, die Killerzellen, erkennt genau diese befallenen Zellen und tötet sie gezielt ab. So wird verhindert, dass sich der Erreger in der Zelle weiter vermehrt. Die übrig gebliebenen Zelltrümmer werden anschließend wieder von Fresszellen beseitigt.</li>
+      </ol>
+      <div class="callout"><strong>Merke:</strong> Bei der spezifischen Immunabwehr werden einzelne Krankheitserreger gezielt durch Antikörper und Killerzellen bekämpft.</div>
+    `
   },
   /* "Abwehrmaßnahmen des Körpers": 3 eigene Beschriftungsaufgaben (Wunsch Manuel, 11.10.),
      angelehnt an 3 hochgeladene Abbildungen (unspezifische Abwehr/Fresszelle, Antikörperbildung,
