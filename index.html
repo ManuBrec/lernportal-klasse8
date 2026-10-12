@@ -1227,6 +1227,7 @@ const deutschChapters = [
 ];
 
 const deutschGetrenntZusammenTopics = [
+  { tag:"lernen", label:"Einstieg: Kleiner Unterschied – große Wirkung!", practice:"deutsch-gz-einleitung" },
   { tag:"lernen", label:"Einstiegstest: Getrennt- oder Zusammenschreibung", practice:"deutsch-gz-einstiegstest" },
 
   { tag:"lernen", label:"Wortbausteine: Wortarten kombinieren", practice:"deutsch-gz-wortbausteine" },
@@ -2714,6 +2715,48 @@ const exerciseSets = {
       <p>Jetzt wendest du alle Regeln aus den Teilen 1–7 in einem zusammenhängenden Text an.</p>
       <p><b>Tipp:</b> Sprich dir den Satz laut vor und achte auf die Betonung, probiere die Steigerung (<i>sehr …</i>) aus und überlege, ob eine neue, übertragene Bedeutung entsteht.</p>
     ` },
+/* === exerciseSets-Eintrag: "Einstieg: Kleiner Unterschied - große Wirkung!" (Wunsch Manuel,
+   12.10.2026: "attraktive Aufgabe, um das Thema einzuleiten... Problemstellung... nette Sätze,
+   die zum Lachen sind"). Ganz bewusst VOR dem Einstiegstest platziert, als motivierender Einstieg,
+   nicht als Test. 6 echte, im Deutschen korrekte Verbindungen aus Verben/Adjektiv+Verb (sitzen
+   bleiben/sitzenbleiben, hängen bleiben/hängenbleiben, liegen bleiben/liegenbleiben, stehen
+   bleiben/stehenbleiben, schwarz fahren/schwarzfahren, frei sprechen/freisprechen - dieselben
+   Verbpaare, die später in Teilthema 5+6 als Regel-Beispiele wiederkehren), bei denen allein die
+   Schreibweise entscheidet, was gemeint ist, obwohl gesprochen beide Varianten gleich klingen -
+   genau das ist die "Problemstellung" des ganzen Kapitels. table-match: 12 kurze, bewusst
+   anschauliche/witzige Situationsbeschreibungen als Zeilen, 12 Schreibweisen als Kärtchen. */
+"deutsch-gz-einleitung": {
+    title: "Einstieg: Kleiner Unterschied – große Wirkung!", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 10 Minuten",
+    questions: [
+      { kind:"table-match", section:"Ein Wort, zwei Bedeutungen?",
+        text:"Bei diesen Verben entscheidet NUR die Schreibweise, was gemeint ist – gesprochen klingen beide Sätze völlig gleich! Lies jede Situation und ordne ihr die passende Schreibweise zu.",
+        columns: ["Situation", "Schreibweise"],
+        rows: [
+          { label:"Mia hat die Matheprobe nicht bestanden und muss die 8. Klasse wiederholen.", accept:["sitzengeblieben"] },
+          { label:"Opa ist beim Mittagsschlaf auf dem Sofa eingenickt und einfach so liegen geblieben, wie er war.", accept:["sitzengebliebenGetrennt"] },
+          { label:"Dieser Ohrwurm geht mir seit Tagen einfach nicht mehr aus dem Kopf.", accept:["haengengeblieben"] },
+          { label:"Toms Jacke hat sich am Zaun verfangen und ließ sich nicht mehr lösen.", accept:["haengengebliebenGetrennt"] },
+          { label:"Papas altes Auto ist mitten auf der Autobahn kaputtgegangen und stand plötzlich still.", accept:["liegengeblieben"] },
+          { label:"Der Hund war nach dem langen Spaziergang so müde, dass er sich einfach ins Gras legte und nicht mehr aufstand.", accept:["liegengebliebenGetrennt"] },
+          { label:"Die alte Kirchturmuhr zeigt seit Wochen immer dieselbe Uhrzeit – sie funktioniert einfach nicht mehr.", accept:["stehengeblieben"] },
+          { label:"Vor dem Schaufenster mit den neuen Spielsachen blieb Ben wie angewurzelt stehen, weil er so fasziniert war.", accept:["stehengebliebenGetrennt"] },
+          { label:"Leon hatte sein Busticket vergessen und ist trotzdem ohne zu bezahlen mitgefahren.", accept:["schwarzgefahren"] },
+          { label:"Wir sind mit Papas neuem, schwarz lackiertem Auto zum See gefahren.", accept:["schwarzgefahrenGetrennt"] },
+          { label:"Das Gericht hat entschieden: Der Angeklagte war unschuldig und durfte gehen.", accept:["freigesprochen"] },
+          { label:"Luisa hatte ihren Vortrag so gut geübt, dass sie ganz ohne Spickzettel reden konnte.", accept:["freiSprechenGetrennt"] },
+        ],
+        chips: [
+          { id:"sitzengeblieben", label:"ist sitzengeblieben" }, { id:"sitzengebliebenGetrennt", label:"ist sitzen geblieben" },
+          { id:"haengengeblieben", label:"ist hängengeblieben" }, { id:"haengengebliebenGetrennt", label:"ist hängen geblieben" },
+          { id:"liegengeblieben", label:"ist liegengeblieben" }, { id:"liegengebliebenGetrennt", label:"ist liegen geblieben" },
+          { id:"stehengeblieben", label:"ist stehengeblieben" }, { id:"stehengebliebenGetrennt", label:"ist stehen geblieben" },
+          { id:"schwarzgefahren", label:"ist schwarzgefahren" }, { id:"schwarzgefahrenGetrennt", label:"ist schwarz gefahren" },
+          { id:"freigesprochen", label:"wurde freigesprochen" }, { id:"freiSprechenGetrennt", label:"konnte frei sprechen" },
+        ],
+        popupText: "Schreibe 2 dieser Satzpaare in dein Heft – sie zeigen dir, warum die Schreibweise bei diesen Verben so wichtig ist.",
+        explain: "Genau das ist das Problem, um das es in diesem Kapitel geht: Gesprochen hört man bei „sitzengeblieben“ und „sitzen geblieben“ keinen Unterschied – nur beim Schreiben musst du dich entscheiden, was gemeint ist! Zusammengeschrieben bekommt das Verb oft eine ganz neue, übertragene Bedeutung (sitzenbleiben = die Klasse wiederholen, schwarzfahren = ohne Fahrkarte fahren, freisprechen = für unschuldig erklären). Getrennt geschrieben bleibt die wörtliche, ursprüngliche Bedeutung der einzelnen Wörter erhalten. Genau diese Regeln schauen wir uns jetzt Schritt für Schritt an." },
+    ]
+  },
 /* === exerciseSets-Eintrag: Einstiegstest Getrennt- oder Zusammenschreibung ===
    Eigene, schlanke Custom-Engine (NICHT die riesige Wortarten-Spezial-Engine kopiert): 20 Fragen
    nacheinander (reine MC, ein Versuch pro Frage, direkt Feedback+Erklaerung), am Ende
@@ -11835,6 +11878,10 @@ window.__startGetrenntZusammenEinstiegstest = function(slug){
           const correctBtn = document.querySelector(`#opts .option[data-idx="${q.correct}"]`);
           if (correctBtn) correctBtn.classList.add("correct");
         }
+        /* Meldet jede Frage einzeln ans Google-Sheets-Auswertungs-Backend, genau wie der
+           Wortarten-Einstiegstest - ein Versuch pro Frage, direkt richtig/falsch (Wunsch Manuel,
+           12.10.2026: Einstiegstest soll wie die anderen Übungen im Auswerten-Portal auftauchen). */
+        reportResult(slug, i, ok ? "correct" : "wrong", 1);
         const fb = document.getElementById("fb");
         fb.textContent = (ok ? "✓ Richtig. " : "✗ Leider falsch. ") + (q.explain || "");
         fb.className = "feedback show " + (ok ? "correct" : "wrong");
