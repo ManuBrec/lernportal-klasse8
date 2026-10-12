@@ -285,6 +285,14 @@
     line-height:1; flex:none;
   }
   .qmeta{font-size:12.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; margin-bottom:10px;}
+  /* Deutlich sichtbare Aufgaben-Nummer vor jeder Frage (Wunsch Manuel, 12.10.2026: "die Aufgaben
+     vorne durchnummeriert", damit er z.B. "Erledige 1., 2." sagen kann, OHNE das mit evtl. in einer
+     Abbildung vorkommenden Nummern 1,2,3... zu verwechseln - die gehören zur Zeichnung, nicht zur
+     Aufgabenzählung). */
+  .qnum-badge{
+    flex:none; width:30px; height:30px; border-radius:50%; background:var(--accent); color:var(--accent-ink);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:15px; font-family:var(--font-mono);
+  }
   .qtext{font-size:19px; font-weight:600; margin-bottom:20px; text-wrap:balance;}
   .qtext b{color:var(--mark); background:var(--mark-soft); font-weight:800; border-radius:4px; padding:0 3px;}
   .options{display:grid; gap:10px;}
@@ -4823,10 +4831,10 @@ const exerciseSets = {
         explain: "Richtig – Nummer 1 zeigt Krankheitserreger, die in den Körper eingedrungen sind." },
       { kind:"text", strict:true,
         image: IMG_ABWEHR_FRESSZELLE, imageAlt: "Unspezifische Abwehr durch die Fresszelle, mit nummerierten Stationen 1 bis 5",
-        text: "Schau dir Nummer 2 an: Hier ist einer dieser Erreger vergrößert gezeichnet – an seiner runden Form mit den vielen kleinen Zacken erkennst du, um welche Erregerart es sich handelt. Wie heißt sie?",
+        text: "Schau dir Nummer 2 an: Hier ist einer dieser Erreger vergrößert dargestellt, damit man seinen Aufbau genauer erkennt. Wie heißt dieser Erreger?",
         placeholder: "Begriff eintippen",
         accept: ["Virus"],
-        explain: "Richtig – Nummer 2 zeigt ein einzelnes Virus, vergrößert dargestellt." },
+        explain: "Richtig – Nummer 2 zeigt ein einzelnes Virus, vergrößert dargestellt, damit sein Aufbau sichtbar wird." },
       { kind:"text", strict:true,
         image: IMG_ABWEHR_FRESSZELLE, imageAlt: "Unspezifische Abwehr durch die Fresszelle, mit nummerierten Stationen 1 bis 5",
         text: "Schau dir Nummer 3 an: Dieser Pfeil zeigt, was zwischen dem Virus und der Körperzelle passiert. Was tut die Zelle mit dem Virus? Ergänze: Sie %%.",
@@ -9373,9 +9381,24 @@ function viewNaturtechnikChapter(slug){
     const rows = naturtechnikInfektionserkrankungenTopics.map(t => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
-      /* Kein Fortschrittsbalken hier: "Infektionserkrankungen" hat keine Richtig/Falsch-Fragen
-         (questions:[], siehe exerciseSets-Kommentar), ein "x% richtig" würde also nie zutreffen. */
-      const progressHtml = "";
+      /* Fortschrittsbalken wie bei den anderen Kapiteln (Wunsch Manuel, 12.10.2026: "es wird nicht
+         angezeigt, wie viel Prozent sie gemacht haben"). Früher pauschal ausgeblendet, weil der
+         allererste Eintrag (nt-infektionserkrankungen) keine Richtig/Falsch-Fragen hat - inzwischen
+         enthält das Kapitel aber auch echte Übungen mit Fragen (Vermehrung-Abfrage, die 3
+         Abwehrmaßnahmen-Aufgaben). "custom"-Einträge (note-page, infektionserkrankungen-Ablauf) haben
+         weiterhin KEINEN Balken, analog zu "prozentrechnung" (!set.custom-Check). */
+      let progressHtml = "";
+      if (set && !locked && !set.custom){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
       let actionHtml = "";
       if (t.practice && locked){
         actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
@@ -10022,8 +10045,9 @@ window.__startExercise = function(slug){
   }
 
   function head(q){
-    const meta = q.section ? `${q.section} · Frage ${i+1} von ${total}` : `Frage ${i+1} von ${total}`;
-    const badge = q.strategy ? strategyBadgeHtml(q.strategy) : "";
+    const meta = q.section ? `${q.section} · Aufgabe ${i+1} von ${total}` : `Aufgabe ${i+1} von ${total}`;
+    const numBadge = `<span class="qnum-badge">${i+1}</span>`;
+    const badge = numBadge + (q.strategy ? strategyBadgeHtml(q.strategy) : "");
     /* q.bigBadge: großes Symbol als eigentliche Frage-Stellung ("welche Strategie zeigt dieses
        Symbol?") - bewusst getrennt von q.strategy (kleiner, dekorativer Hinweis-Badge), damit hier
        nie versehentlich der Name der Strategie mit verraten wird. */
@@ -11908,7 +11932,7 @@ window.__startGetrenntZusammenEinstiegstest = function(slug){
     const shuffledOptions = shuffled(q.options.map((o, idx) => ({ label:o, idx })));
     host.innerHTML = `
       <div class="qcard">
-        <div class="qmeta-row"><div class="qmeta">${esc(q.topic)} · Frage ${i+1} von ${total}</div></div>
+        <div class="qmeta-row"><span class="qnum-badge">${i+1}</span><div class="qmeta">${esc(q.topic)} · Aufgabe ${i+1} von ${total}</div></div>
         <div class="qtext">${esc(q.text)}</div>
         <div class="options" id="opts">${shuffledOptions.map(o => `<button type="button" class="option" data-idx="${o.idx}">${esc(o.label)}</button>`).join("")}</div>
         <div class="feedback" id="fb"></div>
@@ -13643,7 +13667,7 @@ window.__startInfektionserkrankungen = function(slug){
     const q = IK_FINAL_QUESTIONS[finalPos];
     host.innerHTML = `
       <div class="qcard">
-        <div class="qmeta">Frage ${finalPos+1} von ${IK_FINAL_QUESTIONS.length}</div>
+        <div class="qmeta-row"><span class="qnum-badge">${finalPos+1}</span><div class="qmeta">Aufgabe ${finalPos+1} von ${IK_FINAL_QUESTIONS.length}</div></div>
         <div class="qtext">${esc(q.text)}</div>
         <textarea class="we-textarea" id="ikFinalInput" placeholder="${esc(q.placeholder)}"></textarea>
         <div class="qactions" style="margin-top:14px;"><button class="check-btn" id="ikFinalCheck">Mit Musterlösung vergleichen</button></div>
