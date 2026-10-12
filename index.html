@@ -220,6 +220,10 @@
     border-bottom:1px solid var(--border); font-size:14.5px;
   }
   .topic-row:last-child{border-bottom:none;}
+  .topic-nr{
+    font-family:var(--font-mono); font-size:13px; font-weight:700; color:var(--ink-faint);
+    flex:none; min-width:20px; text-align:right;
+  }
   .topic-tag{
     font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:.03em;
     padding:3px 7px; border-radius:6px; flex:none; text-transform:uppercase;
@@ -1517,7 +1521,7 @@ const prozentTopics = [
   { tag:"lernen", label:"Grundaufgaben der Prozentrechnung", page:9, practice:"prozentrechnung-grundaufgaben" },
   { tag:"lernen", label:"Rechenweg-Trainer", page:9, practice:"prozentrechnung-rechenweg-trainer" },
   { tag:"lernen", label:"Die Prozentrechnung anwenden", page:13 },
-  { tag:"lernen", label:"Mit Wachstumsfaktoren rechnen", page:17 },
+  { tag:"lernen", label:"Mit Wachstumsfaktoren rechnen", page:17, practice:"prozentrechnung-wachstumsfaktoren" },
   { tag:"lernen", label:"Weitere Anwendungen von Wachstumsfaktoren", page:20 },
   { tag:"strategie", label:"Strategie: Preise kalkulieren", page:22 },
   { tag:"werkzeug", label:"Werkzeug: Säulendiagramme mit Prozentangaben", page:24 },
@@ -3067,6 +3071,44 @@ const exerciseSets = {
         correct: 2,
         explain: "p = 45 € / 60 € · 100 % = 75 % (also 25 % Rabatt)."
       }
+    ]
+  },
+  "prozentrechnung-wachstumsfaktoren": {
+    title: "Mit Wachstumsfaktoren rechnen",
+    chapterSlug: "prozentrechnung",
+    duration: "ca. 10 Minuten",
+    locked: false,
+    questions: [
+      { section: "Prozentuale Zunahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Für ihre Wohnung bezahlte Familie Mai bisher 400 € im Monat. Die Miete wird um 5 % erhöht. Wie viel Euro muss Familie Mai nach der Mieterhöhung bezahlen? Rechne mit dem Wachstumsfaktor (Prozentsatz-Methode).",
+        template: "Prozentsatz nach der Erhöhung: 100 % + 5 % = %% %¶Ergebnis: Dieser Prozentsatz von 400 € sind %% €",
+        answers: ["105","420"],
+        explain: "Prozentsatz: 100 % + 5 % = 105 %. Ergebnis: 105 % von 400 € sind 400 € · 1,05 = 420 €." },
+      { section: "Prozentuale Zunahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Im vergangenen Jahr verbrauchte Familie Horst 1850 m³ Wasser. In diesem Jahr ist ihr Verbrauch um 12 % gestiegen. Wie viel m³ verbraucht die Familie jetzt?",
+        template: "Prozentsatz nach der Zunahme: 100 % + 12 % = %% %¶Ergebnis: Dieser Prozentsatz von 1850 m³ sind %% m³",
+        answers: ["112","2072"],
+        explain: "Prozentsatz: 100 % + 12 % = 112 %. Ergebnis: 112 % von 1850 m³ sind 1850 m³ · 1,12 = 2072 m³." },
+      { section: "Prozentuale Zunahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Im Jahr 2020 besuchten 42820 Personen den Zoo. Im Jahr 2021 war die Anzahl der Besucher um 15 % höher. Wie viele Besucher kamen 2021?",
+        template: "Prozentsatz nach der Zunahme: 100 % + 15 % = %% %¶Ergebnis: Dieser Prozentsatz von 42820 Personen sind %% Personen",
+        answers: ["115","49243"],
+        explain: "Prozentsatz: 100 % + 15 % = 115 %. Ergebnis: 115 % von 42820 Personen sind 42820 · 1,15 = 49243 Personen." },
+      { section: "Prozentuale Abnahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Für ihre Krankenversicherung bezahlte Frau Schneiders bisher 350 € im Monat. Der Beitrag wird um 2 % gesenkt. Wie viel Euro bezahlt sie jetzt? Rechne wieder mit dem Wachstumsfaktor.",
+        template: "Prozentsatz nach der Senkung: 100 % − 2 % = %% %¶Ergebnis: Dieser Prozentsatz von 350 € sind %% €",
+        answers: ["98","343"],
+        explain: "Prozentsatz: 100 % − 2 % = 98 %. Ergebnis: 98 % von 350 € sind 350 € · 0,98 = 343 €." },
+      { section: "Prozentuale Abnahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Im Jahr 2019 wurden in Hannover 580 mm Niederschlag gemessen. Im Jahr 2020 war die Niederschlagsmenge um 15 % geringer. Wie viel mm waren es 2020?",
+        template: "Prozentsatz nach der Abnahme: 100 % − 15 % = %% %¶Ergebnis: Dieser Prozentsatz von 580 mm sind %% mm",
+        answers: ["85","493"],
+        explain: "Prozentsatz: 100 % − 15 % = 85 %. Ergebnis: 85 % von 580 mm sind 580 mm · 0,85 = 493 mm." },
+      { section: "Prozentuale Abnahme", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Im Juli besuchten 2450 Personen das Freibad. Im August war die Anzahl der Badegäste um 12 % geringer. Wie viele Badegäste waren es im August?",
+        template: "Prozentsatz nach der Abnahme: 100 % − 12 % = %% %¶Ergebnis: Dieser Prozentsatz von 2450 Personen sind %% Personen",
+        answers: ["88","2156"],
+        explain: "Prozentsatz: 100 % − 12 % = 88 %. Ergebnis: 88 % von 2450 Personen sind 2450 · 0,88 = 2156 Personen." }
     ]
   },
   "noch-fit-prozentrechnung": {
@@ -9003,7 +9045,7 @@ function viewChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Mathematik", href:"#/mathe"}, {label:c.title, href:"#/mathe/"+slug}]);
 
   if (slug === "prozentrechnung"){
-    const rows = prozentTopics.map(t => {
+    const rows = prozentTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9026,6 +9068,7 @@ function viewChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9116,7 +9159,7 @@ function viewDeutschChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Deutsch", href:"#/deutsch"}, {label:c.title, href:"#/deutsch/"+slug}]);
 
   if (slug === "grammatik"){
-    const rows = deutschGrammatikTopics.map(t => {
+    const rows = deutschGrammatikTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9139,6 +9182,7 @@ function viewDeutschChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9159,7 +9203,7 @@ function viewDeutschChapter(slug){
   }
 
   if (slug === "rechtschreibung"){
-    const rows = deutschRechtschreibungTopics.map(t => {
+    const rows = deutschRechtschreibungTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9182,6 +9226,7 @@ function viewDeutschChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9202,7 +9247,7 @@ function viewDeutschChapter(slug){
   }
 
   if (slug === "wortarten"){
-    const rows = deutschWortartenTopics.map(t => {
+    const rows = deutschWortartenTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       const done = set && !locked ? isEinstiegstestDone(t.practice) : false;
@@ -9230,6 +9275,7 @@ function viewDeutschChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
           ${progressHtml}
@@ -9250,7 +9296,7 @@ function viewDeutschChapter(slug){
   }
 
   if (slug === "getrennt-zusammen"){
-    const rows = deutschGetrenntZusammenTopics.map(t => {
+    const rows = deutschGetrenntZusammenTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       const done = set && !locked ? isEinstiegstestDone(t.practice) : false;
@@ -9278,6 +9324,7 @@ function viewDeutschChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
           ${progressHtml}
@@ -9335,7 +9382,7 @@ function viewNaturtechnikChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Natur und Technik", href:"#/naturtechnik"}, {label:c.title, href:"#/naturtechnik/"+slug}]);
 
   if (slug === "mikroorganismen"){
-    const rows = naturtechnikMikroorganismenTopics.map(t => {
+    const rows = naturtechnikMikroorganismenTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9360,6 +9407,7 @@ function viewNaturtechnikChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9380,7 +9428,7 @@ function viewNaturtechnikChapter(slug){
   }
 
   if (slug === "infektionserkrankungen"){
-    const rows = naturtechnikInfektionserkrankungenTopics.map(t => {
+    const rows = naturtechnikInfektionserkrankungenTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       /* Fortschrittsbalken wie bei den anderen Kapiteln (Wunsch Manuel, 12.10.2026: "es wird nicht
@@ -9413,6 +9461,7 @@ function viewNaturtechnikChapter(slug){
       }
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9469,7 +9518,7 @@ function viewInformatikChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Informatik", href:"#/informatik"}, {label:c.title, href:"#/informatik/"+slug}]);
 
   if (slug === "informationssysteme-datenschutz"){
-    const rows = informatikInformationssystemeTopics.map(t => {
+    const rows = informatikInformationssystemeTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9495,6 +9544,7 @@ function viewInformatikChapter(slug){
       const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9552,7 +9602,7 @@ function viewWibChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Wirtschaft im Beruf", href:"#/wib"}, {label:c.title, href:"#/wib/"+slug}]);
 
   if (slug === "wie-arbeiten-betriebe"){
-    const rows = wibBetriebeTopics.map(t => {
+    const rows = wibBetriebeTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9578,6 +9628,7 @@ function viewWibChapter(slug){
       const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9670,7 +9721,7 @@ function viewGpgChapter(folderSlug, slug){
   ]);
 
   if (folderSlug === "geographie" && slug === "landwirtschaft-bayern"){
-    const rows = landwirtschaftTopics.map(t => {
+    const rows = landwirtschaftTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9694,6 +9745,7 @@ function viewGpgChapter(folderSlug, slug){
       const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
@@ -9751,7 +9803,7 @@ function viewKunstChapter(slug){
   setCrumbs([{label:"Start", href:"#/"}, {label:"Kunst", href:"#/kunst"}, {label:c.title, href:"#/kunst/"+slug}]);
 
   if (slug === "fluchtpunktperspektive"){
-    const rows = kunstFluchtpunktTopics.map(t => {
+    const rows = kunstFluchtpunktTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
@@ -9777,6 +9829,7 @@ function viewKunstChapter(slug){
       const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
       return `
         <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
