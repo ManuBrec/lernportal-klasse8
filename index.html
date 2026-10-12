@@ -347,6 +347,14 @@
     padding:12px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
   }
   .check-btn:disabled{opacity:.6; cursor:default;}
+  .reflect-row{display:flex; flex-direction:column; gap:10px; align-items:flex-start;}
+  .reflect-textarea{
+    width:100%; padding:13px 16px; border-radius:var(--radius-md);
+    border:1.5px solid var(--border); background:var(--surface-2); color:var(--ink);
+    font-size:15.5px; font-family:inherit; resize:vertical; min-height:88px;
+  }
+  .reflect-textarea:focus-visible{outline:3px solid var(--accent); outline-offset:1px;}
+  .reflect-textarea:disabled{opacity:.7;}
   .shade-grid{
     display:grid; gap:3px; max-width:320px; aspect-ratio:1; margin:0 auto 14px;
     touch-action:none; user-select:none; -webkit-user-select:none;
@@ -1468,8 +1476,8 @@ const informatikInformationssystemeTopics = [
   { tag:"lernen", label:"Kommunikationsdienste: Apps, Vor-/Nachteile & Mail-Merkmale", page:6, practice:"informatik-kommunikationsdienste-uebung" },
   { tag:"lernen", label:"Aufbau digitaler Informationssysteme", page:8, practice:"informatik-aufbau-informationssysteme" },
   { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10, practice:"informatik-nutzung-informationssysteme" },
-  { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12 },
-  { tag:"lernen", label:"Datenschutz", page:14 },
+  { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12, practice:"informatik-mebis-plattform" },
+  { tag:"lernen", label:"Datenschutz", page:14, practice:"informatik-datenschutz" },
   { tag:"lernen", label:"Big Data", page:16 },
   { tag:"lernen", label:"Projekt: Eine Anleitung für mebis erstellen", page:18 },
   { tag:"abschluss", label:"Üben und Vertiefen", page:20 },
@@ -2223,6 +2231,84 @@ const BEWAESSERUNG_ERWEITERUNG = [
   { id:"erw-gra-4", label:"Versalzung (als Gefahr, wenn das Abwasser fehlt)", group:"graben" },
   { id:"erw-gra-5", label:"Hoher Wasserverbrauch", group:"graben" },
 ];
+
+/* Informatik, "Die digitale Informationsplattform mebis der ByCS" (S.12/13) und "Datenschutz"
+   (S.14/15): neun eigene, flächige "App-Icons" für die wichtigsten mebis-Werkzeuge (KEINE
+   Buchgrafiken - eigene, bewusst klar erkennbare Symbole, siehe gen_mebis_icons.py) sowie zwei
+   zusammengesetzte Szenen-Bilder (Browser-Adresszeilen "sicher/unsicher" und ein Handy-Chat in
+   einer mebis-Gruppe), alle als q.image/q.categories[].image genutzt. */
+const IMG_MEBIS_VIDEOKONFERENZ = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#3454D1"/> <rect x="38" y="70" width="80" height="60" rx="12" fill="#FFFFFF"/> <polygon points="122,86 162,62 162,138 122,114" fill="#FFFFFF"/> <circle cx="148" cy="52" r="10" fill="#E24B4B"/> </svg>`;
+const IMG_MEBIS_KURZLINKS = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#7C5CBF"/> <g transform="rotate(-40 100 100)"> <rect x="48" y="80" width="68" height="40" rx="20" fill="none" stroke="#FFFFFF" stroke-width="14"/> <rect x="84" y="80" width="68" height="40" rx="20" fill="none" stroke="#FFFFFF" stroke-width="14"/> </g> </svg>`;
+const IMG_MEBIS_LERNPLATTFORM = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#237A4B"/> <polygon points="100,56 172,92 100,128 28,92" fill="#FFFFFF"/> <polygon points="60,100 60,134 100,152 140,134 140,100 100,118" fill="#FFFFFF" opacity="0"/> <path d="M60,100 L60,136 Q100,156 140,136 L140,100" fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/> <line x1="166" y1="92" x2="166" y2="140" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/> <circle cx="166" cy="148" r="7" fill="#FFFFFF"/> </svg>`;
+const IMG_MEBIS_TEACHSHARE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#C97A2B"/> <circle cx="60" cy="100" r="16" fill="#FFFFFF"/> <circle cx="146" cy="60" r="16" fill="#FFFFFF"/> <circle cx="146" cy="140" r="16" fill="#FFFFFF"/> <line x1="74" y1="92" x2="132" y2="66" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/> <line x1="74" y1="108" x2="132" y2="134" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/> </svg>`;
+const IMG_MEBIS_MEDIATHEK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#2B8C8C"/> <rect x="36" y="56" width="128" height="92" rx="12" fill="none" stroke="#FFFFFF" stroke-width="10"/> <circle cx="72" cy="90" r="12" fill="#FFFFFF"/> <polygon points="48,138 90,98 118,122 140,100 152,138" fill="#FFFFFF"/> </svg>`;
+const IMG_MEBIS_TUBE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#B8402D"/> <rect x="34" y="56" width="132" height="88" rx="18" fill="none" stroke="#FFFFFF" stroke-width="10"/> <polygon points="88,82 88,118 124,100" fill="#FFFFFF"/> </svg>`;
+const IMG_MEBIS_TAFEL = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#4C616C"/> <rect x="42" y="50" width="116" height="76" rx="8" fill="#FFFFFF"/> <path d="M60,96 Q76,80 92,96 T124,96 T142,96" fill="none" stroke="#4C616C" stroke-width="7" stroke-linecap="round"/> <line x1="60" y1="126" x2="42" y2="160" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/> <line x1="140" y1="126" x2="158" y2="160" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/> <line x1="70" y1="150" x2="130" y2="150" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/> </svg>`;
+const IMG_MEBIS_PRUEFUNGSARCHIV = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#8A5530"/> <path d="M38,76 L38,142 Q38,150 46,150 L154,150 Q162,150 162,142 L162,88 Q162,80 154,80 L104,80 L92,64 L46,64 Q38,64 38,72 Z" fill="#FFFFFF"/> <circle cx="139" cy="123" r="26" fill="#8A5530"/> <path d="M127,123 L136,133 L153,112" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/> </svg>`;
+const IMG_MEBIS_MAGAZIN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200"><rect x="0" y="0" width="200" height="200" rx="44" fill="#D1527A"/> <rect x="50" y="46" width="100" height="120" rx="8" fill="#FFFFFF" opacity="0.35"/> <rect x="42" y="54" width="100" height="120" rx="8" fill="#FFFFFF"/> <line x1="60" y1="80" x2="124" y2="80" stroke="#D1527A" stroke-width="8" stroke-linecap="round"/> <line x1="60" y1="104" x2="124" y2="104" stroke="#D1527A" stroke-width="8" stroke-linecap="round"/> <line x1="60" y1="128" x2="108" y2="128" stroke="#D1527A" stroke-width="8" stroke-linecap="round"/> <line x1="60" y1="152" x2="100" y2="152" stroke="#D1527A" stroke-width="8" stroke-linecap="round"/> </svg>`;
+
+/* Vier Browser-Adresszeilen (A-D) als EIN zusammenhängendes Bild: A/C https+grünes Schloss
+   (sicher), B/D nur http+rotes Warndreieck "Nicht sicher" (unsicher) - siehe gen_browserbars.py.
+   Als q.image genutzt (Data-URI, da q.image laut head() ein <img src> erwartet). */
+const IMG_SICHER_UNSICHER = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 710 354" width="1420" height="708"><rect width="100%" height="100%" fill="white"/><rect x="50" y="10" width="640" height="64" rx="14" fill="#E9EEF1" stroke="#C7D2D8" stroke-width="2"/><circle cx="72" cy="42.0" r="6" fill="#E0645A"/><circle cx="92" cy="42.0" r="6" fill="#E8B84B"/><circle cx="112" cy="42.0" r="6" fill="#59B36B"/><rect x="120" y="22" width="550" height="40" rx="20.0" fill="#FFFFFF" stroke="#2E9E5B" stroke-width="2.5"/><rect x="129" y="41.0" width="14" height="11" rx="2.5" fill="#2E9E5B"/><path d="M131,41.0 v-5 a5,5 0 0 1 10,0 v5" fill="none" stroke="#2E9E5B" stroke-width="2.6"/><text x="152" y="48.0" font-family="monospace" font-size="18" fill="#2E9E5B" font-weight="700">https</text><text x="220" y="48.0" font-family="monospace" font-size="18" fill="#4C616C">://www.schule-mathehilfe.de</text><circle cx="24" cy="42.0" r="18" fill="#3454D1"/><text x="24" y="49.0" font-family="sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" text-anchor="middle">A</text><rect x="50" y="100" width="640" height="64" rx="14" fill="#E9EEF1" stroke="#C7D2D8" stroke-width="2"/><circle cx="72" cy="132.0" r="6" fill="#E0645A"/><circle cx="92" cy="132.0" r="6" fill="#E8B84B"/><circle cx="112" cy="132.0" r="6" fill="#59B36B"/><rect x="120" y="112" width="550" height="40" rx="20.0" fill="#FFFFFF" stroke="#B0373A" stroke-width="2.5"/><polygon points="136,122.0 146,140.0 126,140.0" fill="none" stroke="#B0373A" stroke-width="2.6" stroke-linejoin="round"/><line x1="136" y1="130.0" x2="136" y2="134.0" stroke="#B0373A" stroke-width="2.4" stroke-linecap="round"/><circle cx="136" cy="137.5" r="1.4" fill="#B0373A"/><text x="152" y="138.0" font-family="monospace" font-size="16" fill="#B0373A" font-weight="700">Nicht sicher</text><text x="280" y="138.0" font-family="monospace" font-size="16" fill="#4C616C">| http://gratis-preise-gewinnen.net</text><circle cx="24" cy="132.0" r="18" fill="#3454D1"/><text x="24" y="139.0" font-family="sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" text-anchor="middle">B</text><rect x="50" y="190" width="640" height="64" rx="14" fill="#E9EEF1" stroke="#C7D2D8" stroke-width="2"/><circle cx="72" cy="222.0" r="6" fill="#E0645A"/><circle cx="92" cy="222.0" r="6" fill="#E8B84B"/><circle cx="112" cy="222.0" r="6" fill="#59B36B"/><rect x="120" y="202" width="550" height="40" rx="20.0" fill="#FFFFFF" stroke="#2E9E5B" stroke-width="2.5"/><rect x="129" y="221.0" width="14" height="11" rx="2.5" fill="#2E9E5B"/><path d="M131,221.0 v-5 a5,5 0 0 1 10,0 v5" fill="none" stroke="#2E9E5B" stroke-width="2.6"/><text x="152" y="228.0" font-family="monospace" font-size="18" fill="#2E9E5B" font-weight="700">https</text><text x="220" y="228.0" font-family="monospace" font-size="18" fill="#4C616C">://www.mebis.bycs.de</text><circle cx="24" cy="222.0" r="18" fill="#3454D1"/><text x="24" y="229.0" font-family="sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" text-anchor="middle">C</text><rect x="50" y="280" width="640" height="64" rx="14" fill="#E9EEF1" stroke="#C7D2D8" stroke-width="2"/><circle cx="72" cy="312.0" r="6" fill="#E0645A"/><circle cx="92" cy="312.0" r="6" fill="#E8B84B"/><circle cx="112" cy="312.0" r="6" fill="#59B36B"/><rect x="120" y="292" width="550" height="40" rx="20.0" fill="#FFFFFF" stroke="#B0373A" stroke-width="2.5"/><polygon points="136,302.0 146,320.0 126,320.0" fill="none" stroke="#B0373A" stroke-width="2.6" stroke-linejoin="round"/><line x1="136" y1="310.0" x2="136" y2="314.0" stroke="#B0373A" stroke-width="2.4" stroke-linecap="round"/><circle cx="136" cy="317.5" r="1.4" fill="#B0373A"/><text x="152" y="318.0" font-family="monospace" font-size="16" fill="#B0373A" font-weight="700">Nicht sicher</text><text x="280" y="318.0" font-family="monospace" font-size="16" fill="#4C616C">| http://kostenlos-spiele-123.info</text><circle cx="24" cy="312.0" r="18" fill="#3454D1"/><text x="24" y="319.0" font-family="sans-serif" font-size="19" font-weight="700" fill="#FFFFFF" text-anchor="middle">D</text></svg>`;
+
+/* Handy-Chat in der mebis-Gruppe "Kurs 8b" (Mini-Szenario zur mebis-Seite) - siehe gen_phone.py.
+   Ebenfalls als q.image (Data-URI) genutzt. */
+const IMG_MEBIS_SZENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 460" width="760" height="920"><rect width="100%" height="100%" fill="white"/><rect x="40" y="20" width="300" height="420" rx="34" fill="#1B2A33"/><rect x="50" y="30" width="280" height="400" rx="24" fill="#EEF3F6"/><path d="M50,54 a24,24 0 0 1 24,-24 h232 a24,24 0 0 1 24,24 v46 h-280 z" fill="#3454D1"/><circle cx="86" cy="69.0" r="16" fill="#FFFFFF"/><circle cx="82" cy="65.0" r="7" fill="#3454D1"/><path d="M70,81.0 q12,-10 24,0" fill="none" stroke="#3454D1" stroke-width="5" stroke-linecap="round"/><text x="110" y="63.0" font-family="sans-serif" font-size="17" font-weight="700" fill="#FFFFFF">Kurs 8b</text><text x="110" y="83.0" font-family="sans-serif" font-size="12" fill="#DCE4EA">mebis Nachrichten</text><rect x="66" y="124" width="210" height="46" rx="16" fill="#FFFFFF" stroke="#D3DEE4" stroke-width="1.5"/><text x="80" y="144" font-family="sans-serif" font-size="13" fill="#1B2A33">Hat wer die Hausaufgabe</text><text x="80" y="161" font-family="sans-serif" font-size="13" fill="#1B2A33">schon fertig?</text><rect x="94" y="194" width="220" height="64" rx="16" fill="#3454D1"/><text x="110" y="218" font-family="sans-serif" font-size="13" fill="#FFFFFF">Kann mir wer bei Aufgabe 4</text><text x="110" y="236" font-family="sans-serif" font-size="13" fill="#FFFFFF">in Mathe helfen? 🙋</text><rect x="66" y="284" width="248" height="50" rx="14" fill="#FFFFFF" stroke="#D3DEE4" stroke-width="1.5"/><circle cx="90" cy="309" r="12" fill="#C97A2B"/><path d="M84,309 a6,6 0 0 1 12,0 v6 h-12 z" fill="#FFFFFF"/><text x="112" y="305" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#1B2A33">Push-Benachrichtigung</text><text x="112" y="321" font-family="sans-serif" font-size="11" fill="#7C909A">3 neue Nachrichten in Kurs 8b</text><rect x="150.0" y="426" width="80" height="5" rx="2.5" fill="#4C616C"/></svg>`;
+
+/* Hilfsfunktion: wandelt einen rohen SVG-String in eine Data-URI um, für die Fälle, in denen ein
+   komplettes SVG (nicht pro Kachel, sondern als EIN Bild) über q.image/<img src> angezeigt wird. */
+const svgToDataUri = svg => "data:image/svg+xml," + encodeURIComponent(svg);
+
+/* Neun mebis-Werkzeuge: dieselben Icons werden in zwei Runden verwendet - zuerst ohne Beschriftung
+   (hideCardLabel:true, reines Icon-Erkennen), danach mit Beschriftung (Zuordnung der Beschreibung). */
+const MEBIS_ICON_CATEGORIES = [
+  { id:"lernplattform",   label:"mebis Lernplattform",   color:"#237A4B", image: IMG_MEBIS_LERNPLATTFORM },
+  { id:"mediathek",       label:"mebis Mediathek",       color:"#2B8C8C", image: IMG_MEBIS_MEDIATHEK },
+  { id:"tube",            label:"mebis Tube",             color:"#B8402D", image: IMG_MEBIS_TUBE },
+  { id:"tafel",           label:"mebis Tafel",            color:"#4C616C", image: IMG_MEBIS_TAFEL },
+  { id:"pruefungsarchiv", label:"mebis Prüfungsarchiv",  color:"#8A5530", image: IMG_MEBIS_PRUEFUNGSARCHIV },
+  { id:"magazin",         label:"mebis Magazin",          color:"#D1527A", image: IMG_MEBIS_MAGAZIN },
+  { id:"kurzlinks",       label:"mebis Kurzlinks",        color:"#7C5CBF", image: IMG_MEBIS_KURZLINKS },
+  { id:"videokonferenz",  label:"Videokonferenz",         color:"#3454D1", image: IMG_MEBIS_VIDEOKONFERENZ },
+  { id:"teachshare",      label:"teachSHARE",             color:"#C97A2B", image: IMG_MEBIS_TEACHSHARE },
+];
+const MEBIS_ICON_NAMEN = [
+  { id:"name-lernplattform",   label:"mebis Lernplattform", group:"lernplattform" },
+  { id:"name-mediathek",       label:"mebis Mediathek",     group:"mediathek" },
+  { id:"name-tube",            label:"mebis Tube",          group:"tube" },
+  { id:"name-tafel",           label:"mebis Tafel",         group:"tafel" },
+  { id:"name-pruefungsarchiv", label:"mebis Prüfungsarchiv", group:"pruefungsarchiv" },
+  { id:"name-magazin",         label:"mebis Magazin",       group:"magazin" },
+  { id:"name-kurzlinks",       label:"mebis Kurzlinks",     group:"kurzlinks" },
+  { id:"name-videokonferenz",  label:"Videokonferenz",      group:"videokonferenz" },
+  { id:"name-teachshare",      label:"teachSHARE",          group:"teachshare" },
+];
+const MEBIS_ICON_BESCHREIBUNGEN = [
+  { id:"besch-lernplattform",   label:"Hier findest du Kurse mit Lernmaterial, Aufgaben und Tests deiner Lehrkraft.", group:"lernplattform" },
+  { id:"besch-mediathek",       label:"Eine große Sammlung von Filmen und Audios für den Unterricht.", group:"mediathek" },
+  { id:"besch-tube",            label:"Hier können Lehrkräfte und Schüler eigene Lernvideos hochladen und ansehen.", group:"tube" },
+  { id:"besch-tafel",           label:"Ein digitales Whiteboard, an dem mehrere Personen gleichzeitig arbeiten können.", group:"tafel" },
+  { id:"besch-pruefungsarchiv", label:"Hier findest du alte Abschlussprüfungen zum Üben.", group:"pruefungsarchiv" },
+  { id:"besch-magazin",         label:"Aktuelle News und Tipps rund um den digitalen Unterricht.", group:"magazin" },
+  { id:"besch-kurzlinks",       label:"Macht aus langen Internetadressen kurze, leicht eintippbare Links.", group:"kurzlinks" },
+  { id:"besch-videokonferenz",  label:"Ermöglicht Unterricht und Besprechungen live über das Internet.", group:"videokonferenz" },
+  { id:"besch-teachshare",      label:"Eine Austauschplattform, auf der Lehrkräfte selbst erstelltes Unterrichtsmaterial teilen.", group:"teachshare" },
+];
+
+/* Lückentext "Die mebis-Plattform" - eigens formulierter Merksatz-Text (S.12/13), endet laut Wunsch
+   von Manuel mit einem Pop-up zum Übernehmen ins Heft (siehe popupText/popupBody unten). */
+const MEBIS_LUECKENTEXT = {
+  template: "mebis ist die digitale Lernplattform des Freistaats Bayern für Schulen. Sie ist Teil der %%, kurz ByCS. Dazu gehören zum Beispiel die mebis %% mit Kursen und Aufgaben, die mebis %% mit Filmen für den Unterricht und mebis %% für eigene Lernvideos sowie eine digitale %% zum gemeinsamen Arbeiten. Um die Angebote von mebis zu nutzen, braucht man ein eigenes %%, mit dem man sich sicher anmeldet.",
+  answers: ["BayernCloud Schule","Lernplattform","Mediathek","Tube","Tafel","Schulkonto"],
+};
+
+/* Lückentext "Datenschutz und personenbezogene Daten" (S.14/15) - ebenfalls mit Heft-Pop-up am
+   Ende (popupText/popupBody unten). */
+const DATENSCHUTZ_LUECKENTEXT = {
+  template: "Der Datenschutz regelt, wie mit personenbezogenen Daten umgegangen werden darf. Das sind Daten, die sich einer bestimmten Person zuordnen lassen, zum Beispiel der %%, die %% oder die %%nummer. In der Europäischen Union regelt die %%, kurz DSGVO, den Schutz dieser Daten. Internetseiten und Apps dürfen solche Daten meist nur sammeln und nutzen, wenn die betroffene Person vorher ihre %% gegeben hat.",
+  answers: ["Name","Adresse","Telefon","Datenschutz-Grundverordnung","Einwilligung"],
+};
 
 /* "Vermehrung der Viren - Abfrage": EIN einziges, zusammenhängendes eigenes SVG-Bild des ganzen
    Kreislaufs (Wunsch von Manuel nach seinem hochgeladenen Lehrbuchbild: "nimm die gleichen Bilder,
@@ -5614,6 +5700,106 @@ const exerciseSets = {
         cols:2, rows:2,
         tiles: NUTZUNG_TILES,
         explain: "Digitale Informationssysteme werden u. a. zur Kommunikation, zum Lernen, zur Berufsorientierung und als Cloud-Speicher genutzt." }
+    ]
+  },
+  /* "Die digitale Informationsplattform mebis der ByCS" (S.12/13): auf Wunsch von Manuel bewusst
+     KEINE Frage-mit-vier-Antworten-Aufgaben, sondern (1) Icon-Zuordnung in zwei Runden - zuerst
+     ohne Beschriftung (reines Wiedererkennen der neun selbst gezeichneten Icons, siehe
+     MEBIS_ICON_CATEGORIES/hideCardLabel), danach mit Beschriftung (Zuordnung der Beschreibung) -,
+     (2) ein Lückentext mit Heft-Pop-up (typeIn, popupText/popupBody) und (3) ein Mini-Szenario
+     (kind:"mc") mit dem Handy-Chat-Bild IMG_MEBIS_SZENE. */
+  "informatik-mebis-plattform": {
+    title: "Die digitale Informationsplattform mebis der ByCS",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 12–15 Minuten",
+    locked: false,
+    questions: [
+      { kind:"map-match", layout:"image-cards", matchBy:"group", hideCardLabel:true,
+        text: "mebis bietet viele verschiedene Werkzeuge an – und jedes hat sein eigenes Icon. Ordne jeden Namen dem passenden Icon zu.",
+        categories: MEBIS_ICON_CATEGORIES,
+        tiles: MEBIS_ICON_NAMEN,
+        explain: "mebis bündelt viele Werkzeuge unter einem Dach: Lernplattform, Mediathek, Tube, Tafel, Prüfungsarchiv, Magazin, Kurzlinks, Videokonferenz und teachSHARE." },
+      { kind:"map-match", layout:"image-cards", matchBy:"group",
+        text: "Jetzt weißt du, welches Icon zu welchem Werkzeug gehört. Ordne nun jede Beschreibung dem passenden mebis-Werkzeug zu.",
+        categories: MEBIS_ICON_CATEGORIES,
+        tiles: MEBIS_ICON_BESCHREIBUNGEN,
+        explain: "Jedes mebis-Werkzeug hat eine eigene Aufgabe – von Lernmaterial über Videos bis zum gemeinsamen digitalen Whiteboard." },
+      { kind:"gapfill", typeIn:true, text: "Fülle die Lücken zur mebis-Plattform.",
+        template: MEBIS_LUECKENTEXT.template, answers: MEBIS_LUECKENTEXT.answers,
+        explain: "mebis ist die zentrale Lernplattform Bayerns (Teil der BayernCloud Schule, ByCS) mit vielen Werkzeugen wie Lernplattform, Mediathek, Tube und Tafel – genutzt wird sie über ein eigenes Schulkonto.",
+        popupText: "Merksatz – Die mebis-Plattform",
+        popupBody: "mebis ist die digitale Lernplattform des Freistaats Bayern für Schulen. Sie ist Teil der BayernCloud Schule (ByCS) und bietet viele Werkzeuge: die mebis Lernplattform mit Kursen und Aufgaben, die mebis Mediathek mit Filmen, mebis Tube für eigene Lernvideos, eine digitale Tafel zum gemeinsamen Arbeiten, Kurzlinks, ein Prüfungsarchiv, das Magazin mit aktuellen Infos sowie Nachrichten und Videokonferenzen zur Kommunikation.¶Um mebis zu nutzen, braucht man ein eigenes Schulkonto, mit dem man sich sicher anmeldet." },
+      { kind:"mc",
+        image: svgToDataUri(IMG_MEBIS_SZENE),
+        imageAlt: "Smartphone zeigt einen Chat in der mebis-Gruppe „Kurs 8b“: Eine Mitschülerin fragt nach der Hausaufgabe, Lukas fragt nach Hilfe bei Aufgabe 4, dazu eine Push-Benachrichtigung über 3 neue Nachrichten.",
+        text: "Lukas schreibt in der mebis-Gruppe seiner Klasse 8b: „Kann mir wer bei Aufgabe 4 in Mathe helfen?“ Kurz darauf poppt diese Nachricht auf seinem Handy auf. Was unterscheidet mebis Nachrichten von einer öffentlichen Chat-App im Internet?",
+        options: [
+          "Bei mebis Nachrichten sind nur Personen aus der eigenen Schule mit ihrem Schulkonto angemeldet – fremde Personen haben keinen Zugriff",
+          "Bei mebis Nachrichten kann jede beliebige Person im Internet mitlesen",
+          "mebis Nachrichten speichert keine Nachrichten, sie verschwinden nach einer Sekunde",
+          "Bei mebis Nachrichten muss man seine private Handynummer veröffentlichen"
+        ], correct:0,
+        explain: "mebis ist eine geschützte Schulplattform: Man meldet sich mit einem persönlichen Schulkonto an, und nur Mitglieder der eigenen Schule bzw. Klasse haben Zugriff – anders als bei vielen öffentlichen Angeboten im Internet." }
+    ]
+  },
+  /* "Datenschutz" (S.14/15): (1) Lückentext mit Heft-Pop-up, (2) Daten-Sortierung (personenbezogen/
+     nicht personenbezogen), (3) "Sicher oder unsicher?" mit dem Browser-Adresszeilen-Bild
+     IMG_SICHER_UNSICHER, (4) "Aussage bewerten" – neue Fragenart kind:"reflect" (freie Meinung
+     ohne Richtig/Falsch, siehe reportFreitext()/kind:"reflect" im Übungsmotor). */
+  "informatik-datenschutz": {
+    title: "Datenschutz",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 12–15 Minuten",
+    locked: false,
+    questions: [
+      { kind:"gapfill", typeIn:true, text: "Fülle die Lücken zum Datenschutz.",
+        template: DATENSCHUTZ_LUECKENTEXT.template, answers: DATENSCHUTZ_LUECKENTEXT.answers,
+        explain: "Personenbezogene Daten lassen sich einer bestimmten Person zuordnen (z. B. Name, Adresse, Telefonnummer). Die Datenschutz-Grundverordnung (DSGVO) regelt in der EU den Umgang mit solchen Daten – meist braucht es dafür die Einwilligung der betroffenen Person.",
+        popupText: "Merksatz – Datenschutz und personenbezogene Daten",
+        popupBody: "Personenbezogene Daten sind Daten, die sich einer bestimmten Person zuordnen lassen, zum Beispiel Name, Adresse, Geburtsdatum, Telefonnummer oder ein Foto des Gesichts.¶In der Europäischen Union regelt die Datenschutz-Grundverordnung (DSGVO), wie mit diesen Daten umgegangen werden darf. Internetseiten und Apps dürfen personenbezogene Daten meist nur sammeln und nutzen, wenn die betroffene Person vorher ihre Einwilligung gegeben hat." },
+      { kind:"map-match", layout:"category-cards",
+        text: "Manche Daten lassen sich einer bestimmten Person zuordnen, andere nicht. Sortiere die Beispiele in die passende Kategorie.",
+        categories: [
+          { id:"personenbezogen",     label:"Personenbezogene Daten",     icon:"🙋", color:"#3454D1" },
+          { id:"nicht-personenbezogen", label:"Nicht personenbezogene Daten", icon:"📊", color:"#237A4B" },
+        ],
+        tiles: [
+          { id:"pd-name",    label:"Name",                          group:"personenbezogen" },
+          { id:"pd-adresse", label:"Adresse",                       group:"personenbezogen" },
+          { id:"pd-geburt",  label:"Geburtsdatum",                  group:"personenbezogen" },
+          { id:"pd-handy",   label:"Handynummer",                   group:"personenbezogen" },
+          { id:"pd-mail",    label:"E-Mail-Adresse",                group:"personenbezogen" },
+          { id:"pd-foto",    label:"Foto vom eigenen Gesicht",      group:"personenbezogen" },
+          { id:"pd-finger",  label:"Fingerabdruck",                 group:"personenbezogen" },
+          { id:"pd-ip",      label:"IP-Adresse des eigenen Computers", group:"personenbezogen" },
+          { id:"npd-temp",   label:"Tagestemperatur in München",    group:"nicht-personenbezogen" },
+          { id:"npd-einw",   label:"Einwohnerzahl von Bayern",      group:"nicht-personenbezogen" },
+          { id:"npd-oeff",   label:"Öffnungszeiten eines Supermarkts", group:"nicht-personenbezogen" },
+          { id:"npd-note",   label:"Durchschnittsnote einer ganzen Klasse (anonym)", group:"nicht-personenbezogen" },
+          { id:"npd-verkehr", label:"Verkehrsaufkommen auf einer Autobahn", group:"nicht-personenbezogen" },
+        ],
+        explain: "Personenbezogene Daten lassen sich – allein oder in Kombination – einer bestimmten Person zuordnen (z. B. Name, Adresse, Handynummer, Fingerabdruck). Allgemeine Angaben wie Wetterdaten, Einwohnerzahlen oder Öffnungszeiten betreffen dagegen keine einzelne Person." },
+      { kind:"map-match", layout:"category-cards",
+        image: svgToDataUri(IMG_SICHER_UNSICHER),
+        imageAlt: "Vier Browser-Adresszeilen A bis D: A und C zeigen ein grünes Schloss-Symbol und „https“, B und D zeigen ein rotes Warndreieck und den Hinweis „Nicht sicher“.",
+        text: "Schau dir die vier Internetadressen genau an. Woran erkennst du, ob eine Verbindung sicher ist? Sortiere A bis D in die passende Kategorie.",
+        categories: [
+          { id:"sicher",   label:"Sichere Verbindung",   icon:"🔒", color:"#2E9E5B" },
+          { id:"unsicher", label:"Unsichere Verbindung", icon:"⚠️", color:"#B0373A" },
+        ],
+        tiles: [
+          { id:"web-a", label:"A", group:"sicher" },
+          { id:"web-b", label:"B", group:"unsicher" },
+          { id:"web-c", label:"C", group:"sicher" },
+          { id:"web-d", label:"D", group:"unsicher" },
+        ],
+        explain: "A und C beginnen mit https und zeigen ein grünes Schloss-Symbol – die Verbindung ist verschlüsselt und damit sicher. B und D beginnen nur mit http und werden vom Browser mit einem roten Warndreieck und „Nicht sicher“ markiert – hier sollte man z. B. keine persönlichen Daten eingeben." },
+      { kind:"reflect", noSkip:true,
+        text: "Arbesa sagt: „Ich klicke bei Cookie-Bannern immer einfach überall auf ‚Alle akzeptieren‘, weil das am schnellsten geht und ich sowieso nichts zu verstecken habe.“ Was denkst du über diese Aussage? Schreibe deine Meinung in 2–3 Sätzen auf.",
+        placeholder: "Deine Meinung dazu…",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Meinung wurde gespeichert. Zum Nachdenken: „Alle akzeptieren“ ist zwar schnell, gibt Internetseiten aber oft mehr persönliche Daten frei, als für die Nutzung nötig wäre. Besser ist es, Cookie-Banner genauer zu lesen und nur die wirklich nötigen Cookies zu erlauben." }
     ]
   },
   /* Deutsch, Kapitel "Wortarten": diagnostischer Einstiegstest in 5 Teilen (vor der eigentlichen
@@ -10389,6 +10575,19 @@ window.__startExercise = function(slug){
           <button class="check-btn" id="checkBtn">Prüfen</button>
         </div>
       `;
+    } else if (q.kind === "reflect"){
+      /* Neu (Wunsch Manuel, Informatik/Datenschutz: "Aussage bewerten" - eigene Meinung in freien
+         Worten, OHNE Richtig/Falsch). Jede nicht-leere Antwort wird akzeptiert; gemeldet wird sie
+         NICHT über reportResult() (würde die Ergebnisse-/Auswertungs-Statistik verfälschen),
+         sondern über reportFreitext() in das separate Tabellenblatt "Freitextantworten" (siehe
+         Event-Wiring weiter unten). q.noSkip:true an der jeweiligen Frage sorgt dafür, dass gar
+         kein "Überspringen"-Button angezeigt wird (siehe Branch weiter unten, der skipBtnHtml baut). */
+      body = `
+        <div class="reflect-row">
+          <textarea class="reflect-textarea" id="reflectInput" placeholder="${esc(q.placeholder || "Deine Meinung dazu…")}" rows="4"></textarea>
+          <button class="check-btn" id="checkBtn">Absenden</button>
+        </div>
+      `;
     } else if (q.kind === "markieren"){
       /* Neu 4.10.2026 (Wunsch Manuel: "Texte, wo sie Adjektive markieren müssen"): q.text trägt die
          Anweisung ("Kreuze alle Adjektive an:"), q.tokens ist der zu lesende Satz Wort für Wort
@@ -10692,6 +10891,34 @@ window.__startExercise = function(slug){
         input.parentElement.classList.add("wrong");
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
       });
+    } else if (q.kind === "reflect"){
+      /* Gegenstück zum Body-Aufbau oben (q.kind === "reflect"): jede nicht-leere Eingabe wird
+         akzeptiert. Bewusst KEIN lockQuestion()-Aufruf (der würde reportResult() auslösen und die
+         Aufgabe in die normale Auswertungs-/Punkte-Statistik einfließen lassen) - statt dessen wird
+         der nötige Teil von lockQuestion() hier von Hand nachgebaut (solved=true, state.q[i]
+         merken+persist(), Feedback anzeigen, "Weiter"-Button einblenden), und die Antwort selbst
+         geht separat über reportFreitext() ins Tabellenblatt "Freitextantworten". */
+      const input = document.getElementById("reflectInput");
+      const submit = ()=>{
+        if (solved) return;
+        const val = input.value.trim();
+        if (!val){
+          tryAgainFeedback("Schreib bitte ein paar Worte, bevor du absendest.");
+          return;
+        }
+        attempts++;
+        input.disabled = true;
+        document.getElementById("checkBtn").disabled = true;
+        reportFreitext(slug, "f" + (i+1), q.text, val);
+        solved = true;
+        state.q[i] = { status: "reflect", attempts: (state.q[i].attempts || 0) + attempts };
+        persist();
+        const fb = document.getElementById("fb");
+        fb.textContent = q.explain || "Danke für deine Meinung!";
+        fb.className = "feedback show correct";
+        document.getElementById("nextBtn").classList.add("show");
+      };
+      document.getElementById("checkBtn").addEventListener("click", submit);
     } else if (q.kind === "markieren"){
       /* Gegenstück zum Body-Aufbau oben (q.kind === "markieren"): Wörter antippen schaltet sie um,
          "Prüfen" vergleicht die ausgewählten Positionen (unabhängig von der Klick-Reihenfolge) exakt
