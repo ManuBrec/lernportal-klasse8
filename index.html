@@ -5713,7 +5713,7 @@ const exerciseSets = {
     subject: "informatik",
     chapterSlug: "informationssysteme-datenschutz",
     duration: "ca. 12–15 Minuten",
-    locked: false,
+    locked: true,
     questions: [
       { kind:"map-match", layout:"image-cards", matchBy:"group", hideCardLabel:true,
         text: "mebis bietet viele verschiedene Werkzeuge an – und jedes hat sein eigenes Icon. Ordne jeden Namen dem passenden Icon zu.",
@@ -5752,14 +5752,14 @@ const exerciseSets = {
     subject: "informatik",
     chapterSlug: "informationssysteme-datenschutz",
     duration: "ca. 12–15 Minuten",
-    locked: false,
+    locked: true,
     questions: [
       { kind:"gapfill", typeIn:true, text: "Fülle die Lücken zum Datenschutz.",
         template: DATENSCHUTZ_LUECKENTEXT.template, answers: DATENSCHUTZ_LUECKENTEXT.answers,
         explain: "Personenbezogene Daten lassen sich einer bestimmten Person zuordnen (z. B. Name, Adresse, Telefonnummer). Die Datenschutz-Grundverordnung (DSGVO) regelt in der EU den Umgang mit solchen Daten – meist braucht es dafür die Einwilligung der betroffenen Person.",
         popupText: "Merksatz – Datenschutz und personenbezogene Daten",
         popupBody: "Personenbezogene Daten sind Daten, die sich einer bestimmten Person zuordnen lassen, zum Beispiel Name, Adresse, Geburtsdatum, Telefonnummer oder ein Foto des Gesichts.¶In der Europäischen Union regelt die Datenschutz-Grundverordnung (DSGVO), wie mit diesen Daten umgegangen werden darf. Internetseiten und Apps dürfen personenbezogene Daten meist nur sammeln und nutzen, wenn die betroffene Person vorher ihre Einwilligung gegeben hat." },
-      { kind:"map-match", layout:"category-cards",
+      { kind:"map-match", layout:"category-cards", matchBy:"group",
         text: "Manche Daten lassen sich einer bestimmten Person zuordnen, andere nicht. Sortiere die Beispiele in die passende Kategorie.",
         categories: [
           { id:"personenbezogen",     label:"Personenbezogene Daten",     icon:"🙋", color:"#3454D1" },
@@ -5781,7 +5781,7 @@ const exerciseSets = {
           { id:"npd-verkehr", label:"Verkehrsaufkommen auf einer Autobahn", group:"nicht-personenbezogen" },
         ],
         explain: "Personenbezogene Daten lassen sich – allein oder in Kombination – einer bestimmten Person zuordnen (z. B. Name, Adresse, Handynummer, Fingerabdruck). Allgemeine Angaben wie Wetterdaten, Einwohnerzahlen oder Öffnungszeiten betreffen dagegen keine einzelne Person." },
-      { kind:"map-match", layout:"category-cards",
+      { kind:"map-match", layout:"category-cards", matchBy:"group",
         image: svgToDataUri(IMG_SICHER_UNSICHER),
         imageAlt: "Vier Browser-Adresszeilen A bis D: A und C zeigen ein grünes Schloss-Symbol und „https“, B und D zeigen ein rotes Warndreieck und den Hinweis „Nicht sicher“.",
         text: "Schau dir die vier Internetadressen genau an. Woran erkennst du, ob eine Verbindung sicher ist? Sortiere A bis D in die passende Kategorie.",
@@ -10448,7 +10448,7 @@ window.__startExercise = function(slug){
           `<div class="mm-tile${q.wideTiles ? " tile-wide" : ""}" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
         ).join("");
         return `
-          <div class="cc-card" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
+          <div class="cc-card cat-box" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
             <div class="cc-card-head"><span class="cc-card-icon">${cat.icon}</span>${esc(cat.label)}</div>
             <div class="cc-slots">${slotsHtml}</div>
           </div>`;
@@ -10475,7 +10475,7 @@ window.__startExercise = function(slug){
           `<div class="mm-tile tile-wide" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
         ).join("");
         return `
-          <div class="ic-card" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
+          <div class="ic-card cat-box" style="--cc-color:${esc(cat.color)}; --cc-soft:${esc(cat.color)}22;">
             <div class="ic-card-image">${cat.image}</div>
             ${q.hideCardLabel ? "" : `<div class="ic-card-label">${esc(cat.label)}</div>`}
             <div class="ic-slots">${slotsHtml}</div>
@@ -10500,7 +10500,7 @@ window.__startExercise = function(slug){
           `<div class="mm-tile tile-wide" data-id="${esc(t.id)}" data-label="${esc(t.label)}" data-group="${esc(cat.id)}" data-target="1"></div>`
         ).join("");
         return `
-          <div class="bal-pan" style="--bal-color:${esc(cat.color)}; --bal-soft:${esc(cat.color)}18;">
+          <div class="bal-pan cat-box" style="--bal-color:${esc(cat.color)}; --bal-soft:${esc(cat.color)}18;">
             <div class="bal-pan-head"><span>${cat.icon}</span>${esc(cat.label)}</div>
             <div class="bal-slots">${slotsHtml}</div>
           </div>`;
@@ -11448,7 +11448,17 @@ window.__startExercise = function(slug){
         resetDrag();
         if (solved) return;
         const el = document.elementFromPoint(e.clientX, e.clientY);
-        const tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
+        let tile = el && el.closest ? el.closest(".mm-tile[data-target]") : null;
+        if ((!tile || tile.classList.contains("correct")) && q.matchBy === "group"){
+          /* Auf Manuels Wunsch (12.10.2026, "Daten-Sortierung" zu streng): bei matchBy:"group"
+             reicht es, den Chip IRGENDWO in die richtige (oder falsche) Kategorie-Box zu ziehen -
+             nicht pixelgenau auf eines der kleinen, leeren Platzhalter-Felder. Landet der Finger/
+             die Maus nicht direkt auf einem offenen .mm-tile, aber innerhalb einer .cat-box
+             (cc-card/ic-card/bal-pan), zählt stattdessen das erste noch offene Feld dieser Box als
+             Ziel - die Zuordnung sortiert sich dann automatisch ins passende Feld ein. */
+          const box = el && el.closest ? el.closest(".cat-box") : null;
+          if (box) tile = box.querySelector(".mm-tile[data-target]:not(.correct)");
+        }
         if (!tile || tile.classList.contains("correct")) return;
         attempts++;
         const isMatch = q.matchBy === "group"
