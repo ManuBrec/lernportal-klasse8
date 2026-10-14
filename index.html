@@ -10268,6 +10268,19 @@ function normalizeAnswer(s){
   return String(s).trim().toLowerCase().replace(/\s+/g,"").replace(",",".").replace("%","");
 }
 
+/* Kulanz (Rückmeldung Manuel, 14.10.2026, zu "Komposita/Bindestrich - schwer": ein Schüler schrieb
+   "Missverständnis" mit echtem ä, die accept-Liste im Code enthielt aber nur "missverstaendnis" -
+   das wurde fälschlich als falsch gewertet). Wandelt ä/ö/ü/ß in ae/oe/ue/ss um, damit es für die
+   freie Texteingabe (kind:"text" und getippte Lücken bei kind:"gapfill") keinen Unterschied mehr
+   macht, ob jemand den Umlaut selbst tippt oder ihn als ae/oe/ue umschreibt - in beide Richtungen,
+   unabhängig davon, welche Schreibweise gerade in der jeweiligen accept-Liste hinterlegt ist. */
+function foldUmlauts(s){
+  return String(s)
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+    .replace(/Ä/g,"Ae").replace(/Ö/g,"Oe").replace(/Ü/g,"Ue")
+    .replace(/ß/g,"ss");
+}
+
 window.__startExercise = function(slug){
   const set = exerciseSets[slug];
   if (!set) return;
@@ -10852,7 +10865,7 @@ window.__startExercise = function(slug){
          wirklich zählen - dann NICHT klein schreiben, nur Leerzeichen am Rand/doppelte Leerzeichen
          tolerieren. Ohne q.strict bleibt es wie bisher groß-/kleinschreibungs-unabhängig. */
       const normalizeText = s => {
-        const t = String(s).trim().replace(/\s+/g," ");
+        const t = foldUmlauts(String(s).trim().replace(/\s+/g," "));
         return q.strict ? t : t.toLowerCase();
       };
       /* Kulanz-Fallback (Rückmeldung Manuel 5.10.2026, erweitert nach Perfekt-Beispiel - "sei
@@ -11804,7 +11817,7 @@ window.__startExercise = function(slug){
          (gleiches Verhalten wie beim "text"-Aufgabentyp). */
       const inputs = [...document.querySelectorAll(".lt-type-input")];
       const normalize = s => {
-        const t = String(s).trim().replace(/\s+/g," ");
+        const t = foldUmlauts(String(s).trim().replace(/\s+/g," "));
         return q.strict ? t : t.toLowerCase();
       };
       /* Lücken wachsen beim Tippen mit, damit lange Wörter (z.B. "Geflügelbetriebe") nicht
