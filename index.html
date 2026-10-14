@@ -13751,17 +13751,47 @@ function clearPad(){ strokes=[]; cur=null; redraw(); }
 
 /* NEU (2. Überarbeitung, 14.10.2026, Wunsch Manuel: "wenn die Schüler eine Linie zeichnen und lange
    mit dem Stift drauf halten, soll die Linie gerade werden"): hält der Stift beim Zeichnen kurz
-   ruhig (< HOLD_TOL Referenz-Einheiten Bewegung für HOLD_MS ms), wird der bisherige Strich auf eine
-   gerade Linie vom Startpunkt zur aktuellen Position zusammengezogen - nur beim Stift-Werkzeug. */
-const HOLD_MS = 350, HOLD_TOL = 5;
-let holdAnchor = null, holdTimer = null;
-function clearHold(){ if (holdTimer){ clearTimeout(holdTimer); holdTimer = null; } holdAnchor = null; }
+   ruhig, wird der bisherige Strich auf eine gerade Linie vom Startpunkt zur aktuellen Position
+   zusammengezogen - nur beim Stift-Werkzeug.
+   Technik: ein "Zittert die Hand nur gerade minimal, oder bewegt sie sich wirklich?"-Gleitfenster
+   statt eines einfachen "Timer bei jeder Bewegung zurücksetzen" - letzteres wurde getestet und
+   verworfen, weil schon kleinstes, normales Hand-/Stift-Zittern (wenige Pixel) den Timer bei JEDER
+   Bewegung neu gestartet hätte und die Linie dadurch nie gerade geworden wäre. Stattdessen werden die
+   letzten HOLD_MS ms an Punkten gesammelt; sobald dieses Zeitfenster komplett gefüllt ist UND alle
+   Punkte darin nah beieinander liegen (max. Abstand <= HOLD_TOL), gilt der Stift als "ruhig gehalten"
+   und der Strich wird begradigt. */
+const HOLD_MS = 350, HOLD_TOL = 14;
+let recentPts = [], settleTimer = null;
+function clearHold(){ recentPts = []; if (settleTimer){ clearTimeout(settleTimer); settleTimer=null; } }
+function maxSpread(pts){
+  let max = 0;
+  for (let i=0;i<pts.length;i++){
+    for (let j=i+1;j<pts.length;j++){
+      const d = Math.hypot(pts[i].p[0]-pts[j].p[0], pts[i].p[1]-pts[j].p[1]);
+      if (d>max) max = d;
+    }
+  }
+  return max;
+}
 function straightenCurrent(){
-  holdTimer = null;
   if (!cur || cur.tool!=="pen" || cur.pts.length<2) return;
   const a = cur.pts[0], b = cur.pts[cur.pts.length-1];
   cur.pts = [a, b];
   redraw();
+}
+function evaluateHold(){
+  if (!cur || cur.tool!=="pen" || !recentPts.length) return;
+  const now = performance.now();
+  while (recentPts.length>1 && now - recentPts[0].t > HOLD_MS) recentPts.shift();
+  /* recentPts.length===1 (nach dem Trimmen) heißt: seit HOLD_MS gab es gar kein neues Bewegungs-
+     Event mehr - der Stift steht also komplett still. maxSpread ist dann 0 (trivial "ruhig"). */
+  if ((now - recentPts[0].t) >= HOLD_MS*0.7 && maxSpread(recentPts) <= HOLD_TOL){
+    straightenCurrent();
+  }
+}
+function scheduleSettleCheck(){
+  if (settleTimer) clearTimeout(settleTimer);
+  settleTimer = setTimeout(()=>{ settleTimer=null; evaluateHold(); }, HOLD_MS);
 }
 
 pad.addEventListener("pointerdown", e=>{
@@ -13771,19 +13801,16 @@ pad.addEventListener("pointerdown", e=>{
   cur = { tool, pts:[toRefPt(e.clientX,e.clientY,e.pressure)], id:e.pointerId };
   strokes.push(cur); drawStroke(cur);
   clearHold();
-  if (tool==="pen"){ holdAnchor = cur.pts[0]; holdTimer = setTimeout(straightenCurrent, HOLD_MS); }
+  if (tool==="pen"){ recentPts.push({ p:cur.pts[0], t: performance.now() }); scheduleSettleCheck(); }
 });
 pad.addEventListener("pointermove", e=>{
   if (!cur || e.pointerId!==cur.id) return;
   const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
   evs.forEach(ev=>{ cur.pts.push(toRefPt(ev.clientX,ev.clientY,ev.pressure)); drawStroke({tool:cur.tool, pts:cur.pts.slice(-2)}); });
   if (cur.tool==="pen"){
-    const last = cur.pts[cur.pts.length-1];
-    if (!holdAnchor || Math.hypot(last[0]-holdAnchor[0], last[1]-holdAnchor[1]) > HOLD_TOL){
-      holdAnchor = last;
-      if (holdTimer) clearTimeout(holdTimer);
-      holdTimer = setTimeout(straightenCurrent, HOLD_MS);
-    }
+    recentPts.push({ p: cur.pts[cur.pts.length-1], t: performance.now() });
+    evaluateHold();
+    scheduleSettleCheck();
   }
 });
 ["pointerup","pointercancel","pointerleave"].forEach(n=> pad.addEventListener(n, e=>{ if(cur && e.pointerId===cur.id){ cur=null; clearHold(); } }));
