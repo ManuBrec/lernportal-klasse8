@@ -2683,11 +2683,20 @@ const exerciseSets = {
 /* === Neue Einstiegsaufgabe "Wortbausteine" (Wunsch Manuel): direkt nach dem Einstiegstest,
    vor der ersten Regel. Angelehnt an die Buchseite 48 "Wortzusammensetzungen" (Puzzleteile-
    Aufgabe), aber mit komplett neu erfundenen Beispielwörtern (nicht aus dem Buch übernommen -
-   Urheberrecht). table-match-Aufgabe: 7 Wortart-Kombinationen als Zeilen (Ergebniswortart +
-   Partnerwortart, z.B. "Verb + Partikel" = ein neues Verb aus Partikel+Verb wie "vorbereiten"),
-   darunter alle 21 Beispielwörter gemischt als Kärtchen - jedes Wort passt in genau eine Zeile.
-   Führt inhaltlich zur Vorsilben-Regel: Verb+Partikel-Zusammensetzungen sind genau die trennbaren/
-   untrennbaren Verben, um die es direkt im Anschluss geht. */
+   Urheberrecht). table-match-Aufgabe: ursprünglich 7 Wortart-Kombinationen als Zeilen
+   (Ergebniswortart + Partnerwortart, z.B. "Verb + Partikel" = ein neues Verb aus Partikel+Verb
+   wie "vorbereiten"), darunter alle 21 Beispielwörter gemischt als Kärtchen - jedes Wort passt in
+   genau eine Zeile. Führt inhaltlich zur Vorsilben-Regel: Verb+Partikel-Zusammensetzungen sind
+   genau die trennbaren/untrennbaren Verben, um die es direkt im Anschluss geht.
+   KORREKTUR (14.10.2026, Rückmeldung Manuel): die beiden Zeilen "Nomen + Adjektiv/Partizip"
+   (hochhaus/kleinkind/frischluft) und "Adjektiv + Nomen" (bildschoen/steinreich/schneeweiss)
+   waren sich zu ähnlich und unterschieden sich nur in der (für Schüler kaum erkennbaren)
+   Ergebniswortart/Reihenfolge - dazu kam die Verwechslungsgefahr mit dem Begriff "Partikel" aus
+   der Nachbarzeile "Nomen + Partikel". Zu EINER Zeile "Nomen + Adjektiv" mit allen 6 Wörtern
+   zusammengelegt (jetzt nur noch 6 statt 7 Zeilen) - row.accept.length steuert die Lücken-Anzahl
+   pro Zeile automatisch, keine Engine-Änderung nötig. Die Zeile "Nomen + Partikel" (ausgang/
+   vorname/eingang) und "Verb + Partikel" (bleibt bewusst unverändert, siehe oben, zentral für den
+   Übergang zur Vorsilben-Regel) sind von dieser Zusammenlegung NICHT betroffen. */
 "deutsch-gz-wortbausteine": {
     title: "Wortbausteine: Wortarten kombinieren", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 10 Minuten",
     questions: [
@@ -2696,9 +2705,8 @@ const exerciseSets = {
         columns: ["Wortart-Kombination", "Beispielwörter"],
         rows: [
           { label:"Nomen + Nomen",              accept:["haustuer","kuechentisch","fensterbank"] },
-          { label:"Nomen + Adjektiv/Partizip",   accept:["hochhaus","kleinkind","frischluft"] },
+          { label:"Nomen + Adjektiv",           accept:["hochhaus","kleinkind","frischluft","bildschoen","steinreich","schneeweiss"] },
           { label:"Nomen + Partikel",            accept:["ausgang","vorname","eingang"] },
-          { label:"Adjektiv + Nomen",            accept:["bildschoen","steinreich","schneeweiss"] },
           { label:"Verb + Nomen",                accept:["teilnehmen","staubsaugen","kopfstehen"] },
           { label:"Verb + Adjektiv",             accept:["frohlocken","totschlagen","liebkosen"] },
           { label:"Verb + Partikel",             accept:["vorbereiten","untergehen","nachdenken"] },
@@ -2712,7 +2720,7 @@ const exerciseSets = {
           { id:"frohlocken", label:"frohlocken" }, { id:"totschlagen", label:"totschlagen" }, { id:"liebkosen", label:"liebkosen" },
           { id:"vorbereiten", label:"vorbereiten" }, { id:"untergehen", label:"untergehen" }, { id:"nachdenken", label:"nachdenken" },
         ],
-        popupText: "Übernimm diese Tabelle in dein Heft – so hast du alle 7 Wortart-Kombinationen auf einen Blick.",
+        popupText: "Übernimm diese Tabelle in dein Heft – so hast du alle 6 Wortart-Kombinationen auf einen Blick.",
         explain: "Wortzusammensetzungen gibt es nicht nur bei Nomen: Aus zwei Wörtern kann ein neues Nomen, Adjektiv oder Verb entstehen. Entscheidend ist, welche Wortart am Ende herauskommt (Nomen, Adjektiv oder Verb) und mit welcher Wortart sie verbunden wurde. Besonders wichtig für dieses Kapitel: Verb + Partikel (wie „vorbereiten“) – genau solche Verben schauen wir uns jetzt in Teil 1 genauer an, denn bei ihnen entscheidet sich, ob sie trennbar oder untrennbar sind." },
     ]
   },
