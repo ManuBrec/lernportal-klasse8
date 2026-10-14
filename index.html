@@ -13398,9 +13398,16 @@ start();
 /* Fluchtpunkt-Trainer: eigene, interaktive Zeichen-Übung für Kunst (Einführung Fluchtpunktperspektive).
    Schüler zeichnen mit dem Stift (Pointer Events, wie beim Rechenweg-Trainer-Schmierzettel) Fluchtlinien
    auf einem Guide-Hintergrund (responsives SVG, viewBox 0 0 1000 625) nach; die Striche werden gegen
-   Ziel-Strecken geprüft (mittlerer Abstand zur Strecke + Endpunkt-Nähe). 3 Schritte: Fluchtlinien ->
-   Rückwand/fertiger Raum -> Bonus: Treppe andeuten (gleiche Geometrie wie im Einführungs-Dokument).
-   Läuft in einem Shadow-DOM, wie der Rechenweg-Trainer. Kein Sheets-Reporting. */
+   Ziel-Strecken geprüft (mittlerer Abstand zur Strecke + Endpunkt-Nähe). 4 Schritte: Fluchtlinien ->
+   Rückwand/fertiger Raum -> Fenster einzeichnen -> Bonus: Treppe andeuten (gleiche Geometrie wie im
+   Einführungs-Dokument).
+   Läuft in einem Shadow-DOM, wie der Rechenweg-Trainer. Kein Sheets-Reporting.
+   NEU (14.10.2026, Wunsch Manuel, nach hochgeladenem eigenem Skizzen-Foto "Raum mit Fenster und
+   Treppe"): neuer Schritt 3 "Fenster einzeichnen" eingefügt (Treppe dadurch zu Schritt 4 verschoben).
+   Genau wie bei Schritt 1 (Fluchtlinien zur Bildecke) zieht man hier Linien von den 4 Ecken eines
+   vorgegebenen Fensters an der linken Wand zum Fluchtpunkt - danach wird die Fenstertiefe (Laibung +
+   "Glas"-Fläche) aus genau diesen Linien aufgebaut, exakt die Konstruktionstechnik aus Manuels Skizze
+   (dort als schraffierte Fensterlaibung sichtbar). */
 window.__startFluchtpunktTrainer = function(){
 const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
 const root = host.attachShadow({mode:"open"});
@@ -13431,6 +13438,8 @@ button{font-family:inherit}
 .dot-corner{fill:var(--surface);stroke:var(--ink-soft);stroke-width:2}
 .dot-vp{fill:var(--danger)}
 .lbl-vp{font-size:26px;font-family:var(--font-body);font-weight:700;fill:var(--danger)}
+.quad-line{stroke:var(--ink-faint);stroke-width:1.5;stroke-dasharray:5 6;opacity:.55}
+.obj-rect{stroke:var(--ink-faint);stroke-width:2;stroke-dasharray:4 4;fill:none}
 .fillpoly{fill:var(--accent);opacity:0;transition:opacity .6s ease}
 .fillpoly.show{opacity:.14}
 .fillpoly.dark.show{opacity:.26}
@@ -13451,7 +13460,7 @@ button{font-family:inherit}
 @media (max-width:480px){.card{padding:16px}}
 </style>
 <div class="shell">
-  <div class="stats"><span class="pill">Schritt <b id="stepNr">1</b>/3</span></div>
+  <div class="stats"><span class="pill">Schritt <b id="stepNr">1</b>/8</span></div>
   <section class="card" id="stepCard">
     <div class="eyebrow">Fluchtpunkt-Trainer</div>
     <h2 class="steptitle" id="stepTitle"></h2>
@@ -13477,7 +13486,7 @@ button{font-family:inherit}
   <section class="card end-card" id="endCard" hidden>
     <div class="big">🎉</div>
     <h2>Geschafft!</h2>
-    <p>Du hast gesehen: Alles, was im Bild in die Tiefe geht, läuft auf den Fluchtpunkt zu – Fluchtlinien, Räume, auch eine Treppe. Genau dieses Prinzip nutzt du gleich für deine eigene Zeichnung.</p>
+    <p>Du hast gesehen: Alles, was im Bild in die Tiefe geht, läuft auf den Fluchtpunkt zu – Wände, ein Fenster, eine Treppe, und zuletzt Regal, Lampe, Tisch und Sofa in allen 4 Quadranten. Die Richtung der Linie ändert sich je nach Quadrant, die Regel bleibt immer gleich: Ecke → Fluchtpunkt. Genau dieses Prinzip nutzt du gleich für deine eigene Zeichnung.</p>
     <div class="actions" style="justify-content:center;margin-top:18px">
       <button class="btn ghost" id="btnRestart">Noch einmal üben</button>
       <a class="btn" id="btnBack" href="#/kunst/fluchtpunktperspektive">Zur Übersicht</a>
@@ -13487,12 +13496,27 @@ button{font-family:inherit}
 
 const $ = sel => root.querySelector(sel);
 
-/* ---------- Geometrie der 3 Schritte (Referenzraum 1000x625, wie das SVG-viewBox) ---------- */
+/* ---------- Geometrie der 8 Schritte (Referenzraum 1000x625, wie das SVG-viewBox) ---------- */
 const VP1 = [500,300];
 const FRAME = { tl:[60,40], tr:[940,40], br:[940,560], bl:[60,560] };
 function lerp(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t]; }
 const T = 0.45;
 const Q = { tl: lerp(FRAME.tl,VP1,T), tr: lerp(FRAME.tr,VP1,T), br: lerp(FRAME.br,VP1,T), bl: lerp(FRAME.bl,VP1,T) };
+
+/* Fenster an der linken Wand (Schritt 3, NEU 14.10.2026) - liegt bewusst als flaches Rechteck "auf"
+   der Wand (noch nicht perspektivisch verzerrt); erst die 4 Linien zum Fluchtpunkt + die daraus
+   gebaute Laibung (WQ) geben ihm die Tiefe - exakt Manuels Konstruktionsskizze. */
+const WIN = { tl:[100,190], tr:[210,190], br:[210,430], bl:[100,430] };
+const TWIN = 0.22;
+const WQ = { tl: lerp(WIN.tl,VP1,TWIN), tr: lerp(WIN.tr,VP1,TWIN), br: lerp(WIN.br,VP1,TWIN), bl: lerp(WIN.bl,VP1,TWIN) };
+
+/* Runde 2 (NEU 14.10.2026, Wunsch Manuel): 4 Quadranten-Objekte rund um F, je eines pro Quadrant,
+   damit Schüler erkennen, dass sich nur die LINIENRICHTUNG je Quadrant ändert, die Regel
+   "Ecke -> Fluchtpunkt" aber immer gleich bleibt. Alle 4 beziehen sich auf denselben Fluchtpunkt VP1. */
+const REGAL  = { tl:[90,130],  tr:[180,130], br:[180,180], bl:[90,180]  };   // oben links (Wand, über dem Fenster)
+const LAMPE  = { tl:[650,70],  tr:[730,70],  br:[730,140], bl:[650,140] };   // oben rechts (Decke)
+const TISCH  = { tl:[240,460], tr:[400,460], br:[400,520], bl:[240,520] };   // unten links (Boden)
+const SOFA   = { tl:[600,460], tr:[760,460], br:[760,520], bl:[600,520] };   // unten rechts (Boden)
 
 const VP3 = [860,140];
 const P_L0 = [140,560], P_R0 = [430,560];
@@ -13505,26 +13529,41 @@ function stairStep(i){
   return { x:q[0], y:q[1], w: STAIR_W0*Math.pow(STAIR_R,i), h: RISER_H*Math.pow(STAIR_R,i) };
 }
 function seg(x1,y1,x2,y2){ return {x1,y1,x2,y2,done:false}; }
+function rectPts(r){ return [r.tl,r.tr,r.br,r.bl]; }
+function cornerSegs(r,vp){ return [ seg(r.tl[0],r.tl[1],vp[0],vp[1]), seg(r.tr[0],r.tr[1],vp[0],vp[1]), seg(r.br[0],r.br[1],vp[0],vp[1]), seg(r.bl[0],r.bl[1],vp[0],vp[1]) ]; }
 
 const STEPS = [
   {
     title: "Schritt 1 · Fluchtlinien zeichnen",
     instr: "Zieh mit dem Stift von jeder der 4 Bildecken eine gerade Linie zum roten Fluchtpunkt. So entsteht der Blick in einen Raum.",
     vp: VP1,
+    frameRect: true,
+    cornersFrame: true,
     targets: [ seg(FRAME.tl[0],FRAME.tl[1],VP1[0],VP1[1]), seg(FRAME.tr[0],FRAME.tr[1],VP1[0],VP1[1]), seg(FRAME.br[0],FRAME.br[1],VP1[0],VP1[1]), seg(FRAME.bl[0],FRAME.bl[1],VP1[0],VP1[1]) ],
   },
   {
     title: "Schritt 2 · Rückwand einzeichnen",
     instr: "Die 4 Fluchtlinien von eben sind schon eingezeichnet. Verbinde jetzt die 4 Punkte auf den Linien zu einem kleinen Rechteck – das wird die Rückwand des Raums.",
     vp: VP1,
+    frameRect: true,
+    cornersQ: true,
     refLines: [ seg(FRAME.tl[0],FRAME.tl[1],VP1[0],VP1[1]), seg(FRAME.tr[0],FRAME.tr[1],VP1[0],VP1[1]), seg(FRAME.br[0],FRAME.br[1],VP1[0],VP1[1]), seg(FRAME.bl[0],FRAME.bl[1],VP1[0],VP1[1]) ],
     targets: [ seg(Q.tl[0],Q.tl[1],Q.tr[0],Q.tr[1]), seg(Q.tr[0],Q.tr[1],Q.br[0],Q.br[1]), seg(Q.br[0],Q.br[1],Q.bl[0],Q.bl[1]), seg(Q.bl[0],Q.bl[1],Q.tl[0],Q.tl[1]) ],
     reveal: "room",
   },
   {
-    title: "Schritt 3 · Bonus: Treppe andeuten",
+    title: "Schritt 3 · Fenster einzeichnen",
+    instr: "An der linken Wand ist schon ein Fenster markiert. Zieh von jeder der 4 Fenster-Ecken eine Linie zum Fluchtpunkt – so bekommt das Fenster die richtige Tiefe in der Wand.",
+    vp: VP1,
+    win: true,
+    targets: cornerSegs(WIN, VP1),
+    reveal: "window",
+  },
+  {
+    title: "Schritt 4 · Bonus: Treppe andeuten",
     instr: "Eine Treppe ist eine der schwierigsten Aufgaben. Zieh zuerst die beiden äußeren Fluchtlinien zum Fluchtpunkt, dann zeichne die vorderste Stufe nach (erst die senkrechte, dann die waagrechte Kante).",
     vp: VP3,
+    cornersStair: true,
     targets: [
       seg(P_L0[0],P_L0[1],VP3[0],VP3[1]),
       seg(P_R0[0],P_R0[1],VP3[0],VP3[1]),
@@ -13532,6 +13571,38 @@ const STEPS = [
       seg(P_L0[0],P_L0[1]-RISER_H, P_R0[0],P_R0[1]-RISER_H),
     ],
     reveal: "stairs",
+  },
+  {
+    title: "Runde 2 · 1/4 · Regal (oben links)",
+    instr: "Jetzt übst du das Prinzip an 4 Alltagsgegenständen, einem pro Quadrant – die Richtung der Linie ändert sich, die Regel bleibt gleich: Ecke → Fluchtpunkt. Das Regal liegt oben LINKS vom Fluchtpunkt. Zieh die 4 Linien von den Regal-Ecken zum Fluchtpunkt.",
+    vp: VP1,
+    objRect: REGAL,
+    targets: cornerSegs(REGAL, VP1),
+    reveal: "object",
+  },
+  {
+    title: "Runde 2 · 2/4 · Lampe an der Decke (oben rechts)",
+    instr: "Die quadratische Deckenlampe liegt oben RECHTS vom Fluchtpunkt – die Linien laufen jetzt in eine andere Richtung, aber nach derselben Regel. Zieh die 4 Linien von den Lampen-Ecken zum Fluchtpunkt.",
+    vp: VP1,
+    objRect: LAMPE,
+    targets: cornerSegs(LAMPE, VP1),
+    reveal: "object",
+  },
+  {
+    title: "Runde 2 · 3/4 · Tisch (unten links)",
+    instr: "Der Tisch liegt unten LINKS vom Fluchtpunkt. Zieh die 4 Linien von den Tisch-Ecken zum Fluchtpunkt.",
+    vp: VP1,
+    objRect: TISCH,
+    targets: cornerSegs(TISCH, VP1),
+    reveal: "object",
+  },
+  {
+    title: "Runde 2 · 4/4 · Sofa (unten rechts)",
+    instr: "Das Sofa liegt unten RECHTS vom Fluchtpunkt – der letzte Quadrant. Zieh die 4 Linien von den Sofa-Ecken zum Fluchtpunkt.",
+    vp: VP1,
+    objRect: SOFA,
+    targets: cornerSegs(SOFA, VP1),
+    reveal: "object",
   },
 ];
 
@@ -13546,15 +13617,39 @@ function poly(pts){ return pts.map(p=>p.join(",")).join(" "); }
 function renderGuide(){
   const st = STEPS[stepIdx];
   let parts = [];
-  if (stepIdx === 0 || stepIdx === 1){
+
+  /* Quadranten-Hilfslinien (NEU 14.10.2026, Wunsch Manuel): Horizontale + Vertikale durch den
+     jeweils aktiven Fluchtpunkt teilen das Bild in 4 Quadranten. Wechselt ein Punkt den Quadranten,
+     dreht sich nur die Richtung seiner Fluchtlinie - die Regel "Ecke -> Fluchtpunkt" bleibt immer
+     gleich. Bewusst generisch über st.vp (gilt also auch für den eigenen Fluchtpunkt der Treppe). */
+  parts.push(`<line class="quad-line" x1="0" y1="${st.vp[1]}" x2="1000" y2="${st.vp[1]}"></line>`);
+  parts.push(`<line class="quad-line" x1="${st.vp[0]}" y1="0" x2="${st.vp[0]}" y2="625"></line>`);
+
+  if (st.frameRect){
     parts.push(`<rect x="${FRAME.tl[0]}" y="${FRAME.tl[1]}" width="${FRAME.tr[0]-FRAME.tl[0]}" height="${FRAME.bl[1]-FRAME.tl[1]}" fill="none" stroke="var(--border)" stroke-width="2"></rect>`);
   }
-  if (st.reveal === "room"){
-    parts.push(`<polygon class="fillpoly dark${st._revealed?" show":""}" points="${poly([FRAME.bl,FRAME.br,Q.br,Q.bl])}"></polygon>`);
-    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tl,FRAME.tr,Q.tr,Q.tl])}"></polygon>`);
-    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tl,FRAME.bl,Q.bl,Q.tl])}"></polygon>`);
-    parts.push(`<polygon class="fillpoly${st._revealed?" show":""}" points="${poly([FRAME.tr,FRAME.br,Q.br,Q.tr])}"></polygon>`);
+
+  /* Raum, Fenster und die 4 Quadranten-Objekte bleiben, einmal aufgedeckt, in allen späteren
+     Schritten sichtbar (fertig aufgebauter Raum statt bei jedem Schritt wieder leer). */
+  const roomStep = STEPS[1];
+  if (roomStep && roomStep._revealed){
+    parts.push(`<polygon class="fillpoly dark show" points="${poly([FRAME.bl,FRAME.br,Q.br,Q.bl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly show" points="${poly([FRAME.tl,FRAME.tr,Q.tr,Q.tl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly show" points="${poly([FRAME.tl,FRAME.bl,Q.bl,Q.tl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly show" points="${poly([FRAME.tr,FRAME.br,Q.br,Q.tr])}"></polygon>`);
   }
+  const winStep = STEPS.find(s=>s.win);
+  if (winStep && winStep._revealed){
+    parts.push(`<polygon class="stairpoly side show" points="${poly([WIN.tl,WIN.tr,WQ.tr,WQ.tl])}"></polygon>`);
+    parts.push(`<polygon class="stairpoly side show" points="${poly([WIN.tr,WIN.br,WQ.br,WQ.tr])}"></polygon>`);
+    parts.push(`<polygon class="stairpoly side show" points="${poly([WIN.br,WIN.bl,WQ.bl,WQ.br])}"></polygon>`);
+    parts.push(`<polygon class="stairpoly side show" points="${poly([WIN.bl,WIN.tl,WQ.tl,WQ.bl])}"></polygon>`);
+    parts.push(`<polygon class="fillpoly dark show" points="${poly([WQ.tl,WQ.tr,WQ.br,WQ.bl])}"></polygon>`);
+  }
+  STEPS.filter(s=> s.objRect && s._revealed).forEach(s=>{
+    parts.push(`<polygon class="fillpoly show" points="${poly(rectPts(s.objRect))}"></polygon>`);
+  });
+
   if (st.reveal === "stairs" && st._revealed){
     for(let i=0;i<STAIR_N;i++){
       const a = stairStep(i), b = stairStep(i+1);
@@ -13564,11 +13659,20 @@ function renderGuide(){
       parts.push(`<polygon class="stairpoly side show" points="${poly(riser)}"></polygon>`);
     }
   }
+  if (st.win){
+    parts.push(`<rect x="${WIN.tl[0]}" y="${WIN.tl[1]}" width="${WIN.tr[0]-WIN.tl[0]}" height="${WIN.bl[1]-WIN.tl[1]}" class="obj-rect"></rect>`);
+  }
+  if (st.objRect && !st._revealed){
+    const r = st.objRect;
+    parts.push(`<rect x="${r.tl[0]}" y="${r.tl[1]}" width="${r.tr[0]-r.tl[0]}" height="${r.bl[1]-r.tl[1]}" class="obj-rect"></rect>`);
+  }
   if (st.refLines){ st.refLines.forEach((s,i)=> parts.push(svgLine("seg-ref", s, "ref"+i)) ); }
   st.targets.forEach((s,i)=> parts.push(svgLine("seg-target"+(s.done?" done":""), s, "t"+i)) );
-  if (stepIdx === 0){ Object.values(FRAME).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="9"></circle>`)); }
-  if (stepIdx === 1){ Object.values(Q).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="8"></circle>`)); }
-  if (stepIdx === 2){
+  if (st.cornersFrame){ Object.values(FRAME).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="9"></circle>`)); }
+  if (st.cornersQ){ Object.values(Q).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="8"></circle>`)); }
+  if (st.win){ Object.values(WIN).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="8"></circle>`)); }
+  if (st.objRect){ Object.values(st.objRect).forEach(p=> parts.push(`<circle class="dot-corner" cx="${p[0]}" cy="${p[1]}" r="8"></circle>`)); }
+  if (st.cornersStair){
     parts.push(`<circle class="dot-corner" cx="${P_L0[0]}" cy="${P_L0[1]}" r="8"></circle>`);
     parts.push(`<circle class="dot-corner" cx="${P_R0[0]}" cy="${P_R0[1]}" r="8"></circle>`);
   }
