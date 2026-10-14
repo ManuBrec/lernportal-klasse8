@@ -448,6 +448,20 @@
   }
   .lt-type-input.wrong{border-bottom-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
 
+  /* Entscheidungs-Lücken (gapfill mit q.typeIn + q.choicePairs, Wunsch Manuel 14.10.2026: "sie
+     müssen sich für eine Variante entscheiden und es dann richtig in die Lücke eintippen"): vor
+     jeder getippten Lücke zwei kleine Auswahl-Kärtchen mit den beiden Schreibweisen (eine richtig,
+     eine mit naiver Getrennt-/Zusammenschreibung-Falle). Antippen übernimmt die gewählte
+     Schreibweise nur als Vorschlag in die Lücke (fokussiert, editierbar) - gewertet wird am Ende
+     trotzdem, was tatsächlich in der Lücke steht, nicht welches Kärtchen angetippt wurde. */
+  .lt-choice-group{display:inline-flex; gap:5px; margin:0 3px; vertical-align:middle;}
+  .lt-choice-btn{
+    padding:4px 10px; border-radius:999px; border:1.5px solid var(--border); background:var(--surface);
+    color:var(--ink-soft); font-weight:700; font-size:12.5px; cursor:pointer; font-family:inherit;
+  }
+  .lt-choice-btn:hover{border-color:var(--accent);}
+  .lt-choice-btn.chosen{border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
+
   /* Tabellen-Zuordnung (table-match): Tabelle mit fester linker Spalte, rechte Spalte mit
      Lücken-Kärtchen ("tm-blank"), die Kärtchenbank selbst nutzt bewusst dieselben .lt-chip/
      .lt-wordbank-Stile wie beim Lückentext (gleiche Bedienlogik, gleiches Erscheinungsbild). */
@@ -1283,6 +1297,7 @@ const deutschGetrenntZusammenTopics = [
   { tag:"lernen", label:"8. Anwendung: Lesetext – Regel", practice:"deutsch-gz-anwendung-regel" },
   { tag:"lernen", label:"8. Anwendung: Lesetext – Übung 1 (leicht)", practice:"deutsch-gz-anwendung-leicht" },
   { tag:"lernen", label:"8. Anwendung: Lesetext – Übung 2 (schwer)", practice:"deutsch-gz-anwendung-schwer" },
+  { tag:"lernen", label:"8. Anwendung: Entscheiden und richtig schreiben", practice:"deutsch-gz-anwendung-entscheiden" },
 ];
 
 
@@ -2478,6 +2493,51 @@ const exerciseSets = {
         popupBody:"In einem Lesetext triffst du auf alle Arten der Getrennt- und Zusammenschreibung gleichzeitig.¶Tipp: Sprich den Satz laut, probiere die Steigerung (sehr …) aus und überlege, ob eine neue, übertragene Bedeutung entsteht." },
     ]
   },
+
+  /* === Neue Übung "Entscheiden und richtig schreiben" (Wunsch Manuel, 14.10.2026: "Es sind im
+     Prinzip nur antipp Aufgaben, sie müssen nichts selbst gestalten... Ich möchte einen Text, wo
+     die Schüler entscheiden müssen, wie die Wörter geschrieben werden. Es soll das Wort in zwei
+     Varianten zur Auswahl stehen, sie müssen sich für eine entscheiden und es dann richtig in die
+     Lücke eintippen"). Manuel hatte dazu zwei Fotoseiten aus einem Schulbuch hochgeladen (Lesetext
+     "Der Seehund" mit unterstrichenen Komposita + Arbeitsaufträge 30/31) und gebeten, den Text
+     komplett abzutippen. Das geht aus Urheberrechtsgründen nicht (siehe auch schon früher in
+     dieser Datei bei "deutsch-gz-wortbausteine": "mit komplett neu erfundenen Beispielwörtern -
+     nicht aus dem Buch übernommen" und bei "nt-infektionserkrankungen": "eigener Text statt
+     Buch-Original") - deshalb hier ein komplett SELBST GESCHRIEBENER Text zum gleichen Thema
+     (Seehunde), der bewusst die gleiche Art von Zusammensetzungen enthält wie die unterstrichenen
+     Wörter im Originaltext (einzelne Wörter sind nicht urheberrechtlich geschützt, nur der
+     konkrete Satztext des Buchs). Neuer, generischer Mechanismus in der gapfill/typeIn-Engine:
+     q.choicePairs (parallel zu q.answers) zeigt vor jeder Lücke zwei anklickbare Kärtchen mit genau
+     der richtigen und einer naiven, falsch auseinandergeschriebenen Variante - Antippen übernimmt
+     die gewählte Schreibweise nur als Vorschlag in die (weiterhin frei editierbare) Lücke, gewertet
+     wird beim Prüfen wie bisher der tatsächlich eingetippte Text (siehe Render-/Event-Kommentare bei
+     q.kind==="gapfill" weiter unten). Startet wie jede neue Übung gesperrt (true), bis Manuel sie
+     über das Dashboard freischaltet. */
+  "deutsch-gz-anwendung-entscheiden": {
+    title: "8. Anwendung: Entscheiden und richtig schreiben", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 10 Minuten",
+    locked: true,
+    questions: [
+      { section:"Seehunde – Entscheiden und schreiben", kind:"gapfill", typeIn:true, noBookHint:true,
+        text:"Seehunde: Entscheide dich bei jeder Lücke für die richtige Schreibweise und tippe sie ein.",
+        template:"Seehunde gehören zu den bekanntesten Tieren an den Küsten Deutschlands. An ruhigen Tagen kann man sie %% auf einer Sandbank entdecken, wo sie stundenlang reglos liegen und ausgiebig %% können. Das wärmt sie nach einem Tauchgang im kalten Wasser wieder auf.¶Manche Seehunde schwimmen sogar %% in größere Flüsse hinein, auf der Suche nach Fischen. Ein besonders ausdauerndes Tier soll einmal mehrere Kilometer einen Fluss %% sein, bevor es wieder zurück ins Meer fand.¶Für die Geburt ihrer Jungen suchen sich Seehundmütter eine %% Sandbank, auf der sie möglichst ungestört sind. Die Jungen haben besonders %% Ohren, mit denen sie schon aus großer Entfernung die Stimme ihrer Mutter erkennen. Auch ihre Augen sind sehr %%, was ihnen hilft, selbst im trüben Wasser noch etwas zu erkennen.¶Wird ein Junges von seiner Mutter getrennt, ruft es mit einer fast %% klingenden Stimme nach ihr. Nur wenn seine eigene Mutter es %%, wird es weiter gesäugt – fremde Muttertiere nehmen kein fremdes Junges an.",
+        answers:["mühelos","sonnenbaden","flussaufwärts","hinaufgeschwommen","abgelegene","geräuschempfindliche","lichtempfindlich","herzzerreißend","wiederfindet"],
+        choicePairs:[
+          ["mühelos","Mühe los"],
+          ["Sonne baden","sonnenbaden"],
+          ["flussaufwärts","Fluss aufwärts"],
+          ["hinaufgeschwommen","hinauf geschwommen"],
+          ["ab gelegene","abgelegene"],
+          ["geräuschempfindliche","Geräusch empfindliche"],
+          ["Licht empfindlich","lichtempfindlich"],
+          ["herzzerreißend","Herz zerreißend"],
+          ["wieder findet","wiederfindet"],
+        ],
+        explain:"Alle neun Wörter sind feste Zusammensetzungen und werden deshalb in einem Wort geschrieben – egal ob am Ende ein Adjektiv (mühelos, abgelegene, geräuschempfindliche, lichtempfindlich, herzzerreißend), ein Verb (sonnenbaden, hinaufgeschwommen, wiederfindet) oder ein Adverb (flussaufwärts) herauskommt. Getrennt schreibt man nur echte Wortgruppen, bei denen jedes Wort noch seine eigene, selbstständige Bedeutung hat.",
+        popupText:"Merksatz: Entscheiden und richtig schreiben",
+        popupBody:"Zusammengesetzte Wörter aus Nomen, Verb, Adjektiv oder Vorsilbe + Grundwort schreibst du in einem Wort – auch wenn man beim Sprechen manchmal zwei Wörter heraushört.¶Tipp: Überlege, ob die beiden Teile zusammen eine neue, feste Bedeutung ergeben (z. B. sonnenbaden = sich zum Aufwärmen in die Sonne legen). Dann gehören sie zusammen." },
+    ]
+  },
+
   "deutsch-gz-verbverb-leicht": {
     title: "5. Wortverbindungen aus Verben – Übung 1 (leicht)", subject: "deutsch", chapterSlug: "getrennt-zusammen", duration: "ca. 7 Minuten",
     questions: [
@@ -10680,11 +10740,31 @@ window.__startExercise = function(slug){
          robuster auf dem iPad als Ziehen). */
       const gapParts = q.template.split("%%");
       if (q.typeIn){
-        const textHtml = gapParts.map((seg, idx) =>
-          esc(seg).split("¶").join("<br><br>") + (idx < gapParts.length - 1 ? `<input type="text" class="lt-type-input" id="ltInput_${idx}" data-idx="${idx}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">` : "")
-        ).join("");
+        /* q.choicePairs (optional, parallel zu q.answers): bei jeder Lücke zwei Schreibweisen zur
+           Auswahl (eine richtig, eine mit typischer Getrennt-/Zusammenschreibung-Falle) - Wunsch
+           Manuel 14.10.2026: "Es soll das Wort in zwei Varianten zur Auswahl stehen, sie müssen
+           sich für eine entscheiden und es dann richtig in die Lücke eintippen". Antippen eines
+           Kärtchens übernimmt dessen Text nur als Vorschlag in die Lücke (siehe Event-Wiring weiter
+           unten) - gewertet wird wie gehabt, was am Ende tatsächlich in der Lücke steht. */
+        const textHtml = gapParts.map((seg, idx) => {
+          let gapHtml = "";
+          if (idx < gapParts.length - 1){
+            let choicesHtml = "";
+            if (q.choicePairs && q.choicePairs[idx]){
+              choicesHtml = `<span class="lt-choice-group">` +
+                shuffled(q.choicePairs[idx]).map(opt =>
+                  `<button type="button" class="lt-choice-btn" data-idx="${idx}" data-text="${esc(opt)}">${esc(opt)}</button>`
+                ).join("") + `</span>`;
+            }
+            gapHtml = choicesHtml + `<input type="text" class="lt-type-input" id="ltInput_${idx}" data-idx="${idx}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">`;
+          }
+          return esc(seg).split("¶").join("<br><br>") + gapHtml;
+        }).join("");
+        const instructionText = q.choicePairs
+          ? "Entscheide dich bei jeder Lücke für eine der beiden Schreibweisen und tippe sie dann richtig in die Lücke."
+          : `Tippe die fehlenden Wörter in die Lücken${q.noBookHint ? "." : " – nutze dazu den Text im Buch."}`;
         body = `
-          <p class="ws-instruction">👉 Tippe die fehlenden Wörter in die Lücken${q.noBookHint ? "." : " – nutze dazu den Text im Buch."}</p>
+          <p class="ws-instruction">👉 ${instructionText}</p>
           <div class="lt-text" id="ltText">${textHtml}</div>
           <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>
         `;
@@ -11824,6 +11904,22 @@ window.__startExercise = function(slug){
          abgeschnitten werden - Breite in "ch" (Zeichenbreite), Mindestbreite über die CSS-Regel. */
       const autoSize = input => { input.style.width = Math.max(8, input.value.length + 2) + "ch"; };
       inputs.forEach(autoSize);
+      /* Auswahl-Kärtchen (q.choicePairs, siehe Render-Kommentar oben): Antippen übernimmt die
+         gewählte Schreibweise als Vorschlag in die zugehörige Lücke (weiterhin frei editierbar) und
+         markiert das Kärtchen als "chosen" - rein eine Entscheidungshilfe, gewertet wird beim
+         Prüfen allein der tatsächlich eingetippte Text wie gehabt. */
+      document.querySelectorAll(".lt-choice-btn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const idx = btn.dataset.idx;
+          const input = document.getElementById("ltInput_" + idx);
+          if (!input || input.disabled) return;
+          input.value = btn.dataset.text;
+          autoSize(input);
+          input.focus();
+          input.select();
+          document.querySelectorAll(`.lt-choice-btn[data-idx="${idx}"]`).forEach(b => b.classList.toggle("chosen", b === btn));
+        });
+      });
       const checkBtn = document.getElementById("checkBtn");
       /* Pop-up nach vollständig richtigem Lückentext zeigt nicht nur eine Anweisung, sondern einen
          eigenen kürzeren Text zum Abschreiben (q.popupBody, z.B. ein kurzer Merksatz/Vergleich) -
