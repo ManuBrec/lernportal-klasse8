@@ -1047,6 +1047,15 @@
 
   /* "markieren"-Aufgaben (Wörter in einem Satz ankreuzen, siehe q.kind==="markieren" weiter unten):
      jedes Wort ein eigener Chip zum Antippen, Satzzeichen als reiner Text ohne Lücke davor. */
+  .pr-wrap{display:flex; flex-direction:column; gap:14px; margin:6px 0 14px;}
+  .pr-label{font-weight:700; color:var(--ink-soft); font-size:.9rem; margin-bottom:6px;}
+  .pr-opts{display:flex; flex-wrap:wrap; gap:8px;}
+  .pr-opt{font:inherit; padding:8px 14px; border-radius:var(--radius-sm); border:2px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer;}
+  .pr-opt:hover:not(:disabled){border-color:var(--accent);}
+  .pr-opt.pr-selected{background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:700;}
+  .pr-opt.correct{background:var(--success-soft); border-color:var(--success); color:var(--success); font-weight:700;}
+  .pr-opt.pr-solution{background:var(--warm-soft); border-color:var(--warm); color:var(--warm); font-weight:700;}
+  .pr-opt:disabled{cursor:default;}
   .mk-sentence{
     display:flex; flex-wrap:wrap; align-items:center; gap:8px;
     font-size:17px; line-height:1.7; padding:16px 18px;
@@ -1396,6 +1405,8 @@ const deutschWortartenTopics = [
   { tag:"lernen", label:"Die Vergangenheiten: Präteritum, Perfekt, Plusquamperfekt", practice:"deutsch-vergangenheiten" },
   { tag:"lernen", label:"Verben in die Vergangenheit setzen", practice:"deutsch-vergangenheiten-verbformen" },
   { tag:"lernen", label:"Verben in die Vergangenheit setzen (Teil 2)", practice:"deutsch-vergangenheiten-verbformen-2" },
+  { tag:"lernen", label:"Zeitformen bestimmen (Zeit, Person, Numerus)", practice:"deutsch-zeitformen-bestimmen" },
+  { tag:"lernen", label:"Verbformen bilden (Zeit, Person, Numerus)", practice:"deutsch-zeitformen-bilden" },
 ];
 
 /* Geschichte, Politik, Geographie (GPG): ein Fach mit zwei Bereichen ("Ordnern") - Geschichte und
@@ -7800,6 +7811,72 @@ const exerciseSets = {
         explain: "Richtig ist „gekauft hatten“ – regelmäßiges Partizip + „hatten“." },
     ],
   },
+  "deutsch-zeitformen-bestimmen": {
+    title: "Zeitformen bestimmen",
+    subject: "deutsch",
+    chapterSlug: "wortarten",
+    duration: "ca. 20 Minuten",
+    locked: false,
+    questions: [
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „sie sprachen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 1}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„sie sprachen“ = Präteritum, 3. Person Plural. Tipp: Präteritum = einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „sie ist gestanden“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 2}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„sie ist gestanden“ = Perfekt, 3. Person Singular. Tipp: Perfekt = „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ich werde fliegen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 4}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„ich werde fliegen“ = Futur I, 1. Person Singular. Tipp: Futur I = „werden“ + Infinitiv."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „du hattest gelacht“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 3}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„du hattest gelacht“ = Plusquamperfekt, 2. Person Singular. Tipp: Plusquamperfekt = „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „wir werden gegessen haben“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 5}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„wir werden gegessen haben“ = Futur II, 1. Person Plural. Tipp: Futur II = „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ihr lauft“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 0}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„ihr lauft“ = Präsens, 2. Person Plural. Tipp: Präsens = Verb in der Gegenwartsform."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „er hat gesungen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 2}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„er hat gesungen“ = Perfekt, 3. Person Singular. Tipp: Perfekt = „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „wir schwammen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 1}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„wir schwammen“ = Präteritum, 1. Person Plural. Tipp: Präteritum = einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „du wirst kommen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 4}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„du wirst kommen“ = Futur I, 2. Person Singular. Tipp: Futur I = „werden“ + Infinitiv."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ich hatte geschlafen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 3}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„ich hatte geschlafen“ = Plusquamperfekt, 1. Person Singular. Tipp: Plusquamperfekt = „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ihr werdet gewonnen haben“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 5}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„ihr werdet gewonnen haben“ = Futur II, 2. Person Plural. Tipp: Futur II = „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „es regnet“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 0}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„es regnet“ = Präsens, 3. Person Singular. Tipp: Präsens = Verb in der Gegenwartsform."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ihr habt gespielt“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 2}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„ihr habt gespielt“ = Perfekt, 2. Person Plural. Tipp: Perfekt = „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ich las“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 1}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„ich las“ = Präteritum, 1. Person Singular. Tipp: Präteritum = einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „sie waren gefahren“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 3}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„sie waren gefahren“ = Plusquamperfekt, 3. Person Plural. Tipp: Plusquamperfekt = „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „wir lesen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 0}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„wir lesen“ = Präsens, 1. Person Plural. Tipp: Präsens = Verb in der Gegenwartsform."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „er wird gerufen haben“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 5}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„er wird gerufen haben“ = Futur II, 3. Person Singular. Tipp: Futur II = „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „du schriebst“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 1}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„du schriebst“ = Präteritum, 2. Person Singular. Tipp: Präteritum = einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „sie werden helfen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 4}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 2}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„sie werden helfen“ = Futur I, 3. Person Plural. Tipp: Futur I = „werden“ + Infinitiv."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „wir sind gelaufen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 2}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„wir sind gelaufen“ = Perfekt, 1. Person Plural. Tipp: Perfekt = „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ihr wart gegangen“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 3}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„ihr wart gegangen“ = Plusquamperfekt, 2. Person Plural. Tipp: Plusquamperfekt = „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ich werde gesehen haben“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 5}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 0}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„ich werde gesehen haben“ = Futur II, 1. Person Singular. Tipp: Futur II = „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „du trinkst“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 0}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 0}], "explain": "„du trinkst“ = Präsens, 2. Person Singular. Tipp: Präsens = Verb in der Gegenwartsform."},
+      {"kind": "pick-rows", "text": "Bestimme die Verbform „ihr bliebt“: Wähle Zeitform, Person und Numerus.", "rows": [{"label": "Zeitform", "options": ["Präsens", "Präteritum", "Perfekt", "Plusquamperfekt", "Futur I", "Futur II"], "answer": 1}, {"label": "Person", "options": ["1. Person", "2. Person", "3. Person"], "answer": 1}, {"label": "Numerus", "options": ["Singular", "Plural"], "answer": 1}], "explain": "„ihr bliebt“ = Präteritum, 2. Person Plural. Tipp: Präteritum = einfache Vergangenheitsform aus einem Wort."}
+    ] },
+
+  "deutsch-zeitformen-bilden": {
+    title: "Verbformen bilden",
+    subject: "deutsch",
+    chapterSlug: "wortarten",
+    duration: "ca. 20–25 Minuten",
+    locked: false,
+    questions: [
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: beraten → 2. Person, Singular, Perfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["du hast beraten", "hast beraten"], "explain": "Richtig ist „du hast beraten“. Perfekt: „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: rufen → 1. Person, Plural, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["wir riefen", "riefen"], "explain": "Richtig ist „wir riefen“. Präteritum: einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: werfen → 3. Person, Singular, Futur II", "placeholder": "z. B. ich habe gespielt", "accept": ["er/sie/es wird geworfen haben", "wird geworfen haben"], "explain": "Richtig ist „er/sie/es wird geworfen haben“. Futur II: „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: fliegen → 2. Person, Plural, Plusquamperfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["ihr wart geflogen", "wart geflogen"], "explain": "Richtig ist „ihr wart geflogen“. Plusquamperfekt: „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: singen → 1. Person, Singular, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["ich sang", "sang"], "explain": "Richtig ist „ich sang“. Präteritum: einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: gehen → 3. Person, Plural, Perfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["sie sind gegangen", "sind gegangen"], "explain": "Richtig ist „sie sind gegangen“. Perfekt: „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: schreiben → 2. Person, Singular, Futur I", "placeholder": "z. B. ich habe gespielt", "accept": ["du wirst schreiben", "wirst schreiben"], "explain": "Richtig ist „du wirst schreiben“. Futur I: „werden“ + Infinitiv."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: essen → 3. Person, Singular, Präsens", "placeholder": "z. B. ich habe gespielt", "accept": ["er/sie/es isst", "isst"], "explain": "Richtig ist „er/sie/es isst“. Präsens: Verb in der Gegenwartsform."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: laufen → 1. Person, Plural, Plusquamperfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["wir waren gelaufen", "waren gelaufen"], "explain": "Richtig ist „wir waren gelaufen“. Plusquamperfekt: „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: lesen → 2. Person, Plural, Futur II", "placeholder": "z. B. ich habe gespielt", "accept": ["ihr werdet gelesen haben", "werdet gelesen haben"], "explain": "Richtig ist „ihr werdet gelesen haben“. Futur II: „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: trinken → 2. Person, Singular, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["du trankst", "trankst"], "explain": "Richtig ist „du trankst“. Präteritum: einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: fahren → 1. Person, Singular, Perfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["ich bin gefahren", "bin gefahren"], "explain": "Richtig ist „ich bin gefahren“. Perfekt: „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: schlafen → 3. Person, Plural, Plusquamperfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["sie hatten geschlafen", "hatten geschlafen"], "explain": "Richtig ist „sie hatten geschlafen“. Plusquamperfekt: „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: helfen → 2. Person, Singular, Präsens", "placeholder": "z. B. ich habe gespielt", "accept": ["du hilfst", "hilfst"], "explain": "Richtig ist „du hilfst“. Präsens: Verb in der Gegenwartsform."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: finden → 1. Person, Plural, Futur I", "placeholder": "z. B. ich habe gespielt", "accept": ["wir werden finden", "werden finden"], "explain": "Richtig ist „wir werden finden“. Futur I: „werden“ + Infinitiv."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: kommen → 3. Person, Singular, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["er/sie/es kam", "kam"], "explain": "Richtig ist „er/sie/es kam“. Präteritum: einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: bringen → 2. Person, Plural, Perfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["ihr habt gebracht", "habt gebracht"], "explain": "Richtig ist „ihr habt gebracht“. Perfekt: „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: nehmen → 1. Person, Singular, Futur II", "placeholder": "z. B. ich habe gespielt", "accept": ["ich werde genommen haben", "werde genommen haben"], "explain": "Richtig ist „ich werde genommen haben“. Futur II: „werden“ + Partizip II + „haben“ oder „sein“."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: springen → 2. Person, Singular, Plusquamperfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["du warst gesprungen", "warst gesprungen"], "explain": "Richtig ist „du warst gesprungen“. Plusquamperfekt: „hatte(n)“ oder „war(en)“ + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: denken → 3. Person, Plural, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["sie dachten", "dachten"], "explain": "Richtig ist „sie dachten“. Präteritum: einfache Vergangenheitsform aus einem Wort."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: sehen → 2. Person, Plural, Präsens", "placeholder": "z. B. ich habe gespielt", "accept": ["ihr seht", "seht"], "explain": "Richtig ist „ihr seht“. Präsens: Verb in der Gegenwartsform."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: spielen → 3. Person, Singular, Futur I", "placeholder": "z. B. ich habe gespielt", "accept": ["er/sie/es wird spielen", "wird spielen"], "explain": "Richtig ist „er/sie/es wird spielen“. Futur I: „werden“ + Infinitiv."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: schwimmen → 1. Person, Plural, Perfekt", "placeholder": "z. B. ich habe gespielt", "accept": ["wir sind geschwommen", "sind geschwommen"], "explain": "Richtig ist „wir sind geschwommen“. Perfekt: „haben“ oder „sein“ im Präsens + Partizip II."},
+      {"kind": "text", "text": "Setze das Verb in die richtige Form: stehen → 1. Person, Singular, Präteritum", "placeholder": "z. B. ich habe gespielt", "accept": ["ich stand", "stand"], "explain": "Richtig ist „ich stand“. Präteritum: einfache Vergangenheitsform aus einem Wort."}
+    ] },
+
   "deutsch-vergangenheiten-verbformen-2": {
     title: "Verben in die Vergangenheit setzen (Teil 2)",
     subject: "deutsch",
@@ -10688,6 +10765,16 @@ window.__startExercise = function(slug){
         <p class="gap-hint">${hint}</p>
         <div class="chip-tray" id="chipTray">${chipsHtml}</div>
       `;
+    } else if (q.kind === "pick-rows"){
+      /* Neu 19.10.2026 (Wunsch Manuel, "Zeitformen bestimmen" nach seiner Probe): pro Aufgabe
+         mehrere Auswahlreihen (q.rows = [{label, options, answer}]) - in jeder Reihe genau eine
+         Angabe antippen. Richtig nur, wenn ALLE Reihen stimmen. */
+      body = `<div class="pr-wrap">` + q.rows.map((r, ri) => `
+        <div class="pr-row">
+          <div class="pr-label">${esc(r.label)}</div>
+          <div class="pr-opts">${r.options.map((o, oi) => `<button type="button" class="pr-opt" data-r="${ri}" data-o="${oi}">${esc(o)}</button>`).join("")}</div>
+        </div>`).join("") + `</div>
+        <div class="qactions" style="margin-top:0;"><button class="check-btn" id="checkBtn">Prüfen</button></div>`;
     } else if (q.kind === "text"){
       body = `
         <div class="numeric-row">
@@ -10970,6 +11057,40 @@ window.__startExercise = function(slug){
         input.value = q.accept[0];
         input.parentElement.classList.add("wrong");
         lockQuestion("skipped", "Nicht gelöst.", "wrong");
+      });
+    } else if (q.kind === "pick-rows"){
+      const picks = q.rows.map(() => -1);
+      const btns = [...host.querySelectorAll(".pr-opt")];
+      btns.forEach(b => b.addEventListener("click", ()=>{
+        if (solved) return;
+        const r = Number(b.dataset.r), o = Number(b.dataset.o);
+        picks[r] = o;
+        btns.filter(x => Number(x.dataset.r) === r).forEach(x => x.classList.toggle("pr-selected", Number(x.dataset.o) === o));
+      }));
+      const showSolution = cls => {
+        btns.forEach(x => {
+          x.classList.remove("pr-selected");
+          if (Number(x.dataset.o) === q.rows[Number(x.dataset.r)].answer) x.classList.add(cls);
+          x.disabled = true;
+        });
+        document.getElementById("checkBtn").disabled = true;
+      };
+      document.getElementById("checkBtn").addEventListener("click", ()=>{
+        if (solved) return;
+        if (picks.some(p => p === -1)){ tryAgainFeedback("Wähle in jeder Reihe eine Angabe aus."); return; }
+        attempts++;
+        if (picks.every((p, r) => p === q.rows[r].answer)){
+          showSolution("correct");
+          lockQuestion("correct", q.explain, "correct");
+        } else {
+          tryAgainFeedback("Leider falsch – mindestens eine Angabe stimmt noch nicht.");
+        }
+      });
+      const skipBtn = document.getElementById("skipBtn");
+      if (skipBtn) skipBtn.addEventListener("click", ()=>{
+        if (solved) return;
+        showSolution("pr-solution");
+        lockQuestion("skipped", "Nicht gelöst. " + q.explain, "wrong");
       });
     } else if (q.kind === "text"){
       const input = document.getElementById("textInput");
