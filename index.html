@@ -1308,7 +1308,6 @@ const deutschGetrenntZusammenTopics = [
   { tag:"lernen", label:"8. Anwendung: Lesetext – Übung 1 (leicht)", practice:"deutsch-gz-anwendung-leicht" },
   { tag:"lernen", label:"8. Anwendung: Lesetext – Übung 2 (schwer)", practice:"deutsch-gz-anwendung-schwer" },
   { tag:"lernen", label:"8. Anwendung: Entscheiden und richtig schreiben", practice:"deutsch-gz-anwendung-entscheiden" },
-  { tag:"lernen", label:"Lösung: Arbeitsblatt Getrennt- und Zusammenschreibung", practice:"deutsch-gz-ab-loesung" },
 ];
 
 
@@ -1400,7 +1399,6 @@ const deutschWortartenTopics = [
   { tag:"abschluss", label:"Abschlusstest Teil 2: Große Mischung – alles bestimmen", practice:"deutsch-wortarten-teil5-mischung" },
 
   { tag:"lernen", label:"Wortarten-Trainer: Sätze bestimmen (leicht/schwer)", practice:"deutsch-wortarten-trainer" },
-  { tag:"lernen", label:"Lösung: Arbeitsblatt Wortarten", practice:"deutsch-wortarten-ab-loesung" },
 
   { tag:"lernen", label:"Die Vergangenheiten: Präteritum, Perfekt, Plusquamperfekt", practice:"deutsch-vergangenheiten" },
   { tag:"lernen", label:"Verben in die Vergangenheit setzen", practice:"deutsch-vergangenheiten-verbformen" },
@@ -9659,6 +9657,15 @@ function viewDeutschChapter(slug){
       </div>
       <div class="section-label">Themen in diesem Bereich</div>
       <div class="topic-group">${rows}</div>
+      <div class="section-label">📁 Ordner: Arbeitsblätter</div>
+      <div class="topic-group">
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Wortarten bestimmen</span>
+          <a class="practice-btn" href="#/uebung/deutsch-wortarten-ab-loesung">Ansehen</a>
+        </div>
+      </div>
+      <p class="result-hint" style="margin-top:10px;">Hier findest du direkt die Lösungen zu den ausgeteilten Arbeitsblättern.</p>
     `;
   }
 
@@ -9708,6 +9715,15 @@ function viewDeutschChapter(slug){
       </div>
       <div class="section-label">Themen in diesem Bereich</div>
       <div class="topic-group">${rows}</div>
+      <div class="section-label">📁 Ordner: Arbeitsblätter</div>
+      <div class="topic-group">
+        <div class="topic-row">
+          <span class="topic-tag tag-loesung">Lösung</span>
+          <span class="topic-name">Arbeitsblatt: Getrennt- und Zusammenschreibung</span>
+          <a class="practice-btn" href="#/uebung/deutsch-gz-ab-loesung">Ansehen</a>
+        </div>
+      </div>
+      <p class="result-hint" style="margin-top:10px;">Hier findest du direkt die Lösungen zu den ausgeteilten Arbeitsblättern.</p>
     `;
   }
 
