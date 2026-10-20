@@ -944,6 +944,11 @@
 
   /* Buch-Lösungen (fertige Antworten aus dem Schulbuch, zwei Spalten je Niveaustufe) */
   .bl-niveau-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 28px; margin-top:10px;}
+  /* Variante fuer Tabellen-Inhalte: Niveau I/II UNTEREINANDER in voller Breite statt nebeneinander,
+     damit breitere Tabellen (z.B. 4 Datenspalten) nicht seitlich abgeschnitten werden (siehe
+     buchLoesungItemHtml, needsFullWidth). */
+  .bl-niveau-stack .bl-niveau-col{margin-top:14px;}
+  .bl-niveau-stack .bl-niveau-col:first-child{margin-top:0;}
   .bl-niveau-col{padding:2px 0;}
   .bl-niveau-head{
     font-family:var(--font-mono); font-size:12px; font-weight:700; letter-spacing:.04em;
@@ -9241,17 +9246,42 @@ function buchLoesungItemHtml(item){
       </div>
     `;
   }
+  /* Tabellen (type "table"/"subtables") brauchen mehr Breite als eine 2-Spalten-Grid-Hälfte
+     hergibt - bei Nebeneinander-Anordnung lief der rechte Rand regelmäßig aus dem sichtbaren
+     Bereich (Manuel, 20.10.2026: "Der rechte Teil der Lösungen fehlt"). Für diese Typen deshalb
+     Niveau I und Niveau II UNTEREINANDER in voller Breite statt nebeneinander - einfache Listen/
+     Texte/Zeilen (wenig Platzbedarf) bleiben wie gewohnt nebeneinander. */
+  const typeI = item.niveauIType || item.type;
+  const typeII = item.niveauIIType || item.type;
+  const needsFullWidth = ["table", "subtables"].includes(typeI) || ["table", "subtables"].includes(typeII);
+  if (needsFullWidth){
+    return `
+      <div class="task">
+        <div><span class="task-num num">${esc(item.num)}.</span></div>
+        <div class="bl-niveau-stack">
+          <div class="bl-niveau-col">
+            <div class="bl-niveau-head">Niveau I</div>
+            ${blContentHtml(typeI, item.niveauI)}
+          </div>
+          <div class="bl-niveau-col">
+            <div class="bl-niveau-head">Niveau II</div>
+            ${blContentHtml(typeII, item.niveauII)}
+          </div>
+        </div>
+      </div>
+    `;
+  }
   return `
     <div class="task">
       <div><span class="task-num num">${esc(item.num)}.</span></div>
       <div class="bl-niveau-grid">
         <div class="bl-niveau-col">
           <div class="bl-niveau-head">Niveau I</div>
-          ${blContentHtml(item.niveauIType || item.type, item.niveauI)}
+          ${blContentHtml(typeI, item.niveauI)}
         </div>
         <div class="bl-niveau-col">
           <div class="bl-niveau-head">Niveau II</div>
-          ${blContentHtml(item.niveauIIType || item.type, item.niveauII)}
+          ${blContentHtml(typeII, item.niveauII)}
         </div>
       </div>
     </div>
