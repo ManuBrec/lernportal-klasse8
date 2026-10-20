@@ -1469,6 +1469,7 @@ const landwirtschaftTopics = [
   { tag:"lernen", label:"Konventionelle Landwirtschaft", page:206, practice:"gpg-konventionell-oekologisch-landwirtschaft" },
   { tag:"lernen", label:"Ökologische Landwirtschaft", page:208, practice:"gpg-konventionell-oekologisch-landwirtschaft" },
   { tag:"lernen", label:"Aufschrieb Ökologische Landwirtschaft", practice:"gpg-aufschrieb-oekologische-landwirtschaft" },
+  { tag:"lernen", label:"Preisvergleich bei REWE: Bio und regional vs. günstig", practice:"gpg-rewe-preisvergleich" },
   { tag:"lernen", label:"Wahlseite: Landwirtschaftliche Maschinen", page:210 },
   { tag:"lernen", label:"Wahlseite: Erntehelfer berichten", page:211 },
   { tag:"lernen", label:"Wahlseite: Weinbau", page:212 },
@@ -4862,6 +4863,60 @@ const exerciseSets = {
         </ul>
       </div>
     `
+  },
+  /* Neue Übung "Preisvergleich bei REWE" (Wunsch Manuel, 20.10.2026): Schüler öffnen die echte
+     REWE-Online-Shop-Seite (rewe.de/shop) in einem zweiten Tab/Fenster und recherchieren dort
+     selbst aktuelle Preise - bewusst NICHT automatisch bewertet (kind:"reflect", wie schon bei den
+     Verständnisfragen der Landwirtschafts-Vergleichsübung), da sich echte Online-Preise laufend
+     ändern und das Lernportal die REWE-Seite nicht selbst abfragen/prüfen kann. 8 Produkte 1:1 nach
+     Manuels Vorgabe, je mit Bio/regional-vs-günstig-Vergleich (außer Müsli/Brot, dort nur
+     Preis-Notiz + optionale Bio-Variante, wie von Manuel so angegeben), plus abschließende
+     Auswertungsfrage. Ergänzt direkt nach "Aufschrieb Ökologische Landwirtschaft", da inhaltlich
+     eine Fortsetzung des dortigen Themas "Preise von Bio-Produkten" ist. */
+  "gpg-rewe-preisvergleich": {
+    title: "Preisvergleich bei REWE: Bio und regional vs. günstig",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    duration: "ca. 20–25 Minuten",
+    questions: [
+      { kind:"reflect", noSkip:true,
+        text: "Öffne in einem zweiten Tab die Seite rewe.de/shop und suche dort nach „Hackfleisch“. Vergleiche den Preis für 1 kg Bio-Hackfleisch mit dem Preis für 1 kg eines günstigen oder regionalen Hackfleischs. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio: … € pro kg – günstig/regional: … € pro kg – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Bio-Fleisch ist meist deutlich teurer, weil artgerechte Tierhaltung mehr Platz, Zeit und Futter braucht und dadurch weniger Fleisch pro Tier und Fläche entsteht." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Eier“ (10er-Packung). Vergleiche den Preis für Bio-Eier mit dem Preis für Eier aus Bodenhaltung. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio (10 Eier): … € – Bodenhaltung (10 Eier): … € – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Bio-Hühner haben mehr Platz, Auslauf im Freien und artgerechteres Futter als Hühner aus Bodenhaltung – das macht die Eier teurer." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Nudeln“ (500 g). Vergleiche den Preis für Bio-Nudeln mit dem Preis für günstige oder regionale Nudeln. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio (500 g): … € – günstig/regional (500 g): … € – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Bei pflanzlichen Produkten wie Nudeln fällt der Preisunterschied zwischen Bio und günstig oft kleiner aus als bei tierischen Produkten." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Butter“. Vergleiche den Preis für Bio-Butter mit dem Preis für günstige oder regionale Butter. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio: … € – günstig/regional: … € – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Auch bei Milchprodukten wie Butter ist Bio meist teurer, weil die Milch von Bio-Kühen aufwendiger erzeugt wird." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Milch“ (1 Liter). Vergleiche den Preis für Bio-Milch mit dem Preis für günstige oder regionale Milch. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio (1 Liter): … € – günstig/regional (1 Liter): … € – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Bio-Milch kostet meist mehr, weil Bio-Kühe weniger Kraftfutter und mehr Auslauf/Weidegang bekommen, was die Milchmenge je Kuh senkt." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Müsli“ mit Haferflocken (500 g). Trage den Preis ein, den du dort findest. Gibt es dort auch eine Bio-Variante? Falls ja, notiere auch deren Preis.",
+        placeholder: "Preis: … € (Bio-Variante, falls vorhanden: … €)",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Getreideprodukte wie Müsli sind pflanzlich – hier ist der Unterschied zwischen Bio und normal oft kleiner als bei Fleisch, Eiern oder Milchprodukten." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Brot“ (Preis für 1 kg). Trage den Preis ein, den du dort findest. Gibt es auch ein Bio-Brot? Falls ja, notiere auch dessen Preis.",
+        placeholder: "Preis: … € pro kg (Bio-Variante, falls vorhanden: … €)",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Brotpreise hängen stark von den Zutaten, der Bäckerei und der Backzeit ab, nicht nur von „Bio oder nicht“." },
+      { kind:"reflect", noSkip:true,
+        text: "Suche bei REWE nach „Hähnchenbrustfilet“. Vergleiche den Preis für 1 kg Bio-Hähnchenbrustfilet mit dem Preis für 1 kg eines regionalen oder günstigen Hähnchenbrustfilets. Trage beide Preise und den Unterschied ein.",
+        placeholder: "Bio: … € pro kg – günstig/regional: … € pro kg – Unterschied: … €",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Preise wurden gespeichert. Auch beim Geflügel ist Bio meist teurer, weil die Tiere langsamer wachsen, mehr Platz und Auslauf haben und seltener Massentierhaltung betrieben wird." },
+      { kind:"reflect", noSkip:true,
+        text: "Schau dir deine acht Preisvergleiche noch einmal an. Bei welchem Produkt war der Unterschied zwischen Bio/regional und günstig am größten, bei welchem am kleinsten? Was fällt dir insgesamt auf?",
+        placeholder: "Deine Auswertung…",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Antwort wurde gespeichert. Zum Nachdenken: Bei tierischen Produkten (Fleisch, Eier, Butter, Milch) ist der Unterschied zwischen Bio und günstig meist besonders groß, weil artgerechte Tierhaltung viel aufwendiger ist als Massentierhaltung. Bei pflanzlichen Produkten wie Nudeln, Müsli oder Brot fällt der Unterschied dagegen oft kleiner aus." }
+    ]
   },
   "bauernhof-suchsel": {
     title: "Begriffe vom Bauernhof – Suchsel",
