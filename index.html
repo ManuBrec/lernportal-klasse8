@@ -1468,6 +1468,7 @@ const landwirtschaftTopics = [
   { tag:"lernen", label:"Bewässerungsarten", practice:"gpg-bewaesserungsarten" },
   { tag:"lernen", label:"Konventionelle Landwirtschaft", page:206, practice:"gpg-konventionell-oekologisch-landwirtschaft" },
   { tag:"lernen", label:"Ökologische Landwirtschaft", page:208, practice:"gpg-konventionell-oekologisch-landwirtschaft" },
+  { tag:"lernen", label:"Aufschrieb Ökologische Landwirtschaft", practice:"gpg-aufschrieb-oekologische-landwirtschaft" },
   { tag:"lernen", label:"Wahlseite: Landwirtschaftliche Maschinen", page:210 },
   { tag:"lernen", label:"Wahlseite: Erntehelfer berichten", page:211 },
   { tag:"lernen", label:"Wahlseite: Weinbau", page:212 },
@@ -4796,6 +4797,71 @@ const exerciseSets = {
         placeholder: "Deine Überlegung dazu…",
         explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Antwort wurde gespeichert. Zum Nachdenken: Ja, zum Beispiel durch weniger chemische Mittel, abwechslungsreichere Fruchtfolgen oder schonendere Techniken. Diese Zwischenform nennt man integrierte Landwirtschaft." }
     ]
+  },
+  /* "Aufschrieb Ökologische Landwirtschaft": reine Anzeige-Seite ohne Fragen (Wunsch Manuel,
+     20.10.2026, nach seinem hochgeladenen Aufschrieb-PDF "Ökologische Landwirtschaft" - eigener
+     Aufschrieb/Zusammenfassung, kein Lehrbuch-Scan). custom:"note-page" wie bei den anderen
+     Aufschrieb-Seiten, Inhalt 1:1 aus Manuels PDF übernommen (seine eigenen Notizen), nur in
+     knappe Stichpunkte/HTML-Struktur gebracht. Direkt nach "Ökologische Landwirtschaft" (S.208)
+     einsortiert, ohne eigene Seitenzahl (wie "Bewässerungsarten"). */
+  "gpg-aufschrieb-oekologische-landwirtschaft": {
+    title: "Aufschrieb Ökologische Landwirtschaft",
+    subject: "gpg",
+    folderSlug: "geographie",
+    chapterSlug: "landwirtschaft-bayern",
+    locked: false,
+    custom: "note-page",
+    questions: [],
+    noteHtml: `
+      <h3>Tierhaltung (Viehwirtschaft)</h3>
+      <ul>
+        <li>Tiere haben mehr Platz</li>
+        <li>Tiere dürfen ins Freie (z. B. Schweine suhlen, Hühner Auslauf)</li>
+        <li>Wenig oder keine Medikamente</li>
+        <li>Futter möglichst selbst angebaut</li>
+        <li>Keine chemischen Zusatzstoffe im Futter</li>
+      </ul>
+      <h3>Ackerbau &amp; Boden</h3>
+      <ul>
+        <li>Keine chemischen Dünger oder Pestizide</li>
+        <li>Stattdessen: <b>Kompost</b> als natürlicher Dünger</li>
+        <li>Böden bleiben gesünder</li>
+        <li>Pflanzenvielfalt wird gefördert</li>
+      </ul>
+      <h3>Vermarktung von Öko-Produkten</h3>
+      <ul>
+        <li>Verkauf im <b>Hofladen</b> oder <b>Wochenmarkt</b></li>
+        <li><b>Kein Zwischenhandel</b> – mehr Gewinn für den Bauern</li>
+        <li>Große Supermärkte verkaufen auch Bio-Produkte</li>
+        <li>Bio-Produkte haben <b>Siegel</b> (z. B. Demeter, Bioland, Naturland)</li>
+      </ul>
+      <h3>Preise von Bio-Produkten</h3>
+      <ul>
+        <li><b>Teurer</b> als normale Produkte (z. B. Bio-Eier: 2,59 € / normale: 1,19 €)</li>
+        <li>Gründe:
+          <ul>
+            <li>Höherer Aufwand</li>
+            <li>Bessere Tierhaltung</li>
+            <li>Umweltfreundlicher</li>
+            <li>Keine Massenproduktion</li>
+          </ul>
+        </li>
+      </ul>
+      <h3>Warum kaufen manche keine Öko-Produkte?</h3>
+      <ul>
+        <li>Preis ist oft zu hoch</li>
+        <li>Weniger Auswahl</li>
+        <li>Bio-Produkte nicht überall erhältlich</li>
+      </ul>
+      <div class="callout">
+        <strong>📚 Begriffe einfach erklärt</strong>
+        <ul>
+          <li><b>Kompost</b> = verrottete Pflanzenreste als Dünger</li>
+          <li><b>Artgerecht</b> = Tiere leben möglichst so, wie es ihrer Natur entspricht</li>
+          <li><b>Natürlich</b> = ohne künstliche Zusätze oder Chemie</li>
+        </ul>
+      </div>
+    `
   },
   "bauernhof-suchsel": {
     title: "Begriffe vom Bauernhof – Suchsel",
