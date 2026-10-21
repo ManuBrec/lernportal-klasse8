@@ -1550,7 +1550,8 @@ const informatikInformationssystemeTopics = [
    sollen, und fordern nach vollständig richtiger Lösung per Pop-up zum Heft-Eintrag auf.
    S. 10-13 sind nur als Themenpunkte angelegt (noch ohne Übung). */
 const wibChapters = [
-  { slug:"wie-arbeiten-betriebe", nr:1, title:"Wie arbeiten Betriebe, welche Ziele haben sie?", status:"aktuell" },
+  { slug:"wie-arbeiten-betriebe", nr:1, title:"Wie arbeiten Betriebe, welche Ziele haben sie?", status:"fertig" },
+  { slug:"wirtschaftskreislauf", nr:2, title:"Wie funktioniert der einfache Wirtschaftskreislauf?", status:"aktuell" },
 ];
 
 const wibBetriebeTopics = [
@@ -1562,6 +1563,14 @@ const wibBetriebeTopics = [
   { tag:"lernen", label:"Wichtige Begriffe zu Produktion und Absatz", page:"10–11", practice:"wib-begriffe-produktion-absatz" },
   { tag:"lernen", label:"Wie wird die Ökologie im Betrieb beachtet?", page:12, practice:"wib-oekologie-grundfunktionen" },
   { tag:"lernen", label:"Welchen Stellenwert haben die Arbeitsplätze in einem Betrieb?", page:13, practice:"wib-stellenwert-arbeitsplaetze" },
+];
+
+/* Neu (21.10.2026, Wunsch Manuel): Kapitel "Wie funktioniert der einfache Wirtschaftskreislauf?"
+   (S. 34-37), drei Übungen nach den drei Buchabschnitten. */
+const wibKreislaufTopics = [
+  { tag:"lernen", label:"Was bedeutet „Wirtschaft“ und wer ist daran beteiligt?", page:34, practice:"wib-wirtschaft-beteiligte" },
+  { tag:"lernen", label:"Welche Ziele haben die Beteiligten im Wirtschaftskreislauf?", page:35, practice:"wib-ziele-beteiligte" },
+  { tag:"lernen", label:"Wie funktioniert das Grundmodell des Wirtschaftskreislaufs?", page:"36–37", practice:"wib-grundmodell-kreislauf" },
 ];
 const kunstChapters = [
   { slug:"fluchtpunktperspektive", nr:1, title:"Fluchtpunktperspektive", status:"aktuell" },
@@ -5281,6 +5290,7 @@ const exerciseSets = {
     folderSlug: "geographie",
     chapterSlug: "landwirtschaft-bayern",
     duration: "ca. 20–25 Minuten",
+    locked: true,
     questions: [
       { section:"Begriffe", kind:"text", noSkip: true,
         text: "Sonderkultur aus Mainfranken:",
@@ -6422,6 +6432,148 @@ const exerciseSets = {
         options: ["Du zahlst pünktlich einen fairen Lohn, bietest Fortbildungen an und sorgst für ein gutes Betriebsklima.","Du lässt die Mitarbeiter möglichst viele unbezahlte Überstunden machen.","Du kümmerst dich nicht um die Meinung der Mitarbeiter, Hauptsache der Gewinn stimmt.","Du stellst immer wieder neue Mitarbeiter ein und entlässt sie nach kurzer Zeit wieder."],
         correct:0,
         explain: "Fairer Lohn, Fortbildungen und ein gutes Betriebsklima fördern die Motivation - das zeigt sich am Ende auch in besserer Qualität und einem guten Image des Betriebs." }
+    ]
+  },
+  /* ---------- WiB: Wie funktioniert der einfache Wirtschaftskreislauf? (S. 34-37) ----------
+     Neu (21.10.2026, Wunsch Manuel): drei Übungen nach den drei Buchabschnitten - mit Manuel
+     anhand der hochgeladenen Buchseiten abgeglichen. */
+  "wib-wirtschaft-beteiligte": {
+    title: "Was bedeutet „Wirtschaft“ und wer ist daran beteiligt?",
+    subject: "wib",
+    chapterSlug: "wirtschaftskreislauf",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { kind:"table-match", section:"S. 34",
+        text: "Lies im Buch auf S. 34 den Text. Ordne jedem Beteiligten zu, was er im Wirtschaftskreislauf macht.",
+        columns: ["Beteiligter", "Das macht er"],
+        rows: [
+          { label: "Betriebe",          accept: ["betriebe_def"] },
+          { label: "Private Haushalte", accept: ["haushalte_def"] },
+          { label: "Banken",            accept: ["banken_def"] },
+          { label: "Staat",             accept: ["staat_def"] },
+        ],
+        chips: [
+          { id: "betriebe_def",  label: "Stellen Güter her oder bieten Dienstleistungen an" },
+          { id: "haushalte_def", label: "Kaufen Güter und Dienstleistungen ein und arbeiten dafür gegen Lohn" },
+          { id: "banken_def",    label: "Bieten Kredite an und helfen beim Sparen und Anlegen von Geld" },
+          { id: "staat_def",     label: "Besteht aus allen Bürgern des Landes und seinen Einrichtungen, z. B. Ämtern" },
+          { id: "d1", label: "Verkaufen ausschließlich Lebensmittel" },
+          { id: "d2", label: "Sind nur für den Straßenbau zuständig" },
+        ],
+        popupText: "Übernimm die vier Beteiligten am Wirtschaftskreislauf mit ihrer Aufgabe in dein Heft.",
+        explain: "Betriebe stellen Güter her oder bieten Dienstleistungen an. Private Haushalte kaufen ein und arbeiten dafür gegen Lohn. Banken bieten Kredite an und helfen beim Sparen. Der Staat besteht aus allen Bürgern und seinen Einrichtungen, z. B. Ämtern." },
+      { kind:"gapfill", typeIn:true, section:"S. 34 – INFO-Kasten",
+        text: "Fülle die Lücken zur Definition von „Wirtschaft“ aus.",
+        template: "Die %% ist die Gesamtheit aller Einrichtungen, Personen und Handlungen, die sich auf %% und %% von Wirtschaftsgütern beziehen. Die Beteiligten sind dabei u. a. %%, Banken, Staat und die privaten %%.",
+        answers: ["Wirtschaft","Produktion","Konsum","Betriebe","Haushalte"],
+        explain: "Die Wirtschaft ist die Gesamtheit aller Einrichtungen, Personen und Handlungen, die sich auf Produktion und Konsum von Wirtschaftsgütern beziehen. Beteiligte sind u. a. Betriebe, Banken, Staat und private Haushalte." },
+      { kind:"text", section:"S. 34 – Randspalte",
+        text: "Wie nennt man einen Geldbetrag, den man sich meist von einer Bank oder Sparkasse ausleiht, um sich etwas leisten zu können?",
+        accept: ["Kredit","ein Kredit"], strict:false, placeholder: "Begriff eintippen",
+        explain: "Ein Kredit ist ein Geldbetrag, den man sich meist von einer Bank oder Sparkasse ausleiht, um sich etwas leisten zu können - dafür zahlt man Zinsen zurück." },
+      { kind:"mc",
+        text: "Familie Huber möchte sich ein neues Auto kaufen, hat aber nicht genug Erspartes. Wer kann ihr dabei helfen?",
+        options: [
+          "Eine Bank, die ihr einen Kredit anbietet.",
+          "Der Staat, der ihr das Auto schenkt.",
+          "Ein Betrieb, der das Auto für sie bezahlt.",
+          "Niemand, dafür gibt es keine Möglichkeit."
+        ], correct:0,
+        explain: "Banken bieten Kredite an: Familie Huber kann sich so Geld leihen und später mit Zinsen zurückzahlen." }
+    ]
+  },
+  "wib-ziele-beteiligte": {
+    title: "Welche Ziele haben die Beteiligten im Wirtschaftskreislauf?",
+    subject: "wib",
+    chapterSlug: "wirtschaftskreislauf",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { kind:"table-match", section:"S. 35",
+        text: "Lies im Buch auf S. 35 den Text. Ordne jedem Beteiligten sein Ziel im Wirtschaftskreislauf zu.",
+        columns: ["Beteiligter", "Sein Ziel"],
+        rows: [
+          { label: "Die Unternehmen",       accept: ["unternehmen_def"] },
+          { label: "Der Staat",             accept: ["staat_def"] },
+          { label: "Die privaten Haushalte",accept: ["haushalte_def"] },
+          { label: "Die Banken",            accept: ["banken_def"] },
+        ],
+        chips: [
+          { id: "unternehmen_def", label: "Möchten möglichst viel verkaufen und Gewinn machen, dabei aber möglichst wenig Lohn zahlen" },
+          { id: "staat_def",       label: "Möchte, dass es im Wirtschaftsgeschehen gerecht zugeht - Gesetze und Regeln werden von Polizei und Gerichten überwacht" },
+          { id: "haushalte_def",   label: "Möchten möglichst viele Waren und Dienstleistungen bekommen, aber möglichst wenig Geld dafür ausgeben" },
+          { id: "banken_def",      label: "Sorgen dafür, dass Geld im Umlauf ist, wollen aber mit Krediten und Sparplänen auch selbst Geld verdienen" },
+          { id: "d1", label: "Wollen möglichst hohe Steuern zahlen" },
+          { id: "d2", label: "Wollen möglichst wenig verkaufen" },
+        ],
+        popupText: "Übernimm die vier Beteiligten am Wirtschaftskreislauf mit ihrem Ziel in dein Heft.",
+        explain: "Unternehmen wollen viel verkaufen und Gewinn machen, dabei aber wenig Lohn zahlen. Der Staat will Gerechtigkeit und lässt Regeln überwachen. Private Haushalte wollen viel bekommen, aber wenig ausgeben. Banken wollen mit Krediten und Sparplänen selbst verdienen." },
+      { kind:"text", section:"S. 35 – INFO-Kasten",
+        text: "Wie nennt man eine Lösung zwischen zwei oder mehreren Personen, bei der jeder Beteiligte ein Zugeständnis machen muss?",
+        accept: ["Kompromiss","ein Kompromiss"], strict:false, placeholder: "Begriff eintippen",
+        explain: "Ein Kompromiss ist eine Lösung zwischen zwei oder mehreren Personen, bei der jeder Beteiligte ein Zugeständnis machen muss." },
+      { kind:"mc",
+        text: "Die Unternehmen wollen möglichst wenig Lohn zahlen, die Arbeitnehmer wollen aber einen möglichst hohen Lohn. Was zeigt dieses Beispiel?",
+        options: [
+          "Dass die Beteiligten im Wirtschaftskreislauf unterschiedliche, manchmal gegensätzliche Ziele haben und einen Kompromiss finden müssen.",
+          "Dass die Unternehmen damit immer im Recht sind.",
+          "Dass es im Wirtschaftskreislauf nie Streit um Geld gibt.",
+          "Dass der Staat die Höhe aller Löhne allein festlegt."
+        ], correct:0,
+        explain: "Beteiligte im Wirtschaftskreislauf haben oft gegensätzliche Interessen - deshalb muss immer wieder ein Kompromiss gefunden werden." },
+      { kind:"gapfill", typeIn:true,
+        text: "Fülle die Lücken zu den Zielen im Wirtschaftskreislauf.",
+        template: "Die Unternehmen wollen möglichst viel %% und dabei %% machen. Die privaten Haushalte wollen möglichst viele Waren und Dienstleistungen bekommen, aber möglichst wenig %% dafür ausgeben. Der %% möchte, dass es im Wirtschaftsgeschehen gerecht zugeht. Die %% wollen mit Krediten und Sparplänen selbst Geld verdienen.",
+        answers: ["verkaufen","Gewinn","Geld","Staat","Banken"],
+        explain: "Unternehmen wollen verkaufen und Gewinn machen, Haushalte wollen wenig Geld ausgeben, der Staat will Gerechtigkeit, und die Banken wollen mit Krediten und Sparplänen selbst Geld verdienen." }
+    ]
+  },
+  "wib-grundmodell-kreislauf": {
+    title: "Wie funktioniert das Grundmodell des Wirtschaftskreislaufs?",
+    subject: "wib",
+    chapterSlug: "wirtschaftskreislauf",
+    duration: "ca. 12–15 Minuten",
+    locked: false,
+    questions: [
+      { kind:"gapfill", typeIn:true, section:"S. 36",
+        text: "Fülle die Lücken zum Grundmodell des Wirtschaftskreislaufs aus.",
+        template: "Ein %% ist eine vereinfachte Darstellung der Wirklichkeit, die hilft, etwas Kompliziertes besser zu verstehen - so wie z. B. ein Modell eines Herzens im %%. Das Grundmodell des einfachen Wirtschaftskreislaufs besteht nur aus zwei Beteiligten: den %% und den privaten %%. Banken und der Staat werden hier noch nicht einbezogen.",
+        answers: ["Modell","Biologieunterricht","Unternehmen","Haushalten"],
+        explain: "Ein Modell vereinfacht die Wirklichkeit, um sie besser zu verstehen. Das Grundmodell des einfachen Wirtschaftskreislaufs zeigt nur zwei Beteiligte: Unternehmen und private Haushalte - Banken und Staat kommen erst später dazu." },
+      { kind:"table-match", section:"S. 37 – Der Kreislauf",
+        text: "Lies im Buch auf S. 37 den Text und schau dir die Grafik an. Im Grundmodell fließen vier Ströme zwischen Unternehmen und Haushalten. Ordne jedem Begriff zu, was er bedeutet.",
+        columns: ["Begriff", "Das bedeutet er"],
+        rows: [
+          { label: "Arbeit",           accept: ["arbeit_def"] },
+          { label: "Entlohnung",       accept: ["entlohnung_def"] },
+          { label: "Güter",            accept: ["gueter_def"] },
+          { label: "Konsumausgaben",   accept: ["konsumausgaben_def"] },
+        ],
+        chips: [
+          { id: "arbeit_def",         label: "Die privaten Haushalte stellen den Unternehmen ihre Arbeitskraft zur Verfügung" },
+          { id: "entlohnung_def",     label: "Die Unternehmen zahlen den Haushalten dafür Lohn" },
+          { id: "gueter_def",         label: "Die Unternehmen liefern Waren und Dienstleistungen an die Haushalte" },
+          { id: "konsumausgaben_def", label: "Die Haushalte bezahlen den Unternehmen dafür Geld" },
+          { id: "d1", label: "Der Staat zieht Steuern ein" },
+          { id: "d2", label: "Die Bank vergibt einen Kredit" },
+        ],
+        popupText: "Zeichne den Kreislauf aus dem Buch (S. 37) mit den vier Strömen Arbeit, Entlohnung, Güter und Konsumausgaben in dein Heft.",
+        explain: "Die Haushalte stellen Arbeit zur Verfügung und bekommen dafür Entlohnung. Die Unternehmen liefern Güter und bekommen dafür Konsumausgaben von den Haushalten." },
+      { kind:"gapfill", typeIn:true, section:"S. 37 – Geldstrom und Güterstrom",
+        text: "Fülle die Lücken zum Geld- und Güterstrom aus.",
+        template: "Arbeit und Güter fließen zwischen Unternehmen und Haushalten als %% (blau). Entlohnung und Konsumausgaben fließen dagegen als %% (rot). Wenn ein Haushalt etwas einkauft, um es zu verbrauchen, nennt man das %%. So entsteht ein Kreislauf aus Geld, Waren und Arbeitskraft - wir nennen ihn den einfachen %%.",
+        answers: ["Güterstrom","Geldstrom","Konsum","Wirtschaftskreislauf"],
+        explain: "Arbeit und Güter bilden den Güterstrom (blau), Entlohnung und Konsumausgaben den Geldstrom (rot). Konsum ist ein anderes Wort für Verbrauch. Zusammen ergeben sie den einfachen Wirtschaftskreislauf." },
+      { kind:"mc",
+        text: "Familie Berger geht einkaufen und bezahlt an der Kasse mit Geld. Zu welchem Strom im Grundmodell des Wirtschaftskreislaufs gehört dieser Vorgang?",
+        options: [
+          "Zum Geldstrom, denn Geld fließt von den Haushalten zu den Unternehmen (Konsumausgaben).",
+          "Zum Güterstrom, denn hier fließen nur Waren.",
+          "Zu keinem der beiden Ströme.",
+          "Zur Entlohnung, denn die Familie bekommt dafür Lohn."
+        ], correct:0,
+        explain: "Konsumausgaben sind Geld, das von den Haushalten zu den Unternehmen fließt - sie gehören zum roten Geldstrom." }
     ]
   },
   "informatik-kommunikationssysteme": {
@@ -11103,6 +11255,54 @@ function viewWibChapter(slug){
 
   if (slug === "wie-arbeiten-betriebe"){
     const rows = wibBetriebeTopics.map((t, idx) => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
+      return `
+        <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}</span>
+          ${progressHtml}
+          ${pageHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/wib">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Lies die Buchseiten und löse die Aufgaben der Reihe nach. Weitere Themen folgen, sobald wir im Unterricht so weit sind.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
+  if (slug === "wirtschaftskreislauf"){
+    const rows = wibKreislaufTopics.map((t, idx) => {
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
