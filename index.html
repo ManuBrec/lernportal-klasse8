@@ -482,6 +482,45 @@
   .tm-blank.active{background:var(--accent-soft); border-bottom-color:var(--accent);}
   .tm-blank.correct{border-bottom:2px solid var(--success); color:var(--success); cursor:default;}
   .tm-blank.wrong-flash{background:var(--danger-soft); border-bottom-color:var(--danger);}
+
+  /* Grafikbaukasten (Wunsch Manuel 21.10.2026, wib-grundmodell-kreislauf Aufgabe 2): erscheint nach
+     richtig gelöster table-match-Tabelle (siehe q.graphicBuilder, renderGraphicBuilder() im
+     Event-Wiring). Kreis aus vier antippbaren SVG-Bogen-"Pfeilen" (leer = gestrichelt grau), die mit
+     den vier Begriffs-Kärtchen (gleiche Antippen-Logik wie bei table-match) gefüllt werden; Haushalte
+     oben/Unternehmen unten als Kärtchen über der Grafik platziert. Bei vollständig richtiger
+     Anordnung kurzes "Aufleuchten" (gb-lit-up) und danach automatisch das Heft-Pop-up. */
+  .gb-host{margin-top:6px;}
+  .gb-wrap{position:relative; max-width:320px; margin:14px auto 18px;}
+  .gb-svg{width:100%; height:auto; display:block;}
+  .gb-arc-visual{transition:stroke .2s; pointer-events:none;}
+  .gb-arc-visual.active{stroke:var(--accent) !important; stroke-dasharray:none !important;}
+  .gb-arc-visual.wrong-flash{stroke:var(--danger) !important; stroke-dasharray:none !important;}
+  .gb-arc-hit{cursor:pointer;}
+  .gb-arc-hit.gb-arc-filled{cursor:default; pointer-events:none;}
+  .gb-svg.gb-lit-up{animation:gbGlow .9s ease-out forwards;}
+  @keyframes gbGlow{
+    0%{filter:drop-shadow(0 0 0 rgba(250,204,21,0));}
+    50%{filter:drop-shadow(0 0 18px rgba(250,204,21,.95));}
+    100%{filter:drop-shadow(0 0 6px rgba(250,204,21,.55));}
+  }
+  .gb-node{
+    position:absolute; left:50%; transform:translate(-50%,-50%); white-space:nowrap;
+    background:var(--surface); border:1.5px solid var(--border); border-radius:999px;
+    padding:7px 14px; font-weight:700; font-size:13px; color:var(--ink); box-shadow:var(--shadow);
+  }
+  .gb-node-top{top:12.5%;}
+  .gb-node-bottom{top:87.5%;}
+  .gb-arc-label{
+    position:absolute; transform:translate(-50%,-50%); font-weight:700; font-size:12px;
+    text-align:center; width:90px; pointer-events:none;
+  }
+  .gb-label-blue{color:#2563eb;}
+  .gb-label-red{color:#dc2626;}
+  .gb-chip-blue{border-color:#93c5fd; color:#2563eb;}
+  .gb-chip-blue.active{border-color:#2563eb; background:#dbeafe; color:#2563eb;}
+  .gb-chip-red{border-color:#fca5a5; color:#dc2626;}
+  .gb-chip-red.active{border-color:#dc2626; background:#fee2e2; color:#dc2626;}
+
   /* Pop-up nach vollständig richtiger Tabelle: fordert zum Übernehmen ins Heft auf, muss aktiv
      geschlossen werden (kein Auto-Ausblenden), damit es wirklich wahrgenommen wird. */
   .tm-popup-overlay{
@@ -6577,6 +6616,7 @@ const exerciseSets = {
           { id: "d1", label: "Der Staat zieht Steuern ein" },
           { id: "d2", label: "Die Bank vergibt einen Kredit" },
         ],
+        graphicBuilder: true,
         popupText: "Zeichne den Kreislauf aus dem Buch (S. 37) mit den vier Strömen Arbeit, Entlohnung, Güter und Konsumausgaben in dein Heft.",
         explain: "Die Haushalte stellen Arbeit zur Verfügung und bekommen dafür Entlohnung. Die Unternehmen liefern Güter und bekommen dafür Konsumausgaben von den Haushalten." },
       { kind:"gapfill", typeIn:true, section:"S. 37 – Geldstrom und Güterstrom",
@@ -12278,6 +12318,14 @@ window.__startExercise = function(slug){
       }).join("");
       const chipList = shuffled(q.chips.map((c,idx) => ({ ...c, idx })));
       const chipsHtml = chipList.map((chip,i) => `<button type="button" class="lt-chip" data-chip-id="${esc(chip.id)}" id="tmChip_${i}">${esc(chip.label)}</button>`).join("");
+      /* q.graphicBuilder (optional, Wunsch Manuel 21.10.2026): nach vollständig richtiger Tabelle
+         erscheint statt (bzw. vor) dem normalen Text-Pop-up ein interaktiver "Grafikbaukasten" -
+         siehe renderGraphicBuilder() im Event-Wiring weiter unten. Der leere Host-Container wird
+         hier schon mitgerendert (zunächst unsichtbar), damit er beim Einblenden nicht neu
+         aufgebaut werden muss. */
+      const graphicBuilderHtml = q.graphicBuilder
+        ? `<div class="gb-host" id="graphicBuilderHost" style="display:none;"></div>`
+        : "";
       body = `
         <p class="ws-instruction">👉 Tippe eine Lücke in der Tabelle an und danach das passende Kärtchen aus der Liste – oder umgekehrt.</p>
         <table class="tm-table" id="tmTable">
@@ -12285,6 +12333,7 @@ window.__startExercise = function(slug){
           <tbody>${rowsHtml}</tbody>
         </table>
         <div class="lt-wordbank" id="tmWordbank">${chipsHtml}</div>
+        ${graphicBuilderHtml}
       `;
     } else {
       /* Fix 4.10.2026 (Rückmeldung Manuel: "die richtige Antwort ist immer zuerst"): die
@@ -13648,6 +13697,152 @@ window.__startExercise = function(slug){
         document.body.appendChild(overlay);
         overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
       }
+      /* Grafikbaukasten (Wunsch Manuel 21.10.2026, siehe q.graphicBuilder): wird erst nach
+         vollständig richtiger Tabelle eingeblendet (statt des sofortigen Pop-ups) - die vier
+         Begriffe (Arbeit/Entlohnung/Güter/Konsumausgaben) müssen per Antippen (gleiche
+         Kärtchen-Logik wie überall sonst) an die richtige Stelle im Kreislauf-Kreis gezogen werden.
+         Geometrie fix nach dem Buch (S. 37): oben=Haushalte, unten=Unternehmen, im Uhrzeigersinn
+         ein durchgehender Kreislauf aus vier Viertelbögen: oben-rechts=Arbeit (blau, Richtung nach
+         unten), unten-rechts=Konsumausgaben (rot, nach unten), unten-links=Güter (blau, nach oben),
+         oben-links=Entlohnung (rot, nach oben). Erst wenn alle vier richtig sitzen: kurzes
+         "Aufleuchten" der Grafik, danach erst lockQuestion()+Heft-Pop-up (nicht schon nach der
+         Tabelle selbst). */
+      function renderGraphicBuilder(){
+        const hostEl = document.getElementById("graphicBuilderHost");
+        if (!hostEl) return;
+        const slots = [
+          { id:"tl", flow:"entlohnung",      label:"Entlohnung",      color:"red",
+            path:"M10,200 A150,150 0 0 1 160,50",  labelX:12.5, labelY:24 },
+          { id:"tr", flow:"arbeit",          label:"Arbeit",          color:"blue",
+            path:"M160,50 A150,150 0 0 1 310,200", labelX:87.5, labelY:24 },
+          { id:"br", flow:"konsumausgaben",  label:"Konsumausgaben",  color:"red",
+            path:"M310,200 A150,150 0 0 1 160,350", labelX:87.5, labelY:76 },
+          { id:"bl", flow:"gueter",          label:"Güter",           color:"blue",
+            path:"M160,350 A150,150 0 0 1 10,200",  labelX:12.5, labelY:76 },
+        ];
+        const slotById = Object.fromEntries(slots.map(s => [s.id, s]));
+        /* Zwei Pfade pro Bogen: ein sichtbarer dünnerer (gb-arc-visual, zeigt Farbe/leer) und
+           darüber ein unsichtbarer, deutlich breiterer Pfad (gb-arc-hit, pointer-events="all") als
+           großzügige Tippfläche - ein gebogener Pfad lässt sich sonst nur sehr knapp genau auf der
+           Linie treffen (wichtig fürs Tippen mit dem Finger auf dem iPad). */
+        const arcsHtml = slots.map(s =>
+          `<path d="${s.path}" class="gb-arc-visual" data-slot="${s.id}" fill="none" stroke="#cbd5e1" stroke-width="14" stroke-linecap="round" stroke-dasharray="4 10"></path>`
+        ).join("") + slots.map(s =>
+          `<path d="${s.path}" class="gb-arc-hit" data-slot="${s.id}" fill="none" stroke="transparent" stroke-width="44" stroke-linecap="round" pointer-events="all"></path>`
+        ).join("");
+        const labelsHtml = slots.map(s =>
+          `<div class="gb-arc-label" id="gbLabel_${s.id}" style="left:${s.labelX}%; top:${s.labelY}%;"></div>`
+        ).join("");
+        const chipsHtml = shuffled(slots).map((s,idx) =>
+          `<button type="button" class="lt-chip gb-chip gb-chip-${s.color}" data-flow="${s.flow}" id="gbChip_${idx}">${esc(s.label)}</button>`
+        ).join("");
+        hostEl.innerHTML = `
+          <p class="ws-instruction">👉 Jetzt der Kreislauf: Tippe einen Begriff an und danach die passende Stelle im Kreis – oder umgekehrt.</p>
+          <div class="gb-wrap">
+            <svg class="gb-svg" id="gbSvg" viewBox="0 0 320 400">
+              <defs>
+                <marker id="gbArrowBlue" markerWidth="8" markerHeight="8" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2563eb"></path></marker>
+                <marker id="gbArrowRed" markerWidth="8" markerHeight="8" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#dc2626"></path></marker>
+              </defs>
+              ${arcsHtml}
+            </svg>
+            <div class="gb-node gb-node-top">🏠 Haushalte</div>
+            <div class="gb-node gb-node-bottom">🏭 Unternehmen</div>
+            ${labelsHtml}
+          </div>
+          <div class="lt-wordbank" id="gbWordbank">${chipsHtml}</div>
+        `;
+        hostEl.style.display = "";
+        hostEl.scrollIntoView({ behavior:"smooth", block:"nearest" });
+
+        let gbSelection = null; // {type:"slot"|"chip", id/flow, el}
+        let gbFilled = 0;
+        const totalSlots = slots.length;
+
+        function clearGbSelection(){
+          if (gbSelection) gbSelection.el.classList.remove("active");
+          gbSelection = null;
+        }
+        function flashGbWrong(el){
+          el.classList.add("wrong-flash");
+          setTimeout(()=>el.classList.remove("wrong-flash"), 450);
+        }
+        function fillSlot(slotId, chipEl){
+          const s = slotById[slotId];
+          const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
+          const hitEl = hostEl.querySelector(`.gb-arc-hit[data-slot="${slotId}"]`);
+          const colorHex = s.color === "blue" ? "#2563eb" : "#dc2626";
+          visualEl.setAttribute("stroke", colorHex);
+          visualEl.setAttribute("stroke-dasharray", "none");
+          visualEl.setAttribute("marker-end", s.color === "blue" ? "url(#gbArrowBlue)" : "url(#gbArrowRed)");
+          visualEl.classList.add("gb-arc-filled");
+          hitEl.classList.add("gb-arc-filled");
+          const labelEl = document.getElementById(`gbLabel_${slotId}`);
+          labelEl.textContent = s.label;
+          labelEl.classList.add(s.color === "blue" ? "gb-label-blue" : "gb-label-red");
+          chipEl.classList.add("used");
+          chipEl.disabled = true;
+          gbFilled++;
+          if (gbFilled >= totalSlots){
+            const svgEl = document.getElementById("gbSvg");
+            svgEl.classList.add("gb-lit-up");
+            setTimeout(()=>{
+              lockQuestion("correct", q.explain, "correct");
+              showTablePopup(q.popupText || "Übernimm diese Skizze in dein Heft.");
+            }, 900);
+          }
+        }
+        function tryGbMatch(slotId, flow, chipEl){
+          attempts++;
+          if (slotById[slotId].flow === flow){
+            fillSlot(slotId, chipEl);
+          } else {
+            const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
+            flashGbWrong(visualEl);
+            flashGbWrong(chipEl);
+            tryAgainFeedback();
+          }
+        }
+        hostEl.querySelectorAll(".gb-arc-hit").forEach(pathEl=>{
+          pathEl.addEventListener("click", ()=>{
+            if (pathEl.classList.contains("gb-arc-filled")) return;
+            const slotId = pathEl.dataset.slot;
+            if (gbSelection && gbSelection.type === "chip"){
+              const chipEl = gbSelection.el, flow = gbSelection.flow;
+              clearGbSelection();
+              tryGbMatch(slotId, flow, chipEl);
+              return;
+            }
+            if (gbSelection && gbSelection.type === "slot" && gbSelection.id === slotId){
+              clearGbSelection();
+              return;
+            }
+            clearGbSelection();
+            const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
+            gbSelection = { type:"slot", id: slotId, el: visualEl };
+            visualEl.classList.add("active");
+          });
+        });
+        hostEl.querySelectorAll(".gb-chip").forEach(chipEl=>{
+          chipEl.addEventListener("click", ()=>{
+            if (chipEl.classList.contains("used")) return;
+            const flow = chipEl.dataset.flow;
+            if (gbSelection && gbSelection.type === "slot"){
+              const slotId = gbSelection.id;
+              clearGbSelection();
+              tryGbMatch(slotId, flow, chipEl);
+              return;
+            }
+            if (gbSelection && gbSelection.type === "chip" && gbSelection.el === chipEl){
+              clearGbSelection();
+              return;
+            }
+            clearGbSelection();
+            gbSelection = { type:"chip", flow, el: chipEl };
+            chipEl.classList.add("active");
+          });
+        });
+      }
       function tryMatch(row, slot, chipId, chipLabel, chipEl, blankBtnEl){
         attempts++;
         if (q.rows[row].accept.includes(chipId)){
@@ -13658,8 +13853,12 @@ window.__startExercise = function(slug){
           chipEl.disabled = true;
           filledCount++;
           if (filledCount >= totalBlanks){
-            lockQuestion("correct", q.explain, "correct");
-            showTablePopup(q.popupText || "Übernimm diese Tabelle schriftlich in dein Heft.");
+            if (q.graphicBuilder){
+              renderGraphicBuilder();
+            } else {
+              lockQuestion("correct", q.explain, "correct");
+              showTablePopup(q.popupText || "Übernimm diese Tabelle schriftlich in dein Heft.");
+            }
           }
         } else {
           flashWrong(blankBtnEl);
