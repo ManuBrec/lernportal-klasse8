@@ -6528,7 +6528,18 @@ const exerciseSets = {
         text: "Fülle die Lücken zu den Zielen im Wirtschaftskreislauf.",
         template: "Die Unternehmen wollen möglichst viel %% und dabei %% machen. Die privaten Haushalte wollen möglichst viele Waren und Dienstleistungen bekommen, aber möglichst wenig %% dafür ausgeben. Der %% möchte, dass es im Wirtschaftsgeschehen gerecht zugeht. Die %% wollen mit Krediten und Sparplänen selbst Geld verdienen.",
         answers: ["verkaufen","Gewinn","Geld","Staat","Banken"],
-        explain: "Unternehmen wollen verkaufen und Gewinn machen, Haushalte wollen wenig Geld ausgeben, der Staat will Gerechtigkeit, und die Banken wollen mit Krediten und Sparplänen selbst Geld verdienen." }
+        explain: "Unternehmen wollen verkaufen und Gewinn machen, Haushalte wollen wenig Geld ausgeben, der Staat will Gerechtigkeit, und die Banken wollen mit Krediten und Sparplänen selbst Geld verdienen.",
+        popupText: "Ziele der Beteiligten im Wirtschaftskreislauf",
+        popupBody: "Übernimm diese Tabelle in dein Heft.",
+        popupTable: {
+          columns: ["Beteiligter", "Sein Ziel"],
+          rows: [
+            ["Unternehmen", "Möglichst viel verkaufen und Gewinn machen, dabei aber möglichst wenig Lohn zahlen"],
+            ["Private Haushalte", "Möglichst viele Waren und Dienstleistungen bekommen, aber möglichst wenig Geld dafür ausgeben"],
+            ["Staat", "Dass es im Wirtschaftsgeschehen gerecht zugeht - Gesetze und Regeln werden von Polizei und Gerichten überwacht"],
+            ["Banken", "Dafür sorgen, dass Geld im Umlauf ist, aber mit Krediten und Sparplänen auch selbst Geld verdienen"]
+          ]
+        } }
     ]
   },
   "wib-grundmodell-kreislauf": {
@@ -13420,13 +13431,23 @@ window.__startExercise = function(slug){
          eigenen kürzeren Text zum Abschreiben (q.popupBody, z.B. ein kurzer Merksatz/Vergleich) -
          das ist bewusst ein ANDERER, kürzerer Text als der Lückentext selbst (q.template), nicht
          einfach der ausgefüllte Lückentext. q.popupText ist die Überschrift darüber; "¶" in
-         q.popupBody trennt Absätze. */
+         q.popupBody trennt Absätze. q.popupTable (optional, zusätzlich zu/statt q.popupBody):
+         {columns:[...], rows:[[...], ...]} - rendert eine echte, fertig ausgefüllte Tabelle im
+         Pop-up (gleiche Optik wie beim table-match/map-match-Pop-up), genau das, was abgeschrieben
+         werden soll, nicht nur eine Aufforderung dazu (Rückmeldung von Manuel: eine reine
+         Text-Aufforderung ohne sichtbare Tabelle reicht zum Abschreiben nicht). */
       const showPopup = ()=>{
-        if (!q.popupText || !q.popupBody) return;
-        const paragraphsHtml = q.popupBody.split("¶").map(p => `<p>${esc(p.trim())}</p>`).join("");
+        if (!q.popupText || !(q.popupBody || q.popupTable)) return;
+        const paragraphsHtml = q.popupBody ? q.popupBody.split("¶").map(p => `<p>${esc(p.trim())}</p>`).join("") : "";
+        let tableHtml = "";
+        if (q.popupTable){
+          const headHtml = `<tr>${q.popupTable.columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr>`;
+          const rowsHtml = q.popupTable.rows.map(r => `<tr>${r.map(cell => `<td>${esc(cell)}</td>`).join("")}</tr>`).join("");
+          tableHtml = `<table class="tm-table"><thead>${headHtml}</thead><tbody>${rowsHtml}</tbody></table>`;
+        }
         const overlay = document.createElement("div");
         overlay.className = "tm-popup-overlay";
-        overlay.innerHTML = `<div class="tm-popup-card text-content"><h3>${esc(q.popupText)}</h3>${paragraphsHtml}<button type="button" class="tm-popup-close">Schließen</button></div>`;
+        overlay.innerHTML = `<div class="tm-popup-card text-content${q.popupTable ? " table-content" : ""}"><h3>${esc(q.popupText)}</h3>${paragraphsHtml}${tableHtml}<button type="button" class="tm-popup-close">Schließen</button></div>`;
         document.body.appendChild(overlay);
         overlay.querySelector(".tm-popup-close").addEventListener("click", ()=> overlay.remove());
       };
