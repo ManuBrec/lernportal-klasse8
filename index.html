@@ -1880,32 +1880,38 @@ const BAUERNHOF_LUECKENTEXT = {
    zum Kapitel, S. 219 im Buch "Teste dich!") - eigens erzeugtes Gitter mit sieben Begriffen,
    die das ganze Kapitel zusammenfassen (bewusst andere Begriffe als in der Zuordnungsaufgabe
    unten, damit nichts vorweggenommen wird). waagrecht/senkrecht platziert, mit Überschneidungen. */
+/* Wunsch Manuel (21.10.2026): an das offizielle "Teste dein Wissen"-Suchsel aus dem Buch angeglichen
+   (er hat die Cornelsen-Lösung dazu geschickt) - die sechs gesuchten Begriffe entsprechen jetzt genau
+   den sechs Antworten der "Begriffe"-Fragen oben in dieser Übung (Wein, Knoblauchsland, Ökologisch,
+   Folie, Grünland, Ernte), statt wie bisher sieben frei erfundenen Begriffen. Die Wörter liegen -
+   wie im Originalrätsel - nicht mehr nur waagrecht/senkrecht, sondern auch rückwärts und diagonal
+   (WEIN diagonal, ÖKOLOGISCH und FOLIE rückwärts) - dafür wurde die Rätsel-Engine weiter unten
+   (pathBetween) um Diagonalen erweitert. */
 const LANDWIRTSCHAFT_TESTE_DICH_WORDSEARCH = {
   rows: 14, cols: 14,
   grid: [
-    "SBQGBCNNCHCRNB",
-    "SDBHUUSBSSMMBH",
-    "BREEJWEINBAUNE",
-    "RDWSÖKOLOGISCH",
-    "JRÄVGRÜNLANDFD",
-    "SSSUGLDRWCFSBT",
-    "GPSVRNYKOSROLJ",
-    "HZEFWYHCSJAQPK",
-    "XORJTCDQNFNAYK",
-    "EPUNBVCYRSKLZK",
-    "KONVENTIONELLK",
-    "WLGTPSZOCCNGIP",
-    "WVCBXWJUSVOÄJW",
-    "MVLAOLFTDPBUGY",
+    "GOHFHHEJSGKCGM",
+    "IHQQHUWERNTERZ",
+    "DUOBDAPEHOLBÜJ",
+    "HDBGTSGCILQFNO",
+    "TIYYVADUTNWTLL",
+    "GBLKEBGIBTXUAG",
+    "KNOBLAUCHSLAND",
+    "AKNVLFTJCGBZDP",
+    "RPHCSIGOLOKÖCN",
+    "DZMVREURCUFMWE",
+    "INJVJNBJXSLNNI",
+    "AYZLUGMXMGANFL",
+    "NDCMSLOYFEABRO",
+    "EUZMCSTLXQFELF",
   ],
   words: [
-    { word:"KONVENTIONELL", cells:[[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[10,11],[10,12]] },
-    { word:"BEWÄSSERUNG", cells:[[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],[10,2],[11,2]] },
-    { word:"MAINFRANKEN", cells:[[1,10],[2,10],[3,10],[4,10],[5,10],[6,10],[7,10],[8,10],[9,10],[10,10],[11,10]] },
-    { word:"ÖKOLOGISCH", cells:[[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[3,12],[3,13]] },
-    { word:"GRÜNLAND", cells:[[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11]] },
-    { word:"WEINBAU", cells:[[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[2,11]] },
-    { word:"ALLGÄU", cells:[[8,11],[9,11],[10,11],[11,11],[12,11],[13,11]] },
+    { word:"KNOBLAUCHSLAND", cells:[[6,0],[6,1],[6,2],[6,3],[6,4],[6,5],[6,6],[6,7],[6,8],[6,9],[6,10],[6,11],[6,12],[6,13]] },
+    { word:"GRÜNLAND", cells:[[0,12],[1,12],[2,12],[3,12],[4,12],[5,12],[6,12],[7,12]] },
+    { word:"ÖKOLOGISCH", cells:[[8,11],[8,10],[8,9],[8,8],[8,7],[8,6],[8,5],[8,4],[8,3],[8,2]] },
+    { word:"WEIN", cells:[[1,6],[2,7],[3,8],[4,9]] },
+    { word:"FOLIE", cells:[[13,13],[12,13],[11,13],[10,13],[9,13]] },
+    { word:"ERNTE", cells:[[1,7],[1,8],[1,9],[1,10],[1,11]] },
   ],
 };
 
@@ -5341,11 +5347,11 @@ const exerciseSets = {
         explain: "Richtig! Genau das sind typische Merkmale des intensiven Gemüseanbaus." },
 
       { section:"Suchsel", kind:"wordsearch", noSkip: true,
-        text: "Markiere die sieben Begriffe, die zum Thema Landwirtschaft in Bayern passen – waagrecht oder senkrecht.",
+        text: "Markiere die sechs Begriffe aus den Aufgaben oben – vorwärts, rückwärts oder diagonal.",
         image: IMG_BAUER_TESTE_DICH, imageAlt: "Gezeichneter Bauer mit Mistgabel und Eimer",
         rows: LANDWIRTSCHAFT_TESTE_DICH_WORDSEARCH.rows, cols: LANDWIRTSCHAFT_TESTE_DICH_WORDSEARCH.cols,
         grid: LANDWIRTSCHAFT_TESTE_DICH_WORDSEARCH.grid, words: LANDWIRTSCHAFT_TESTE_DICH_WORDSEARCH.words,
-        explain: "Konventionell, Bewässerung, Mainfranken, Ökologisch, Grünland, Weinbau und Allgäu – diese sieben Begriffe begegnen euch im ganzen Kapitel immer wieder." },
+        explain: "Wein, Knoblauchsland, Ökologisch, Folie, Grünland und Ernte – genau die sechs Antworten aus den Begriffe-Fragen oben verstecken sich im Rätsel." },
 
       { section:"Begriffe zuordnen", kind:"table-match", noSkip: true,
         text: "Ordne jedem Begriff die passende Erklärung zu.",
@@ -12197,8 +12203,13 @@ window.__startExercise = function(slug){
       const cellsHtml = q.grid.map((rowStr, r) => rowStr.split("").map((ch, c) =>
         `<button type="button" class="ws-cell" data-r="${r}" data-c="${c}">${esc(ch)}</button>`
       ).join("")).join("");
+      /* Anleitungstext (Wunsch Manuel, 21.10.2026): zusätzlich zur Tipp-/Bedien-Erklärung unten den
+         Text aus dem Buch ergänzt ("Notiert die gesuchten Begriffe..."), an die digitale Bedienung
+         angepasst (antippen statt anstreichen) - inkl. Hinweis auf Diagonale, Überschneidungen und
+         Umlaut-Schreibweise (gilt, falls ein Rätsel Umlaute per AE/UE/SS statt Ä/Ü/ß schreibt). */
       body = `
-        <p class="ws-instruction">👉 So geht's: Tippe den <strong>ersten</strong> und danach den <strong>letzten</strong> Buchstaben eines Begriffs an (waagrecht oder senkrecht) – dazwischen wird automatisch markiert.</p>
+        <p class="ws-instruction">👉 So geht's: Tippe den <strong>ersten</strong> und danach den <strong>letzten</strong> Buchstaben eines Begriffs an (waagrecht, senkrecht oder diagonal, auch rückwärts) – dazwischen wird automatisch markiert.</p>
+        <p class="ws-instruction">Notiert euch die gefundenen Begriffe. Tipp: keine Leerzeichen; Wörter und Buchstaben können sich überschneiden; falls Umlaute vorkommen, stehen sie ggf. als AE, UE bzw. ß als SS im Rätsel.</p>
         <div class="ws-board" id="wsBoard" style="grid-template-columns:repeat(${q.cols},1fr);">${cellsHtml}</div>
         <div class="ws-progress" id="wsProgress">0 von ${q.words.length} Begriffen gefunden</div>
         <div class="ws-found" id="wsFound"></div>
@@ -13304,6 +13315,10 @@ window.__startExercise = function(slug){
       function cellKey(r,c){ return r + "_" + c; }
       function cellBtn(r,c){ return board.querySelector(`.ws-cell[data-r="${r}"][data-c="${c}"]`); }
       function pathBetween(r1,c1,r2,c2){
+        /* Erweiterung 21.10.2026 (Wunsch Manuel, wie im Originalrätsel aus dem Buch): neben waagrecht
+           und senkrecht jetzt auch diagonal erlaubt (beide Richtungen, vor- wie rückwärts) - geprüft
+           wird nur, ob Start und Ende exakt auf einer geraden Linie liegen (gleicher Abstand in
+           Zeile und Spalte); ansonsten ungültig. */
         if (r1 === r2){
           const lo = Math.min(c1,c2), hi = Math.max(c1,c2);
           const cells = [];
@@ -13314,6 +13329,14 @@ window.__startExercise = function(slug){
           const lo = Math.min(r1,r2), hi = Math.max(r1,r2);
           const cells = [];
           for (let r=lo;r<=hi;r++) cells.push([r,c1]);
+          return cells;
+        }
+        if (Math.abs(r2 - r1) === Math.abs(c2 - c1)){
+          const steps = Math.abs(r2 - r1);
+          const dr = r2 > r1 ? 1 : -1;
+          const dc = c2 > c1 ? 1 : -1;
+          const cells = [];
+          for (let i=0;i<=steps;i++) cells.push([r1 + i*dr, c1 + i*dc]);
           return cells;
         }
         return null;
@@ -13360,7 +13383,7 @@ window.__startExercise = function(slug){
           start = null;
           if (!path){
             startBtn.classList.remove("selected");
-            tryAgainFeedback("Das ist nicht waagrecht oder senkrecht.");
+            tryAgainFeedback("Das ist keine gerade Linie (waagrecht, senkrecht oder diagonal).");
             return;
           }
           attempts++;
