@@ -483,43 +483,52 @@
   .tm-blank.correct{border-bottom:2px solid var(--success); color:var(--success); cursor:default;}
   .tm-blank.wrong-flash{background:var(--danger-soft); border-bottom-color:var(--danger);}
 
-  /* Grafikbaukasten (Wunsch Manuel 21.10.2026, wib-grundmodell-kreislauf Aufgabe 2): erscheint nach
-     richtig gelöster table-match-Tabelle (siehe q.graphicBuilder, renderGraphicBuilder() im
-     Event-Wiring). Kreis aus vier antippbaren SVG-Bogen-"Pfeilen" (leer = gestrichelt grau), die mit
-     den vier Begriffs-Kärtchen (gleiche Antippen-Logik wie bei table-match) gefüllt werden; Haushalte
-     oben/Unternehmen unten als Kärtchen über der Grafik platziert. Bei vollständig richtiger
-     Anordnung kurzes "Aufleuchten" (gb-lit-up) und danach automatisch das Heft-Pop-up. */
+  /* Grafikbaukasten (Wunsch Manuel 21.10.2026, wib-grundmodell-kreislauf Aufgabe 2, neu aufgebaut
+     nach Rückmeldung mit Buchfoto): Haushalte links / Unternehmen rechts, zwei parallele Bögen oben
+     (Entlohnung außen rot, Arbeit innen blau) und zwei unten (Güter innen blau, Konsumausgaben außen
+     rot) - von Anfang an fertig eingefärbt. Die Aufgabe besteht darin, die vier Begriffs-Kärtchen auf
+     die vier großen "?"-Platzhalter-Kärtchen (gb-pill) zu setzen (gleiche Antippen-Logik wie überall
+     sonst: erst Kärtchen oder Platzhalter antippen, dann das Gegenstück) - bewusst keine dünnen
+     Linien mehr zum Antippen (siehe renderGraphicBuilder() im Event-Wiring). Bei vollständig
+     richtiger Zuordnung kurzes "Aufleuchten" (gb-lit-up) und danach automatisch das Heft-Pop-up. */
   .gb-host{margin-top:6px;}
-  .gb-wrap{position:relative; max-width:320px; margin:14px auto 18px;}
+  .gb-wrap{position:relative; max-width:520px; margin:14px auto 18px;}
   .gb-svg{width:100%; height:auto; display:block;}
-  .gb-arc-visual{transition:stroke .2s; pointer-events:none;}
-  .gb-arc-visual.active{stroke:var(--accent) !important; stroke-dasharray:none !important;}
-  .gb-arc-visual.wrong-flash{stroke:var(--danger) !important; stroke-dasharray:none !important;}
-  .gb-arc-hit{cursor:pointer;}
-  .gb-arc-hit.gb-arc-filled{cursor:default; pointer-events:none;}
   .gb-svg.gb-lit-up{animation:gbGlow .9s ease-out forwards;}
   @keyframes gbGlow{
     0%{filter:drop-shadow(0 0 0 rgba(250,204,21,0));}
     50%{filter:drop-shadow(0 0 18px rgba(250,204,21,.95));}
     100%{filter:drop-shadow(0 0 6px rgba(250,204,21,.55));}
   }
+  .gb-bg{fill:var(--surface-2); stroke:var(--border); stroke-width:2;}
   .gb-node{
-    position:absolute; left:50%; transform:translate(-50%,-50%); white-space:nowrap;
-    background:var(--surface); border:1.5px solid var(--border); border-radius:999px;
-    padding:7px 14px; font-weight:700; font-size:13px; color:var(--ink); box-shadow:var(--shadow);
+    position:absolute; top:50%; transform:translate(-50%,-50%); white-space:nowrap;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    font-weight:700; font-size:13px; color:var(--ink); pointer-events:none;
   }
-  .gb-node-top{top:12.5%;}
-  .gb-node-bottom{top:87.5%;}
-  .gb-arc-label{
-    position:absolute; transform:translate(-50%,-50%); font-weight:700; font-size:12px;
-    text-align:center; width:90px; pointer-events:none;
+  .gb-node-icon{font-size:34px; line-height:1;}
+  .gb-node-left{left:12.5%;}
+  .gb-node-right{left:87.5%;}
+  .gb-pill{
+    position:absolute; transform:translate(-50%,-50%); min-width:104px;
+    padding:6px 14px; border-radius:8px; border:2px dashed var(--ink-faint); background:var(--surface);
+    font-weight:700; font-size:13.5px; text-align:center; color:var(--ink-faint); cursor:pointer;
+    box-shadow:var(--shadow); line-height:1.25; white-space:nowrap; font-family:inherit;
   }
-  .gb-label-blue{color:#2563eb;}
-  .gb-label-red{color:#dc2626;}
+  .gb-pill.active{border-style:solid; border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
+  .gb-pill.wrong-flash{border-style:solid; border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .gb-pill-filled{cursor:default; border-style:solid; background:var(--surface); color:var(--ink);}
+  .gb-pill-blue.gb-pill-filled{border-color:#2563eb;}
+  .gb-pill-red.gb-pill-filled{border-color:#dc2626;}
   .gb-chip-blue{border-color:#93c5fd; color:#2563eb;}
-  .gb-chip-blue.active{border-color:#2563eb; background:#dbeafe; color:#2563eb;}
+  .gb-chip-blue.active{border-color:#2563eb; background:rgba(37,99,235,.14); color:#2563eb;}
   .gb-chip-red{border-color:#fca5a5; color:#dc2626;}
-  .gb-chip-red.active{border-color:#dc2626; background:#fee2e2; color:#dc2626;}
+  .gb-chip-red.active{border-color:#dc2626; background:rgba(220,38,38,.14); color:#dc2626;}
+  @media (max-width:480px){
+    .gb-pill{min-width:64px; font-size:10.5px; padding:2px 6px; border-width:1.5px; border-radius:6px;}
+    .gb-node{font-size:10px;}
+    .gb-node-icon{font-size:20px;}
+  }
 
   /* Pop-up nach vollständig richtiger Tabelle: fordert zum Übernehmen ins Heft auf, muss aktiv
      geschlossen werden (kein Auto-Ausblenden), damit es wirklich wahrgenommen wird. */
@@ -13710,45 +13719,65 @@ window.__startExercise = function(slug){
       function renderGraphicBuilder(){
         const hostEl = document.getElementById("graphicBuilderHost");
         if (!hostEl) return;
+        /* Komplett neu aufgebaut (21.10.2026, Rückmeldung Manuel mit Buch-Foto): Haushalte/Unternehmen
+           liegen im Buch LINKS/RECHTS (nicht oben/unten), dazwischen zwei parallele Bögen oben
+           (außen=Entlohnung rot, innen=Arbeit blau) und zwei unten (innen=Güter blau, außen=
+           Konsumausgaben rot) - kein Vollkreis aus vier Vierteln. Die Pfeile werden von Anfang an
+           fertig eingefärbt gezeichnet (wie im Buch) - die eigentliche Aufgabe ist, die vier
+           Begriffs-Kärtchen an die richtige Stelle zu setzen; dafür gibt es vier große, gut lesbare
+           "Platzhalter"-Kärtchen (keine dünnen Linien mehr zum Antippen - das war laut Manuel zu
+           fummelig und schlecht lesbar). */
+        /* Geometrie wie im Buch (viewBox 600x360, Haushalte Mitte links bei x=75, Unternehmen Mitte
+           rechts bei x=525, Mittellinie y=180): die beiden ROTEN Bögen (Geldstrom) laufen außen und
+           docken oben bzw. unten an den Gebäuden an, die beiden BLAUEN (Güterstrom) laufen innen und
+           docken an den einander zugewandten Seiten an. Pfeilrichtung = Zeichenrichtung des Pfads
+           (Pfeilspitze am Ende): Entlohnung Unternehmen->Haushalte, Arbeit Haushalte->Unternehmen,
+           Güter Unternehmen->Haushalte, Konsumausgaben Haushalte->Unternehmen. Die Platzhalter-
+           Kärtchen sitzen - wie die Beschriftungen im Buch - mittig auf dem Scheitel ihres Bogens
+           (pillY = Scheitelhöhe in % der viewBox-Höhe). */
         const slots = [
-          { id:"tl", flow:"entlohnung",      label:"Entlohnung",      color:"red",
-            path:"M10,200 A150,150 0 0 1 160,50",  labelX:12.5, labelY:24 },
-          { id:"tr", flow:"arbeit",          label:"Arbeit",          color:"blue",
-            path:"M160,50 A150,150 0 0 1 310,200", labelX:87.5, labelY:24 },
-          { id:"br", flow:"konsumausgaben",  label:"Konsumausgaben",  color:"red",
-            path:"M310,200 A150,150 0 0 1 160,350", labelX:87.5, labelY:76 },
-          { id:"bl", flow:"gueter",          label:"Güter",           color:"blue",
-            path:"M160,350 A150,150 0 0 1 10,200",  labelX:12.5, labelY:76 },
+          { id:"entlohnung",     flow:"entlohnung",     label:"Entlohnung",     color:"red",
+            path:"M520,126 C500,0 100,0 82,118",     pillY:  32/360*100 },
+          { id:"arbeit",         flow:"arbeit",          label:"Arbeit",         color:"blue",
+            path:"M122,156 C170,70 430,70 470,146",  pillY:  92/360*100 },
+          { id:"gueter",         flow:"gueter",          label:"Güter",          color:"blue",
+            path:"M478,204 C430,290 170,290 130,214", pillY: 268/360*100 },
+          { id:"konsumausgaben", flow:"konsumausgaben",  label:"Konsumausgaben", color:"red",
+            path:"M80,234 C100,360 500,360 518,242",  pillY: 328/360*100 },
         ];
         const slotById = Object.fromEntries(slots.map(s => [s.id, s]));
-        /* Zwei Pfade pro Bogen: ein sichtbarer dünnerer (gb-arc-visual, zeigt Farbe/leer) und
-           darüber ein unsichtbarer, deutlich breiterer Pfad (gb-arc-hit, pointer-events="all") als
-           großzügige Tippfläche - ein gebogener Pfad lässt sich sonst nur sehr knapp genau auf der
-           Linie treffen (wichtig fürs Tippen mit dem Finger auf dem iPad). */
-        const arcsHtml = slots.map(s =>
-          `<path d="${s.path}" class="gb-arc-visual" data-slot="${s.id}" fill="none" stroke="#cbd5e1" stroke-width="14" stroke-linecap="round" stroke-dasharray="4 10"></path>`
-        ).join("") + slots.map(s =>
-          `<path d="${s.path}" class="gb-arc-hit" data-slot="${s.id}" fill="none" stroke="transparent" stroke-width="44" stroke-linecap="round" pointer-events="all"></path>`
+        const arcsHtml = slots.map(s => {
+          const colorHex = s.color === "blue" ? "#2563eb" : "#dc2626";
+          return `<path d="${s.path}" fill="none" stroke="${colorHex}" stroke-width="13" marker-end="url(#gbArrow${s.color === "blue" ? "Blue" : "Red"})"></path>`;
+        }).join("");
+        const pillsHtml = slots.map(s =>
+          `<button type="button" class="gb-pill gb-pill-${s.color}" data-slot="${s.id}" id="gbPill_${s.id}" style="left:50%; top:${s.pillY}%;">?</button>`
         ).join("");
-        const labelsHtml = slots.map(s =>
-          `<div class="gb-arc-label" id="gbLabel_${s.id}" style="left:${s.labelX}%; top:${s.labelY}%;"></div>`
-        ).join("");
+        /* Kleine Bild-Symbole in der Mitte wie die Fotos im Buch: oben Menschen, die arbeiten (Arbeit),
+           unten Ware und Dienstleistung (Güter) - nur Deko, nicht antippbar. */
+        const decoHtml = `
+          <text x="262" y="160" font-size="34" text-anchor="middle">👷</text>
+          <text x="338" y="160" font-size="34" text-anchor="middle">🧑‍💼</text>
+          <text x="262" y="232" font-size="34" text-anchor="middle">🍞</text>
+          <text x="338" y="232" font-size="34" text-anchor="middle">💇</text>`;
         const chipsHtml = shuffled(slots).map((s,idx) =>
           `<button type="button" class="lt-chip gb-chip gb-chip-${s.color}" data-flow="${s.flow}" id="gbChip_${idx}">${esc(s.label)}</button>`
         ).join("");
         hostEl.innerHTML = `
-          <p class="ws-instruction">👉 Jetzt der Kreislauf: Tippe einen Begriff an und danach die passende Stelle im Kreis – oder umgekehrt.</p>
+          <p class="ws-instruction">👉 Jetzt der Kreislauf: Tippe einen Begriff an und danach das passende "?"-Kärtchen in der Grafik – oder umgekehrt.</p>
           <div class="gb-wrap">
-            <svg class="gb-svg" id="gbSvg" viewBox="0 0 320 400">
+            <svg class="gb-svg" id="gbSvg" viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet">
               <defs>
-                <marker id="gbArrowBlue" markerWidth="8" markerHeight="8" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#2563eb"></path></marker>
-                <marker id="gbArrowRed" markerWidth="8" markerHeight="8" refX="5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#dc2626"></path></marker>
+                <marker id="gbArrowBlue" markerUnits="userSpaceOnUse" markerWidth="34" markerHeight="34" refX="8" refY="17" orient="auto"><path d="M0,0 L30,17 L0,34 Z" fill="#2563eb"></path></marker>
+                <marker id="gbArrowRed" markerUnits="userSpaceOnUse" markerWidth="34" markerHeight="34" refX="8" refY="17" orient="auto"><path d="M0,0 L30,17 L0,34 Z" fill="#dc2626"></path></marker>
               </defs>
+              <rect class="gb-bg" x="2" y="2" width="596" height="356" rx="22"></rect>
+              ${decoHtml}
               ${arcsHtml}
             </svg>
-            <div class="gb-node gb-node-top">🏠 Haushalte</div>
-            <div class="gb-node gb-node-bottom">🏭 Unternehmen</div>
-            ${labelsHtml}
+            <div class="gb-node gb-node-left"><span class="gb-node-icon">🏠</span>Haushalte</div>
+            <div class="gb-node gb-node-right"><span class="gb-node-icon">🏭</span>Unternehmen</div>
+            ${pillsHtml}
           </div>
           <div class="lt-wordbank" id="gbWordbank">${chipsHtml}</div>
         `;
@@ -13769,17 +13798,10 @@ window.__startExercise = function(slug){
         }
         function fillSlot(slotId, chipEl){
           const s = slotById[slotId];
-          const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
-          const hitEl = hostEl.querySelector(`.gb-arc-hit[data-slot="${slotId}"]`);
-          const colorHex = s.color === "blue" ? "#2563eb" : "#dc2626";
-          visualEl.setAttribute("stroke", colorHex);
-          visualEl.setAttribute("stroke-dasharray", "none");
-          visualEl.setAttribute("marker-end", s.color === "blue" ? "url(#gbArrowBlue)" : "url(#gbArrowRed)");
-          visualEl.classList.add("gb-arc-filled");
-          hitEl.classList.add("gb-arc-filled");
-          const labelEl = document.getElementById(`gbLabel_${slotId}`);
-          labelEl.textContent = s.label;
-          labelEl.classList.add(s.color === "blue" ? "gb-label-blue" : "gb-label-red");
+          const pillEl = document.getElementById(`gbPill_${slotId}`);
+          pillEl.textContent = s.label;
+          pillEl.classList.add("gb-pill-filled");
+          pillEl.disabled = true;
           chipEl.classList.add("used");
           chipEl.disabled = true;
           gbFilled++;
@@ -13797,16 +13819,16 @@ window.__startExercise = function(slug){
           if (slotById[slotId].flow === flow){
             fillSlot(slotId, chipEl);
           } else {
-            const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
-            flashGbWrong(visualEl);
+            const pillEl = document.getElementById(`gbPill_${slotId}`);
+            flashGbWrong(pillEl);
             flashGbWrong(chipEl);
             tryAgainFeedback();
           }
         }
-        hostEl.querySelectorAll(".gb-arc-hit").forEach(pathEl=>{
-          pathEl.addEventListener("click", ()=>{
-            if (pathEl.classList.contains("gb-arc-filled")) return;
-            const slotId = pathEl.dataset.slot;
+        hostEl.querySelectorAll(".gb-pill").forEach(pillEl=>{
+          pillEl.addEventListener("click", ()=>{
+            if (pillEl.classList.contains("gb-pill-filled")) return;
+            const slotId = pillEl.dataset.slot;
             if (gbSelection && gbSelection.type === "chip"){
               const chipEl = gbSelection.el, flow = gbSelection.flow;
               clearGbSelection();
@@ -13818,9 +13840,8 @@ window.__startExercise = function(slug){
               return;
             }
             clearGbSelection();
-            const visualEl = hostEl.querySelector(`.gb-arc-visual[data-slot="${slotId}"]`);
-            gbSelection = { type:"slot", id: slotId, el: visualEl };
-            visualEl.classList.add("active");
+            gbSelection = { type:"slot", id: slotId, el: pillEl };
+            pillEl.classList.add("active");
           });
         });
         hostEl.querySelectorAll(".gb-chip").forEach(chipEl=>{
