@@ -3316,29 +3316,8 @@ const exerciseSets = {
     "noSkip": true,
     "text": "Erkläre das Wort aus dem Text: „der Wohlstand“",
     "placeholder": "Deine Erklärung…",
-    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-    "keywords": [
-      [
-        "geld",
-        "reich",
-        "vermoeg",
-        "besitz",
-        "gut leben",
-        "gut geht",
-        "gut gehen",
-        "gutes leben",
-        "guten leben",
-        "gut ergeht",
-        "lebensstandard",
-        "gueter",
-        "guter",
-        "ohne sorgen",
-        "genug"
-      ]
-    ],
-    "need": 1,
     "label": "der Wohlstand",
-    "intro": "Erkläre die folgenden Wörter aus dem Text in eigenen Worten."
+    "intro": "Erkläre in eigenen Worten, was diese Wörter bedeuten. Schreibe so, wie du es verstehst."
   },
   {
     "section": "3 Wörter erklären",
@@ -3346,43 +3325,6 @@ const exerciseSets = {
     "noSkip": true,
     "text": "Erkläre das Wort aus dem Text: „die Lieferkette“",
     "placeholder": "Deine Erklärung…",
-    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-    "keywords": [
-      [
-        "ware",
-        "waren",
-        "produkt",
-        "lebensmittel",
-        "gueter",
-        "artikel",
-        "sache",
-        "ding"
-      ],
-      [
-        "hersteller",
-        "anbau",
-        "produktion",
-        "erzeug",
-        "bauer",
-        "fabrik",
-        "herstell",
-        "transport",
-        "weg",
-        "geschaeft",
-        "laden",
-        "supermarkt",
-        "kunde",
-        "verbraucher",
-        "handel",
-        "liefer",
-        "station",
-        "schritt",
-        "kette",
-        "verkauf",
-        "kaeufer"
-      ]
-    ],
-    "need": 2,
     "label": "die Lieferkette"
   },
   {
@@ -3391,33 +3333,6 @@ const exerciseSets = {
     "noSkip": true,
     "text": "Erkläre das Wort aus dem Text: „der Kaltlufteinbruch“",
     "placeholder": "Deine Erklärung…",
-    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-    "keywords": [
-      [
-        "kalt",
-        "kaelt",
-        "frost",
-        "eis"
-      ],
-      [
-        "luft",
-        "ploetz",
-        "schnell",
-        "stroem",
-        "kommt",
-        "einbruch",
-        "wetter",
-        "temperatur",
-        "sinkt",
-        "faellt",
-        "wird",
-        "winter",
-        "grad",
-        "einbrechen",
-        "bricht"
-      ]
-    ],
-    "need": 2,
     "label": "der Kaltlufteinbruch"
   },
   {
@@ -3426,32 +3341,6 @@ const exerciseSets = {
     "noSkip": true,
     "text": "Erkläre das Wort aus dem Text: „das Bruttoinlandsprodukt“",
     "placeholder": "Deine Erklärung…",
-    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-    "keywords": [
-      [
-        "wert",
-        "summe",
-        "gesamt",
-        "alle",
-        "wie viel",
-        "wieviel",
-        "menge",
-        "geld",
-        "leistung",
-        "produziert",
-        "hergestellt",
-        "herstell"
-      ],
-      [
-        "land",
-        "staat",
-        "deutschland",
-        "volkswirtschaft",
-        "wirtschaft",
-        "laender"
-      ]
-    ],
-    "need": 2,
     "label": "das Bruttoinlandsprodukt"
   },
   {
@@ -19538,6 +19427,7 @@ window.__startSheet = function(slug){
           state.q[idx] = { status: "reflect", attempts: (state.q[idx].attempts || 0) + 1, answer: val };
           save();
           reportFreitext(slug, "f" + (idx + 1), q.text, val);
+          reportResult(slug, idx, "correct", state.q[idx].attempts); /* zählt im Dashboard als erledigt; der Text steht in der Schüler-Detailansicht */
           setFb(el, true, q.explain || "Deine Antwort wurde gespeichert.");
           updateProgress();
         }
