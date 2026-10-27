@@ -17906,6 +17906,11 @@ startRound();
 function route(){
   const hash = location.hash.replace(/^#/, "") || "/";
   const parts = hash.split("/").filter(Boolean);
+  { /* Seitenaufruf-Messung nur auf freigeschalteten Anzeige-Seiten (siehe startPageView) */
+    const pvSet = (parts[0] === "uebung" && parts.length === 2) ? exerciseSets[parts[1]] : null;
+    if (pvSet && pvSet.custom === "note-page" && !isLocked(pvSet, parts[1])) startPageView(parts[1]);
+    else stopPageView();
+  }
   const app = document.getElementById("app");
   let html;
   if (parts.length === 0){
@@ -18191,6 +18196,68 @@ function reportFreitext(exerciseSlug, frageKey, frageLabel, antwort){
     }).catch(function(){ /* ignorieren - darf Schüler nie stören */ });
   } catch(e){ /* ignorieren */ }
 }
+
+/* ---------- Seitenaufrufe (nur "note-page": Info-Blätter, Lösungs-/Notizseiten) ----------
+   Auf Wunsch Manuel (27.10.2026): im Dashboard soll sichtbar sein, ob und wie lange Schüler diese
+   Seiten geöffnet haben (die haben sonst keine Fragen/Ergebnisse). Gleiches fire-and-forget-Prinzip
+   wie reportResult(): beim Öffnen sofort eine Meldung (0 Sek), danach alle 30 s und beim Verlassen/
+   Ausblenden der Seite die bisher AKTIVE Zeit (nur solange der Tab sichtbar ist, max. 30 Min pro
+   Besuch). Jeder Besuch hat eine eigene Sitzungs-ID; das Skript nimmt pro Sitzung den größten Wert
+   (siehe Code.gs: doPost type:"view", dashBerechneViews). Ohne Code (z.B. Vorschau ohne Anmeldung)
+   wird nichts gemeldet. */
+let pageView = null;
+const PAGEVIEW_MAX_SEC = 1800;
+function reportPageView(slug, sessionId, seconds){
+  if (!APPS_SCRIPT_URL) return;
+  const code = getMyCode();
+  if (!code) return;
+  try {
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      keepalive: true,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ type: "view", code: code, page: slug, session: sessionId, seconds: seconds })
+    }).catch(function(){ /* ignorieren - darf Schüler nie stören */ });
+  } catch(e){ /* ignorieren */ }
+}
+function pageViewTick(){
+  if (!pageView) return;
+  const now = Date.now();
+  if (pageView.visible) pageView.sec += (now - pageView.last) / 1000;
+  pageView.last = now;
+}
+function pageViewSend(){
+  if (!pageView) return;
+  pageViewTick();
+  reportPageView(pageView.slug, pageView.id, Math.min(Math.round(pageView.sec), PAGEVIEW_MAX_SEC));
+}
+function stopPageView(){
+  if (!pageView) return;
+  pageViewSend();
+  clearInterval(pageView.timer);
+  pageView = null;
+}
+function startPageView(slug){
+  if (pageView && pageView.slug === slug) return; /* route() wird mehrfach für dieselbe Seite aufgerufen */
+  stopPageView();
+  pageView = {
+    slug: slug,
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    sec: 0,
+    last: Date.now(),
+    visible: document.visibilityState === "visible",
+    timer: setInterval(function(){ if (pageView && pageView.visible) pageViewSend(); }, 30000)
+  };
+  pageViewSend();
+}
+document.addEventListener("visibilitychange", function(){
+  if (!pageView) return;
+  pageViewTick();
+  pageView.visible = document.visibilityState === "visible";
+  if (!pageView.visible) pageViewSend();
+});
+window.addEventListener("pagehide", stopPageView);
 
 function showApp(){
   document.getElementById("gateOverlay").hidden = true;
