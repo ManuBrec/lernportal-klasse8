@@ -357,6 +357,27 @@
     padding:12px 22px; font-weight:700; font-size:14.5px; cursor:pointer;
   }
   .check-btn:disabled{opacity:.6; cursor:default;}
+  /* Arbeitsblatt-Ansicht (set.custom === "sheet", siehe window.__startSheet) */
+  .sheet-bar{position:sticky; top:0; z-index:30; background:var(--bg); padding:10px 0 12px; margin-bottom:14px; border-bottom:1px solid var(--border);}
+  .sheet-bar-top{display:flex; flex-wrap:wrap; row-gap:6px; gap:10px; align-items:center; justify-content:space-between;}
+  .sheet-count{font-weight:700; font-size:14px; color:var(--ink-soft);}
+  body.sheet-mode .topbar{position:static;}
+  .sheet-nav{display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; max-width:100%; padding-bottom:2px;}
+  .sheet-nav-btn{flex:none;}
+  .sheet-nav-btn{min-width:32px; height:32px; padding:0 8px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--ink-soft); font-weight:700; font-size:13px; cursor:pointer;}
+  .sheet-nav-btn.done{background:var(--success-soft); border-color:var(--success); color:var(--success);}
+  .sheet-task{scroll-margin-top:112px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow); padding:0 0 18px; margin:0 0 22px; overflow:hidden;}
+  .sheet-task-head{display:flex; align-items:center; gap:12px; padding:14px 22px; background:var(--accent-soft); border-bottom:1px solid var(--border);}
+  .sheet-task-nr{display:inline-flex; align-items:center; justify-content:center; min-width:30px; height:30px; padding:0 6px; border-radius:999px; background:var(--accent); color:var(--accent-ink); font-weight:800; font-size:15px;}
+  .sheet-task-title{font-weight:800; font-size:17px; color:var(--ink); flex:1;}
+  .sheet-task-count{font-size:13px; font-weight:700; color:var(--ink-soft);}
+  .sheet-intro{margin:16px 22px 4px; font-weight:700; color:var(--ink);}
+  .sheet-item{padding:14px 22px 4px;}
+  .sheet-item + .sheet-item{border-top:1px dashed var(--border); margin-top:10px;}
+  .sheet-q{margin:0 0 10px; font-weight:600; color:var(--ink); font-size:16px; line-height:1.45;}
+  .sheet-item .feedback{margin-top:12px;}
+  .sheet-end{background:var(--success-soft); color:var(--success); border-radius:var(--radius-lg); padding:22px; text-align:center; margin-bottom:30px;}
+  .sheet-end .restart-btn{margin-top:4px;}
   .reflect-row{display:flex; flex-direction:column; gap:10px; align-items:flex-start;}
   .reflect-textarea{
     width:100%; padding:13px 16px; border-radius:var(--radius-md);
@@ -3155,885 +3176,921 @@ const exerciseSets = {
     duration: "ca. 45–60 Minuten",
     locked: true, /* gesperrt, Freischaltung über das Dashboard (Wunsch Manuel 27.10.2026) */
     countReflectAsDone: true,
+    custom: "sheet", /* Arbeitsblatt-Ansicht, siehe window.__startSheet */
     questions: [
-          {
-                "section": "1 Überschriften zuordnen",
-                "kind": "table-match",
-                "noPopup": true,
-                "noSkip": true,
-                "text": "Wie heißen die Überschriften zu den einzelnen Abschnitten? Ordne zu. Danach ergänzt du die Überschriften in deinem Lesetext!",
-                "columns": [
-                      "Zeile",
-                      "Überschrift"
-                ],
-                "rows": [
-                      {
-                            "label": "Zeile 1",
-                            "accept": [
-                                  "h1"
-                            ]
-                      },
-                      {
-                            "label": "Zeile 10",
-                            "accept": [
-                                  "h2"
-                            ]
-                      },
-                      {
-                            "label": "Zeile 25",
-                            "accept": [
-                                  "h3"
-                            ]
-                      },
-                      {
-                            "label": "Zeile 46",
-                            "accept": [
-                                  "h4"
-                            ]
-                      },
-                      {
-                            "label": "Zeile 64",
-                            "accept": [
-                                  "h5"
-                            ]
-                      },
-                      {
-                            "label": "Zeile 75",
-                            "accept": [
-                                  "h6"
-                            ]
-                      }
-                ],
-                "chips": [
-                      {
-                            "id": "h1",
-                            "label": "Ein Ozean weit weg – und doch nah"
-                      },
-                      {
-                            "id": "h2",
-                            "label": "El Niño: Die Macht, die über die Erde fegt"
-                      },
-                      {
-                            "id": "h3",
-                            "label": "Heißer Sommer, kalter Winter – und mehr Stürme?"
-                      },
-                      {
-                            "id": "h4",
-                            "label": "Der El-Niño-Faktor an der Kasse"
-                      },
-                      {
-                            "id": "h5",
-                            "label": "Die 5,5-Milliarden-Rechnung"
-                      },
-                      {
-                            "id": "h6",
-                            "label": "„Wir können kreativ und großzügig sein“"
-                      }
-                ],
-                "explain": "Alle Überschriften richtig zugeordnet."
-          },
-          {
-                "section": "2 Wörter und ihre Erklärungen",
-                "kind": "table-match",
-                "noPopup": true,
-                "noSkip": true,
-                "text": "Welche Wörter aus dem Text werden hier erklärt? Ordne zu.",
-                "columns": [
-                      "Wort",
-                      "Erklärung"
-                ],
-                "rows": [
-                      {
-                            "label": "die Dürre",
-                            "accept": [
-                                  "d1"
-                            ]
-                      },
-                      {
-                            "label": "die Resilienz",
-                            "accept": [
-                                  "d2"
-                            ]
-                      },
-                      {
-                            "label": "der Passatwind",
-                            "accept": [
-                                  "d3"
-                            ]
-                      },
-                      {
-                            "label": "die Inflation",
-                            "accept": [
-                                  "d4"
-                            ]
-                      }
-                ],
-                "chips": [
-                      {
-                            "id": "d1",
-                            "label": "eine lange Zeit mit viel zu wenig Regen, in der Böden austrocknen und Ernten ausfallen"
-                      },
-                      {
-                            "id": "d2",
-                            "label": "die Fähigkeit, Krisen und Katastrophen gut zu überstehen und sich danach wieder zu erholen"
-                      },
-                      {
-                            "id": "d3",
-                            "label": "ein gleichmäßiger Wind in den Tropen, der fast das ganze Jahr aus derselben Richtung weht"
-                      },
-                      {
-                            "id": "d4",
-                            "label": "wenn die Preise allgemein steigen und man für das gleiche Geld weniger kaufen kann"
-                      }
-                ],
-                "explain": "Alle Wörter richtig zugeordnet."
-          },
-          {
-                "section": "3 Wörter erklären",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Erkläre das Wort aus dem Text: „der Wohlstand“",
-                "placeholder": "Deine Erklärung…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "geld",
-                            "reich",
-                            "vermoeg",
-                            "besitz",
-                            "gut leben",
-                            "gut geht",
-                            "gut gehen",
-                            "gutes leben",
-                            "guten leben",
-                            "gut ergeht",
-                            "lebensstandard",
-                            "gueter",
-                            "guter",
-                            "ohne sorgen",
-                            "genug"
-                      ]
-                ],
-                "need": 1
-          },
-          {
-                "section": "3 Wörter erklären",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Erkläre das Wort aus dem Text: „die Lieferkette“",
-                "placeholder": "Deine Erklärung…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "ware",
-                            "waren",
-                            "produkt",
-                            "lebensmittel",
-                            "gueter",
-                            "artikel",
-                            "sache",
-                            "ding"
-                      ],
-                      [
-                            "hersteller",
-                            "anbau",
-                            "produktion",
-                            "erzeug",
-                            "bauer",
-                            "fabrik",
-                            "herstell",
-                            "transport",
-                            "weg",
-                            "geschaeft",
-                            "laden",
-                            "supermarkt",
-                            "kunde",
-                            "verbraucher",
-                            "handel",
-                            "liefer",
-                            "station",
-                            "schritt",
-                            "kette",
-                            "verkauf",
-                            "kaeufer"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "3 Wörter erklären",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Erkläre das Wort aus dem Text: „der Kaltlufteinbruch“",
-                "placeholder": "Deine Erklärung…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "kalt",
-                            "kaelt",
-                            "frost",
-                            "eis"
-                      ],
-                      [
-                            "luft",
-                            "ploetz",
-                            "schnell",
-                            "stroem",
-                            "kommt",
-                            "einbruch",
-                            "wetter",
-                            "temperatur",
-                            "sinkt",
-                            "faellt",
-                            "wird",
-                            "winter",
-                            "grad",
-                            "einbrechen",
-                            "bricht"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "3 Wörter erklären",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Erkläre das Wort aus dem Text: „das Bruttoinlandsprodukt“",
-                "placeholder": "Deine Erklärung…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "wert",
-                            "summe",
-                            "gesamt",
-                            "alle",
-                            "wie viel",
-                            "wieviel",
-                            "menge",
-                            "geld",
-                            "leistung",
-                            "produziert",
-                            "hergestellt",
-                            "herstell"
-                      ],
-                      [
-                            "land",
-                            "staat",
-                            "deutschland",
-                            "volkswirtschaft",
-                            "wirtschaft",
-                            "laender"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "4 Wie heißt es im Text?",
-                "kind": "text",
-                "noSkip": true,
-                "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Organisation, die das Wetter weltweit beobachtet und vor Gefahren warnt",
-                "placeholder": "Begriff mit Begleiter eintippen",
-                "accept": [
-                      "die Weltwetterorganisation",
-                      "Weltwetterorganisation",
-                      "die Weltwetterorganisation (WMO)",
-                      "Weltwetterorganisation (WMO)",
-                      "die WMO",
-                      "WMO"
-                ],
-                "explain": "Richtig! Trage den Begriff mit der Zeilennummer in dein Heft ein."
-          },
-          {
-                "section": "4 Wie heißt es im Text?",
-                "kind": "text",
-                "noSkip": true,
-                "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Behörde in Deutschland, die das Wetter vorhersagt",
-                "placeholder": "Begriff mit Begleiter eintippen",
-                "accept": [
-                      "der Deutsche Wetterdienst",
-                      "Deutsche Wetterdienst",
-                      "Deutscher Wetterdienst",
-                      "der Deutsche Wetterdienst (DWD)",
-                      "Deutscher Wetterdienst (DWD)",
-                      "der DWD",
-                      "DWD"
-                ],
-                "explain": "Richtig! Trage den Begriff mit der Zeilennummer in dein Heft ein."
-          },
-          {
-                "section": "4 Wie heißt es im Text?",
-                "kind": "text",
-                "noSkip": true,
-                "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: der Zeitpunkt, an dem El Niño am stärksten sein wird",
-                "placeholder": "Begriff mit Begleiter eintippen",
-                "accept": [
-                      "der Höhepunkt",
-                      "Höhepunkt",
-                      "der Höhepunkt des Klimaphänomens",
-                      "Höhepunkt des Klimaphänomens"
-                ],
-                "explain": "Richtig! Trage den Begriff mit der Zeilennummer in dein Heft ein."
-          },
-          {
-                "section": "4 Wie heißt es im Text?",
-                "kind": "text",
-                "noSkip": true,
-                "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Ernte der Pflanze, die als Futter für Schweine und Hühner dient",
-                "placeholder": "Begriff mit Begleiter eintippen",
-                "accept": [
-                      "die Sojaernte",
-                      "Sojaernte",
-                      "die Soja-Ernte",
-                      "Soja-Ernte"
-                ],
-                "explain": "Richtig! Trage den Begriff mit der Zeilennummer in dein Heft ein."
-          },
-          {
-                "section": "4 Wie heißt es im Text?",
-                "kind": "text",
-                "noSkip": true,
-                "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die allgemeine Preissteigerung bei Lebensmitteln",
-                "placeholder": "Begriff mit Begleiter eintippen",
-                "accept": [
-                      "die Lebensmittelinflation",
-                      "Lebensmittelinflation",
-                      "die Nahrungsmittelinflation",
-                      "Nahrungsmittelinflation"
-                ],
-                "explain": "Richtig! Trage den Begriff mit der Zeilennummer in dein Heft ein."
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "a) Was ist El Niño? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "waerm",
-                            "warm",
-                            "schwankung",
-                            "phaenomen",
-                            "erwaerm",
-                            "hitze",
-                            "strom",
-                            "wetter",
-                            "klima"
-                      ],
-                      [
-                            "pazifik",
-                            "meer",
-                            "ozean",
-                            "wasser",
-                            "wassertemperatur",
-                            "oberflaechengewaesser",
-                            "gewaesser"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "b) Warum sollte man meinen, dass der Pazifik Deutschland nicht interessieren muss? Warum stimmt das trotzdem nicht? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "8000",
-                            "weit",
-                            "entfernt",
-                            "kilometer",
-                            "km",
-                            "fern",
-                            "weg"
-                      ],
-                      [
-                            "wetter",
-                            "wohlstand",
-                            "preise",
-                            "wirtschaft",
-                            "einfluss",
-                            "beeinfluss",
-                            "auswirk",
-                            "folgen",
-                            "lebensmittel",
-                            "betrifft",
-                            "betroffen",
-                            "trotzdem",
-                            "doch",
-                            "aber"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "c) Wovor warnt die Weltwetterorganisation? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "duerre",
-                            "trocken"
-                      ],
-                      [
-                            "regen",
-                            "ueberschwemm",
-                            "starkregen",
-                            "hochwasser"
-                      ],
-                      [
-                            "hitze",
-                            "heiss",
-                            "waerme"
-                      ],
-                      [
-                            "wassertemperatur",
-                            "el nino",
-                            "nie so hoch",
-                            "noch nie",
-                            "rekord",
-                            "hoechste",
-                            "starker",
-                            "staerkste",
-                            "ausserge"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "d) Welche Regionen der Erde sind besonders betroffen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "suedamerika",
-                            "sued-amerika",
-                            "sued amerika"
-                      ],
-                      [
-                            "afrika"
-                      ],
-                      [
-                            "asien"
-                      ]
-                ],
-                "need": 3
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "e) Welche Auswirkungen auf das Wetter in Deutschland sind möglich? Nenne drei. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "hitze",
-                            "rekord",
-                            "waermer",
-                            "heisser",
-                            "temperatur",
-                            "hitzewelle"
-                      ],
-                      [
-                            "kaelte",
-                            "kaltluft",
-                            "kalt",
-                            "kaelter"
-                      ],
-                      [
-                            "sturm",
-                            "stuerme",
-                            "unwetter",
-                            "wind"
-                      ],
-                      [
-                            "mild",
-                            "feucht",
-                            "niederschlag",
-                            "regen",
-                            "nass"
-                      ]
-                ],
-                "need": 3
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "f) Warum ist es so schwierig, die Auswirkungen von El Niño auf Deutschland zu belegen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "andere",
-                            "viele",
-                            "weitere",
-                            "verschieden",
-                            "ueberdeck",
-                            "ueberlag",
-                            "mehrere",
-                            "vielen"
-                      ],
-                      [
-                            "einfluss",
-                            "effekt",
-                            "faktor",
-                            "ursache",
-                            "wetter",
-                            "ereignis",
-                            "zusammenhang",
-                            "klima",
-                            "wirkung"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "g) Wie kann El Niño die Lebensmittelpreise in Deutschland beeinflussen? Erkläre, warum sie steigen, aber auch sinken können. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "ernte",
-                            "ertrag",
-                            "duerre",
-                            "starkregen",
-                            "import",
-                            "ernten",
-                            "anbau"
-                      ],
-                      [
-                            "brasilien",
-                            "argentinien",
-                            "soja",
-                            "profitier",
-                            "mehr regen",
-                            "haeufiger",
-                            "niederschlaege",
-                            "guenstig",
-                            "sinken",
-                            "billiger",
-                            "futter",
-                            "guenstiger",
-                            "andere regionen",
-                            "andere laender"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "5 Fragen zum Text",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "h) Was fordern WMO-Chefin Saulo und UN-Nothilfekoordinator Fletcher? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
-                "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "vorbereit",
-                            "vorsorg",
-                            "vorher",
-                            "rechtzeitig",
-                            "vorbereitung"
-                      ],
-                      [
-                            "hilf",
-                            "helfen",
-                            "unterstuetz",
-                            "hilfe",
-                            "geld",
-                            "investier"
-                      ],
-                      [
-                            "resilienz",
-                            "katastrophe",
-                            "warten",
-                            "handeln",
-                            "schnell",
-                            "weltgemeinschaft",
-                            "alle laender",
-                            "zusammen"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „Der Pazifik ist mindestens 8000 Kilometer von Deutschland entfernt.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 0,
-                "explain": "Stimmt, die Aussage ist richtig."
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 1,
-                "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie im nächsten Schritt."
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“",
-                "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "noch nie",
-                            "nie so",
-                            "nie zuvor",
-                            "nicht so hoch",
-                            "noch nicht",
-                            "bisher nie",
-                            "rekord",
-                            "hoechste",
-                            "nie"
-                      ]
-                ],
-                "need": 1
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „El Niño hat auf der ganzen Welt dieselben Folgen.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 1,
-                "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie im nächsten Schritt."
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „El Niño hat auf der ganzen Welt dieselben Folgen.“",
-                "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "unterschied",
-                            "verschieden",
-                            "je nach",
-                            "nicht ueberall",
-                            "nicht auf der ganzen",
-                            "nicht dieselben",
-                            "nicht die gleichen",
-                            "nicht die selben",
-                            "nicht gleich",
-                            "region",
-                            "manche",
-                            "mancherorts",
-                            "anders",
-                            "unterschiedlich",
-                            "nicht jeder"
-                      ]
-                ],
-                "need": 1
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 1,
-                "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie im nächsten Schritt."
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“",
-                "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "mild"
-                      ],
-                      [
-                            "feucht",
-                            "nass",
-                            "regnerisch",
-                            "regen"
-                      ]
-                ],
-                "need": 2
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 1,
-                "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie im nächsten Schritt."
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“",
-                "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
-                "keywords": [
-                      [
-                            "nicht alle",
-                            "nicht jede",
-                            "manche",
-                            "einige",
-                            "spanisch",
-                            "zentralbank",
-                            "sinken",
-                            "guenstiger",
-                            "billiger",
-                            "nicht immer",
-                            "teils",
-                            "unterschiedlich",
-                            "verschieden",
-                            "beide richtung",
-                            "nicht unbedingt",
-                            "nicht jede studie"
-                      ]
-                ],
-                "need": 1
-          },
-          {
-                "section": "6 Richtig oder falsch?",
-                "kind": "mc",
-                "noSkip": true,
-                "text": "Ist die Aussage richtig oder falsch? „Der Höhepunkt von El Niño wird im Dezember erwartet.“",
-                "options": [
-                      "richtig",
-                      "falsch"
-                ],
-                "correct": 0,
-                "explain": "Stimmt, die Aussage ist richtig."
-          },
-          {
-                "section": "7 Zahlen im Text",
-                "kind": "table-match",
-                "noPopup": true,
-                "noSkip": true,
-                "text": "Im Text kommen viele Zahlen vor. Wofür stehen sie? Ordne zu.",
-                "columns": [
-                      "Zahl",
-                      "Wofür steht die Zahl?"
-                ],
-                "rows": [
-                      {
-                            "label": "8000",
-                            "accept": [
-                                  "z1"
-                            ]
-                      },
-                      {
-                            "label": "40",
-                            "accept": [
-                                  "z2"
-                            ]
-                      },
-                      {
-                            "label": "2027",
-                            "accept": [
-                                  "z3"
-                            ]
-                      },
-                      {
-                            "label": "0,6 bis 0,7 Prozent",
-                            "accept": [
-                                  "z4"
-                            ]
-                      },
-                      {
-                            "label": "0,21 Prozent",
-                            "accept": [
-                                  "z5"
-                            ]
-                      },
-                      {
-                            "label": "5,5 Milliarden Euro",
-                            "accept": [
-                                  "z6"
-                            ]
-                      }
-                ],
-                "chips": [
-                      {
-                            "id": "z1",
-                            "label": "Entfernung zwischen Deutschland und dem Pazifik in Kilometern (mindestens)"
-                      },
-                      {
-                            "id": "z2",
-                            "label": "So viele Jahre gibt es schon systematische Messungen der Wassertemperatur"
-                      },
-                      {
-                            "id": "z3",
-                            "label": "Ab diesem Jahr steigt die globale Mitteltemperatur (mit Verzögerung)"
-                      },
-                      {
-                            "id": "z4",
-                            "label": "So viel sinken die Lebensmittelpreise im Euroraum laut spanischer Zentralbank"
-                      },
-                      {
-                            "id": "z5",
-                            "label": "So viel könnte die Nahrungsmittelinflation in Deutschland laut Allianz steigen"
-                      },
-                      {
-                            "id": "z6",
-                            "label": "So viel Wirtschaftsleistung könnte Deutschland laut Allianz verlieren"
-                      }
-                ],
-                "explain": "Alle Zahlen richtig zugeordnet."
-          },
-          {
-                "section": "8 Sicher oder nur möglich?",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Im Text steht oft nicht, dass etwas sicher ist, sondern nur, dass es möglich ist (z.B. „könnte“, „womöglich“, „gilt als denkbar“). Finde drei Beispiele und gib die Zeilennummer/n an.",
-                "placeholder": "Drei Beispiele mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
-          },
-          {
-                "section": "9 Deine Meinung",
-                "kind": "reflect",
-                "noSkip": true,
-                "text": "Der UN-Nothilfekoordinator sagt: „Wir können auf eine Katastrophe warten oder in Resilienz investieren.“ (Zeilen 86 – 87) Was meint er damit? Was könnte „in Resilienz investieren“ konkret bedeuten? Schreibe 3 bis 4 Sätze.",
-                "placeholder": "Deine Antwort in 3 bis 4 Sätzen…",
-                "explain": "Deine Antwort wurde gespeichert."
-          }
-    ]
+  {
+    "section": "1 Überschriften zuordnen",
+    "kind": "table-match",
+    "noPopup": true,
+    "noSkip": true,
+    "text": "Wie heißen die Überschriften zu den einzelnen Abschnitten? Ordne zu. Danach ergänzt du die Überschriften in deinem Lesetext!",
+    "columns": [
+      "Zeile",
+      "Überschrift"
+    ],
+    "rows": [
+      {
+        "label": "Zeile 1",
+        "accept": [
+          "h1"
+        ]
+      },
+      {
+        "label": "Zeile 10",
+        "accept": [
+          "h2"
+        ]
+      },
+      {
+        "label": "Zeile 25",
+        "accept": [
+          "h3"
+        ]
+      },
+      {
+        "label": "Zeile 46",
+        "accept": [
+          "h4"
+        ]
+      },
+      {
+        "label": "Zeile 64",
+        "accept": [
+          "h5"
+        ]
+      },
+      {
+        "label": "Zeile 75",
+        "accept": [
+          "h6"
+        ]
+      }
+    ],
+    "chips": [
+      {
+        "id": "h1",
+        "label": "Ein Ozean weit weg – und doch nah"
+      },
+      {
+        "id": "h2",
+        "label": "El Niño: Die Macht, die über die Erde fegt"
+      },
+      {
+        "id": "h3",
+        "label": "Heißer Sommer, kalter Winter – und mehr Stürme?"
+      },
+      {
+        "id": "h4",
+        "label": "Der El-Niño-Faktor an der Kasse"
+      },
+      {
+        "id": "h5",
+        "label": "Die 5,5-Milliarden-Rechnung"
+      },
+      {
+        "id": "h6",
+        "label": "„Wir können kreativ und großzügig sein“"
+      }
+    ],
+    "explain": "Alle Überschriften richtig zugeordnet."
+  },
+  {
+    "section": "2 Wörter und ihre Erklärungen",
+    "kind": "table-match",
+    "noPopup": true,
+    "noSkip": true,
+    "text": "Welche Wörter aus dem Text werden hier erklärt? Ordne zu.",
+    "columns": [
+      "Wort",
+      "Erklärung"
+    ],
+    "rows": [
+      {
+        "label": "die Dürre",
+        "accept": [
+          "d1"
+        ]
+      },
+      {
+        "label": "die Resilienz",
+        "accept": [
+          "d2"
+        ]
+      },
+      {
+        "label": "der Passatwind",
+        "accept": [
+          "d3"
+        ]
+      },
+      {
+        "label": "die Inflation",
+        "accept": [
+          "d4"
+        ]
+      }
+    ],
+    "chips": [
+      {
+        "id": "d1",
+        "label": "eine lange Zeit mit viel zu wenig Regen, in der Böden austrocknen und Ernten ausfallen"
+      },
+      {
+        "id": "d2",
+        "label": "die Fähigkeit, Krisen und Katastrophen gut zu überstehen und sich danach wieder zu erholen"
+      },
+      {
+        "id": "d3",
+        "label": "ein gleichmäßiger Wind in den Tropen, der fast das ganze Jahr aus derselben Richtung weht"
+      },
+      {
+        "id": "d4",
+        "label": "wenn die Preise allgemein steigen und man für das gleiche Geld weniger kaufen kann"
+      }
+    ],
+    "explain": "Alle Wörter richtig zugeordnet."
+  },
+  {
+    "section": "3 Wörter erklären",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Erkläre das Wort aus dem Text: „der Wohlstand“",
+    "placeholder": "Deine Erklärung…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "geld",
+        "reich",
+        "vermoeg",
+        "besitz",
+        "gut leben",
+        "gut geht",
+        "gut gehen",
+        "gutes leben",
+        "guten leben",
+        "gut ergeht",
+        "lebensstandard",
+        "gueter",
+        "guter",
+        "ohne sorgen",
+        "genug"
+      ]
+    ],
+    "need": 1,
+    "label": "der Wohlstand",
+    "intro": "Erkläre die folgenden Wörter aus dem Text in eigenen Worten."
+  },
+  {
+    "section": "3 Wörter erklären",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Erkläre das Wort aus dem Text: „die Lieferkette“",
+    "placeholder": "Deine Erklärung…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "ware",
+        "waren",
+        "produkt",
+        "lebensmittel",
+        "gueter",
+        "artikel",
+        "sache",
+        "ding"
+      ],
+      [
+        "hersteller",
+        "anbau",
+        "produktion",
+        "erzeug",
+        "bauer",
+        "fabrik",
+        "herstell",
+        "transport",
+        "weg",
+        "geschaeft",
+        "laden",
+        "supermarkt",
+        "kunde",
+        "verbraucher",
+        "handel",
+        "liefer",
+        "station",
+        "schritt",
+        "kette",
+        "verkauf",
+        "kaeufer"
+      ]
+    ],
+    "need": 2,
+    "label": "die Lieferkette"
+  },
+  {
+    "section": "3 Wörter erklären",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Erkläre das Wort aus dem Text: „der Kaltlufteinbruch“",
+    "placeholder": "Deine Erklärung…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "kalt",
+        "kaelt",
+        "frost",
+        "eis"
+      ],
+      [
+        "luft",
+        "ploetz",
+        "schnell",
+        "stroem",
+        "kommt",
+        "einbruch",
+        "wetter",
+        "temperatur",
+        "sinkt",
+        "faellt",
+        "wird",
+        "winter",
+        "grad",
+        "einbrechen",
+        "bricht"
+      ]
+    ],
+    "need": 2,
+    "label": "der Kaltlufteinbruch"
+  },
+  {
+    "section": "3 Wörter erklären",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Erkläre das Wort aus dem Text: „das Bruttoinlandsprodukt“",
+    "placeholder": "Deine Erklärung…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "wert",
+        "summe",
+        "gesamt",
+        "alle",
+        "wie viel",
+        "wieviel",
+        "menge",
+        "geld",
+        "leistung",
+        "produziert",
+        "hergestellt",
+        "herstell"
+      ],
+      [
+        "land",
+        "staat",
+        "deutschland",
+        "volkswirtschaft",
+        "wirtschaft",
+        "laender"
+      ]
+    ],
+    "need": 2,
+    "label": "das Bruttoinlandsprodukt"
+  },
+  {
+    "section": "4 Wie heißt es im Text?",
+    "kind": "text",
+    "noSkip": true,
+    "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Organisation, die das Wetter weltweit beobachtet und vor Gefahren warnt",
+    "placeholder": "Begriff mit Begleiter eintippen",
+    "accept": [
+      "die Weltwetterorganisation",
+      "Weltwetterorganisation",
+      "die Weltwetterorganisation (WMO)",
+      "Weltwetterorganisation (WMO)",
+      "die WMO",
+      "WMO"
+    ],
+    "explain": "Richtig!",
+    "label": "die Organisation, die das Wetter weltweit beobachtet und vor Gefahren warnt",
+    "intro": "Wie heißt es im Text? Schreibe den Begriff mit Begleiter (der/die/das) auf."
+  },
+  {
+    "section": "4 Wie heißt es im Text?",
+    "kind": "text",
+    "noSkip": true,
+    "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Behörde in Deutschland, die das Wetter vorhersagt",
+    "placeholder": "Begriff mit Begleiter eintippen",
+    "accept": [
+      "der Deutsche Wetterdienst",
+      "Deutsche Wetterdienst",
+      "Deutscher Wetterdienst",
+      "der Deutsche Wetterdienst (DWD)",
+      "Deutscher Wetterdienst (DWD)",
+      "der DWD",
+      "DWD"
+    ],
+    "explain": "Richtig!",
+    "label": "die Behörde in Deutschland, die das Wetter vorhersagt"
+  },
+  {
+    "section": "4 Wie heißt es im Text?",
+    "kind": "text",
+    "noSkip": true,
+    "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: der Zeitpunkt, an dem El Niño am stärksten sein wird",
+    "placeholder": "Begriff mit Begleiter eintippen",
+    "accept": [
+      "der Höhepunkt",
+      "Höhepunkt",
+      "der Höhepunkt des Klimaphänomens",
+      "Höhepunkt des Klimaphänomens"
+    ],
+    "explain": "Richtig!",
+    "label": "der Zeitpunkt, an dem El Niño am stärksten sein wird"
+  },
+  {
+    "section": "4 Wie heißt es im Text?",
+    "kind": "text",
+    "noSkip": true,
+    "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die Ernte der Pflanze, die als Futter für Schweine und Hühner dient",
+    "placeholder": "Begriff mit Begleiter eintippen",
+    "accept": [
+      "die Sojaernte",
+      "Sojaernte",
+      "die Soja-Ernte",
+      "Soja-Ernte"
+    ],
+    "explain": "Richtig!",
+    "label": "die Ernte der Pflanze, die als Futter für Schweine und Hühner dient"
+  },
+  {
+    "section": "4 Wie heißt es im Text?",
+    "kind": "text",
+    "noSkip": true,
+    "text": "Wie heißt es im Text? Schreibe den Begriff (mit Begleiter) auf: die allgemeine Preissteigerung bei Lebensmitteln",
+    "placeholder": "Begriff mit Begleiter eintippen",
+    "accept": [
+      "die Lebensmittelinflation",
+      "Lebensmittelinflation",
+      "die Nahrungsmittelinflation",
+      "Nahrungsmittelinflation"
+    ],
+    "explain": "Richtig!",
+    "label": "die allgemeine Preissteigerung bei Lebensmitteln"
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "a) Was ist El Niño? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "waerm",
+        "warm",
+        "schwankung",
+        "phaenomen",
+        "erwaerm",
+        "hitze",
+        "strom",
+        "wetter",
+        "klima"
+      ],
+      [
+        "pazifik",
+        "meer",
+        "ozean",
+        "wasser",
+        "wassertemperatur",
+        "oberflaechengewaesser",
+        "gewaesser"
+      ]
+    ],
+    "need": 2,
+    "label": "a) Was ist El Niño?",
+    "intro": "Beantworte die Fragen in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast."
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "b) Warum sollte man meinen, dass der Pazifik Deutschland nicht interessieren muss? Warum stimmt das trotzdem nicht? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "8000",
+        "weit",
+        "entfernt",
+        "kilometer",
+        "km",
+        "fern",
+        "weg"
+      ],
+      [
+        "wetter",
+        "wohlstand",
+        "preise",
+        "wirtschaft",
+        "einfluss",
+        "beeinfluss",
+        "auswirk",
+        "folgen",
+        "lebensmittel",
+        "betrifft",
+        "betroffen",
+        "trotzdem",
+        "doch",
+        "aber"
+      ]
+    ],
+    "need": 2,
+    "label": "b) Warum sollte man meinen, dass der Pazifik Deutschland nicht interessieren muss? Warum stimmt das trotzdem nicht?"
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "c) Wovor warnt die Weltwetterorganisation? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "duerre",
+        "trocken"
+      ],
+      [
+        "regen",
+        "ueberschwemm",
+        "starkregen",
+        "hochwasser"
+      ],
+      [
+        "hitze",
+        "heiss",
+        "waerme"
+      ],
+      [
+        "wassertemperatur",
+        "el nino",
+        "nie so hoch",
+        "noch nie",
+        "rekord",
+        "hoechste",
+        "starker",
+        "staerkste",
+        "ausserge"
+      ]
+    ],
+    "need": 2,
+    "label": "c) Wovor warnt die Weltwetterorganisation?"
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "d) Welche Regionen der Erde sind besonders betroffen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "suedamerika",
+        "sued-amerika",
+        "sued amerika"
+      ],
+      [
+        "afrika"
+      ],
+      [
+        "asien"
+      ]
+    ],
+    "need": 3,
+    "label": "d) Welche Regionen der Erde sind besonders betroffen?"
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "e) Welche Auswirkungen auf das Wetter in Deutschland sind möglich? Nenne drei. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "hitze",
+        "rekord",
+        "waermer",
+        "heisser",
+        "temperatur",
+        "hitzewelle"
+      ],
+      [
+        "kaelte",
+        "kaltluft",
+        "kalt",
+        "kaelter"
+      ],
+      [
+        "sturm",
+        "stuerme",
+        "unwetter",
+        "wind"
+      ],
+      [
+        "mild",
+        "feucht",
+        "niederschlag",
+        "regen",
+        "nass"
+      ]
+    ],
+    "need": 3,
+    "label": "e) Welche Auswirkungen auf das Wetter in Deutschland sind möglich? Nenne drei."
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "f) Warum ist es so schwierig, die Auswirkungen von El Niño auf Deutschland zu belegen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "andere",
+        "viele",
+        "weitere",
+        "verschieden",
+        "ueberdeck",
+        "ueberlag",
+        "mehrere",
+        "vielen"
+      ],
+      [
+        "einfluss",
+        "effekt",
+        "faktor",
+        "ursache",
+        "wetter",
+        "ereignis",
+        "zusammenhang",
+        "klima",
+        "wirkung"
+      ]
+    ],
+    "need": 2,
+    "label": "f) Warum ist es so schwierig, die Auswirkungen von El Niño auf Deutschland zu belegen?"
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "g) Wie kann El Niño die Lebensmittelpreise in Deutschland beeinflussen? Erkläre, warum sie steigen, aber auch sinken können. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "ernte",
+        "ertrag",
+        "duerre",
+        "starkregen",
+        "import",
+        "ernten",
+        "anbau"
+      ],
+      [
+        "brasilien",
+        "argentinien",
+        "soja",
+        "profitier",
+        "mehr regen",
+        "haeufiger",
+        "niederschlaege",
+        "guenstig",
+        "sinken",
+        "billiger",
+        "futter",
+        "guenstiger",
+        "andere regionen",
+        "andere laender"
+      ]
+    ],
+    "need": 2,
+    "label": "g) Wie kann El Niño die Lebensmittelpreise in Deutschland beeinflussen? Erkläre, warum sie steigen, aber auch sinken können."
+  },
+  {
+    "section": "5 Fragen zum Text",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "h) Was fordern WMO-Chefin Saulo und UN-Nothilfekoordinator Fletcher? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
+    "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "vorbereit",
+        "vorsorg",
+        "vorher",
+        "rechtzeitig",
+        "vorbereitung"
+      ],
+      [
+        "hilf",
+        "helfen",
+        "unterstuetz",
+        "hilfe",
+        "geld",
+        "investier"
+      ],
+      [
+        "resilienz",
+        "katastrophe",
+        "warten",
+        "handeln",
+        "schnell",
+        "weltgemeinschaft",
+        "alle laender",
+        "zusammen"
+      ]
+    ],
+    "need": 2,
+    "label": "h) Was fordern WMO-Chefin Saulo und UN-Nothilfekoordinator Fletcher?"
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „Der Pazifik ist mindestens 8000 Kilometer von Deutschland entfernt.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 0,
+    "explain": "Stimmt, die Aussage ist richtig.",
+    "label": "„Der Pazifik ist mindestens 8000 Kilometer von Deutschland entfernt.“",
+    "intro": "Ist die Aussage richtig oder falsch? Verbessere falsche Aussagen und gib die Zeile an."
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 1,
+    "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie jetzt darunter.",
+    "label": "„Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“"
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“",
+    "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "noch nie",
+        "nie so",
+        "nie zuvor",
+        "nicht so hoch",
+        "noch nicht",
+        "bisher nie",
+        "rekord",
+        "hoechste",
+        "nie"
+      ]
+    ],
+    "need": 1,
+    "label": "Schreibe die Aussage richtig auf (mit Zeilenangabe):",
+    "showAfter": 20
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „El Niño hat auf der ganzen Welt dieselben Folgen.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 1,
+    "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie jetzt darunter.",
+    "label": "„El Niño hat auf der ganzen Welt dieselben Folgen.“"
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „El Niño hat auf der ganzen Welt dieselben Folgen.“",
+    "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "unterschied",
+        "verschieden",
+        "je nach",
+        "nicht ueberall",
+        "nicht auf der ganzen",
+        "nicht dieselben",
+        "nicht die gleichen",
+        "nicht die selben",
+        "nicht gleich",
+        "region",
+        "manche",
+        "mancherorts",
+        "anders",
+        "unterschiedlich",
+        "nicht jeder"
+      ]
+    ],
+    "need": 1,
+    "label": "Schreibe die Aussage richtig auf (mit Zeilenangabe):",
+    "showAfter": 22
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 1,
+    "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie jetzt darunter.",
+    "label": "„Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“"
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“",
+    "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "mild"
+      ],
+      [
+        "feucht",
+        "nass",
+        "regnerisch",
+        "regen"
+      ]
+    ],
+    "need": 2,
+    "label": "Schreibe die Aussage richtig auf (mit Zeilenangabe):",
+    "showAfter": 24
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 1,
+    "explain": "Richtig erkannt: Die Aussage ist falsch. Verbessere sie jetzt darunter.",
+    "label": "„Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“"
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“",
+    "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
+    "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+    "keywords": [
+      [
+        "nicht alle",
+        "nicht jede",
+        "manche",
+        "einige",
+        "spanisch",
+        "zentralbank",
+        "sinken",
+        "guenstiger",
+        "billiger",
+        "nicht immer",
+        "teils",
+        "unterschiedlich",
+        "verschieden",
+        "beide richtung",
+        "nicht unbedingt",
+        "nicht jede studie"
+      ]
+    ],
+    "need": 1,
+    "label": "Schreibe die Aussage richtig auf (mit Zeilenangabe):",
+    "showAfter": 26
+  },
+  {
+    "section": "6 Richtig oder falsch?",
+    "kind": "mc",
+    "noSkip": true,
+    "text": "Ist die Aussage richtig oder falsch? „Der Höhepunkt von El Niño wird im Dezember erwartet.“",
+    "options": [
+      "richtig",
+      "falsch"
+    ],
+    "correct": 0,
+    "explain": "Stimmt, die Aussage ist richtig.",
+    "label": "„Der Höhepunkt von El Niño wird im Dezember erwartet.“"
+  },
+  {
+    "section": "7 Zahlen im Text",
+    "kind": "table-match",
+    "noPopup": true,
+    "noSkip": true,
+    "text": "Im Text kommen viele Zahlen vor. Wofür stehen sie? Ordne zu.",
+    "columns": [
+      "Zahl",
+      "Wofür steht die Zahl?"
+    ],
+    "rows": [
+      {
+        "label": "8000",
+        "accept": [
+          "z1"
+        ]
+      },
+      {
+        "label": "40",
+        "accept": [
+          "z2"
+        ]
+      },
+      {
+        "label": "2027",
+        "accept": [
+          "z3"
+        ]
+      },
+      {
+        "label": "0,6 bis 0,7 Prozent",
+        "accept": [
+          "z4"
+        ]
+      },
+      {
+        "label": "0,21 Prozent",
+        "accept": [
+          "z5"
+        ]
+      },
+      {
+        "label": "5,5 Milliarden Euro",
+        "accept": [
+          "z6"
+        ]
+      }
+    ],
+    "chips": [
+      {
+        "id": "z1",
+        "label": "Entfernung zwischen Deutschland und dem Pazifik in Kilometern (mindestens)"
+      },
+      {
+        "id": "z2",
+        "label": "So viele Jahre gibt es schon systematische Messungen der Wassertemperatur"
+      },
+      {
+        "id": "z3",
+        "label": "Ab diesem Jahr steigt die globale Mitteltemperatur (mit Verzögerung)"
+      },
+      {
+        "id": "z4",
+        "label": "So viel sinken die Lebensmittelpreise im Euroraum laut spanischer Zentralbank"
+      },
+      {
+        "id": "z5",
+        "label": "So viel könnte die Nahrungsmittelinflation in Deutschland laut Allianz steigen"
+      },
+      {
+        "id": "z6",
+        "label": "So viel Wirtschaftsleistung könnte Deutschland laut Allianz verlieren"
+      }
+    ],
+    "explain": "Alle Zahlen richtig zugeordnet."
+  },
+  {
+    "section": "8 Sicher oder nur möglich?",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Im Text steht oft nicht, dass etwas sicher ist, sondern nur, dass es möglich ist (z.B. „könnte“, „womöglich“, „gilt als denkbar“). Finde drei Beispiele und gib die Zeilennummer/n an.",
+    "placeholder": "Drei Beispiele mit Zeilenangabe…",
+    "explain": "Deine Antwort wurde gespeichert."
+  },
+  {
+    "section": "9 Deine Meinung",
+    "kind": "reflect",
+    "noSkip": true,
+    "text": "Der UN-Nothilfekoordinator sagt: „Wir können auf eine Katastrophe warten oder in Resilienz investieren.“ (Zeilen 86 – 87) Was meint er damit? Was könnte „in Resilienz investieren“ konkret bedeuten? Schreibe 3 bis 4 Sätze.",
+    "placeholder": "Deine Antwort in 3 bis 4 Sätzen…",
+    "explain": "Deine Antwort wurde gespeichert."
+  }
+]
   },
   /* "Lösung: Arbeitsblatt Getrennt- und Zusammenschreibung (Blatt 2)" (20.10.2026, Wunsch Manuel,
      nach seinem hochgeladenen Arbeitsblatt "AB_Deutsch_Getrennt_Zusammenschreibung_2.pdf"). Anders
@@ -13666,6 +13723,18 @@ function viewExercise(slug){
   }
 
 
+  if (set.custom === "sheet"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Arbeitsblatt</span>
+        <h1>${esc(set.title)}</h1>
+        <p>Alle Aufgaben stehen untereinander wie auf einem Blatt${set.duration ? " · " + esc(set.duration) : ""}. Scrolle nach unten und bearbeite sie der Reihe nach – mit den Zahlen oben springst du zu einer Aufgabe.</p>
+      </div>
+      <div id="exerciseHost"></div>
+    `;
+  }
+
   /* set.custom === "wortarten-trainer": ebenfalls eigener Ablauf (siehe
      window.__startWortartenTrainer), beliebig oft wiederholbar wie der Rechenweg-Trainer. */
   if (set.custom === "wortarten-trainer"){
@@ -18938,6 +19007,7 @@ function route(){
   } else {
     html = viewNotFound();
   }
+  document.body.classList.remove("sheet-mode");
   app.innerHTML = html;
   window.scrollTo(0,0);
 
@@ -18960,6 +19030,8 @@ function route(){
       window.__startVergangenheitenUebung(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "infektionserkrankungen"){
       window.__startInfektionserkrankungen(parts[1]);
+    } else if (exerciseSets[parts[1]].custom === "sheet"){
+      window.__startSheet(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "note-page"){
       /* reine Anzeige-Seite (set.noteHtml), schon komplett in viewExercise() gerendert - nichts
          zu initialisieren. */
@@ -19253,6 +19325,241 @@ function showApp(){
   window.addEventListener("DOMContentLoaded", route);
   if (document.readyState !== "loading") route();
 }
+
+/* ============================================================================================
+   Arbeitsblatt-Ansicht (neu 27.10.2026, Wunsch Manuel: "wie ein größeres Blatt, von oben nach unten
+   scrollen, nicht das stupide Durchklicken"): set.custom === "sheet". Alle Fragen aus set.questions
+   stehen auf EINER Seite untereinander, gruppiert nach q.section ("1 Titel", "2 Titel" ...) zu
+   Aufgabenkarten - wie ein Papier-Arbeitsblatt. Jede Frage wird einzeln geprüft (Zuordnung,
+   Eintippen, Richtig/Falsch, freie Antwort per Schlüsselwort-Gruppen), ohne Überspringen und ohne
+   Lösungsanzeige. Fortschritt wird wie bei der normalen Übung gespeichert (loadExerciseState /
+   saveExerciseState, Status "correct"/"reflect") und per reportResult()/reportFreitext() ans
+   Dashboard gemeldet. Unterstützte Fragetypen: table-match, text, mc, reflect (mit/ohne q.keywords).
+   Optionale Felder: q.label (kurzer Anzeigetext statt q.text), q.intro (Aufgabenstellung über der
+   Aufgabenkarte, nur an der ersten Frage der Gruppe), q.showAfter (Index einer Frage, die erst richtig
+   gelöst sein muss, bevor diese Frage sichtbar wird).
+   ============================================================================================ */
+window.__startSheet = function(slug){
+  const set = exerciseSets[slug];
+  const host = document.getElementById("exerciseHost");
+  if (!set || !host) return;
+  const qs = set.questions, total = qs.length;
+  const state = loadExerciseState(slug, total);
+  const isDone = st => !!st && (st.status === "correct" || st.status === "reflect");
+  const norm = s => foldUmlauts(String(s)).toLowerCase().replace(/\s+/g, " ").trim();
+  const save = () => saveExerciseState(slug, state);
+
+  const groups = [];
+  qs.forEach((q, idx) => {
+    const g = groups[groups.length - 1];
+    if (g && g.section === q.section) g.items.push(idx); else groups.push({ section: q.section, items: [idx] });
+  });
+
+  function itemHtml(idx){
+    const q = qs[idx];
+    const label = q.label || q.text;
+    let inner = "";
+    if (q.kind === "table-match"){
+      const rowsHtml = q.rows.map((r, rIdx) =>
+        `<tr><td class="tm-given">${esc(r.label)}</td><td class="tm-answer"><button type="button" class="tm-blank" data-row="${rIdx}" data-slot="0"></button></td></tr>`).join("");
+      const chipsHtml = shuffled(q.chips.slice()).map(c =>
+        `<button type="button" class="lt-chip" data-chip-id="${esc(c.id)}">${esc(c.label)}</button>`).join("");
+      inner = `<p class="ws-instruction">👉 Tippe eine Lücke an und danach das passende Kärtchen – oder umgekehrt.</p>
+        <table class="tm-table"><thead><tr><th>${esc(q.columns[0])}</th><th>${esc(q.columns[1])}</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+        <div class="lt-wordbank">${chipsHtml}</div>`;
+    } else if (q.kind === "text"){
+      inner = `<div class="numeric-row"><input type="text" class="numeric-input sheet-input" placeholder="${esc(q.placeholder || "Antwort eintippen")}" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button" class="check-btn sheet-check">Prüfen</button></div>`;
+    } else if (q.kind === "mc"){
+      inner = `<div class="options sheet-options">${q.options.map((o, oi) => `<button type="button" class="option" data-idx="${oi}">${esc(o)}</button>`).join("")}</div>`;
+    } else {
+      inner = `<div class="reflect-row"><textarea class="reflect-textarea sheet-input" rows="${q.rows || 3}" placeholder="${esc(q.placeholder || "Deine Antwort…")}"></textarea><button type="button" class="check-btn sheet-check">${q.keywords ? "Prüfen" : "Absenden"}</button></div>`;
+    }
+    return `<div class="sheet-item" data-item="${idx}"${q.showAfter !== undefined ? ' style="display:none"' : ""}>
+      <p class="sheet-q">${esc(label)}</p>${inner}<div class="feedback"></div></div>`;
+  }
+
+  const navHtml = groups.map((g, gi) => `<button type="button" class="sheet-nav-btn" data-task="${gi}" title="Zu Aufgabe ${esc(String(g.section).split(" ")[0])}">${esc(String(g.section).split(" ")[0])}</button>`).join("");
+  const cardsHtml = groups.map((g, gi) => {
+    const m = String(g.section).match(/^(\S+)\s+(.*)$/);
+    const nr = m ? m[1] : String(gi + 1), title = m ? m[2] : g.section;
+    const intro = qs[g.items[0]].intro;
+    return `<section class="sheet-task" data-task="${gi}">
+      <header class="sheet-task-head"><span class="sheet-task-nr">${esc(nr)}</span><span class="sheet-task-title">${esc(title)}</span><span class="sheet-task-count" data-count="${gi}"></span></header>
+      ${intro ? `<p class="sheet-intro">${esc(intro)}</p>` : ""}
+      ${g.items.map(itemHtml).join("")}
+    </section>`;
+  }).join("");
+
+  host.innerHTML = `
+    <div class="sheet-bar">
+      <div class="sheet-bar-top"><span id="sheetCount" class="sheet-count"></span><span class="sheet-nav">${navHtml}</span></div>
+      <div class="progress-track" style="margin:8px 0 0;"><div class="progress-fill" id="sheetFill" style="width:0%"></div></div>
+    </div>
+    ${cardsHtml}
+    <div class="sheet-end" id="sheetEnd" style="display:none;">
+      <p style="font-weight:700; font-size:17px; margin:0 0 6px;">Geschafft! Du hast alle Aufgaben bearbeitet.</p>
+      <p style="margin:0 0 14px;">Du kannst jede Aufgabe oben noch einmal ansehen.</p>
+      <button type="button" class="restart-btn" id="sheetReset">Alles zurücksetzen &amp; nochmal üben</button>
+    </div>`;
+
+  document.body.classList.add("sheet-mode"); /* Kopfleiste scrollt mit weg, damit die feste Aufgabenleiste Platz hat (wird in route() wieder entfernt) */
+
+  function updateProgress(){
+    const done = state.q.filter(isDone).length;
+    document.getElementById("sheetCount").textContent = `${done} von ${total} Aufgaben erledigt`;
+    document.getElementById("sheetFill").style.width = Math.round(done / total * 100) + "%";
+    groups.forEach((g, gi) => {
+      const d = g.items.filter(ix => isDone(state.q[ix])).length;
+      const c = host.querySelector(`[data-count="${gi}"]`);
+      if (c) c.textContent = `${d}/${g.items.length}`;
+      const nb = host.querySelector(`.sheet-nav-btn[data-task="${gi}"]`);
+      if (nb) nb.classList.toggle("done", d === g.items.length);
+    });
+    document.getElementById("sheetEnd").style.display = done === total ? "block" : "none";
+  }
+  function setFb(el, ok, msg){
+    const fb = el.querySelector(".feedback");
+    fb.textContent = msg; fb.className = "feedback show " + (ok ? "correct" : "wrong");
+  }
+  function bump(idx){ state.q[idx].attempts = (state.q[idx].attempts || 0) + 1; save(); }
+  function revealDependents(idx){
+    qs.forEach((q, j) => { if (q.showAfter === idx){ const el = host.querySelector(`[data-item="${j}"]`); if (el) el.style.display = ""; } });
+  }
+  function finishCorrect(idx, el, msg, extra){
+    state.q[idx] = Object.assign({ status: "correct", attempts: state.q[idx].attempts || 0 }, extra || {});
+    save();
+    reportResult(slug, idx, "correct", state.q[idx].attempts);
+    setFb(el, true, msg || "Richtig!");
+    revealDependents(idx);
+    updateProgress();
+  }
+  function flash(el){ el.classList.add("wrong-flash"); setTimeout(() => el.classList.remove("wrong-flash"), 450); }
+
+  function wireItem(idx){
+    const q = qs[idx];
+    const el = host.querySelector(`[data-item="${idx}"]`);
+    if (!el) return;
+    const st = state.q[idx];
+    const done = isDone(st);
+
+    if (q.kind === "table-match"){
+      const blanks = Array.from(el.querySelectorAll(".tm-blank"));
+      const chips = Array.from(el.querySelectorAll(".lt-chip"));
+      const chipById = id => chips.find(c => c.dataset.chipId === id);
+      const matches = st.matches || {};
+      const fillRow = (rIdx, chipId) => {
+        const b = blanks[rIdx], c = chipById(chipId);
+        b.textContent = c.textContent; b.classList.add("correct"); b.disabled = true;
+        c.classList.add("used"); c.disabled = true;
+      };
+      Object.keys(matches).forEach(r => fillRow(Number(r), matches[r]));
+      if (done){ q.rows.forEach((r, rIdx) => { if (!blanks[rIdx].disabled) fillRow(rIdx, r.accept[0]); }); setFb(el, true, q.explain || "Richtig!"); return; }
+      let sel = null;
+      const clearSel = () => { if (sel){ sel.el.classList.remove("active"); sel = null; } };
+      const attempt = (blank, chip) => {
+        bump(idx);
+        const rIdx = Number(blank.dataset.row);
+        if (q.rows[rIdx].accept.includes(chip.dataset.chipId)){
+          fillRow(rIdx, chip.dataset.chipId);
+          state.q[idx].matches = Object.assign({}, state.q[idx].matches, { [rIdx]: chip.dataset.chipId });
+          save();
+          if (blanks.every(b => b.disabled)) finishCorrect(idx, el, q.explain, { matches: state.q[idx].matches });
+        } else {
+          flash(blank); flash(chip);
+          setFb(el, false, "Leider falsch – versuch's nochmal.");
+        }
+      };
+      blanks.forEach(b => b.addEventListener("click", () => {
+        if (b.disabled) return;
+        if (sel && sel.type === "chip"){ const c = sel.el; clearSel(); attempt(b, c); return; }
+        if (sel && sel.el === b){ clearSel(); return; }
+        clearSel(); sel = { type: "blank", el: b }; b.classList.add("active");
+      }));
+      chips.forEach(c => c.addEventListener("click", () => {
+        if (c.disabled) return;
+        if (sel && sel.type === "blank"){ const b = sel.el; clearSel(); attempt(b, c); return; }
+        if (sel && sel.el === c){ clearSel(); return; }
+        clearSel(); sel = { type: "chip", el: c }; c.classList.add("active");
+      }));
+    } else if (q.kind === "text"){
+      const input = el.querySelector(".sheet-input"), btn = el.querySelector(".sheet-check");
+      if (done){ input.value = st.answer || q.accept[0]; input.disabled = true; btn.disabled = true; setFb(el, true, q.explain || "Richtig!"); return; }
+      const check = () => {
+        const val = norm(input.value).replace(/[.;:!?,]+$/, "");
+        if (!val){ setFb(el, false, "Schreib bitte zuerst deine Antwort auf."); return; }
+        bump(idx);
+        if (q.accept.some(a => norm(a) === val)){
+          input.disabled = true; btn.disabled = true;
+          finishCorrect(idx, el, q.explain, { answer: input.value.trim() });
+        } else setFb(el, false, "Leider falsch – versuch's nochmal.");
+      };
+      btn.addEventListener("click", check);
+      input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+    } else if (q.kind === "mc"){
+      const opts = Array.from(el.querySelectorAll(".option"));
+      if (done){ opts.forEach(o => { o.disabled = true; if (Number(o.dataset.idx) === q.correct) o.classList.add("correct"); }); setFb(el, true, q.explain || "Richtig!"); return; }
+      opts.forEach(o => o.addEventListener("click", () => {
+        if (o.disabled) return;
+        bump(idx);
+        if (Number(o.dataset.idx) === q.correct){
+          opts.forEach(x => { x.disabled = true; x.classList.add("disabled"); });
+          o.classList.remove("disabled"); o.classList.add("correct");
+          finishCorrect(idx, el, q.explain);
+        } else {
+          flash(o);
+          setFb(el, false, "Leider falsch – versuch's nochmal.");
+        }
+      }));
+    } else {
+      const input = el.querySelector(".sheet-input"), btn = el.querySelector(".sheet-check");
+      if (st.answer) input.value = st.answer;
+      if (done){ input.disabled = true; btn.disabled = true; setFb(el, true, q.keywords ? (q.explain || "Richtig!") : (q.explain || "Deine Antwort wurde gespeichert.")); return; }
+      const keywordMatch = val => {
+        const n = norm(val);
+        const words = n.split(" ").filter(w => /[a-z0-9]/.test(w)).length;
+        if (words < (q.minWords || 2)) return false;
+        const hit = q.keywords.filter(group => group.some(stem => n.indexOf(norm(stem)) !== -1)).length;
+        return hit >= (q.need || q.keywords.length);
+      };
+      btn.addEventListener("click", () => {
+        const val = input.value.trim();
+        if (!val){ setFb(el, false, q.keywords ? "Schreib bitte zuerst deine Antwort auf." : "Schreib bitte ein paar Worte, bevor du absendest."); return; }
+        if (q.keywords){
+          bump(idx);
+          if (keywordMatch(val)){
+            input.disabled = true; btn.disabled = true;
+            finishCorrect(idx, el, q.explain || "Richtig!", { answer: val });
+          } else {
+            state.q[idx].answer = val; save();
+            setFb(el, false, "Noch nicht ganz. Lies die Frage und die Textzeilen noch einmal genau und ergänze oder ändere deine Antwort.");
+          }
+        } else {
+          input.disabled = true; btn.disabled = true;
+          state.q[idx] = { status: "reflect", attempts: (state.q[idx].attempts || 0) + 1, answer: val };
+          save();
+          reportFreitext(slug, "f" + (idx + 1), q.text, val);
+          setFb(el, true, q.explain || "Deine Antwort wurde gespeichert.");
+          updateProgress();
+        }
+      });
+    }
+  }
+
+  qs.forEach((q, idx) => wireItem(idx));
+  qs.forEach((q, idx) => { if (q.showAfter !== undefined && isDone(state.q[q.showAfter])) revealDependents(q.showAfter); });
+  host.querySelectorAll(".sheet-nav-btn").forEach(b => b.addEventListener("click", () => {
+    const card = host.querySelector(`.sheet-task[data-task="${b.dataset.task}"]`);
+    if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+  }));
+  document.getElementById("sheetReset").addEventListener("click", () => {
+    showConfirmDialog("Willst du wirklich alles zurücksetzen? Alle deine Antworten gehen dann verloren und du fängst wieder oben an.", "Ja, zurücksetzen", () => {
+      state.q = freshExerciseState(total).q; save();
+      window.__startSheet(slug);
+      window.scrollTo(0, 0);
+    });
+  });
+  updateProgress();
+};
 
 /* Codeprüfung bei jedem Start (27.10.2026, Wunsch Manuel: am Schuljahresende sollen entfernte Codes
    sofort auch auf schon angemeldeten Geräten gesperrt sein): Ist ein Code auf dem Gerät gespeichert,
