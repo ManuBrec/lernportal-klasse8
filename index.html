@@ -3146,7 +3146,7 @@ const exerciseSets = {
      Der Lesetext selbst steht bewusst NICHT im Portal (Urheberrecht, GitHub Pages ist öffentlich) -
      die Schüler bekommen ihn ausgedruckt; die Aufgaben verweisen nur per Zeilennummer darauf.
      Aufgaben 1+2 als table-match (Zuordnen, mit Prüfung), alle anderen als offene Fragen
-     (kind:"reflect": freie Eingabe, landet im Tabellenblatt "Freitextantworten", keine Bewertung); Aufgabe 4 (kind:"text"), 6 (kind:"mc" + freie Verbesserung der falschen Aussagen) und 7 (table-match) werden geprüft (Update 27.10.2026).
+     (kind:"reflect": freie Eingabe, landet im Tabellenblatt "Freitextantworten", keine Bewertung); Aufgabe 4 (kind:"text"), 6 (kind:"mc" + freie Verbesserung der falschen Aussagen) und 7 (table-match) werden geprüft (Update 27.10.2026); Aufgabe 3, 5 und die Verbesserungen in 6 prüfen frei geschriebene Antworten per Schlüsselwort-Gruppen (q.keywords/q.need, siehe reflect-Wiring in der Engine).
      Vorgabe Manuel: nichts überspringbar (noSkip), keine Musterlösung anzeigen. */
   "deutsch-sachtexte-el-nino": {
     title: "El Niño – Aufgabenblatt zum Lesetext",
@@ -3159,6 +3159,7 @@ const exerciseSets = {
           {
                 "section": "1 Überschriften zuordnen",
                 "kind": "table-match",
+                "noPopup": true,
                 "noSkip": true,
                 "text": "Wie heißen die Überschriften zu den einzelnen Abschnitten? Ordne zu. Danach ergänzt du die Überschriften in deinem Lesetext!",
                 "columns": [
@@ -3229,12 +3230,12 @@ const exerciseSets = {
                             "label": "„Wir können kreativ und großzügig sein“"
                       }
                 ],
-                "popupText": "Ergänze die Überschriften in deinem Lesetext.",
                 "explain": "Alle Überschriften richtig zugeordnet."
           },
           {
                 "section": "2 Wörter und ihre Erklärungen",
                 "kind": "table-match",
+                "noPopup": true,
                 "noSkip": true,
                 "text": "Welche Wörter aus dem Text werden hier erklärt? Ordne zu.",
                 "columns": [
@@ -3293,7 +3294,27 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Erkläre das Wort aus dem Text: „der Wohlstand“",
                 "placeholder": "Deine Erklärung…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "geld",
+                            "reich",
+                            "vermoeg",
+                            "besitz",
+                            "gut leben",
+                            "gut geht",
+                            "gut gehen",
+                            "gutes leben",
+                            "guten leben",
+                            "gut ergeht",
+                            "lebensstandard",
+                            "gueter",
+                            "guter",
+                            "ohne sorgen",
+                            "genug"
+                      ]
+                ],
+                "need": 1
           },
           {
                 "section": "3 Wörter erklären",
@@ -3301,7 +3322,43 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Erkläre das Wort aus dem Text: „die Lieferkette“",
                 "placeholder": "Deine Erklärung…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "ware",
+                            "waren",
+                            "produkt",
+                            "lebensmittel",
+                            "gueter",
+                            "artikel",
+                            "sache",
+                            "ding"
+                      ],
+                      [
+                            "hersteller",
+                            "anbau",
+                            "produktion",
+                            "erzeug",
+                            "bauer",
+                            "fabrik",
+                            "herstell",
+                            "transport",
+                            "weg",
+                            "geschaeft",
+                            "laden",
+                            "supermarkt",
+                            "kunde",
+                            "verbraucher",
+                            "handel",
+                            "liefer",
+                            "station",
+                            "schritt",
+                            "kette",
+                            "verkauf",
+                            "kaeufer"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "3 Wörter erklären",
@@ -3309,7 +3366,33 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Erkläre das Wort aus dem Text: „der Kaltlufteinbruch“",
                 "placeholder": "Deine Erklärung…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "kalt",
+                            "kaelt",
+                            "frost",
+                            "eis"
+                      ],
+                      [
+                            "luft",
+                            "ploetz",
+                            "schnell",
+                            "stroem",
+                            "kommt",
+                            "einbruch",
+                            "wetter",
+                            "temperatur",
+                            "sinkt",
+                            "faellt",
+                            "wird",
+                            "winter",
+                            "grad",
+                            "einbrechen",
+                            "bricht"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "3 Wörter erklären",
@@ -3317,7 +3400,32 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Erkläre das Wort aus dem Text: „das Bruttoinlandsprodukt“",
                 "placeholder": "Deine Erklärung…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "wert",
+                            "summe",
+                            "gesamt",
+                            "alle",
+                            "wie viel",
+                            "wieviel",
+                            "menge",
+                            "geld",
+                            "leistung",
+                            "produziert",
+                            "hergestellt",
+                            "herstell"
+                      ],
+                      [
+                            "land",
+                            "staat",
+                            "deutschland",
+                            "volkswirtschaft",
+                            "wirtschaft",
+                            "laender"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "4 Wie heißt es im Text?",
@@ -3400,7 +3508,30 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "a) Was ist El Niño? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "waerm",
+                            "warm",
+                            "schwankung",
+                            "phaenomen",
+                            "erwaerm",
+                            "hitze",
+                            "strom",
+                            "wetter",
+                            "klima"
+                      ],
+                      [
+                            "pazifik",
+                            "meer",
+                            "ozean",
+                            "wasser",
+                            "wassertemperatur",
+                            "oberflaechengewaesser",
+                            "gewaesser"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3408,7 +3539,35 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "b) Warum sollte man meinen, dass der Pazifik Deutschland nicht interessieren muss? Warum stimmt das trotzdem nicht? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "8000",
+                            "weit",
+                            "entfernt",
+                            "kilometer",
+                            "km",
+                            "fern",
+                            "weg"
+                      ],
+                      [
+                            "wetter",
+                            "wohlstand",
+                            "preise",
+                            "wirtschaft",
+                            "einfluss",
+                            "beeinfluss",
+                            "auswirk",
+                            "folgen",
+                            "lebensmittel",
+                            "betrifft",
+                            "betroffen",
+                            "trotzdem",
+                            "doch",
+                            "aber"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3416,7 +3575,36 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "c) Wovor warnt die Weltwetterorganisation? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "duerre",
+                            "trocken"
+                      ],
+                      [
+                            "regen",
+                            "ueberschwemm",
+                            "starkregen",
+                            "hochwasser"
+                      ],
+                      [
+                            "hitze",
+                            "heiss",
+                            "waerme"
+                      ],
+                      [
+                            "wassertemperatur",
+                            "el nino",
+                            "nie so hoch",
+                            "noch nie",
+                            "rekord",
+                            "hoechste",
+                            "starker",
+                            "staerkste",
+                            "ausserge"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3424,7 +3612,21 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "d) Welche Regionen der Erde sind besonders betroffen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "suedamerika",
+                            "sued-amerika",
+                            "sued amerika"
+                      ],
+                      [
+                            "afrika"
+                      ],
+                      [
+                            "asien"
+                      ]
+                ],
+                "need": 3
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3432,7 +3634,37 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "e) Welche Auswirkungen auf das Wetter in Deutschland sind möglich? Nenne drei. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "hitze",
+                            "rekord",
+                            "waermer",
+                            "heisser",
+                            "temperatur",
+                            "hitzewelle"
+                      ],
+                      [
+                            "kaelte",
+                            "kaltluft",
+                            "kalt",
+                            "kaelter"
+                      ],
+                      [
+                            "sturm",
+                            "stuerme",
+                            "unwetter",
+                            "wind"
+                      ],
+                      [
+                            "mild",
+                            "feucht",
+                            "niederschlag",
+                            "regen",
+                            "nass"
+                      ]
+                ],
+                "need": 3
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3440,7 +3672,31 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "f) Warum ist es so schwierig, die Auswirkungen von El Niño auf Deutschland zu belegen? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "andere",
+                            "viele",
+                            "weitere",
+                            "verschieden",
+                            "ueberdeck",
+                            "ueberlag",
+                            "mehrere",
+                            "vielen"
+                      ],
+                      [
+                            "einfluss",
+                            "effekt",
+                            "faktor",
+                            "ursache",
+                            "wetter",
+                            "ereignis",
+                            "zusammenhang",
+                            "klima",
+                            "wirkung"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3448,7 +3704,35 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "g) Wie kann El Niño die Lebensmittelpreise in Deutschland beeinflussen? Erkläre, warum sie steigen, aber auch sinken können. Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "ernte",
+                            "ertrag",
+                            "duerre",
+                            "starkregen",
+                            "import",
+                            "ernten",
+                            "anbau"
+                      ],
+                      [
+                            "brasilien",
+                            "argentinien",
+                            "soja",
+                            "profitier",
+                            "mehr regen",
+                            "haeufiger",
+                            "niederschlaege",
+                            "guenstig",
+                            "sinken",
+                            "billiger",
+                            "futter",
+                            "guenstiger",
+                            "andere regionen",
+                            "andere laender"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "5 Fragen zum Text",
@@ -3456,7 +3740,35 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "h) Was fordern WMO-Chefin Saulo und UN-Nothilfekoordinator Fletcher? Antworte in ganzen Sätzen und gib die Textzeile/n an, in denen du die Antwort gefunden hast.",
                 "placeholder": "Antwort in ganzen Sätzen mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "vorbereit",
+                            "vorsorg",
+                            "vorher",
+                            "rechtzeitig",
+                            "vorbereitung"
+                      ],
+                      [
+                            "hilf",
+                            "helfen",
+                            "unterstuetz",
+                            "hilfe",
+                            "geld",
+                            "investier"
+                      ],
+                      [
+                            "resilienz",
+                            "katastrophe",
+                            "warten",
+                            "handeln",
+                            "schnell",
+                            "weltgemeinschaft",
+                            "alle laender",
+                            "zusammen"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "6 Richtig oder falsch?",
@@ -3488,7 +3800,21 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Die Wassertemperaturen im tropischen Pazifik waren in den letzten 40 Jahren schon öfter so hoch wie jetzt.“",
                 "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "noch nie",
+                            "nie so",
+                            "nie zuvor",
+                            "nicht so hoch",
+                            "noch nicht",
+                            "bisher nie",
+                            "rekord",
+                            "hoechste",
+                            "nie"
+                      ]
+                ],
+                "need": 1
           },
           {
                 "section": "6 Richtig oder falsch?",
@@ -3508,7 +3834,27 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „El Niño hat auf der ganzen Welt dieselben Folgen.“",
                 "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "unterschied",
+                            "verschieden",
+                            "je nach",
+                            "nicht ueberall",
+                            "nicht auf der ganzen",
+                            "nicht dieselben",
+                            "nicht die gleichen",
+                            "nicht die selben",
+                            "nicht gleich",
+                            "region",
+                            "manche",
+                            "mancherorts",
+                            "anders",
+                            "unterschiedlich",
+                            "nicht jeder"
+                      ]
+                ],
+                "need": 1
           },
           {
                 "section": "6 Richtig oder falsch?",
@@ -3528,7 +3874,19 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Der Deutsche Wetterdienst erwartet für den kommenden Winter einen sehr kalten und trockenen Winter.“",
                 "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "mild"
+                      ],
+                      [
+                            "feucht",
+                            "nass",
+                            "regnerisch",
+                            "regen"
+                      ]
+                ],
+                "need": 2
           },
           {
                 "section": "6 Richtig oder falsch?",
@@ -3548,7 +3906,28 @@ const exerciseSets = {
                 "noSkip": true,
                 "text": "Verbessere die falsche Aussage und schreibe sie richtig auf (Zeilenangabe nicht vergessen): „Alle Studien sagen, dass El Niño die Lebensmittel in Deutschland teurer macht.“",
                 "placeholder": "Verbesserte Aussage mit Zeilenangabe…",
-                "explain": "Deine Antwort wurde gespeichert."
+                "explain": "Richtig! Du hast die wichtigen Punkte genannt.",
+                "keywords": [
+                      [
+                            "nicht alle",
+                            "nicht jede",
+                            "manche",
+                            "einige",
+                            "spanisch",
+                            "zentralbank",
+                            "sinken",
+                            "guenstiger",
+                            "billiger",
+                            "nicht immer",
+                            "teils",
+                            "unterschiedlich",
+                            "verschieden",
+                            "beide richtung",
+                            "nicht unbedingt",
+                            "nicht jede studie"
+                      ]
+                ],
+                "need": 1
           },
           {
                 "section": "6 Richtig oder falsch?",
@@ -3565,6 +3944,7 @@ const exerciseSets = {
           {
                 "section": "7 Zahlen im Text",
                 "kind": "table-match",
+                "noPopup": true,
                 "noSkip": true,
                 "text": "Im Text kommen viele Zahlen vor. Wofür stehen sie? Ordne zu.",
                 "columns": [
@@ -3635,7 +4015,6 @@ const exerciseSets = {
                             "label": "So viel Wirtschaftsleistung könnte Deutschland laut Allianz verlieren"
                       }
                 ],
-                "popupText": "Schreibe die Zahlen mit ihrer Bedeutung und der Zeilennummer in dein Heft.",
                 "explain": "Alle Zahlen richtig zugeordnet."
           },
           {
@@ -13482,9 +13861,9 @@ window.__startExercise = function(slug){
     navHost.innerHTML = state.q.map((qs, idx) => {
       let cls = "qnav-btn";
       if (idx === i) cls += " current";
-      if (qs.status === "correct") cls += " correct";
+      if (qs.status === "correct" || (set.countReflectAsDone && qs.status === "reflect")) cls += " correct";
       else if (qs.status === "skipped") cls += " skipped";
-      const titleBit = qs.status === "correct" ? " – richtig gelöst" : qs.status === "skipped" ? " – noch nicht verstanden" : "";
+      const titleBit = qs.status === "correct" ? " – richtig gelöst" : (qs.status === "reflect" && set.countReflectAsDone) ? " – beantwortet" : qs.status === "skipped" ? " – noch nicht verstanden" : "";
       return `<button type="button" class="${cls}" data-idx="${idx}" title="Aufgabe ${idx+1}${titleBit}">${idx+1}</button>`;
     }).join("");
     navHost.querySelectorAll(".qnav-btn").forEach(btn=>{
@@ -13535,12 +13914,14 @@ window.__startExercise = function(slug){
   }
 
   function renderReviewCard(q, qState){
-    const ok = qState.status === "correct";
+    const answered = qState.status === "reflect"; /* offene Frage (kind:"reflect"): Antwort wurde abgegeben */
+    const ok = qState.status === "correct" || answered;
     const triesText = qState.attempts ? ` (${qState.attempts} ${qState.attempts===1 ? "Versuch" : "Versuche"})` : "";
     host.innerHTML = `
       <div class="qcard">
         ${head(q)}
-        <div class="feedback show ${ok ? "correct" : "wrong"}">${ok ? "✓ Schon richtig gelöst" : "Nicht gelöst"}${triesText}.${ok ? " " + esc(q.explain) : ""}</div>
+        <div class="feedback show ${ok ? "correct" : "wrong"}">${answered ? "✓ Antwort abgegeben" : (ok ? "✓ Schon richtig gelöst" : "Nicht gelöst")}${triesText}.${ok ? " " + esc(q.explain) : ""}</div>
+        ${qState.answer ? `<textarea class="reflect-textarea" rows="4" readonly style="margin-top:12px;">${esc(qState.answer)}</textarea>` : ""}
         <div class="qactions">
           <button class="skip-btn" id="retryBtn">Nochmal versuchen</button>
           <button class="next-btn show" id="nextBtn">${i+1===total ? "Ergebnis ansehen" : "Weiter"}</button>
@@ -13548,7 +13929,7 @@ window.__startExercise = function(slug){
       </div>
     `;
     document.getElementById("retryBtn").addEventListener("click", ()=>{
-      state.q[i] = { status:"open", attempts:0 };
+      state.q[i] = { status:"open", attempts:0, answer: qState.answer };
       persist();
       renderQuestion();
     });
@@ -13804,8 +14185,8 @@ window.__startExercise = function(slug){
          kein "Überspringen"-Button angezeigt wird (siehe Branch weiter unten, der skipBtnHtml baut). */
       body = `
         <div class="reflect-row">
-          <textarea class="reflect-textarea" id="reflectInput" placeholder="${esc(q.placeholder || "Deine Meinung dazu…")}" rows="4"></textarea>
-          <button class="check-btn" id="checkBtn">Absenden</button>
+          <textarea class="reflect-textarea" id="reflectInput" placeholder="${esc(q.placeholder || "Deine Meinung dazu…")}" rows="4">${esc((state.q[i] && state.q[i].answer) || "")}</textarea>
+          <button class="check-btn" id="checkBtn">${q.keywords ? "Prüfen" : "Absenden"}</button>
         </div>
       `;
     } else if (q.kind === "markieren"){
@@ -14214,11 +14595,39 @@ window.__startExercise = function(slug){
          merken+persist(), Feedback anzeigen, "Weiter"-Button einblenden), und die Antwort selbst
          geht separat über reportFreitext() ins Tabellenblatt "Freitextantworten". */
       const input = document.getElementById("reflectInput");
+      /* q.keywords (neu 27.10.2026, Wunsch Manuel "freie Antworten mit hinterlegten Antworten abgleichen"):
+         Liste von Schlüsselwort-GRUPPEN, jede Gruppe = Liste alternativer Wortstämme (Kleinschreibung,
+         Umlaute als ae/oe/ue, Teilwort-Treffer genügen, z.B. "waerm" trifft "wärmer"/"Erwärmung").
+         Eine Gruppe ist erfüllt, wenn mindestens EIN Stamm in der Antwort vorkommt; richtig ist die
+         Antwort, wenn mindestens q.need Gruppen (Standard: alle) erfüllt sind UND mindestens
+         q.minWords Wörter (Standard 2) geschrieben wurden. Bei "falsch" bleibt der Text im Feld
+         stehen (zum Ergänzen), die Lösung wird nie gezeigt; die Antwort wird NICHT als Freitext
+         ans Dashboard gemeldet, nur das Ergebnis (richtig + Versuche) über lockQuestion(). */
+      const keywordMatch = (val)=>{
+        const norm = foldUmlauts(val).toLowerCase().replace(/\s+/g," ");
+        const words = norm.split(" ").filter(w => /[a-z0-9]/.test(w)).length;
+        if (words < (q.minWords || 2)) return false;
+        const hit = q.keywords.filter(group => group.some(stem => norm.indexOf(foldUmlauts(stem).toLowerCase()) !== -1)).length;
+        return hit >= (q.need || q.keywords.length);
+      };
       const submit = ()=>{
         if (solved) return;
         const val = input.value.trim();
         if (!val){
-          tryAgainFeedback("Schreib bitte ein paar Worte, bevor du absendest.");
+          tryAgainFeedback(q.keywords ? "Schreib bitte zuerst deine Antwort auf." : "Schreib bitte ein paar Worte, bevor du absendest.");
+          return;
+        }
+        if (q.keywords){
+          attempts++;
+          if (keywordMatch(val)){
+            input.disabled = true;
+            document.getElementById("checkBtn").disabled = true;
+            lockQuestion("correct", q.explain || "Richtig!", "correct");
+            state.q[i].answer = val; persist();
+          } else {
+            state.q[i].answer = val; persist();
+            tryAgainFeedback("Noch nicht ganz. Lies die Frage und die Textzeilen noch einmal genau und ergänze oder ändere deine Antwort.");
+          }
           return;
         }
         attempts++;
@@ -14226,7 +14635,7 @@ window.__startExercise = function(slug){
         document.getElementById("checkBtn").disabled = true;
         reportFreitext(slug, "f" + (i+1), q.text, val);
         solved = true;
-        state.q[i] = { status: "reflect", attempts: (state.q[i].attempts || 0) + attempts };
+        state.q[i] = { status: "reflect", attempts: (state.q[i].attempts || 0) + attempts, answer: val };
         persist();
         const fb = document.getElementById("fb");
         fb.textContent = q.explain || "Danke für deine Meinung!";
@@ -15652,7 +16061,8 @@ window.__startExercise = function(slug){
               renderGraphicBuilder();
             } else {
               lockQuestion("correct", q.explain, "correct");
-              showTablePopup(q.popupText || "Übernimm diese Tabelle schriftlich in dein Heft.");
+              /* q.noPopup (neu 27.10.2026, Wunsch Manuel): kein "Übernimm ... in dein Heft"-Pop-up */
+              if (!q.noPopup) showTablePopup(q.popupText || "Übernimm diese Tabelle schriftlich in dein Heft.");
             }
           }
         } else {
