@@ -1751,6 +1751,8 @@ const prozentTopics = [
   { tag:"werkzeug", label:"Werkzeug: Säulendiagramme mit Prozentangaben", page:24 },
   { tag:"werkzeug", label:"Werkzeug: Streifendiagramme zeichnen", page:25 },
   { tag:"werkzeug", label:"Werkzeug: Kreisdiagramme zeichnen", page:26 },
+  { tag:"lernen", label:"Handy-Detektiv: Kreisdiagramm", practice:"prozentrechnung-handy-detektiv" },
+  { tag:"lernen", label:"Abfrage Wintersporttag: Kreisdiagramm", practice:"prozentrechnung-wintersporttag-kreisdiagramm" },
   { tag:"werkzeug", label:"Werkzeug: Diagramme mit dem Computer erstellen", page:28 },
   { tag:"lernen", label:"Promille", page:29 },
   { tag:"abschluss", label:"Klar so weit?", page:32 },
@@ -4779,6 +4781,93 @@ const exerciseSets = {
         template: "Prozentsatz nach der Abnahme: 100 % − 12 % = %% %¶Ergebnis: Dieser Prozentsatz von 2450 Personen sind %% Personen",
         answers: ["88","2156"],
         explain: "Prozentsatz: 100 % − 12 % = 88 %. Ergebnis: 88 % von 2450 Personen sind 2450 · 0,88 = 2156 Personen." }
+    ]
+  },
+  /* Neu (10.11.2026, Wunsch Manuel): zwei Alltags-Aufgaben zum Kreisdiagramm (Wiederholung zum Heft-Eintrag
+     "Diagramme zeichnen" - Anteil p = (P : G) · 100, 100 % = 360°, 1 % = 3,6°). Stehen in der Themenliste
+     Prozentrechnung direkt hinter "Kreisdiagramme zeichnen" (Nr. 12 und 13). Ablauf je Aufgabe: Prozent berechnen
+     (getippte Lücken, auf ganze Prozent gerundet) -> Winkel (mit den gerundeten Prozentwerten, auf ganze Grad
+     gerundet; Heft-Aufschrieb-Popup mit Tabelle) -> Kontrolle (Summen) -> Kreisdiagramm im Heft zeichnen -> Auswertung. */
+  "prozentrechnung-handy-detektiv": {
+    title: "Handy-Detektiv: Kreisdiagramm",
+    chapterSlug: "prozentrechnung",
+    duration: "ca. 15 Minuten",
+    locked: false,
+    questions: [
+      { section: "Schätzen", kind:"reflect", noSkip:true,
+        text: "Lukas verbringt seinen Tag (24 Stunden) mit folgenden Beschäftigungen: Schlafen: 8 Stunden · Schule (mit Weg): 6 Stunden · Handy: 4 Stunden · Freunde und Sport: 3 Stunden · Essen und Haushalt: 2 Stunden · Hausaufgaben: 1 Stunde. Lukas' Mutter sagt: „Du bist den ganzen Tag am Handy!“ Schätze zuerst, ohne zu rechnen: Wie viel Prozent seines Tages ist Lukas am Handy?",
+        placeholder: "Ich schätze: … %",
+        explain: "Deine Schätzung wurde gespeichert. Rechne jetzt nach und vergleiche am Ende mit deinem Ergebnis." },
+      { section: "Prozent berechnen", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Wie viel Prozent nehmen die einzelnen Aktivitäten ein? Der ganze Tag hat 24 Stunden (Grundwert G = 24 h). Rechne mit p = (P : G) · 100 und runde auf ganze Prozent.",
+        template: "Schlafen (8 h): %% %¶Schule (6 h): %% %¶Handy (4 h): %% %¶Freunde und Sport (3 h): %% %¶Essen und Haushalt (2 h): %% %¶Hausaufgaben (1 h): %% %",
+        answers: ["33","25","17","13","8","4"],
+        explain: "Schlafen: 8 : 24 · 100 ≈ 33 %. Schule: 6 : 24 · 100 = 25 %. Handy: 4 : 24 · 100 ≈ 17 %. Freunde und Sport: 3 : 24 · 100 = 12,5 ≈ 13 %. Essen und Haushalt: 2 : 24 · 100 ≈ 8 %. Hausaufgaben: 1 : 24 · 100 ≈ 4 %." },
+      { section: "Winkel berechnen", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Für das Kreisdiagramm brauchst du die Winkel. Es gilt: 100 % entsprechen 360°, also entspricht 1 % genau 3,6°. Rechne mit den gerundeten Prozentwerten und runde auf ganze Grad.",
+        template: "Schlafen: 33 % · 3,6° ≈ %°¶Schule: 25 % · 3,6° = %°¶Handy: 17 % · 3,6° ≈ %°¶Freunde und Sport: 13 % · 3,6° ≈ %°¶Essen und Haushalt: 8 % · 3,6° ≈ %°¶Hausaufgaben: 4 % · 3,6° ≈ %°",
+        answers: ["119","90","61","47","29","14"],
+        popupText: "Übernimm diese Tabelle in dein Heft:",
+        popupTable: { columns:["Aktivität","Stunden","Anteil","Winkel"],
+          rows:[["Schlafen","8 h","33 %","119°"],["Schule (mit Weg)","6 h","25 %","90°"],["Handy","4 h","17 %","61°"],["Freunde und Sport","3 h","13 %","47°"],["Essen und Haushalt","2 h","8 %","29°"],["Hausaufgaben","1 h","4 %","14°"]] },
+        explain: "33 · 3,6 = 118,8 ≈ 119°. 25 · 3,6 = 90°. 17 · 3,6 = 61,2 ≈ 61°. 13 · 3,6 = 46,8 ≈ 47°. 8 · 3,6 = 28,8 ≈ 29°. 4 · 3,6 = 14,4 ≈ 14°." },
+      { section: "Kontrolle", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Kontrolliere deine Rechnung: Zähle alle Prozentwerte und alle Winkel zusammen.",
+        template: "Summe der Prozentwerte: %% %¶Summe der Winkel: %°",
+        answers: ["100","360"],
+        explain: "33 + 25 + 17 + 13 + 8 + 4 = 100 % und 119° + 90° + 61° + 47° + 29° + 14° = 360°. Wenn die Summen stimmen, kannst du zeichnen." },
+      { section: "Zeichnen", kind:"reflect", noSkip:true,
+        text: "Zeichne das Kreisdiagramm in dein Heft: Radius 5 cm, Mittelpunkt markieren, die Winkel nacheinander mit dem Geodreieck abtragen, jeden Teil anmalen und beschriften. Schreibe „fertig“, wenn dein Kreisdiagramm im Heft ist.",
+        placeholder: "fertig",
+        explain: "Gut! Prüfe noch einmal: Hat jeder Teil die richtige Größe und eine Beschriftung?" },
+      { section: "Auswertung", kind:"reflect", noSkip:true,
+        text: "Wer hat recht: Lukas („nur ein kleiner Teil“) oder seine Mutter („den ganzen Tag“)? Schreibe einen Antwortsatz mit der Prozentzahl und vergleiche mit deiner Schätzung vom Anfang.",
+        placeholder: "Antwortsatz …",
+        explain: "Die Handyzeit ist mit 17 % ungefähr ein Sechstel des Tages und damit mehr als Freunde und Sport (13 %). Lukas hat nicht ganz recht, seine Mutter übertreibt aber auch." },
+      { section: "Zusatz für Profis", kind:"numeric", accept:["25"],
+        text: "Lukas schläft 8 Stunden, er ist also 24 − 8 = 16 Stunden wach. Wie viel Prozent seiner Wachzeit sind die 4 Stunden Handy? (Achtung: Der Grundwert ist jetzt 16 Stunden. Antwort ohne Prozentzeichen.)",
+        explain: "p = (4 : 16) · 100 = 25 %. Von seiner Wachzeit ist ein Viertel Handyzeit – das überrascht viele." },
+      { section: "Zusatz für Profis", kind:"reflect", noSkip:true,
+        text: "Schau in der Bildschirmzeit deines Handys oder iPads nach: Wie viele Stunden warst du gestern am Handy? Wie viel Prozent von 24 Stunden sind das, und wie groß wäre dein Winkel im Kreisdiagramm?",
+        placeholder: "Gestern … Stunden = … % → Winkel …°",
+        explain: "Deine Antwort wurde gespeichert." }
+    ]
+  },
+  "prozentrechnung-wintersporttag-kreisdiagramm": {
+    title: "Abfrage Wintersporttag: Kreisdiagramm",
+    chapterSlug: "prozentrechnung",
+    duration: "ca. 15 Minuten",
+    locked: false,
+    questions: [
+      { section: "Prozent berechnen", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Vor dem Wintersporttag wurde in der Schule gefragt, bei welcher Aktivität sich die Schüler anmelden möchten (erfundene Abfrage). Insgesamt haben 275 Schüler abgestimmt: Skifahren: 110 · Winterwanderung: 44 · Rodeln: 55 · Eislaufen: 33 · Langlaufen: 33. Wie viel Prozent der Schüler haben sich für die einzelnen Aktivitäten entschieden? (Grundwert G = 275, Rechnung p = (P : G) · 100)",
+        template: "Skifahren (110): %% %¶Winterwanderung (44): %% %¶Rodeln (55): %% %¶Eislaufen (33): %% %¶Langlaufen (33): %% %",
+        answers: ["40","16","20","12","12"],
+        explain: "Skifahren: 110 : 275 · 100 = 40 %. Winterwanderung: 44 : 275 · 100 = 16 %. Rodeln: 55 : 275 · 100 = 20 %. Eislaufen: 33 : 275 · 100 = 12 %. Langlaufen: 33 : 275 · 100 = 12 %." },
+      { section: "Winkel berechnen", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Berechne die Winkel für das Kreisdiagramm (100 % entsprechen 360°, 1 % entspricht 3,6°). Runde auf ganze Grad.",
+        template: "Skifahren: 40 % · 3,6° = %°¶Winterwanderung: 16 % · 3,6° ≈ %°¶Rodeln: 20 % · 3,6° = %°¶Eislaufen: 12 % · 3,6° ≈ %°¶Langlaufen: 12 % · 3,6° ≈ %°",
+        answers: ["144","58","72","43","43"],
+        popupText: "Übernimm diese Tabelle in dein Heft:",
+        popupTable: { columns:["Aktivität","Schüler","Anteil","Winkel"],
+          rows:[["Skifahren","110","40 %","144°"],["Winterwanderung","44","16 %","58°"],["Rodeln","55","20 %","72°"],["Eislaufen","33","12 %","43°"],["Langlaufen","33","12 %","43°"]] },
+        explain: "40 · 3,6 = 144°. 16 · 3,6 = 57,6 ≈ 58°. 20 · 3,6 = 72°. 12 · 3,6 = 43,2 ≈ 43°. 12 · 3,6 = 43,2 ≈ 43°." },
+      { section: "Kontrolle", kind:"gapfill", typeIn:true, noBookHint:true,
+        text: "Kontrolliere deine Rechnung: Zähle alle Prozentwerte und alle Winkel zusammen.",
+        template: "Summe der Prozentwerte: %% %¶Summe der Winkel: %°",
+        answers: ["100","360"],
+        explain: "40 + 16 + 20 + 12 + 12 = 100 % und 144° + 58° + 72° + 43° + 43° = 360°." },
+      { section: "Zeichnen", kind:"reflect", noSkip:true,
+        text: "Zeichne das Kreisdiagramm in dein Heft (Radius 5 cm), male die Teile an und beschrifte sie. Schreibe „fertig“, wenn dein Kreisdiagramm im Heft ist.",
+        placeholder: "fertig",
+        explain: "Gut! Prüfe noch einmal, ob jeder Teil die richtige Größe und eine Beschriftung hat." },
+      { section: "Auswertung", kind:"reflect", noSkip:true,
+        text: "Welche Aktivität ist am beliebtesten, welche am wenigsten? Schreibe zwei Sätze mit Prozentzahlen.",
+        placeholder: "Am beliebtesten ist … mit … %.",
+        explain: "Am beliebtesten ist Skifahren mit 40 %, am wenigsten beliebt sind Eislaufen und Langlaufen mit je 12 %." },
+      { section: "Zusatz für Profis", kind:"numeric", accept:["19"],
+        text: "Nachträglich melden sich noch 25 Schüler zum Langlaufen an. Jetzt sind es 300 Schüler insgesamt, davon 58 beim Langlaufen. Wie viel Prozent sind das? (Neuer Grundwert 300, auf ganze Prozent runden, Antwort ohne Prozentzeichen.)",
+        explain: "p = (58 : 300) · 100 ≈ 19 %. Der Grundwert ändert sich, deshalb steigt der Anteil nicht einfach um 25 Prozentpunkte." }
     ]
   },
   "noch-fit-prozentrechnung": {
@@ -12653,7 +12742,7 @@ function viewChapter(slug){
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
           <span class="topic-name">${esc(t.label)}</span>
           ${progressHtml}
-          <span class="topic-page num">S. ${t.page}</span>
+          ${t.page ? `<span class="topic-page num">S. ${t.page}</span>` : ""}
           ${actionHtml}
         </div>
       `;
