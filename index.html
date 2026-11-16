@@ -1647,6 +1647,7 @@ const naturtechnikMikroorganismenTopics = [
    Wunsch von Manuel am 05.10. aus dem Mikroorganismen-Kapitel herausgelöst. */
 const naturtechnikSuchtTopics = [
   { tag:"lernen", label:"Einstieg: Stoffgebundene und stoffungebundene Sucht", practice:"nt-sucht-bilder-zuordnen" },
+  { tag:"lernen", label:"Was macht dich glücklich? – Die Glücksblume", practice:"nt-sucht-gluecksblume" },
 ];
 
 const naturtechnikInfektionserkrankungenTopics = [
@@ -5012,6 +5013,17 @@ const exerciseSets = {
      geschnitten, SUCHT_IMG[1..24]) einzeln als mc: stoffgebunden (ungerade Nr.: Zigarette, Energy-Drink, Bier, Testosteron, Cannabis,
      Snus, Schnaps, Nasenspray, E-Zigarette, Shisha, Wein, Tabletten) oder stoffungebunden (gerade Nr.). Reihenfolge fest gemischt (order).
      Am Ende Lückentext mit Heft-Tabelle (popupTable) zum Abschreiben. */
+  /* Neu (Wunsch Manuel, 16.11.2026): "Glücksblume" zu Material A der Buchseite "Was macht dich glücklich?" - eine Blume,
+     die aus dem Samen wächst, wenn die Schüler passende Glücksquellen eintippen (custom:"gluecksblume", siehe
+     window.__startGluecksblume). Keine Fragen im Sinne des generischen Motors (questions:[]). */
+  "nt-sucht-gluecksblume": {
+    title: "Was macht dich glücklich? – Die Glücksblume",
+    subject: "naturtechnik",
+    chapterSlug: "suchterkrankungen",
+    duration: "ca. 10 Minuten",
+    locked: false,
+    custom: "gluecksblume",
+    questions: [] },
   "nt-sucht-bilder-zuordnen": {
     title: "Stoffgebundene und stoffungebundene Sucht",
     subject: "naturtechnik",
@@ -13432,7 +13444,7 @@ function viewNaturtechnikChapter(slug){
       const set = t.practice ? exerciseSets[t.practice] : null;
       const locked = isLocked(set, t.practice);
       let progressHtml = "";
-      if (set && !locked){
+      if (set && !locked && !set.custom){
         const prog = exerciseProgress(t.practice);
         const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
         const done = !!prog && prog.correct === prog.total;
@@ -14095,6 +14107,17 @@ function viewExercise(slug){
     `;
   }
 
+  if (set.custom === "gluecksblume"){
+    return h`
+      <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Übung</span>
+        <h1>${esc(set.title)}</h1>
+        <p>Wer genug Glück aus guten Quellen bekommt, braucht keine Suchtmittel. Bring deine Glücksblume zum Wachsen: Schreib auf, was dich glücklich macht.</p>
+      </div>
+      <div id="exerciseHost"></div>
+    `;
+  }
   if (set.custom === "fluchtpunkt-trainer"){
     return h`
       <a class="backlink" href="${chapterHref}">← Zurück zum Kapitel</a>
@@ -18167,6 +18190,277 @@ start();
      einer flachen Fläche zu sehen ist (Wunsch Manuel: "so aussieht wie bei mir").
    - Beim Zeichnen: hält man den Stift kurz ruhig auf der Linie, wird der bisherige Strich automatisch
      gerade gezogen (von Startpunkt zur aktuellen Stiftposition) - erleichtert gerade Fluchtlinien. */
+/* === Glücksblume (neu, Wunsch Manuel: "was macht dich glücklich" - Natur und Technik / Suchterkrankungen) ===
+   Die Blume liegt zu Beginn als Samen in der Erde. Die Schüler tippen Beispiele ein, was sie glücklich macht
+   (Menschen, Sport, Lob, Erfolg, Musik ...). Passt ein Beispiel zu einer "Gießkanne" (Kategorie, siehe GB_CATS),
+   wird gegossen und die Blume wächst; jede Kategorie zählt nur einmal. Nach 6 Gießkannen blüht sie, danach
+   folgt eine kurze Transferfrage (Warum sinkt die Suchtgefahr, wenn man viele Glücksquellen hat?) und ein Heft-Pop-up.
+   Suchtmittel/Handy/Zocken/Shoppen werden NICHT als Glücksquelle gewertet, sondern erklärt. Jede Eingabe wird per
+   reportFreitext() ins Blatt "Freitextantworten" gemeldet (✓ Kategorie bzw. ✗ nicht erkannt), damit Manuel die
+   Stichwortlisten bei Bedarf erweitern kann. Stichwörter: kleingeschrieben, Umlaute als ae/oe/ue/ss; Stämme mit
+   höchstens 4 Buchstaben müssen am Wortanfang stehen, "xyz$" bedeutet exakt dieses Wort. */
+const GB_GOAL = 6;
+const GB_CATS = [
+  { key:"familie", label:"Familie", kw:["familie","eltern","mama","papa","mutter","vater","mutti","vati","geschwister","bruder","schwester","oma","opa","grosseltern","tante","onkel","cousin","zuhause","daheim","verwandt"] },
+  { key:"freunde", label:"Freunde", kw:["freund","kumpel","clique","kollegen","leute treffen","bff"] },
+  { key:"sport", label:"Sport und Bewegung", kw:["sport","fussball","handball","basketball","volleyball","tennis","tischtennis","schwimm","joggen","laufen","rennen","training","trainier","tanz","klettern","radfahren","fahrrad","mountainbike","biken","ski$","skifahr","skitour","snowboard","wandern","gym","fitness","turnen","boxen","kampf","judo","karate","reiten","bewegung","skate","eishockey","rudern","kajak","paddeln","bouldern","krafttraining","spazieren"] },
+  { key:"lob", label:"Lob und Anerkennung", kw:["lob","gelobt","loben","anerkennung","anerkannt","kompliment","wertschaetzung","respekt","bewunder","beliebt","aufmerksamkeit","gesehen werden","wertgeschaetzt"] },
+  { key:"erfolg", label:"Erfolg und Leistung", kw:["erfolg","gute note","guten note","noten","zeugnis","pruefung","bestanden","geschafft","ziel erreicht","ziele erreicht","stolz","leistung","gewonnen","gewinnen","sieg","pokal","medaille","fortschritt","lernerfolg","ausbildung","praktikum","lehrstelle","job bekommen","eine eins","besser geworden","verbessert"] },
+  { key:"musik", label:"Musik", kw:["musik","singen","gesang","gitarre","klavier","schlagzeug","instrument","konzert","band","lied","song","chor","trompete","floete","geige","orgel","harmonika","tuba","dj"] },
+  { key:"tiere", label:"Tiere", kw:["tier","hund","katze","pferd","hamster","kanin","vogel","meerschwein","reiterhof","kuh","kuehe","schaf","ziege","huhn","huehner"] },
+  { key:"natur", label:"Natur und frische Luft", kw:["natur","wald","berg","see$","spaziergang","draussen","garten","wiese","frische luft","sonne","strand","meer$","am meer","fluss","gipfel","alpen","bach","schnee","blumen"] },
+  { key:"hobby", label:"Hobbys und Kreatives", kw:["hobby","malen","zeichn","basteln","handwerk","naehen","stricken","fotograf","lesen","buch","schreiben","werken","bauen","lego","modellbau","angeln","schnitzen","holz","schrauben","reparieren","motorrad","moped","traktor","landwirtschaft","bauernhof","forst","jagd"] },
+  { key:"gemeinschaft", label:"Gemeinschaft und Verein", kw:["verein","team","mannschaft","gemeinschaft","jugendgruppe","pfadfinder","feuerwehr","thw","ehrenamt","helfen","gruppe","dazugehoeren","dazu gehoeren","zusammen","bergrettung","jugendarbeit","ministrant","trachten","musikkapelle","schuetzen"] },
+  { key:"ruhe", label:"Ruhe und Zeit für mich", kw:["ruhe","entspann","ausruhen","schlaf","ausschlafen","relax","zeit fuer mich","allein","chillen","urlaub","ferien","reise","reisen","wellness","baden","meditation","nichts tun","wochenende","pause","feierabend","freizeit"] },
+  { key:"liebe", label:"Liebe und Geborgenheit", kw:["liebe","verliebt","zuneigung","kuscheln","umarmung","umarmen","partner","beziehung","kuss","vertrauen","geborgen","zaertlich","nah sein"] },
+  { key:"spass", label:"Spaß und Lachen", kw:["spass","lachen","lustig","humor","witz","brettspiel","kartenspiel","gesellschaftsspiel","spieleabend","karten","uno","party","feiern","ausgelassen","freude","witzig","bloedsinn","quatsch"] },
+  { key:"essen", label:"Gutes Essen", kw:["essen$","lieblingsessen","gutes essen","pizza","kochen","backen","kuchen","schokolade","burger","pommes","kaesespaetzle","spaetzle","braten","fruehstueck","lieblingsgericht","grillen","brotzeit"] }
+];
+/* nicht als Glücksquelle gewertet, sondern erklärt */
+const GB_RISK = [
+  { key:"suchtmittel", kw:["alkohol","bier$","wein$","schnaps","vodka","wodka","rauchen","zigarette","vape","vapen","shisha","kiffen","cannabis","gras$","drogen","energy","redbull","red bull","koks","speed$","tabak","snus","joint"],
+    msg:"Das ist ein Suchtmittel. Es erzeugt nur ein künstliches Glücksgefühl, das schnell verfliegt und abhängig machen kann. Gesucht ist etwas, das dich auf gesunde Weise glücklich macht." },
+  { key:"medien", kw:["handy","smartphone","tiktok","instagram","snapchat","youtube","netflix","serie","fernsehen","tv$","zocken","gaming","gamen","konsole","playstation","ps5","fortnite","internet","social media","whatsapp","videospiel","online","insta"],
+    msg:"Das macht vielen Spaß. Aber Handy, Zocken und Social Media können selbst zur Sucht werden (stoffungebundene Sucht). Gesucht ist eine Glücksquelle, die dich nicht abhängig machen kann." },
+  { key:"geld", kw:["geld","shoppen","einkaufen","kaufen","klamotten","kleidung","schuhe","sneaker","reich"],
+    msg:"Neue Sachen freuen kurz, aber das Glück hält nicht lange und kann zur Kaufsucht werden. Gesucht ist etwas, das dich länger glücklich macht." }
+];
+
+function gbFold(s){
+  return String(s).toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss");
+}
+function gbMatches(norm, tokens, kw){
+  return kw.some(stem => {
+    if (stem.charAt(stem.length-1) === "$"){ const w = stem.slice(0,-1); return tokens.indexOf(w) !== -1; }
+    if (stem.indexOf(" ") !== -1) return norm.indexOf(stem) !== -1;
+    if (stem.length <= 4) return tokens.some(t => t.indexOf(stem) === 0);
+    return norm.indexOf(stem) !== -1;
+  });
+}
+/* Prüft eine Eingabe: liefert { cats:[Kategorien], risk: Eintrag|null } */
+function gbCheck(text){
+  const norm = gbFold(text).replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
+  const tokens = norm.split(" ").filter(Boolean);
+  const cats = GB_CATS.filter(c => gbMatches(norm, tokens, c.kw));
+  const risk = GB_RISK.find(r => gbMatches(norm, tokens, r.kw)) || null;
+  return { cats, risk };
+}
+
+window.__startGluecksblume = function(slug){
+const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
+const root = host.attachShadow({mode:"open"});
+const KEY = "lernportal:gluecksblume:" + slug;
+let st = { used: [], done: false, answer: "", sent: 0, tries: 0 };
+try { const raw = localStorage.getItem(KEY); if (raw){ const p = JSON.parse(raw); if (p && Array.isArray(p.used)) st = Object.assign(st, p); } } catch(e){}
+const save = ()=>{ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} };
+
+/* Wachstumsstufen: Stängelhöhe, Blatt-Paare, Blüten-Öffnung (0 = Samen in der Erde) */
+const STEM = [0, 40, 90, 140, 190, 210, 210];
+const HEAD_SCALE = [0, 0, 0, 0, .5, .8, 1];
+const OPEN = [0, 0, 0, 0, .1, .6, 1];
+const PETAL_ANGLES = [0,45,90,135,180,225,270,315];
+
+root.innerHTML = `<style>
+:host{display:block;font-family:var(--font-body);color:var(--ink);line-height:1.5}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:20px}
+.flower{flex:0 0 300px;max-width:100%;margin:0 auto;text-align:center}
+.flower svg{width:100%;height:auto;display:block;overflow:visible}
+.panel{flex:1 1 320px;min-width:0}
+.panel h2{font-size:20px;margin:0 0 6px}
+.hint{color:var(--ink-soft);font-size:15px;margin:0 0 14px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text]{flex:1 1 200px;min-width:0;font:inherit;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface-2,#fff);color:var(--ink)}
+input[type=text]:focus,textarea:focus{outline:3px solid var(--accent-soft,#cdd7ff);border-color:var(--accent)}
+textarea{width:100%;font:inherit;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:var(--surface-2,#fff);color:var(--ink);resize:vertical;min-height:96px}
+button{font-family:inherit}
+.btn{border:0;background:var(--accent);color:#fff;font-weight:700;font-size:15px;padding:11px 20px;border-radius:999px;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.soft{background:var(--surface-2,#eef);color:var(--ink-soft);border:1px solid var(--border)}
+.fb{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:14.5px;display:none;white-space:pre-line}
+.fb.show{display:block}
+.fb.ok{background:#e6f5ea;color:#1c6b34}
+.fb.no{background:#fbe4e1;color:#a3281b}
+.fb.info{background:#fff3d6;color:#7a5200}
+.count{font-size:13px;font-weight:700;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase;margin:16px 0 8px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--accent-soft,#e6ebff);color:var(--accent);font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px}
+.final{margin-top:18px}
+.final h3{margin:0 0 6px;font-size:17px}
+.stem,.leaf,.head,.petal,.bud{transition:transform 1.1s cubic-bezier(.3,1.3,.5,1),opacity .6s}
+.stem{transform-box:fill-box;transform-origin:50% 100%}
+.seed{transition:opacity .6s}
+.drop{opacity:0}
+.drop.fall{animation:fall 1s ease-in forwards}
+@keyframes fall{0%{opacity:0;transform:translateY(0)}15%{opacity:1}100%{opacity:0;transform:translateY(120px)}}
+#can{transition:transform .5s;transform-origin:250px 40px}
+#can.tilt{transform:rotate(-28deg)}
+@media (prefers-reduced-motion:reduce){.stem,.leaf,.head,.petal{transition:none}}
+</style>
+<div class="wrap">
+  <div class="card flower">
+    <svg viewBox="0 0 300 340" role="img" aria-label="Deine Glücksblume" id="svg">
+      <g id="can"><path d="M222 28h38l-6 26h-26z" fill="#6aa7d8"/><path d="M222 32l-18-6v8l18 6z" fill="#6aa7d8"/><path d="M260 34q16 0 16 14" fill="none" stroke="#6aa7d8" stroke-width="5" stroke-linecap="round"/></g>
+      <g id="drops"></g>
+      <path d="M10 305Q150 268 290 305V336H10Z" fill="#7a4e2d"/>
+      <path d="M10 305Q150 268 290 305" fill="none" stroke="#5c3a20" stroke-width="3"/>
+      <circle cx="60" cy="320" r="3" fill="#5c3a20"/><circle cx="110" cy="326" r="2.5" fill="#5c3a20"/><circle cx="210" cy="322" r="3" fill="#5c3a20"/><circle cx="250" cy="328" r="2.5" fill="#5c3a20"/>
+      <ellipse class="seed" id="seed" cx="150" cy="303" rx="11" ry="7" fill="#4a2e17"/>
+      <rect class="stem" id="stem" x="146" y="90" width="8" height="212" rx="4" fill="#3f9b4a"/>
+      <g class="leaf" id="leafL1"><path d="M0 0Q-40-34-74-12Q-40 16 0 0Z" fill="#4caf50"/></g>
+      <g class="leaf" id="leafR1"><path d="M0 0Q40-34 74-12Q40 16 0 0Z" fill="#4caf50"/></g>
+      <g class="leaf" id="leafL2"><path d="M0 0Q-40-34-74-12Q-40 16 0 0Z" fill="#43a047"/></g>
+      <g class="leaf" id="leafR2"><path d="M0 0Q40-34 74-12Q40 16 0 0Z" fill="#43a047"/></g>
+      <g class="leaf" id="leafL3"><path d="M0 0Q-34-28-62-10Q-34 14 0 0Z" fill="#4caf50"/></g>
+      <g class="leaf" id="leafR3"><path d="M0 0Q34-28 62-10Q34 14 0 0Z" fill="#4caf50"/></g>
+      <g class="head" id="head">
+        <g id="petals"></g>
+        <circle class="bud" id="center" r="17" fill="#ffc933" stroke="#e5a400" stroke-width="2"/>
+      </g>
+    </svg>
+    <div id="stageTxt" style="font-weight:700;margin-top:4px"></div>
+  </div>
+  <div class="panel card">
+    <h2>Was macht dich glücklich?</h2>
+    <p class="hint" id="hint">Deine Glücksblume liegt noch als Samen in der Erde. Schreib auf, was dich glücklich macht (eine Person, eine Tätigkeit, ein Erlebnis). Passt dein Beispiel, bekommt die Blume eine Gießkanne und wächst. Jede Gießkanne muss etwas Neues sein.</p>
+    <div class="row" id="inRow"><input type="text" id="inp" placeholder="Zum Beispiel: Mit Freunden Fußball spielen" autocomplete="off" maxlength="120"><button class="btn" id="water" type="button">Gießen</button></div>
+    <div class="fb" id="fb"></div>
+    <div class="count" id="count"></div>
+    <div class="chips" id="chips"></div>
+    <div class="final" id="final" hidden>
+      <h3>Zum Nachdenken</h3>
+      <p class="hint" style="margin-bottom:8px">Deine Blume blüht, weil sie viele Gießkannen hat. Erkläre in 1–2 Sätzen: Warum ist die Suchtgefahr kleiner, wenn jemand viele Glücksquellen hat?</p>
+      <textarea id="ans" placeholder="Schreib deine Erklärung hier hin …"></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn" id="send" type="button">Prüfen</button></div>
+      <div class="fb" id="fb2"></div>
+    </div>
+    <div style="margin-top:16px"><button class="btn soft" id="reset" type="button">Neu anfangen</button></div>
+  </div>
+</div>`;
+
+const $ = id => root.getElementById ? root.getElementById(id) : root.querySelector("#"+id);
+const NS = "http://www.w3.org/2000/svg";
+/* Blütenblätter einmalig erzeugen */
+const petals = $("petals");
+const petalEls = PETAL_ANGLES.map((a, i) => {
+  const e = document.createElementNS(NS, "ellipse");
+  e.setAttribute("class", "petal"); e.setAttribute("cx","0"); e.setAttribute("cy","-36"); e.setAttribute("rx","15"); e.setAttribute("ry","31");
+  e.setAttribute("fill", i % 2 ? "#ff8fb8" : "#ff6fa3"); e.setAttribute("stroke","#d84b82"); e.setAttribute("stroke-width","1.5");
+  petals.appendChild(e); return e;
+});
+function leafStyle(id, y, side, show){
+  const el = $(id); const s = show ? 1 : 0;
+  el.style.transform = "translate(150px," + y + "px) scale(" + s + ")";
+  el.style.opacity = show ? 1 : 0;
+}
+function render(){
+  const n = Math.min(st.used.length, GB_GOAL);
+  const h = STEM[n];
+  $("stem").style.transform = "scaleY(" + (h / 212) + ")";
+  $("stem").style.opacity = h ? 1 : 0;
+  $("seed").style.opacity = n === 0 ? 1 : 0;
+  const top = 300 - h;
+  $("head").style.transform = "translate(150px," + top + "px) scale(" + HEAD_SCALE[n] + ")";
+  $("head").style.opacity = HEAD_SCALE[n] ? 1 : 0;
+  const open = OPEN[n];
+  petalEls.forEach((e, i) => { e.style.transform = "rotate(" + (PETAL_ANGLES[i] * open) + "deg)"; });
+  $("center").style.opacity = n >= 5 ? 1 : 0;
+  leafStyle("leafL1", 268, -1, n >= 2); leafStyle("leafR1", 268, 1, n >= 2);
+  leafStyle("leafL2", 222, -1, n >= 3); leafStyle("leafR2", 222, 1, n >= 3);
+  leafStyle("leafL3", 178, -1, n >= 5); leafStyle("leafR3", 178, 1, n >= 5);
+  const stages = ["Samen in der Erde","Der Keimling wächst","Stängel und erste Blätter","Mehr Blätter","Eine Knospe","Die Blüte öffnet sich","Deine Glücksblume blüht!"];
+  $("stageTxt").textContent = stages[n];
+  $("count").textContent = "Gießkannen: " + st.used.length + " von " + GB_GOAL;
+  $("chips").innerHTML = st.used.map(u => '<span class="chip">💧 ' + esc(u.label) + '</span>').join("");
+  const bloom = st.used.length >= GB_GOAL;
+  $("inRow").hidden = bloom;
+  $("final").hidden = !bloom;
+  if (bloom){ $("hint").textContent = "Geschafft! Du hast " + GB_GOAL + " verschiedene Gießkannen. Deine Glücksblume blüht."; $("ans").value = st.answer || ""; if (st.done){ $("ans").disabled = true; $("send").disabled = true; } }
+}
+function say(id, cls, txt){ const f = $(id); f.className = "fb show " + cls; f.textContent = txt; }
+function dropAnim(){
+  const g = $("drops"); g.innerHTML = "";
+  const cx = 150, topY = 300 - STEM[Math.min(st.used.length, GB_GOAL)] - 40;
+  for (let i = 0; i < 7; i++){
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("class","drop"); c.setAttribute("r","4"); c.setAttribute("fill","#4aa3e8");
+    c.setAttribute("cx", String(cx - 30 + i * 10)); c.setAttribute("cy", String(Math.max(50, topY - 20)));
+    c.style.animationDelay = (i * 0.08) + "s";
+    g.appendChild(c); void c.getBoundingClientRect(); c.classList.add("fall");
+  }
+  const can = $("can"); can.classList.add("tilt"); setTimeout(()=> can.classList.remove("tilt"), 1100);
+}
+
+let unknownInRow = 0;
+function water(){
+  const inp = $("inp"); const text = inp.value.trim();
+  if (!text){ say("fb","info","Schreib zuerst ein Beispiel hin, was dich glücklich macht."); return; }
+  if (gbFold(text).replace(/[^a-z]/g,"").length < 3){ say("fb","info","Schreib bitte ein Wort oder einen kurzen Satz."); return; }
+  const res = gbCheck(text);
+  const fresh = res.cats.filter(c => !st.used.some(u => u.key === c.key));
+  const dup = res.cats.filter(c => st.used.some(u => u.key === c.key));
+  st.tries++;
+  if (fresh.length){
+    const take = fresh.slice(0, Math.min(2, GB_GOAL - st.used.length));
+    take.forEach(c => st.used.push({ key:c.key, label:c.label, text:text }));
+    reportFreitext(slug, "g" + st.tries, "Glücksblume: Beispiel", "✓ " + take.map(c => c.label).join(" + ") + " – " + text);
+    unknownInRow = 0; inp.value = ""; save(); render(); dropAnim();
+    let msg = "Passt! Die Blume bekommt " + (take.length > 1 ? take.length + " Gießkannen" : "eine Gießkanne") + ": " + take.map(c => c.label).join(" und ") + ".";
+    if (dup.length) msg += "\n(" + dup.map(c => c.label).join(", ") + " hattest du schon.)";
+    if (fresh.length > take.length && st.used.length < GB_GOAL) msg += "\n(Pro Eingabe zählen höchstens zwei Gießkannen. Den Rest kannst du noch einmal eintippen.)";
+    if (res.risk) msg += "\n(" + (res.risk.key === "suchtmittel" ? "Suchtmittel" : res.risk.key === "medien" ? "Handy und Zocken" : "Geld und Shoppen") + " zählt nicht als Gießkanne.)";
+    say("fb","ok",msg);
+    return;
+  }
+  reportFreitext(slug, "g" + st.tries, "Glücksblume: Beispiel", "✗ " + (dup.length ? "doppelt (" + dup[0].label + ")" : (res.risk ? "Suchtmittel/Risiko (" + res.risk.key + ")" : "nicht erkannt")) + " – " + text);
+  save();
+  if (dup.length){ say("fb","info","Das passt, aber zu „" + dup[0].label + "“ hast du schon eine Gießkanne. Jede Gießkanne muss etwas Neues sein. Was macht dich noch glücklich?"); return; }
+  if (res.risk){ say("fb","no",res.risk.msg); return; }
+  unknownInRow++;
+  let m = "Dazu erkenne ich noch keine Glücksquelle. Nenne etwas Konkretes: eine Person, eine Tätigkeit oder ein Erlebnis, das dir guttut.";
+  if (unknownInRow >= 3) m += "\nTipp: Denk an Menschen, Bewegung, Erfolge, Lob, Musik, Natur, Tiere oder Zeit für dich.";
+  say("fb","no",m);
+}
+$("water").addEventListener("click", water);
+$("inp").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); water(); } });
+
+const kwA = ["sucht","droge","alkohol","zigarett","rauch","abhaeng","suechtig"];
+const kwB = ["brauch","noetig","bedarf","ersatz","weniger","kein","reicht","genug","nicht mehr","muss nicht","weniger anfaellig","schuetz"];
+$("send").addEventListener("click", ()=>{
+  if (st.done) return;
+  const val = $("ans").value.trim();
+  const norm = gbFold(val);
+  const words = norm.split(/\s+/).filter(w => /[a-z0-9]/.test(w)).length;
+  if (!val){ say("fb2","info","Schreib zuerst deine Erklärung auf."); return; }
+  st.answer = val; st.sent = (st.sent || 0) + 1; save();
+  const okA = kwA.some(k => norm.indexOf(k) !== -1), okB = kwB.some(k => norm.indexOf(k) !== -1);
+  if (words < 6 || !okA || !okB){
+    say("fb2","no", words < 6 ? "Schreib bitte mindestens einen ganzen Satz." : "Noch nicht ganz. Erkläre den Zusammenhang: Was passiert mit dem Bedürfnis nach Glücksgefühlen, wenn man schon viele Glücksquellen hat, und was bedeutet das für Suchtmittel?");
+    return;
+  }
+  st.done = true; save();
+  $("ans").disabled = true; $("send").disabled = true;
+  reportFreitext(slug, "g-erklaerung", "Glücksblume: Warum sinkt die Suchtgefahr?", val);
+  reportResult(slug, 0, "correct", st.sent);
+  say("fb2","ok","Genau! Wer viele Glücksquellen hat, braucht kein Suchtmittel, um sich gut zu fühlen. Schreib jetzt den Merktext in dein Heft.");
+  zitatShowPopup({
+    popupText: "Schreib das in dein Heft:",
+    popupBody: "Meine Glücksblume: " + st.used.map(u => u.label).join(", ") + ".¶Wer genug Glück aus gesunden Quellen bekommt, hat weniger Bedarf an Suchtmitteln. Je mehr „Gießkannen“, desto kleiner die Suchtgefahr."
+  });
+});
+$("reset").addEventListener("click", ()=>{
+  if (!confirm("Willst du wirklich ganz neu anfangen? Deine Blume wird wieder zum Samen.")) return;
+  st = { used: [], done: false, answer: "", sent: 0, tries: 0 }; save();
+  $("ans").disabled = false; $("send").disabled = false; $("ans").value = ""; $("fb").className = "fb"; $("fb2").className = "fb";
+  $("hint").textContent = "Deine Glücksblume liegt noch als Samen in der Erde. Schreib auf, was dich glücklich macht (eine Person, eine Tätigkeit, ein Erlebnis). Passt dein Beispiel, bekommt die Blume eine Gießkanne und wächst. Jede Gießkanne muss etwas Neues sein.";
+  render();
+});
+render();
+};
+
+
 window.__startFluchtpunktTrainer = function(){
 const host = document.getElementById("exerciseHost"); if(!host || host.shadowRoot) return;
 const root = host.attachShadow({mode:"open"});
@@ -19756,6 +20050,8 @@ function route(){
       window.__startGetrenntZusammenEinstiegstest(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "rechenweg-trainer"){
       window.__startRechenwegTrainer();
+    } else if (exerciseSets[parts[1]].custom === "gluecksblume"){
+      window.__startGluecksblume(parts[1]);
     } else if (exerciseSets[parts[1]].custom === "fluchtpunkt-trainer"){
       window.__startFluchtpunktTrainer();
     } else if (exerciseSets[parts[1]].custom === "persp-guide" || exerciseSets[parts[1]].custom === "persp-trainer"){
