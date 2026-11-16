@@ -14409,12 +14409,12 @@ function zitatCheck(answer, spec, attempts){
     if (after[0] === "("){
       const close = after.indexOf(")");
       const inner = (close < 0 ? after.slice(1) : after.slice(1, close)).trim();
-      const m = inner.match(/^(z\.?|zeilen?)\s*(\d+)\s*(?:(?:[-–—]|bis)\s*(\d+))?$/i);
+      const m = inner.match(/^(?:in\s+)?(?:z\.?|zeilen?)\s*[:.]?\s*(\d+)\s*(?:(?:[-–—\/,]|bis|und|u\.)\s*(?:z\.?|zeilen?)?\s*[:.]?\s*(\d+))?\s*(ff?\.?)?\s*\.?$/i);
       const onlyNum = inner.match(/^(\d+)\s*(?:(?:[-–—]|bis)\s*(\d+))?$/);
       if (close < 0){
         errs.push("Die Klammer bei der Zeilenangabe wird nicht geschlossen: (Z. 5–6)");
       } else if (m){
-        info = { ok:true, a:+m[2], b: m[3] ? +m[3] : +m[2] };
+        info = { ok:true, a:+m[1], b: m[2] ? +m[2] : (m[3] ? (m[3].toLowerCase().indexOf("ff") === 0 ? null : +m[1] + 1) : +m[1]) };
       } else if (onlyNum){
         errs.push("Bei der Zeilenangabe fehlt „Z.“ (oder „Zeile“): Schreibe zum Beispiel (Z. 5–6) und nicht nur die Zahl.");
         info = { ok:true, a:+onlyNum[1], b: onlyNum[2] ? +onlyNum[2] : +onlyNum[1] };
@@ -14508,9 +14508,9 @@ function zitatCheck(answer, spec, attempts){
     const expText = expA === expB ? "Z. " + expA : "Z. " + expA + "–" + expB;
     const zi = zl[bi];
     if (zi && zi.ok){
-      const startOk = sL.indexOf(zi.a) !== -1, endOk = eL.indexOf(zi.b) !== -1;
+      const startOk = sL.indexOf(zi.a) !== -1, endOk = zi.b === null ? (expB >= zi.a) : eL.indexOf(zi.b) !== -1;
       if (!(startOk && endOk)){
-        if (zi.a > zi.b){
+        if (zi.b !== null && zi.a > zi.b){
           errs.push("In der Zeilenangabe ist die erste Zahl größer als die zweite. Erst die Zeile, in der dein Zitat beginnt, dann die, in der es endet.");
         } else if (reveal){
           errs.push("Die Zeilenangabe stimmt nicht. Dein Zitat beginnt in Zeile " + expA + " und endet in Zeile " + expB + ": (" + expText + ").");
