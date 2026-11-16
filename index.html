@@ -1648,6 +1648,7 @@ const naturtechnikMikroorganismenTopics = [
 const naturtechnikSuchtTopics = [
   { tag:"lernen", label:"Einstieg: Stoffgebundene und stoffungebundene Sucht", practice:"nt-sucht-bilder-zuordnen" },
   { tag:"lernen", label:"Was macht dich glücklich? – Die Glücksblume", practice:"nt-sucht-gluecksblume" },
+  { tag:"lernen", label:"Sucht: Definition und Merkmale (Heftaufschrieb)", practice:"nt-sucht-definition" },
 ];
 
 const naturtechnikInfektionserkrankungenTopics = [
@@ -5016,6 +5017,26 @@ const exerciseSets = {
   /* Neu (Wunsch Manuel, 16.11.2026): "Glücksblume" zu Material A der Buchseite "Was macht dich glücklich?" - eine Blume,
      die aus dem Samen wächst, wenn die Schüler passende Glücksquellen eintippen (custom:"gluecksblume", siehe
      window.__startGluecksblume). Keine Fragen im Sinne des generischen Motors (questions:[]). */
+  /* Neu (16.11.2026, Wunsch Manuel): Heftaufschrieb "Sucht" - Definition + Merkmale, Text von Manuel (note-page ohne Fragen). */
+  "nt-sucht-definition": {
+    title: "Sucht: Definition und Merkmale",
+    subject: "naturtechnik",
+    chapterSlug: "suchterkrankungen",
+    locked: false,
+    custom: "note-page",
+    questions: [],
+    noteHtml: `
+      <p><b>Def.:</b> Unter einer <mark>Sucht</mark> versteht man eine <mark>zwanghafte</mark> und <mark>krankhafte Abhängigkeit</mark> von einer <b>Verhaltensweise</b> (Magersucht) und einer <b>Substanz</b> (z. B. Alkohol).</p>
+      <p><b>Merkmale, an denen man Suchtverhalten erkennen kann:</b></p>
+      <ul>
+        <li><mark>Kontrollverlust</mark> (Veränderung des Verhaltens, z. B. aggressives Verhalten)</li>
+        <li><mark>Entzugssymptome</mark> (psychisch oder physisch)</li>
+        <li><mark>Verleugnung</mark> der Sucht</li>
+        <li><mark>Tendenzen zur Steigerung</mark> (man nimmt immer größere Mengen)</li>
+        <li><mark>Vernachlässigung</mark> anderer Menschen, Aktivitäten und Pflichten (Schule, Job, Freunde, Familie)</li>
+        <li>Nicht in der Lage sein, die Sucht zu beenden, obwohl man über negative Folgen Bescheid weiß oder die mittlerweile schon eingetreten sind (<mark>Ignoranz</mark>)</li>
+      </ul>
+    ` },
   "nt-sucht-gluecksblume": {
     title: "Was macht dich glücklich? – Die Glücksblume",
     subject: "naturtechnik",
@@ -13459,7 +13480,7 @@ function viewNaturtechnikChapter(slug){
       if (t.practice && locked){
         actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
       } else if (set){
-        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">${set.custom === "note-page" ? "Ansehen" : "Jetzt üben"}</a>`;
       } else {
         actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
       }
