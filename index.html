@@ -1694,9 +1694,12 @@ const informatikInformationssystemeTopics = [
   { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10, practice:"informatik-nutzung-informationssysteme" },
   { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12, practice:"informatik-mebis-plattform" },
   { tag:"lernen", label:"Datenschutz", page:14, practice:"informatik-datenschutz" },
-  { tag:"lernen", label:"Big Data", page:16 },
+  { tag:"lernen", label:"Big Data: Wer sammelt was?", page:16, practice:"informatik-bigdata-einstieg" },
+  { tag:"lernen", label:"Werbung durch Big Tech", page:16, practice:"informatik-bigdata-werbung" },
+  { tag:"lernen", label:"Filterblasen erkennen", page:16, practice:"informatik-bigdata-filterblase" },
+  { tag:"lernen", label:"Schutz vor Big Data", page:17, practice:"informatik-bigdata-schutz" },
   { tag:"lernen", label:"Projekt: Eine Anleitung für mebis erstellen", page:18 },
-  { tag:"abschluss", label:"Üben und Vertiefen", page:20 },
+  { tag:"abschluss", label:"Üben und Vertiefen", page:20, practice:"informatik-ueben-vertiefen" },
   { tag:"abschluss", label:"M-Seite: Informationssysteme und Datenschutz", page:23 },
   { tag:"abschluss", label:"Am Ziel", page:25 },
   { tag:"abschluss", label:"Alles im Blick" },
@@ -9668,6 +9671,453 @@ const exerciseSets = {
         text: "Arbesa sagt: „Ich klicke bei Cookie-Bannern immer einfach überall auf ‚Alle akzeptieren‘, weil das am schnellsten geht und ich sowieso nichts zu verstecken habe.“ Was denkst du über diese Aussage? Schreibe deine Meinung in 2–3 Sätzen auf.",
         placeholder: "Deine Meinung dazu…",
         explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Meinung wurde gespeichert. Zum Nachdenken: „Alle akzeptieren“ ist zwar schnell, gibt Internetseiten aber oft mehr persönliche Daten frei, als für die Nutzung nötig wäre. Besser ist es, Cookie-Banner genauer zu lesen und nur die wirklich nötigen Cookies zu erlauben." }
+    ]
+  },
+  /* Informatik, Kapitel "Informationssysteme und Datenschutz": "Big Data" (S.16/17) als Übungsfolge in
+     4 Schritten (Einstieg, Werbung durch Big Tech, Filterblasen, Schutz vor Big Data) + abschließende
+     Übung "Üben und Vertiefen" (S.20, Wiederholung des ganzen Kapitels). Eigene Formulierungen/Beispiele,
+     keine Buchtexte oder -grafiken übernommen; bewusst gemischte Aufgabentypen (Zuordnen, Sortieren,
+     Lückentext, Richtig/Falsch, Eintippen, Meinung). Stand 17.11.2026. */
+  "informatik-bigdata-einstieg": {
+    title: "Big Data: Wer sammelt was?",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { section:"Spuren im Netz", kind:"table-match",
+        text: "Jeden Tag nutzt du viele Dienste. Welcher Dienst sammelt welche Daten über dich? Ordne zu.",
+        columns: ["Dienst", "Das wird gesammelt"],
+        rows: [
+          { label:"Suchmaschine",         accept:["bd_suche"] },
+          { label:"Online-Shop",          accept:["bd_shop"] },
+          { label:"Navigations-App",      accept:["bd_navi"] },
+          { label:"Soziales Netzwerk",    accept:["bd_social"] },
+          { label:"Streaming-Dienst",     accept:["bd_stream"] },
+        ],
+        chips: [
+          { id:"bd_suche",  label:"Wonach du suchst und welche Ergebnisse du anklickst" },
+          { id:"bd_shop",   label:"Was du dir ansiehst, in den Warenkorb legst und kaufst" },
+          { id:"bd_navi",   label:"Wo du dich aufhältst und welche Wege du fährst" },
+          { id:"bd_social", label:"Welche Beiträge du likst, kommentierst und teilst" },
+          { id:"bd_stream", label:"Welche Filme du schaust und wann du abbrichst" },
+          { id:"bd_x1",     label:"Welche Farbe deine Schuhe haben" },
+          { id:"bd_x2",     label:"Was du gestern in der Schule gegessen hast" },
+        ],
+        explain: "Fast jeder Dienst im Internet sammelt Daten über das, was du dort tust: Suchanfragen, Käufe, Standorte, Likes, angesehene Filme. Einzeln wirkt das harmlos – zusammen ergibt es ein genaues Bild von dir." },
+
+      { section:"Was ist Big Data?", kind:"mc",
+        text: "Wenn Millionen Menschen jeden Tag suchen, klicken, kaufen und liken, entstehen riesige Datenmengen. Wie nennt man das?",
+        options: ["Big Data", "Small Talk", "Data Detox", "Smart Cloud"], correct:0,
+        explain: "Big Data heißt „große Datenmenge“. Gemeint sind riesige Mengen an Daten, die so schnell wachsen, dass man sie nur noch mit Computerprogrammen auswerten kann." },
+
+      { section:"Was ist Big Data?", kind:"mc",
+        text: "Warum können Menschen Big Data nicht einfach selbst durchlesen und auswerten?",
+        options: [
+          "Weil die Datenmengen viel zu groß und zu schnell sind – dafür braucht man Computerprogramme",
+          "Weil Big Data nur aus Zahlen besteht, die niemand lesen darf",
+          "Weil Big Data immer verschlüsselt und deshalb unlesbar ist",
+          "Weil Big Data gar nicht gespeichert wird"
+        ], correct:0,
+        explain: "Die Datenmengen sind riesig und kommen ständig neu dazu. Deshalb werten Computerprogramme sie aus – sogenannte Algorithmen." },
+
+      { section:"Stimmt das?", kind:"pick-rows",
+        text: "Entscheide bei jeder Aussage: Stimmt sie oder stimmt sie nicht?",
+        rows: [
+          { label:"Daten entstehen nur, wenn ich bewusst etwas hochlade oder poste.", options:["stimmt","stimmt nicht"], answer:1 },
+          { label:"Auch wenn ich nur im Internet surfe, fallen Daten über mich an.",   options:["stimmt","stimmt nicht"], answer:0 },
+          { label:"Die größten IT-Unternehmen der Welt nennt man Big Tech.",           options:["stimmt","stimmt nicht"], answer:0 },
+          { label:"Big Data kann man nur auf dem eigenen Smartphone speichern.",        options:["stimmt","stimmt nicht"], answer:1 },
+        ],
+        explain: "Daten entstehen auch nebenbei: beim Suchen, Klicken, Scrollen und durch den Standort des Smartphones. Big Tech ist die Bezeichnung für die größten IT-Unternehmen. Big Data liegt auf riesigen Servern, nicht auf dem eigenen Gerät." },
+
+      { section:"Begriff", kind:"text",
+        text: "Wie nennt man die größten IT-Unternehmen der Welt, die besonders viele Daten sammeln? (Tipp: zwei Wörter, das erste heißt „Big“)",
+        placeholder: "Begriff eintippen",
+        accept: ["Big Tech", "BigTech", "big tech"],
+        explain: "Richtig – Big Tech. Diese Unternehmen bieten Suchmaschinen, soziale Netzwerke, Online-Shops oder Smartphones an und sammeln dabei sehr viele Daten." },
+
+      { kind:"gapfill", typeIn:true, noBookHint:true, text: "Fülle die Lücken zu Big Data.",
+        template: "Wenn sehr viele Menschen das Internet nutzen, entstehen riesige Datenmengen. Man spricht von %%. Besonders viele Daten sammeln die größten IT-Unternehmen, die man %% nennt. Die Daten werden von Computerprogrammen ausgewertet, die man %% nennt.",
+        answers: ["Big Data", "Big Tech", "Algorithmen"],
+        explain: "Big Data = riesige Datenmengen. Big Tech = die größten IT-Unternehmen. Algorithmen = Computerprogramme, die diese Daten auswerten.",
+        popupText: "Merksatz – Big Data",
+        popupBody: "Beim Surfen, Suchen, Einkaufen, Liken und Navigieren entstehen jeden Tag riesige Datenmengen. Man nennt sie Big Data.¶Die größten IT-Unternehmen der Welt heißen Big Tech. Sie werten die Daten mit Algorithmen aus – das sind Computerprogramme, die Schritt für Schritt vorgegebenen Anweisungen folgen." }
+    ]
+  },
+
+  "informatik-bigdata-werbung": {
+    title: "Werbung durch Big Tech",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { section:"Der Weg der Daten", kind:"table-match",
+        text: "So kommt die passende Werbung auf dein Handy. Bringe die fünf Schritte in die richtige Reihenfolge.",
+        columns: ["Schritt", "Was passiert?"],
+        rows: [
+          { label:"1.", accept:["w1"] },
+          { label:"2.", accept:["w2"] },
+          { label:"3.", accept:["w3"] },
+          { label:"4.", accept:["w4"] },
+          { label:"5.", accept:["w5"] },
+        ],
+        chips: [
+          { id:"w1", label:"Du suchst nach Sneakern und klickst auf ein paar Angebote." },
+          { id:"w2", label:"Die Dienste speichern deine Suchanfragen und Klicks." },
+          { id:"w3", label:"Ein Algorithmus wertet die Daten aus: Was könnte dir gefallen?" },
+          { id:"w4", label:"Du siehst überall passende Werbung für Sneaker." },
+          { id:"w5", label:"Du kaufst ein Paar – das Unternehmen bezahlt dafür den Werbeplatz." },
+          { id:"w_x", label:"Deine Eltern bekommen automatisch eine Rechnung." },
+        ],
+        explain: "Erst entstehen Daten, dann werden sie gespeichert und von einem Algorithmus ausgewertet. Danach wird dir passende Werbung angezeigt. Kauft jemand etwas, verdient das werbende Unternehmen – und der Werbeplatz wird bezahlt." },
+
+      { section:"Algorithmus", kind:"mc",
+        text: "Was ist ein Algorithmus?",
+        options: [
+          "Eine Reihe von Anweisungen, nach der ein Computer Schritt für Schritt ein Ziel erreicht",
+          "Ein besonders schneller Computer-Chip",
+          "Ein Hacker, der Daten stiehlt",
+          "Ein Passwort mit mindestens zwölf Zeichen"
+        ], correct:0,
+        explain: "Ein Computer führt Anweisungen der Reihe nach aus, um ein Ziel zu erreichen, zum Beispiel: „Zeige die Werbung, die zu diesem Nutzer am besten passt.“" },
+
+      { section:"Personalisierte Werbung", kind:"mc",
+        text: "Jonas hat gestern einmal nach Fußballschuhen gesucht. Seitdem sieht er auf vielen Internetseiten Werbung für Fußballschuhe. Wie kommt das?",
+        options: [
+          "Seine Suchanfrage wurde gespeichert und ein Algorithmus zeigt ihm dazu passende Werbung an",
+          "Alle Nutzer sehen immer dieselbe Werbung",
+          "Sein Handy hat seine Gedanken gelesen",
+          "Die Schuhe sind gerade bei allen Nutzern im Sonderangebot"
+        ], correct:0,
+        explain: "Das nennt man personalisierte Werbung: Sie wird passend zu dem angezeigt, was ein Nutzer vorher gesucht oder angeklickt hat." },
+
+      { section:"Vorteile und Nachteile", kind:"staged-sort", visual:"balance",
+        text: "Personalisierte Werbung hat zwei Seiten. Sortiere die Aussagen: Vorteil oder Nachteil?",
+        categories: [
+          { id:"vorteil",  label:"Vorteile",  icon:"👍", color:"#237A4B" },
+          { id:"nachteil", label:"Nachteile", icon:"👎", color:"#B8402D" },
+        ],
+        items: [
+          { id:"wv1", label:"Ich sehe eher Angebote, die zu meinen Interessen passen.", group:"vorteil" },
+          { id:"wv2", label:"Viele Dienste bleiben kostenlos, weil sie durch Werbung bezahlt werden.", group:"vorteil" },
+          { id:"wv3", label:"Ich sehe weniger Werbung, die mich überhaupt nicht interessiert.", group:"vorteil" },
+          { id:"wn1", label:"Unternehmen wissen sehr viel über mein Verhalten und meine Vorlieben.", group:"nachteil" },
+          { id:"wn2", label:"Ich kaufe vielleicht Dinge, die ich gar nicht brauche.", group:"nachteil" },
+          { id:"wn3", label:"Meine Daten werden an viele Firmen weitergegeben.", group:"nachteil" },
+        ],
+        explain: "Passende Werbung kann praktisch sein und hält viele Dienste kostenlos. Der Preis dafür: Firmen sammeln viele Daten über dich und können dich zu Käufen verleiten, die du eigentlich nicht geplant hattest." },
+
+      { section:"Stimmt das?", kind:"pick-rows",
+        text: "Wer verdient bei personalisierter Werbung Geld? Entscheide bei jeder Aussage.",
+        rows: [
+          { label:"Wenn jemand über eine Werbeanzeige ein Produkt kauft, bekommt das Werbe-Unternehmen Geld.", options:["stimmt","stimmt nicht"], answer:0 },
+          { label:"Der Nutzer bekommt für jede angeklickte Werbung Geld.",                                      options:["stimmt","stimmt nicht"], answer:1 },
+          { label:"Die Daten der Nutzer sind für die Unternehmen wertvoll.",                                     options:["stimmt","stimmt nicht"], answer:0 },
+        ],
+        explain: "Personalisierte Werbung ist ein Geschäft: Die Daten der Nutzer sind für Firmen sehr wertvoll, weil sie dadurch gezielter werben können. Der Nutzer selbst bekommt dafür kein Geld." },
+
+      { section:"Deine Meinung", kind:"reflect", noSkip:true,
+        text: "Tim sagt: „Mir ist es egal, wenn mir passende Werbung angezeigt wird. Ich finde das sogar praktisch.“ Was meinst du dazu? Schreibe 2–3 Sätze.",
+        placeholder: "Deine Meinung dazu…",
+        explain: "Es gibt hier kein „richtig“ oder „falsch“ – deine Meinung wurde gespeichert. Zum Nachdenken: Praktisch ist es, solange man weiß, dass dafür Daten gesammelt werden – und wer diese Daten bekommt." }
+    ]
+  },
+
+  "informatik-bigdata-filterblase": {
+    title: "Filterblasen erkennen",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { section:"Was ist eine Filterblase?", kind:"mc",
+        text: "Lena likt auf einer Video-App fast nur Fußballvideos. Nach ein paar Wochen sieht sie fast nur noch Fußball. Wie nennt man das?",
+        options: ["Filterblase", "Datenschutz-Mauer", "Cookie-Falle", "Serverfehler"], correct:0,
+        explain: "Das nennt man Filterblase: Man bekommt hauptsächlich Dinge angezeigt, die zu den eigenen Interessen und Meinungen passen. So bekommt man ein verzerrtes Bild von der Welt." },
+
+      { section:"Wie entsteht sie?", kind:"table-match",
+        text: "Wie kommt es zur Filterblase? Ordne die Schritte in die richtige Reihenfolge.",
+        columns: ["Schritt", "Was passiert?"],
+        rows: [
+          { label:"1.", accept:["f1"] },
+          { label:"2.", accept:["f2"] },
+          { label:"3.", accept:["f3"] },
+          { label:"4.", accept:["f4"] },
+        ],
+        chips: [
+          { id:"f1", label:"Du likst, kommentierst oder teilst bestimmte Beiträge." },
+          { id:"f2", label:"Das Unternehmen erkennt, was dich interessiert." },
+          { id:"f3", label:"Der Algorithmus zeigt dir mehr von dem Gleichen." },
+          { id:"f4", label:"Anderes wird dir kaum noch angezeigt – du steckst in einer Filterblase." },
+          { id:"f_x", label:"Der Server wird abgeschaltet." },
+        ],
+        explain: "Weil du bestimmte Beiträge likst und teilst, lernt der Algorithmus, was dir gefällt. Er zeigt dir mehr davon – und anderes verschwindet nach und nach aus deinem Feed." },
+
+      { section:"Warum macht das ein Unternehmen?", kind:"mc",
+        text: "Warum haben Tech-Unternehmen Interesse daran, dass du in einer Filterblase bleibst?",
+        options: [
+          "Wer sich wohlfühlt, bleibt länger in der App – so sieht er mehr Werbung und hinterlässt mehr Daten",
+          "Weil sie Nutzer vor schlechten Nachrichten schützen müssen",
+          "Weil das gesetzlich vorgeschrieben ist",
+          "Weil die App dann weniger Strom verbraucht"
+        ], correct:0,
+        explain: "Je länger du in der App bleibst, desto mehr Werbung siehst du und desto mehr Daten entstehen – und beides bringt dem Unternehmen Geld." },
+
+      { section:"Raus aus der Blase", kind:"staged-sort", visual:"cards",
+        text: "Was hält dich in der Filterblase und was hilft dir, wieder herauszukommen? Sortiere.",
+        categories: [
+          { id:"blase",  label:"Hält mich in der Blase",   icon:"🔁", color:"#B8402D" },
+          { id:"raus",   label:"Hilft mir heraus",         icon:"🚪", color:"#237A4B" },
+        ],
+        items: [
+          { id:"fb1", label:"Nur Beiträge liken, die meiner Meinung entsprechen", group:"blase" },
+          { id:"fb2", label:"Mich nur über eine einzige App informieren",         group:"blase" },
+          { id:"fb3", label:"Den Vorschlägen der App immer blind folgen",         group:"blase" },
+          { id:"fb4", label:"Nachrichten aus mehreren Quellen lesen",             group:"raus" },
+          { id:"fb5", label:"Auch Meinungen ansehen, die mir nicht gefallen",     group:"raus" },
+          { id:"fb6", label:"Beiträge hinterfragen: Wer zeigt mir das und warum?", group:"raus" },
+          { id:"fb7", label:"Auch Personen mit anderer Meinung folgen",           group:"raus" },
+        ],
+        explain: "Wer nur eine Quelle nutzt und immer das Gleiche liked, bleibt in der Blase. Hilfreich ist es, mehrere Quellen zu vergleichen, andere Meinungen anzusehen und Beiträge kritisch zu hinterfragen." },
+
+      { section:"Stimmt das?", kind:"pick-rows",
+        text: "Filterblasen und Meinungen: Was stimmt?",
+        rows: [
+          { label:"In einer Filterblase sieht man ein vollständiges Bild der Welt.", options:["stimmt","stimmt nicht"], answer:1 },
+          { label:"Wer geteilte Beiträge unkritisch weitergibt, hilft mit, dass sich Meinungen verfestigen.", options:["stimmt","stimmt nicht"], answer:0 },
+          { label:"Auch bei Wahlen kann eine Filterblase beeinflussen, welche Informationen man sieht.", options:["stimmt","stimmt nicht"], answer:0 },
+        ],
+        explain: "In einer Filterblase fehlt ein Teil der Informationen. Deshalb ist es wichtig, mehrere Quellen zu nutzen – gerade bei politischen Themen und vor Wahlen." },
+
+      { kind:"gapfill", typeIn:true, noBookHint:true, text: "Fülle die Lücken zur Filterblase.",
+        template: "Reagiert man in sozialen Netzwerken auf Beiträge, merken die Unternehmen, was einen %%. Man bekommt dann hauptsächlich das angezeigt, was zu den eigenen Interessen passt. Das nennt man %%. Um herauszukommen, sollte man mehrere %% nutzen und Beiträge kritisch hinterfragen.",
+        answers: ["interessiert", "Filterblase", "Quellen"],
+        explain: "Du hinterlässt durch Likes und Kommentare Spuren, die Algorithmen auswerten. So entsteht eine Filterblase. Gegenmittel: mehrere Quellen nutzen und kritisch bleiben.",
+        popupText: "Merksatz – Filterblase",
+        popupBody: "Reagiert man auf Beiträge in sozialen Medien (Likes, Kommentare, Teilen), merken die Unternehmen, was einen interessiert. Ein Algorithmus zeigt dann hauptsächlich Ähnliches an. Das nennt man Filterblase.¶Man bekommt ein verzerrtes Bild von der Welt. Dagegen helfen mehrere Informationsquellen und kritisches Nachdenken." },
+
+      { section:"Deine Meinung", kind:"reflect", noSkip:true,
+        text: "Wie kannst du dich im Alltag verhalten, damit du möglichst nicht in einer Filterblase landest? Nenne mindestens zwei Möglichkeiten.",
+        placeholder: "Deine Ideen…",
+        explain: "Dein Text wurde gespeichert. Gute Ideen sind zum Beispiel: mehrere Nachrichtenquellen lesen, auch andere Meinungen ansehen, nicht jeden Beitrag teilen und sich bewusst machen, dass Apps nur eine Auswahl zeigen." }
+    ]
+  },
+
+  "informatik-bigdata-schutz": {
+    title: "Schutz vor Big Data",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 10–12 Minuten",
+    locked: false,
+    questions: [
+      { section:"Hilft das?", kind:"staged-sort", visual:"cards",
+        text: "Völlig ohne Spuren im Internet geht es nicht – aber man kann sich schützen. Sortiere: Was schützt deine Daten, was gibt viele Daten preis?",
+        categories: [
+          { id:"schuetzt", label:"Schützt meine Daten",     icon:"🛡️", color:"#237A4B" },
+          { id:"preis",    label:"Gibt viele Daten preis",  icon:"⚠️", color:"#B8402D" },
+        ],
+        items: [
+          { id:"s1", label:"Nicht auf Meldungen in sozialen Medien reagieren",                group:"schuetzt" },
+          { id:"s2", label:"Im Browser nicht mit einem Account angemeldet sein",              group:"schuetzt" },
+          { id:"s3", label:"Cookies im Browser regelmäßig löschen",                           group:"schuetzt" },
+          { id:"s4", label:"Eine Suchmaschine mit Datenschutz benutzen",                      group:"schuetzt" },
+          { id:"p1", label:"Überall mit demselben Account angemeldet bleiben",                group:"preis" },
+          { id:"p2", label:"Bei jedem Cookie-Banner „Alle akzeptieren“ klicken",              group:"preis" },
+          { id:"p3", label:"Allen Apps dauerhaft den Standort erlauben",                      group:"preis" },
+          { id:"p4", label:"Möglichst viel in sozialen Netzwerken liken und teilen",          group:"preis" },
+        ],
+        explain: "Datenschutz fängt bei kleinen Gewohnheiten an: Wer weniger angemeldet ist, Cookies löscht und nur das Nötige erlaubt, hinterlässt weniger Spuren." },
+
+      { section:"Begriffe", kind:"table-match",
+        text: "Ordne jedem Begriff die passende Erklärung zu.",
+        columns: ["Begriff", "Erklärung"],
+        rows: [
+          { label:"Cookie",                   accept:["c_cookie"] },
+          { label:"Account",                  accept:["c_account"] },
+          { label:"Personalisierte Werbung",  accept:["c_werbung"] },
+          { label:"Filterblase",              accept:["c_blase"] },
+          { label:"Algorithmus",              accept:["c_algo"] },
+        ],
+        chips: [
+          { id:"c_cookie",  label:"Kleine Datei, die eine Internetseite im Browser speichert, um dich wiederzuerkennen" },
+          { id:"c_account", label:"Persönliches Benutzerkonto bei einem Dienst" },
+          { id:"c_werbung", label:"Werbung, die zu deinen bisherigen Suchen und Klicks passt" },
+          { id:"c_blase",   label:"Man sieht fast nur noch, was zu den eigenen Interessen passt" },
+          { id:"c_algo",    label:"Anweisungen, nach denen ein Computer Schritt für Schritt ein Ziel erreicht" },
+          { id:"c_x1",      label:"Ein Gerät, das Internet-Signale verstärkt" },
+          { id:"c_x2",      label:"Ein Programm, das Viren entfernt" },
+        ],
+        explain: "Cookies speichern kleine Informationen im Browser. Ein Account ist dein Benutzerkonto. Personalisierte Werbung entsteht aus deinem Verhalten, Filterblasen aus den Vorschlägen eines Algorithmus." },
+
+      { section:"Anmelden oder nicht?", kind:"mc",
+        text: "Warum werden weniger Daten gesammelt, wenn du dich im Browser oder auf dem Smartphone nicht mit einem Account anmeldest?",
+        options: [
+          "Dein Verhalten lässt sich dann schwerer einer bestimmten Person zuordnen",
+          "Dann ist das Internet automatisch schneller",
+          "Dann kann niemand mehr deine IP-Adresse sehen",
+          "Dann werden Cookies automatisch verboten"
+        ], correct:0,
+        explain: "Mit Account kann ein Unternehmen alles, was du in verschiedenen Diensten tust, deiner Person zuordnen. Ohne Account ist das deutlich schwieriger." },
+
+      { section:"Suchmaschine mit Datenschutz", kind:"mc",
+        text: "Manche Suchmaschinen schützen die Privatsphäre besser, zum Beispiel Startpage. Wie machen sie das?",
+        options: [
+          "Sie leiten deine Suchanfragen anonymisiert an eine große Suchmaschine weiter",
+          "Sie zeigen nur Ergebnisse an, die dir bereits bekannt sind",
+          "Sie speichern deine Suchen für 20 Jahre, damit du sie wiederfindest",
+          "Sie funktionieren nur ohne Internet"
+        ], correct:0,
+        explain: "Datenschutzfreundliche Suchmaschinen geben deine Suchanfrage weiter, ohne dass sie mit dir persönlich verknüpft wird (anonymisiert)." },
+
+      { section:"Einstellungen am Smartphone", kind:"pick-rows",
+        text: "Welche Einstellungen sind datensparsam? Entscheide bei jeder Zeile.",
+        rows: [
+          { label:"Standortzugriff nur erlauben, während die App benutzt wird", options:["datensparsam","gibt viele Daten preis"], answer:0 },
+          { label:"Jeder App den Zugriff auf alle Kontakte erlauben",           options:["datensparsam","gibt viele Daten preis"], answer:1 },
+          { label:"Verfolgung durch Apps (Tracking) ablehnen",                  options:["datensparsam","gibt viele Daten preis"], answer:0 },
+          { label:"Mikrofon für jede App dauerhaft freigeben",                  options:["datensparsam","gibt viele Daten preis"], answer:1 },
+        ],
+        explain: "Gib Apps nur die Rechte, die sie wirklich brauchen. Standort, Kontakte und Mikrofon sind besonders sensible Daten." },
+
+      { kind:"gapfill", typeIn:true, noBookHint:true, text: "Fülle die Lücken zum Schutz vor Big Data.",
+        template: "Völlig ohne Spuren im Internet zu bleiben ist kaum möglich. Man kann sich aber schützen, zum Beispiel indem man nicht überall mit einem %% angemeldet ist, regelmäßig die %% im Browser löscht und eine Suchmaschine mit %% nutzt.",
+        answers: ["Account", "Cookies", "Datenschutz"],
+        explain: "Wer nicht angemeldet ist, Cookies löscht und eine datenschutzfreundliche Suchmaschine nutzt, gibt weniger über sich preis.",
+        popupText: "Merksatz – Schutz vor Big Data",
+        popupBody: "Die großen Tech-Unternehmen untersuchen das Verhalten der Nutzer mit Algorithmen. Dadurch entstehen riesige Datenmengen (Big Data), personalisierte Werbung und Filterblasen.¶Man kann seine Privatsphäre verbessern: nicht überall angemeldet sein, Cookies löschen, eine Suchmaschine mit Datenschutz nutzen, Apps nur die nötigen Rechte geben und nicht auf jede Meldung reagieren." }
+    ]
+  },
+
+  "informatik-ueben-vertiefen": {
+    title: "Üben und Vertiefen: Informationssysteme und Datenschutz",
+    subject: "informatik",
+    chapterSlug: "informationssysteme-datenschutz",
+    duration: "ca. 20 Minuten",
+    locked: false,
+    questions: [
+      { section:"Wofür nutzt man digitale Informationssysteme?", kind:"map-match", layout:"category-cards", matchBy:"group",
+        text: "Digitale Informationssysteme werden an vielen Orten eingesetzt. Sortiere die Beispiele in die passende Kategorie.",
+        categories: [
+          { id:"schule",  label:"In der Schule",       icon:"🏫", color:"#3454D1" },
+          { id:"arbeit",  label:"In der Arbeitswelt",  icon:"🏭", color:"#C97A2B" },
+          { id:"alltag",  label:"Im Alltag",           icon:"📱", color:"#237A4B" },
+        ],
+        tiles: [
+          { id:"u-s1", label:"Hausaufgaben über eine Lernplattform abgeben",       group:"schule" },
+          { id:"u-s2", label:"Den digitalen Vertretungsplan ansehen",              group:"schule" },
+          { id:"u-s3", label:"Lernvideos in der Mediathek anschauen",              group:"schule" },
+          { id:"u-a1", label:"Arbeitszeiten im Betrieb digital erfassen",          group:"arbeit" },
+          { id:"u-a2", label:"Lagerbestand per Computer abfragen",                 group:"arbeit" },
+          { id:"u-a3", label:"Stellenangebote auf einem Berufsportal suchen",      group:"arbeit" },
+          { id:"u-t1", label:"Zugverbindungen in einer App heraussuchen",          group:"alltag" },
+          { id:"u-t2", label:"Online-Banking auf dem Smartphone",                  group:"alltag" },
+          { id:"u-t3", label:"Einen Film in einer Streaming-App ansehen",          group:"alltag" },
+        ],
+        explain: "Ob Schule, Arbeitswelt oder Alltag: Digitale Informationssysteme speichern Daten und stellen sie über das Internet bereit." },
+
+      { section:"Voraussetzungen", kind:"gapfill",
+        text: "Was braucht man, um ein digitales Informationssystem zu nutzen? Ergänze den Text mit den Wörtern aus der Liste.",
+        template: "Um ein digitales Informationssystem zu nutzen, braucht man zuerst ein %%, zum Beispiel ein Tablet oder einen Computer. Außerdem ist eine %% nötig, damit Daten ausgetauscht werden können. Oft braucht man auch ein %% mit Benutzername und Passwort.",
+        answers: ["Gerät", "Internetverbindung", "Konto"],
+        extraWords: ["Drucker", "Scanner"],
+        explain: "Für ein digitales Informationssystem braucht man ein Gerät, eine Internetverbindung und häufig ein Benutzerkonto (Account), um sich anzumelden." },
+
+      { section:"Warum Passwort?", kind:"mc",
+        text: "Viele Informationssysteme sind passwortgeschützt, zum Beispiel mebis oder Online-Banking. Warum?",
+        options: [
+          "Weil dort persönliche oder vertrauliche Daten gespeichert sind, die nicht jeder sehen soll",
+          "Weil Passwörter das Internet beschleunigen",
+          "Weil man sonst keinen Strom bekommt",
+          "Weil Passwörter vom Gesetz in jeder App verboten sind"
+        ], correct:0,
+        explain: "Das Passwort stellt sicher, dass nur berechtigte Personen Zugriff auf ihre Daten haben – das ist praktischer Datenschutz." },
+
+      { section:"Aufbau einer Seite", kind:"table-match",
+        text: "Digitale Informationssysteme sind meist ähnlich aufgebaut. Ordne jedem Element seine Aufgabe zu.",
+        columns: ["Element", "Aufgabe"],
+        rows: [
+          { label:"Menü / Navigation",      accept:["a_menu"] },
+          { label:"Suchfeld",               accept:["a_suche"] },
+          { label:"Anmeldebereich (Login)", accept:["a_login"] },
+          { label:"Inhaltsbereich",         accept:["a_inhalt"] },
+        ],
+        chips: [
+          { id:"a_menu",   label:"Zeigt, welche Bereiche es gibt, und führt dorthin" },
+          { id:"a_suche",  label:"Hilft, schnell bestimmte Inhalte zu finden" },
+          { id:"a_login",  label:"Hier gibst du deine Zugangsdaten ein" },
+          { id:"a_inhalt", label:"Hier werden Texte, Bilder oder Videos angezeigt" },
+          { id:"a_x",      label:"Hier wird der Akku des Geräts geladen" },
+        ],
+        explain: "Menü, Suchfeld, Anmeldebereich und Inhaltsbereich findest du fast überall – in mebis ebenso wie in einem Online-Shop." },
+
+      { section:"Soziale Netzwerke", kind:"staged-sort", visual:"cards",
+        text: "In sozialen Netzwerken gibt man schnell persönliche Daten preis. Was sollte man lieber für sich behalten und was ist eher unkritisch?",
+        categories: [
+          { id:"privat",   label:"Besser privat halten", icon:"🔒", color:"#B8402D" },
+          { id:"ok",       label:"Eher unkritisch",      icon:"👍", color:"#237A4B" },
+        ],
+        items: [
+          { id:"n1", label:"Wohnadresse",                          group:"privat" },
+          { id:"n2", label:"Handynummer",                          group:"privat" },
+          { id:"n3", label:"Live-Standort im Urlaub",              group:"privat" },
+          { id:"n4", label:"Geburtsdatum mit Geburtsort",          group:"privat" },
+          { id:"n5", label:"Lieblingsband",                        group:"ok" },
+          { id:"n6", label:"Lieblingsessen",                       group:"ok" },
+          { id:"n7", label:"Lieblingsserie",                       group:"ok" },
+        ],
+        explain: "Angaben, mit denen man dich finden oder erkennen kann (Adresse, Handynummer, Live-Standort), solltest du nicht öffentlich posten. Vorlieben wie Lieblingsessen oder -band sind meist unkritisch." },
+
+      { section:"Ausgedachter Name", kind:"mc",
+        text: "Du nutzt in einem sozialen Netzwerk nicht deinen echten Namen, sondern einen ausgedachten. Was ändert sich dadurch?",
+        options: [
+          "Fremde können dich schwerer einer echten Person zuordnen, deine Freunde erkennen dich aber vielleicht nicht gleich",
+          "Niemand kann mehr Daten über dich sammeln",
+          "Du bist im Netz völlig unsichtbar",
+          "Dein Account wird automatisch gesperrt"
+        ], correct:0,
+        explain: "Ein ausgedachter Name schützt etwas: Fremde können dich schlechter erkennen. Daten werden trotzdem gesammelt, und Freunde müssen wissen, wer du bist." },
+
+      { section:"Tor-Browser", kind:"mc",
+        text: "Der Tor-Browser legt besonderen Wert auf Anonymität. Wie funktioniert das im Kern?",
+        options: [
+          "Die Anfragen laufen über mehrere Zwischenrechner und werden verschlüsselt, so ist die eigene Adresse nicht direkt sichtbar",
+          "Er löscht automatisch alle Inhalte aus dem Internet",
+          "Er macht das Internet zehnmal schneller",
+          "Er ist nur für Smartphones gemacht"
+        ], correct:0,
+        explain: "Beim Tor-Browser werden die Verbindungen über mehrere Rechner geleitet und mehrfach verschlüsselt. So lässt sich schwerer erkennen, von wem eine Anfrage kommt." },
+
+      { section:"Tor-Browser: Vor- und Nachteile", kind:"staged-sort", visual:"balance",
+        text: "Der Tor-Browser hat Vorteile, aber auch Nachteile. Sortiere.",
+        categories: [
+          { id:"vorteil",  label:"Vorteile",  icon:"👍", color:"#237A4B" },
+          { id:"nachteil", label:"Nachteile", icon:"👎", color:"#B8402D" },
+        ],
+        items: [
+          { id:"t1", label:"Die eigene Identität bleibt weitgehend verborgen.",            group:"vorteil" },
+          { id:"t2", label:"Tracking durch Werbefirmen wird erschwert.",                    group:"vorteil" },
+          { id:"t3", label:"Das Surfen ist oft deutlich langsamer.",                       group:"nachteil" },
+          { id:"t4", label:"Manche Internetseiten blockieren Tor-Nutzer.",                 group:"nachteil" },
+          { id:"t5", label:"Die Anonymität kann auch für kriminelle Zwecke missbraucht werden.", group:"nachteil" },
+        ],
+        explain: "Tor schützt die Privatsphäre, ist aber langsamer und wird teils blockiert. Und: Anonymität kann auch von Kriminellen genutzt werden." },
+
+      { section:"Smartphone-Einstellungen", kind:"pick-rows",
+        text: "Smartphones sammeln viele Daten. Welche Einstellung ist datensparsam?",
+        rows: [
+          { label:"Standort nur „beim Benutzen der App“ erlauben", options:["datensparsam","gibt viele Daten preis"], answer:0 },
+          { label:"Standort für alle Apps „immer“ erlauben",       options:["datensparsam","gibt viele Daten preis"], answer:1 },
+          { label:"Werbe-ID regelmäßig zurücksetzen",              options:["datensparsam","gibt viele Daten preis"], answer:0 },
+          { label:"Allen Apps Zugriff auf alle Fotos geben",       options:["datensparsam","gibt viele Daten preis"], answer:1 },
+        ],
+        explain: "Standort und Fotos sind sehr persönliche Daten. Erlaube Apps nur das, was sie für ihre Aufgabe wirklich brauchen." },
+
+      { section:"Zum Schluss", kind:"reflect", noSkip:true,
+        text: "Welche Einstellung an deinem Smartphone oder welche Gewohnheit im Internet willst du nach dieser Übung ändern? Begründe in 2–3 Sätzen.",
+        placeholder: "Meine Idee…",
+        explain: "Dein Text wurde gespeichert. Schon kleine Änderungen – zum Beispiel Standortzugriff einschränken oder Cookies löschen – schützen deine Privatsphäre." }
     ]
   },
   /* Deutsch, Kapitel "Wortarten": diagnostischer Einstiegstest in 5 Teilen (vor der eigentlichen
