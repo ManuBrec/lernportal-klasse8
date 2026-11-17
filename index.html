@@ -1694,12 +1694,12 @@ const informatikInformationssystemeTopics = [
   { tag:"lernen", label:"Nutzung digitaler Informationssysteme", page:10, practice:"informatik-nutzung-informationssysteme" },
   { tag:"lernen", label:"Die digitale Informationsplattform mebis der ByCS", page:12, practice:"informatik-mebis-plattform" },
   { tag:"lernen", label:"Datenschutz", page:14, practice:"informatik-datenschutz" },
-  { tag:"lernen", label:"Big Data: Wer sammelt was?", page:16, practice:"informatik-bigdata-einstieg" },
-  { tag:"lernen", label:"Werbung durch Big Tech", page:16, practice:"informatik-bigdata-werbung" },
-  { tag:"lernen", label:"Filterblasen erkennen", page:16, practice:"informatik-bigdata-filterblase" },
-  { tag:"lernen", label:"Schutz vor Big Data", page:17, practice:"informatik-bigdata-schutz" },
+  { tag:"lernen", label:"Big Data: Wer sammelt was?", page:16, practice:"informatik-bigdata-einstieg", added:"17.11.2026" },
+  { tag:"lernen", label:"Werbung durch Big Tech", page:16, practice:"informatik-bigdata-werbung", added:"17.11.2026" },
+  { tag:"lernen", label:"Filterblasen erkennen", page:16, practice:"informatik-bigdata-filterblase", added:"17.11.2026" },
+  { tag:"lernen", label:"Schutz vor Big Data", page:17, practice:"informatik-bigdata-schutz", added:"17.11.2026" },
   { tag:"lernen", label:"Projekt: Eine Anleitung für mebis erstellen", page:18 },
-  { tag:"abschluss", label:"Üben und Vertiefen", page:20, practice:"informatik-ueben-vertiefen" },
+  { tag:"abschluss", label:"Üben und Vertiefen", page:20, practice:"informatik-ueben-vertiefen", added:"17.11.2026" },
   { tag:"abschluss", label:"M-Seite: Informationssysteme und Datenschutz", page:23 },
   { tag:"abschluss", label:"Am Ziel", page:25 },
   { tag:"abschluss", label:"Alles im Blick" },
@@ -13836,7 +13836,7 @@ function viewChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${t.page ? `<span class="topic-page num">S. ${t.page}</span>` : ""}
           ${actionHtml}
@@ -13972,7 +13972,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14016,7 +14016,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14065,7 +14065,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14123,7 +14123,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}${done ? " – du hast diesen Einstiegstest bereits gemacht." : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14184,7 +14184,7 @@ function viewDeutschChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14266,7 +14266,7 @@ function viewNaturtechnikChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14320,7 +14320,7 @@ function viewNaturtechnikChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${actionHtml}
         </div>
@@ -14412,7 +14412,7 @@ function viewInformatikChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${pageHtml}
           ${actionHtml}
@@ -14496,7 +14496,7 @@ function viewWibChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${pageHtml}
           ${actionHtml}
@@ -14544,7 +14544,7 @@ function viewWibChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${pageHtml}
           ${actionHtml}
@@ -14678,7 +14678,7 @@ function viewGpgChapter(folderSlug, slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${pageHtml}
           ${infoHtml}
@@ -14767,7 +14767,7 @@ function viewKunstChapter(slug){
         <div class="topic-row">
           <span class="topic-nr num">${idx+1}.</span>
           <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
-          <span class="topic-name">${esc(t.label)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
           ${progressHtml}
           ${pageHtml}
           ${actionHtml}
