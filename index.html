@@ -19013,6 +19013,7 @@ const GB_CATS = [
   { key:"ruhe", label:"Ruhe und Zeit für mich", kw:["ruhe","entspann","ausruhen","schlaf","ausschlafen","relax","zeit fuer mich","allein","chillen","urlaub","ferien","reise","reisen","wellness","baden","meditation","nichts tun","wochenende","pause","feierabend","freizeit"] },
   { key:"liebe", label:"Liebe und Geborgenheit", kw:["liebe","verliebt","zuneigung","kuscheln","umarmung","umarmen","partner","beziehung","kuss","vertrauen","geborgen","zaertlich","nah sein"] },
   { key:"spass", label:"Spaß und Lachen", kw:["spass","lachen","lustig","humor","witz","brettspiel","kartenspiel","gesellschaftsspiel","spieleabend","karten","uno","party","feiern","ausgelassen","freude","witzig","bloedsinn","quatsch"] },
+  { key:"glaube", label:"Glaube und Religion", strip:/(^| )(ich glaube|glaube ich|ich glaub|glaub ich|glaube dass|glaube das)( |$)/g, kw:["glaube$","glauben$","gott","beten","gebet","kirche","religion","religioes","gottesdienst","christlich","christ$","islam","moschee","muslim","andacht","spirituell","spiritualitaet","rosenkranz","segen","kapelle","pfarrer","firmung","kommunion"] },
   { key:"essen", label:"Gutes Essen", kw:["essen$","lieblingsessen","gutes essen","pizza","kochen","backen","kuchen","schokolade","burger","pommes","kaesespaetzle","spaetzle","braten","fruehstueck","lieblingsgericht","grillen","brotzeit"] }
 ];
 /* nicht als Glücksquelle gewertet, sondern erklärt */
@@ -19040,7 +19041,11 @@ function gbMatches(norm, tokens, kw){
 function gbCheck(text){
   const norm = gbFold(text).replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
   const tokens = norm.split(" ").filter(Boolean);
-  const cats = GB_CATS.filter(c => gbMatches(norm, tokens, c.kw));
+  const cats = GB_CATS.filter(c => {
+    if (!c.strip) return gbMatches(norm, tokens, c.kw);
+    const n2 = norm.replace(c.strip, " ").replace(/\s+/g," ").trim();
+    return gbMatches(n2, n2.split(" ").filter(Boolean), c.kw);
+  });
   const risk = GB_RISK.find(r => gbMatches(norm, tokens, r.kw)) || null;
   return { cats, risk };
 }
@@ -19219,7 +19224,7 @@ function water(){
   if (res.risk){ say("fb","no",res.risk.msg); return; }
   unknownInRow++;
   let m = "Dazu erkenne ich noch keine Glücksquelle. Nenne etwas Konkretes: eine Person, eine Tätigkeit oder ein Erlebnis, das dir guttut.";
-  if (unknownInRow >= 3) m += "\nTipp: Denk an Menschen, Bewegung, Erfolge, Lob, Musik, Natur, Tiere oder Zeit für dich.";
+  if (unknownInRow >= 3) m += "\nTipp: Denk an Menschen, Bewegung, Erfolge, Lob, Musik, Natur, Tiere, Glaube oder Zeit für dich.";
   say("fb","no",m);
 }
 $("water").addEventListener("click", water);
