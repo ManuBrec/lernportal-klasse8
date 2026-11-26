@@ -1423,6 +1423,7 @@ const deutschSachtexteTopics = [
   { tag:"lernen", label:"El Niño – Aufgabenblatt zum Lesetext", practice:"deutsch-sachtexte-el-nino" },
   { tag:"lernen", label:"Richtig zitieren – Regel für dein Regelheft", practice:"deutsch-sachtexte-zitieren-regel" },
   { tag:"lernen", label:"Richtig zitieren – Fragen zum Text „Bäume pflanzen“", practice:"deutsch-sachtexte-zitieren-fragen" },
+  { tag:"lernen", label:"Zusammenfassen: Schlaf bei Jugendlichen", practice:"deutsch-sachtexte-zusammenfassen-schlaf", added:"26.11.2026" },
 ];
 
 const deutschGetrenntZusammenTopics = [
@@ -3401,6 +3402,75 @@ const exerciseSets = {
         "popupBody": "„Zitat“ (Z. 4–5): Wort für Wort aus dem Text, Zeilenangabe in Klammern.¶[...]: Auslassung, wenn du Wörter weglässt.¶[ ]: Ergänzung oder Änderung, z. B. [a]lle oder [im Schulgarten]."
       }
     ] },
+
+  /* Deutsch / Sachtexte: "Zusammenfassen: Schlaf bei Jugendlichen" (neu 26.11.2026, Wunsch Manuel: Schüler tun sich
+     schwer, Abschnitte in eigenen Worten zusammenzufassen). Eigener kurzer Text (A, B, C), Abschnitte stehen in den
+     Fragen; Stufen: Zahlen weglassen (markieren), passenden Satz wählen (mc), Satzgerüst (gapfill), eigener Satz
+     (reflect + keywords), Gesamt-Zusammenfassung mit Heft-Pop-up. Passend zum Word-Arbeitsblatt "Zusammenfassen_Schlaf_AB". */
+  "deutsch-sachtexte-zusammenfassen-schlaf": {
+    title: "Zusammenfassen: Schlaf bei Jugendlichen",
+    subject: "deutsch",
+    chapterSlug: "sachtexte",
+    duration: "ca. 15 Minuten",
+    locked: false,
+    questions: [
+      { section:"Zahlen weglassen", kind:"markieren", noSkip:true,
+        text:"Beim Zusammenfassen lässt man Zahlen und Beispiele weg. Tippe in Abschnitt A alle Zahlenangaben an:",
+        tokens:["Jugendliche", "brauchen", "viel", "Schlaf", ".", "Ärzte", "empfehlen", "für", "13-", "bis", "17-Jährige", "acht", "bis", "zehn", "Stunden", "pro", "Nacht", ".", "Viele", "schlafen", "aber", "nur", "sieben", "Stunden", "oder", "sogar", "weniger", ".", "Für", "den", "Körper", "ist", "das", "zu", "wenig", ",", "denn", "er", "erholt", "sich", "vor", "allem", "in", "der", "Nacht", "."],
+        correctIndices:[8, 10, 11, 13, 22],
+        explain:"Richtig: 13, 17, acht, zehn und sieben sind Zahlenangaben. Sie sind Einzelheiten und kommen in eine Zusammenfassung meist nicht hinein." },
+      { section:"Den passenden Satz auswählen", kind:"mc", noSkip:true,
+        text:"Lies den Abschnitt: „Jugendliche brauchen viel Schlaf. Ärzte empfehlen für 13- bis 17-Jährige acht bis zehn Stunden pro Nacht. Viele schlafen aber nur sieben Stunden oder sogar weniger. Für den Körper ist das zu wenig, denn er erholt sich vor allem in der Nacht.“ Welcher Satz fasst ihn am besten zusammen?",
+        options:["Viele Jugendliche schlafen weniger, als ihr Körper braucht.", "Ärzte empfehlen für 13- bis 17-Jährige acht bis zehn Stunden pro Nacht.", "In dem Text geht es um Schlaf.", "Jugendliche sollten abends länger aufbleiben."], correct:0,
+        explain:"Der erste Satz nennt den Hauptgedanken in eigenen Worten. Der zweite ist fast abgeschrieben und voller Zahlen, der dritte ist zu allgemein, der vierte steht gar nicht im Text." },
+      { section:"Den passenden Satz auswählen", kind:"mc", noSkip:true,
+        text:"Lies den Abschnitt: „In der Pubertät verändert sich die innere Uhr. Der Körper bildet das Schlafhormon Melatonin erst später am Abend. Deshalb werden Jugendliche spät müde und kommen morgens nur schwer aus dem Bett. Auch das Handy stört: Das helle Licht des Bildschirms hält den Körper wach.“ Welcher Satz fasst ihn am besten zusammen?",
+        options:["Jugendliche werden abends später müde, weil sich ihre innere Uhr verändert und das Handy zusätzlich wach hält.", "Der Körper bildet das Schlafhormon Melatonin erst später am Abend.", "Das Handy ist schlecht für Jugendliche.", "Jugendliche stehen morgens gern früh auf."], correct:0,
+        explain:"Der erste Satz enthält die Hauptgedanken (innere Uhr und Handy) in eigenen Worten. Der zweite nennt nur einen Teil, der dritte ist eine Meinung, der vierte widerspricht dem Text." },
+      { section:"Den passenden Satz auswählen", kind:"mc", noSkip:true,
+        text:"Lies den Abschnitt: „Wer zu wenig schläft, kann sich schlechter konzentrieren und vergisst schneller. Außerdem ist man öfter schlecht gelaunt und wird leichter krank. Mit ein paar Regeln schläft man besser: Man geht zu festen Zeiten ins Bett, legt das Handy eine Stunde vorher weg und dunkelt das Zimmer ab. So ist man am nächsten Tag fitter.“ Welcher Satz fasst ihn am besten zusammen?",
+        options:["Zu wenig Schlaf schadet der Konzentration, der Laune und der Gesundheit; feste Regeln helfen beim Einschlafen.", "Man legt das Handy eine Stunde vorher weg und dunkelt das Zimmer ab.", "Wer zu wenig schläft, kann sich schlechter konzentrieren und vergisst schneller.", "Schlaf ist wichtig."], correct:0,
+        explain:"Der erste Satz fasst beide Hälften des Abschnitts zusammen (Folgen und Regeln). Der zweite nennt nur Tipps, der dritte ist fast wörtlich abgeschrieben und enthält nur die Folgen, der vierte ist zu allgemein." },
+      { section:"Satzgerüst ergänzen", kind:"gapfill", typeIn:true, noBookHint:true, noSkip:true,
+        instruction:"Tippe das passende Wort in die Lücke.",
+        text:"Fasse Abschnitt B mit Hilfe eines Satzgerüsts zusammen.",
+        template:"Weil sich in der Pubertät die innere %% verändert, werden Jugendliche erst %% müde.",
+        answers:["Uhr","spät"],
+        accept:[["uhr"],["später","abends","spaet","spaeter"]],
+        explain:"Weil sich in der Pubertät die innere Uhr verändert, werden Jugendliche erst spät müde." },
+      { section:"Satzgerüst ergänzen", kind:"gapfill", typeIn:true, noBookHint:true, noSkip:true,
+        instruction:"Tippe das passende Wort in die Lücke.",
+        text:"Fasse Abschnitt C mit Hilfe eines Satzgerüsts zusammen.",
+        template:"Wer zu wenig schläft, kann sich schlechter %% und wird schneller %%.",
+        answers:["konzentrieren","krank"],
+        accept:[["aufpassen"],["müde","gereizt"]],
+        explain:"Wer zu wenig schläft, kann sich schlechter konzentrieren und wird schneller krank." },
+      { section:"Eigene Worte finden", kind:"mc", noSkip:true,
+        text:"Im Text steht „Ärzte empfehlen“. Welche Formulierung sagt dasselbe mit eigenen Worten?",
+        options:["Fachleute raten","Ärzte empfehlen","Lehrer verbieten","Schüler wünschen sich"], correct:0,
+        explain:"„Fachleute raten“ sagt dasselbe, benutzt aber andere Wörter. So schreibst du in eigenen Worten und schreibst nicht ab." },
+      { section:"Eigenen Satz schreiben", kind:"reflect", noSkip:true,
+        text:"Schreibe selbst einen Satz, der Abschnitt B zusammenfasst. Nimm die Stichwörter: innere Uhr – spät müde – Handy. Schreibe in eigenen Worten.",
+        placeholder:"Dein Satz zu Abschnitt B …",
+        keywords:[["uhr","pubertaet","koerper","hormon","melatonin"],["spaet","abends","muede","wach"],["handy","bildschirm","licht"]],
+        need:2, minWords:6,
+        explain:"Sehr gut! Dein Satz enthält die wichtigen Gedanken aus Abschnitt B. Vergleiche ihn mit dem Satz auf deinem Arbeitsblatt." },
+      { section:"Eigenen Satz schreiben", kind:"reflect", noSkip:true,
+        text:"Schreibe selbst einen Satz, der Abschnitt C zusammenfasst. Nimm die Stichwörter: zu wenig Schlaf – Folgen – Regeln. Schreibe in eigenen Worten.",
+        placeholder:"Dein Satz zu Abschnitt C …",
+        keywords:[["wenig schlaf","zu wenig","schlafmangel","nicht genug","zu kurz"],["konzentr","vergess","laune","gereizt","krank","muede","fit"],["regel","feste","handy","zimmer","hilft","hilfe","dagegen"]],
+        need:2, minWords:6,
+        explain:"Sehr gut! Dein Satz enthält die wichtigen Gedanken aus Abschnitt C." },
+      { section:"Den ganzen Text zusammenfassen", kind:"reflect", noSkip:true,
+        text:"Schreibe jetzt eine kleine Zusammenfassung des ganzen Textes (2 bis 3 Sätze). Nimm deine Sätze aus A, B und C. Schreibe in eigenen Worten. Satzbausteine: Der Text handelt von … · Zuerst wird erklärt, dass … · Außerdem … · Zum Schluss …",
+        placeholder:"Deine Zusammenfassung …",
+        keywords:[["schlaf"],["jugendlich","teenager","junge"],["pubertaet","uhr","handy","muede","spaet","wach","konzentr","krank","regel","laune"]],
+        need:3, minWords:12,
+        explain:"Sehr gut! Du hast den Text in eigenen Worten zusammengefasst.",
+        popupText:"Zusammenfassen – schreib das in dein Heft:",
+        popupBody:"Schritt 1: Abschnitt genau lesen, wichtige Wörter unterstreichen.¶Schritt 2: Fragen beantworten (Wer? Was? Warum?), nur Stichwörter.¶Schritt 3: Einen Satz in eigenen Worten schreiben – nicht abschreiben, Zahlen und Beispiele weglassen, im Präsens.¶Satzbausteine: Der Text handelt von … · Zuerst wird erklärt, dass … · Außerdem … · Zum Schluss …" }
+    ]
+  },
 
   /* "Sachtexte: Wenn El Niño weltweit wütet" (neu 27.10.2026, Wunsch Manuel): Aufgabenblatt zu einem
      Zeitungsartikel (FOCUS online), 1:1 nach seinem Word-Arbeitsblatt "AB_El_Nino" (Aufgaben 1-9).
@@ -16976,6 +17046,9 @@ window.__startExercise = function(slug){
             document.getElementById("checkBtn").disabled = true;
             lockQuestion("correct", q.explain || "Richtig!", "correct");
             state.q[i].answer = val; persist();
+            if (q.popupText && q.popupBody){
+              document.getElementById("nextBtn").addEventListener("click", ()=> zitatShowPopup(q), { once:true });
+            }
           } else {
             state.q[i].answer = val; persist();
             tryAgainFeedback("Noch nicht ganz. Lies die Frage und die Textzeilen noch einmal genau und ergänze oder ändere deine Antwort.");
