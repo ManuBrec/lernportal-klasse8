@@ -3462,7 +3462,8 @@ const exerciseSets = {
         need:2, minWords:6,
         explain:"Sehr gut! Dein Satz enthält die wichtigen Gedanken aus Abschnitt C." },
       { section:"Den ganzen Text zusammenfassen", kind:"reflect", noSkip:true,
-        text:"Schreibe jetzt eine kleine Zusammenfassung des ganzen Textes (2 bis 3 Sätze). Nimm deine Sätze aus A, B und C. Schreibe in eigenen Worten. Satzbausteine: Der Text handelt von … · Zuerst wird erklärt, dass … · Außerdem … · Zum Schluss …",
+        text:"Schreibe jetzt eine kleine Zusammenfassung des ganzen Textes (2 bis 3 Sätze). Nimm deine Sätze zu B und C von oben und ergänze einen Satz zu Abschnitt A. Schreibe in eigenen Worten. Satzbausteine: Der Text handelt von … · Zuerst wird erklärt, dass … · Außerdem … · Zum Schluss …",
+        showOwn:[{from:7,label:"Dein Satz zu Abschnitt B"},{from:8,label:"Dein Satz zu Abschnitt C"}],
         placeholder:"Deine Zusammenfassung …",
         keywords:[["schlaf"],["jugendlich","teenager","junge"],["pubertaet","uhr","handy","muede","spaet","wach","konzentr","krank","regel","laune"]],
         need:3, minWords:12,
@@ -16567,7 +16568,15 @@ window.__startExercise = function(slug){
          sondern über reportFreitext() in das separate Tabellenblatt "Freitextantworten" (siehe
          Event-Wiring weiter unten). q.noSkip:true an der jeweiligen Frage sorgt dafür, dass gar
          kein "Überspringen"-Button angezeigt wird (siehe Branch weiter unten, der skipBtnHtml baut). */
+      /* q.showOwn (neu 26.11.2026): zeigt über dem Eingabefeld die eigenen, früher geschriebenen Antworten des
+         Schülers (aus state.q[from].answer) - z.B. die eigenen Sätze zu Abschnitt B und C bei der Gesamt-Zusammenfassung. */
+      const ownHtml = (q.showOwn || []).length ? `
+        <div class="own-sentences" style="background:#f4f7fb; border:1px solid #d6dff0; border-radius:12px; padding:12px 14px; margin:0 0 12px;">
+          <div style="font-weight:700; margin-bottom:6px;">Das hast du vorher geschrieben:</div>
+          ${q.showOwn.map(o => { const a = (state.q[o.from] && state.q[o.from].answer) || ""; return `<div style="margin:4px 0;"><strong>${esc(o.label)}:</strong> ${a ? esc(a) : `<em style="opacity:.7;">(noch nicht geschrieben)</em>`}</div>`; }).join("")}
+        </div>` : "";
       body = `
+        ${ownHtml}
         <div class="reflect-row">
           <textarea class="reflect-textarea" id="reflectInput" placeholder="${esc(q.placeholder || "Deine Meinung dazu…")}" rows="${q.zitat ? 5 : 4}">${esc((state.q[i] && state.q[i].answer) || "")}</textarea>
           <button class="check-btn" id="checkBtn">${(q.keywords || q.zitat) ? "Prüfen" : "Absenden"}</button>
