@@ -1847,6 +1847,7 @@ const prozentTopics = [
 
 const termeTopics = [
   { tag:"lernen", label:"Einstieg: Grundlagen", practice:"terme-grundlagen", added:"25.11.2026" },
+  { tag:"lernen", label:"Terme ordnen und zusammenfassen", practice:"terme-ordnen-zusammenfassen", added:"26.11.2026" },
 ];
 
 /* Bundesländer-Karte für die Übung "Wo liegt Bayern?": echte Grenzverläufe, extrahiert aus
@@ -2804,6 +2805,19 @@ function termOrderedAs(expected){
       if (x.vars !== prev){ if (seen.has(x.vars)) return false; seen.add(x.vars); prev = x.vars; }
     }
     return true;
+  };
+}
+
+/* Einzelner Malterm (Terme ordnen): Zahl vorn, Variablen in beliebiger Reihenfolge, z. B. 14ab oder 14ba. */
+function termMonoAs(coeff, vars){
+  const sv = vars.split("").sort().join("");
+  return val => {
+    const raw = String(val).toLowerCase().replace(/\s+/g,"");
+    if (/\d[·⋅*×]\d/.test(raw)) return false;   // "2·8·a" ist noch nicht ausgerechnet
+    const t = raw.replace(/[·⋅*×]/g,"");
+    const m = t.match(/^(\d*)([a-z]+)$/);
+    if (!m) return false;
+    return (m[1] === "" ? "1" : String(parseInt(m[1],10))) === String(coeff) && m[2].split("").sort().join("") === sv;
   };
 }
 
@@ -4999,6 +5013,92 @@ const exerciseSets = {
         explain: "Ordnen: a + a + a + 3b + b + 2. Zusammenfassen: a + a + a = 3a, 3b + b = 4b (das b hat die Zahl 1 vor sich, sie wird nicht geschrieben). Der vereinfachte Term heißt 3a + 4b + 2.",
         popupText: "Grundlagen Gleichungen",
         popupBody: "Schreibe diesen Eintrag in dein Regelheft ab.¶Variablen sind Buchstaben, die für Zahlen stehen, z. B. a, b, x, y.¶Terme sind sinnvolle Verbindungen aus Zahlen, Variablen, Rechenzeichen und Klammern, z. B. 12 · a; 3x + 5; 12 − (6 + 8).¶Terme vereinfachen: x + x + 3 + x + x + 3 → ordnen: x + x + x + x + 3 + 3 → zusammenfassen: 4 · x + 6 → 4x + 6.¶Merke: Den Malpunkt zwischen Zahl und Variable lässt man weg: 4 · x = 4x.¶Die 1 vor einer Variablen schreibt man nicht: 1x = x.¶Nur gleiche Variablen darf man zusammenfassen: 3x + 2x = 5x, aber 3x + 2y bleibt stehen." }
+    ]
+  },
+  "terme-ordnen-zusammenfassen": {
+    title: "Terme ordnen und zusammenfassen",
+    subject: "mathe",
+    chapterSlug: "terme-gleichungen",
+    duration: "ca. 15 Minuten",
+    locked: false,
+    questions: [
+      { section: "Terme ordnen und vereinfachen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe das Ergebnis in die Lücke. Ordne die Variablen und rechne die Zahlen aus – wie in den Beispielen: 3 · x · 4 = 3 · 4 · x = 12x und 2 · b · 7 · a = 2 · 7 · a · b = 14ab.",
+        text: "Aufgabe 1 a): Ordne die Variablen und vereinfache jeden Term.",
+        template: "4 · 2 · a = %%¶3 · b · 5 = %%¶x · 2 · 8 = %%",
+        answers: ["8a", "15b", "16x"],
+        gapCheck: [termMonoAs(8,"a"), termMonoAs(15,"b"), termMonoAs(16,"x")],
+        explain: "4 · 2 · a = 8a. 3 · b · 5 = 15b. x · 2 · 8 = 16x. Erst die Zahlen zusammen ausrechnen, dann die Variablen (am besten nach dem Alphabet) dahinter schreiben." },
+      { section: "Terme ordnen und vereinfachen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe das Ergebnis in die Lücke. Ordne die Variablen und rechne die Zahlen aus – wie in den Beispielen: 3 · x · 4 = 3 · 4 · x = 12x und 2 · b · 7 · a = 2 · 7 · a · b = 14ab.",
+        text: "Aufgabe 1 b): Ordne die Variablen und vereinfache jeden Term.",
+        template: "7 · 3 · y = %%¶5 · z · 6 = %%¶x · 2 · 9 = %%",
+        answers: ["21y", "30z", "18x"],
+        gapCheck: [termMonoAs(21,"y"), termMonoAs(30,"z"), termMonoAs(18,"x")],
+        explain: "7 · 3 · y = 21y. 5 · z · 6 = 30z. x · 2 · 9 = 18x. Erst die Zahlen zusammen ausrechnen, dann die Variablen (am besten nach dem Alphabet) dahinter schreiben." },
+      { section: "Terme ordnen und vereinfachen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe das Ergebnis in die Lücke. Ordne die Variablen und rechne die Zahlen aus – wie in den Beispielen: 3 · x · 4 = 3 · 4 · x = 12x und 2 · b · 7 · a = 2 · 7 · a · b = 14ab.",
+        text: "Aufgabe 1 c): Ordne die Variablen und vereinfache jeden Term.",
+        template: "3 · b · a = %%¶r · 7 · s = %%¶9 · v · u = %%",
+        answers: ["3ab", "7rs", "9uv"],
+        gapCheck: [termMonoAs(3,"ab"), termMonoAs(7,"rs"), termMonoAs(9,"uv")],
+        explain: "3 · b · a = 3ab. r · 7 · s = 7rs. 9 · v · u = 9uv. Erst die Zahlen zusammen ausrechnen, dann die Variablen (am besten nach dem Alphabet) dahinter schreiben." },
+      { section: "Terme ordnen und vereinfachen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe das Ergebnis in die Lücke. Ordne die Variablen und rechne die Zahlen aus – wie in den Beispielen: 3 · x · 4 = 3 · 4 · x = 12x und 2 · b · 7 · a = 2 · 7 · a · b = 14ab.",
+        text: "Aufgabe 1 d): Ordne die Variablen und vereinfache jeden Term.",
+        template: "3 · x · 8 · y = %%¶a · 5 · 2 · b = %%¶s · 3 · r · 7 = %%",
+        answers: ["24xy", "10ab", "21rs"],
+        gapCheck: [termMonoAs(24,"xy"), termMonoAs(10,"ab"), termMonoAs(21,"rs")],
+        explain: "3 · x · 8 · y = 24xy. a · 5 · 2 · b = 10ab. s · 3 · r · 7 = 21rs. Erst die Zahlen zusammen ausrechnen, dann die Variablen (am besten nach dem Alphabet) dahinter schreiben." },
+      { section: "Terme ordnen und vereinfachen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe das Ergebnis in die Lücke. Ordne die Variablen und rechne die Zahlen aus – wie in den Beispielen: 3 · x · 4 = 3 · 4 · x = 12x und 2 · b · 7 · a = 2 · 7 · a · b = 14ab.",
+        text: "Aufgabe 1 e): Ordne die Variablen und vereinfache jeden Term.",
+        template: "6 · p · 2 · q · 3 = %%¶b · 5 · c · a · 2 = %%¶9 · w · 4 · v · 2 = %%",
+        answers: ["36pq", "10abc", "72vw"],
+        gapCheck: [termMonoAs(36,"pq"), termMonoAs(10,"abc"), termMonoAs(72,"vw")],
+        explain: "6 · p · 2 · q · 3 = 36pq. b · 5 · c · a · 2 = 10abc. 9 · w · 4 · v · 2 = 72vw. Erst die Zahlen zusammen ausrechnen, dann die Variablen (am besten nach dem Alphabet) dahinter schreiben." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 a): Fasse gleichartige Terme zusammen.",
+        template: "2x + 5x = %%¶8a + 5a = %%¶4u + 9u = %%",
+        answers: ["7x", "13a", "13u"],
+        gapCheck: [termSameAs("7x"), termSameAs("13a"), termSameAs("13u")],
+        explain: "2x + 5x = 7x. 8a + 5a = 13a. 4u + 9u = 13u. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 b): Fasse gleichartige Terme zusammen.",
+        template: "12x − 2x = %%¶15a − 9a = %%¶20t − 8t = %%",
+        answers: ["10x", "6a", "12t"],
+        gapCheck: [termSameAs("10x"), termSameAs("6a"), termSameAs("12t")],
+        explain: "12x − 2x = 10x. 15a − 9a = 6a. 20t − 8t = 12t. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 c): Fasse gleichartige Terme zusammen.",
+        template: "23x + 4x − 7x = %%¶31v − 9v − 2v = %%¶13p − 6p − p = %%",
+        answers: ["20x", "20v", "6p"],
+        gapCheck: [termSameAs("20x"), termSameAs("20v"), termSameAs("6p")],
+        explain: "23x + 4x − 7x = 20x. 31v − 9v − 2v = 20v. 13p − 6p − p = 6p. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 d): Fasse gleichartige Terme zusammen.",
+        template: "7x + 8y + 2x + 5y = %%¶8a + 4b + 6a + 4b = %%¶9r + 5s + 2r + 7s = %%",
+        answers: ["9x + 13y", "14a + 8b", "11r + 12s"],
+        gapCheck: [termSameAs("9x+13y"), termSameAs("14a+8b"), termSameAs("11r+12s")],
+        explain: "7x + 8y + 2x + 5y = 9x + 13y. 8a + 4b + 6a + 4b = 14a + 8b. 9r + 5s + 2r + 7s = 11r + 12s. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 e): Fasse gleichartige Terme zusammen.",
+        template: "20p + 5q − 3p − 2q = %%¶18r + 5s − 13r − 2s = %%¶12v + 5w − 3v + 2w = %%",
+        answers: ["17p + 3q", "5r + 3s", "9v + 7w"],
+        gapCheck: [termSameAs("17p+3q"), termSameAs("5r+3s"), termSameAs("9v+7w")],
+        explain: "20p + 5q − 3p − 2q = 17p + 3q. 18r + 5s − 13r − 2s = 5r + 3s. 12v + 5w − 3v + 2w = 9v + 7w. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+      { section: "Gleichartige Terme zusammenfassen", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction: "Tippe den vereinfachten Term in die Lücke. Gleichartige Terme (gleiche Variable) darfst du zusammenfassen – wie in den Beispielen: 3a + 5a = 8a und 9x + 7y − 3x − 2y = 6x + 5y.",
+        text: "Aufgabe 2 f): Fasse gleichartige Terme zusammen.",
+        template: "18x + 15y + 12x + 25y + 11z + 10x + 9z = %%¶28a + 30b − 18a − 12b + 4c − 16b − 3c = %%¶17u + 15 + 12v + 13u − 10v − 20u − 13 = %%",
+        answers: ["40x + 40y + 20z", "10a + 2b + c", "10u + 2v + 2"],
+        gapCheck: [termSameAs("40x+40y+20z"), termSameAs("10a+2b+c"), termSameAs("10u+2v+2")],
+        explain: "18x + 15y + 12x + 25y + 11z + 10x + 9z = 40x + 40y + 20z. 28a + 30b − 18a − 12b + 4c − 16b − 3c = 10a + 2b + c. 17u + 15 + 12v + 13u − 10v − 20u − 13 = 10u + 2v + 2. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
     ]
   },
   "prozentrechnung-wachstumsfaktoren": {
