@@ -17084,6 +17084,19 @@ window.__startExercise = function(slug){
       `;
     }
 
+    /* Überspringen (neu 27.11.2026, Wunsch Manuel): Beim Klick auf "Überspringen" soll KEINE Lösung
+       mehr angezeigt werden – die Aufgabe gilt nur als "nicht gelöst". Statt jeden einzelnen
+       aufgabentyp-Handler zu ändern, fängt ein Handler in der Capture-Phase den Klick auf #skipBtn ab
+       und stoppt damit die alten, typ-spezifischen Handler (die sonst die Lösung einblenden würden). */
+    function skipQuestionNoReveal(){
+      if (solved) return;
+      host.querySelectorAll("input, textarea").forEach(el => { el.disabled = true; });
+      host.querySelectorAll("button").forEach(btn => { if (btn.id !== "nextBtn") btn.disabled = true; });
+      lockQuestion("skipped", "Übersprungen – diese Aufgabe ist nicht gelöst. Du kannst sie später noch einmal versuchen.", "wrong");
+    }
+    { const _skipGlobal = document.getElementById("skipBtn");
+      if (_skipGlobal) _skipGlobal.addEventListener("click", (e)=>{ e.stopImmediatePropagation(); e.preventDefault(); skipQuestionNoReveal(); }, true); }
+
     if (q.kind === "numeric"){
       const input = document.getElementById("numInput");
       const check = ()=>{
