@@ -1723,7 +1723,8 @@ const informatikInformationssystemeTopics = [
    S. 10-13 sind nur als Themenpunkte angelegt (noch ohne Übung). */
 const wibChapters = [
   { slug:"wie-arbeiten-betriebe", nr:1, title:"Wie arbeiten Betriebe, welche Ziele haben sie?", status:"fertig" },
-  { slug:"wirtschaftskreislauf", nr:2, title:"Wie funktioniert der einfache Wirtschaftskreislauf?", status:"aktuell" },
+  { slug:"wirtschaftskreislauf", nr:2, title:"Wie funktioniert der einfache Wirtschaftskreislauf?", status:"fertig" },
+  { slug:"loehne-gehaelter", nr:3, title:"Löhne und Gehälter sind unterschiedlich", status:"aktuell" },
 ];
 
 const wibBetriebeTopics = [
@@ -1744,6 +1745,15 @@ const wibKreislaufTopics = [
   { tag:"lernen", label:"Welche Ziele haben die Beteiligten im Wirtschaftskreislauf?", page:35, practice:"wib-ziele-beteiligte" },
   { tag:"lernen", label:"Wie funktioniert das Grundmodell des Wirtschaftskreislaufs?", page:"36–37", practice:"wib-grundmodell-kreislauf" },
 ];
+const wibLoehneTopics = [
+  { tag:"lernen", label:"Gerecht oder ungerecht? – gleicher Lohn für gleiche Arbeit", page:38, practice:"wib-loehne-gerecht", added:"27.11.2026" },
+  { tag:"lernen", label:"Zeitlohn oder Akkordlohn? (Tom und Andrej)", page:38, practice:"wib-loehne-zeitlohn-akkord", added:"27.11.2026" },
+  { tag:"lernen", label:"Woran orientieren sich Löhne und Gehälter?", page:38, practice:"wib-loehne-orientierung", added:"27.11.2026" },
+  { tag:"lernen", label:"Wovon hängt die Höhe des Lohns ab? – Faktoren sortieren", page:"36–37", practice:"wib-loehne-faktoren", added:"27.11.2026" },
+  { tag:"lernen", label:"Wer verdient mehr – und warum?", page:"36–37", practice:"wib-loehne-wer-verdient-mehr", added:"27.11.2026" },
+  { tag:"lernen", label:"Löhne schätzen: Wer verdient wie viel?", page:"36–37", practice:"wib-loehne-schaetzen", added:"27.11.2026" },
+];
+
 const kunstChapters = [
   { slug:"fluchtpunktperspektive", nr:1, title:"Fluchtpunktperspektive", status:"aktuell" },
 ];
@@ -5170,6 +5180,173 @@ const exerciseSets = {
         answers: ["40x + 40y + 20z", "10a + 2b + c", "10u + 2v + 2"],
         gapCheck: [termSameAs("40x+40y+20z"), termSameAs("10a+2b+c"), termSameAs("10u+2v+2")],
         explain: "18x + 15y + 12x + 25y + 11z + 10x + 9z = 40x + 40y + 20z. 28a + 30b − 18a − 12b + 4c − 16b − 3c = 10a + 2b + c. 17u + 15 + 12v + 13u − 10v − 20u − 13 = 10u + 2v + 2. Nur Terme mit der gleichen Variable dürfen zusammengefasst werden; Zahlen ohne Variable bleiben für sich." },
+    ]
+  },
+  "wib-loehne-gerecht": {
+    title: "Gerecht oder ungerecht?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 8 Minuten", locked: false,
+    questions: [
+      { section:"Gerecht oder ungerecht?", kind:"pick-rows",
+        text:"Zwei Menschen machen die gleiche Arbeit, bekommen aber unterschiedlich viel Geld. Entscheide: Ist der Grund für den Unterschied sachlich gerecht oder nicht?",
+        rows:[
+          { label:"Ein Kollege bekommt mehr Lohn, weil er schon 10 Jahre länger in der Firma arbeitet.", options:["gerechter Grund","kein gerechter Grund"], answer:0 },
+          { label:"Eine Kollegin bekommt mehr, weil sie die gefährlichere Arbeit auf dem Dach macht.", options:["gerechter Grund","kein gerechter Grund"], answer:0 },
+          { label:"Ein Kollege bekommt mehr, weil er eine höhere Ausbildung hat.", options:["gerechter Grund","kein gerechter Grund"], answer:0 },
+          { label:"Ein Kollege bekommt mehr, weil er die Leitung einer Gruppe übernimmt.", options:["gerechter Grund","kein gerechter Grund"], answer:0 },
+          { label:"Ein Kollege bekommt mehr, nur weil er verheiratet ist.", options:["gerechter Grund","kein gerechter Grund"], answer:1 },
+          { label:"Ein Kollege bekommt mehr, nur weil er ein Mann ist.", options:["gerechter Grund","kein gerechter Grund"], answer:1 }
+        ],
+        explain:"Für unterschiedlichen Lohn muss es einen sachlichen Grund geben: mehr Berufserfahrung, eine höhere Ausbildung, mehr Verantwortung oder eine größere Belastung. Familienstand oder Geschlecht sind keine sachlichen Gründe." },
+      { section:"Der Fachbegriff", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction:"Tippe das passende Wort in die Lücke.",
+        text:"Wie nennt man den Grundsatz „gleicher Lohn für gleichwertige Arbeit“?",
+        template:"Das ist der %%.",
+        answers:["Gleichheitsgrundsatz"],
+        accept:[["gleichheitsgrundsatz","gleichheitsprinzip","gleichbehandlungsgrundsatz"]],
+        explain:"Der Gleichheitsgrundsatz bedeutet: Für gleichwertige Arbeit muss es gleichen Lohn geben – unabhängig von Geschlecht, Familienstand oder Herkunft.",
+        popupText:"Löhne und Gehälter – gerecht?",
+        popupBody:"Schreibe diesen Eintrag in dein Regelheft ab.¶Gleichheitsgrundsatz: gleicher Lohn für gleichwertige Arbeit.¶Sachlich gerechte Gründe für mehr Lohn: mehr Berufserfahrung, höhere Ausbildung, mehr Verantwortung, größere Belastung (z. B. gefährliche Arbeit).¶Kein gerechter Grund: Geschlecht, Familienstand oder Herkunft." }
+    ]
+  },
+  "wib-loehne-zeitlohn-akkord": {
+    title: "Zeitlohn oder Akkordlohn?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 10 Minuten", locked: false,
+    questions: [
+      { section:"Tom und Andrej tragen Zeitungen aus", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction:"Tippe das Ergebnis in die Lücke.",
+        text:"Tom und Andrej tragen Werbezeitungen aus. Firma A zahlt 9 € pro Stunde (Zeitlohn). Beide arbeiten 3 Stunden. Wie viel verdient man bei Firma A?",
+        template:"3 · 9 € = %% €",
+        answers:["27"],
+        explain:"Bei Firma A (Zeitlohn) verdient man 3 · 9 € = 27 € – egal, wie schnell man arbeitet." },
+      { section:"Firma B zahlt pro Zeitung", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction:"Tippe das Ergebnis in die Lücke.",
+        text:"Firma B zahlt 0,10 € pro ausgetragene Zeitung (Akkordlohn). Andrej arbeitet zügig und trägt in den 3 Stunden 300 Zeitungen aus. Wie viel verdient er bei Firma B?",
+        template:"300 · 0,10 € = %% €",
+        answers:["30"],
+        explain:"300 · 0,10 € = 30 €. Andrej verdient bei Firma B mehr als die 27 € bei Firma A." },
+      { section:"Und der langsamere Tom?", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction:"Tippe das Ergebnis in die Lücke.",
+        text:"Tom ist langsamer und schafft in den 3 Stunden nur 200 Zeitungen. Wie viel verdient er bei Firma B?",
+        template:"200 · 0,10 € = %% €",
+        answers:["20"],
+        explain:"200 · 0,10 € = 20 €. Für den langsameren Tom ist Firma A (27 €) besser als Firma B (20 €)." },
+      { section:"Für wen lohnt sich das?", kind:"mc",
+        text:"Für wen lohnt sich Firma B (Akkordlohn) mehr?",
+        options:["Für den schnellen Andrej, der viele Zeitungen schafft.","Für den langsamen Tom.","Für beide genau gleich."], correct:0,
+        explain:"Beim Akkordlohn wird nach Menge bezahlt. Wer schneller arbeitet und mehr schafft, verdient mehr – deshalb lohnt sich Firma B für den schnellen Andrej." },
+      { section:"Die zwei Lohnarten", kind:"gapfill", typeIn:true, noBookHint:true,
+        instruction:"Tippe die passenden Wörter in die Lücken.",
+        text:"Wie heißen die beiden Lohnarten?",
+        template:"Bezahlung nach der Arbeitszeit nennt man %%. Bezahlung nach der Menge (Stückzahl) nennt man %%.",
+        answers:["Zeitlohn","Akkordlohn"],
+        accept:[["zeitlohn","stundenlohn"],["akkordlohn","stücklohn","stuecklohn","leistungslohn"]],
+        explain:"Zeitlohn: Bezahlung nach der Arbeitszeit (z. B. pro Stunde). Akkordlohn (Stücklohn): Bezahlung nach der Menge (z. B. pro Stück).",
+        popupText:"Zeitlohn und Akkordlohn",
+        popupBody:"Schreibe diesen Eintrag in dein Regelheft ab.¶Zeitlohn: Bezahlung nach der Arbeitszeit, z. B. pro Stunde. Der Verdienst ist gleich, egal wie schnell man arbeitet.¶Akkordlohn (Stücklohn): Bezahlung nach der Menge, z. B. pro Stück. Wer mehr schafft, verdient mehr.¶Der Mindestlohn muss aber immer eingehalten werden." }
+    ]
+  },
+  "wib-loehne-orientierung": {
+    title: "Woran orientieren sich Löhne und Gehälter?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 8 Minuten", locked: false,
+    questions: [
+      { section:"Woran orientieren sich Löhne?", kind:"table-match",
+        text:"Löhne und Gehälter orientieren sich an mehreren Dingen. Ordne jedem Begriff die passende Erklärung zu.",
+        columns:["Begriff","Das bedeutet"],
+        rows:[
+          { label:"Arbeitsanforderungen", accept:["a"] },
+          { label:"Arbeitsbedingungen", accept:["b"] },
+          { label:"Arbeitsleistung", accept:["c"] },
+          { label:"Arbeitsumwelt", accept:["d"] },
+          { label:"Gleichheitsgrundsatz", accept:["e"] },
+          { label:"Gesetzliche Vorgaben", accept:["f"] }
+        ],
+        chips:[
+          { id:"a", label:"Wie schwierig ist die Arbeit und welche Kenntnisse braucht man?" },
+          { id:"b", label:"Arbeitet man im Warmen oder bei Hitze, Lärm und Gefahr?" },
+          { id:"c", label:"Wie viel und wie gut schafft jemand seine Arbeit?" },
+          { id:"d", label:"Wo liegt der Arbeitsplatz – in der Stadt oder auf dem Land?" },
+          { id:"e", label:"Gleicher Lohn für gleichwertige Arbeit." },
+          { id:"f", label:"Mindestlohn und Tarifverträge, die eingehalten werden müssen." }
+        ],
+        explain:"Löhne orientieren sich an den Anforderungen und Bedingungen der Arbeit, an der Leistung, an der Arbeitsumwelt, am Gleichheitsgrundsatz und an gesetzlichen Vorgaben wie dem Mindestlohn." }
+    ]
+  },
+  "wib-loehne-faktoren": {
+    title: "Wovon hängt die Höhe des Lohns ab?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 15 Minuten", locked: false,
+    questions: [
+      { section:"Faktoren sortieren", kind:"pick-rows", reshuffle:true,
+        text:"Die Höhe des Lohns hängt von vielen Faktoren ab. Ordne jeden Faktor dem richtigen Bereich zu. Achtung: Bei einem falschen Versuch werden die Antworten neu gemischt – lies also genau.",
+        rows:[
+          { label:"Schichtarbeit und Nachtarbeit", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:0 },
+          { label:"Wie gefährlich die Arbeit ist", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:0 },
+          { label:"Die Branche, z. B. Autoindustrie", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:1 },
+          { label:"Wie groß der Betrieb ist", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:1 },
+          { label:"Die Konjunktur und die Nachfrage", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:2 },
+          { label:"Konkurrenz durch Billigimporte", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:2 },
+          { label:"Ausbildung und Qualifikation", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:3 },
+          { label:"Die Berufserfahrung", options:["Arbeit","Unternehmen","Markt","Arbeitnehmer"], answer:3 }
+        ],
+        explain:"Die Faktoren lassen sich vier Bereichen zuordnen: der Arbeit selbst (Belastung, Gefahr, Schichtarbeit), dem Unternehmen (Branche, Größe), der Marktsituation (Konjunktur, Konkurrenz) und dem Arbeitnehmer (Ausbildung, Erfahrung)." },
+      { section:"Selbst einordnen – eintippen", kind:"gapfill", typeIn:true, noBookHint:true, noSkip:true,
+        instruction:"Tippe den passenden Bereich ein: Arbeit, Unternehmen, Marktsituation oder Arbeitnehmer.",
+        text:"Jetzt ohne Auswahl: Schreibe selbst, zu welchem Bereich der Faktor gehört.",
+        template:"Arbeitsort (Stadt oder Land): %%¶Die Ertragslage der Firma: %%¶Die Qualifikation des Mitarbeiters: %%¶Steigende Nachfrage (Konjunktur): %%",
+        answers:["Arbeit","Unternehmen","Arbeitnehmer","Marktsituation"],
+        accept:[["arbeit"],["unternehmen","betrieb","firma"],["arbeitnehmer","mitarbeiter","person","beschäftigter","beschaeftigter"],["marktsituation","markt","marktlage","wirtschaftslage"]],
+        explain:"Arbeitsort → Arbeit. Ertragslage und Branche → Unternehmen. Qualifikation und Erfahrung → Arbeitnehmer. Nachfrage und Konjunktur → Marktsituation." },
+      { section:"Begründen", kind:"reflect", noSkip:true,
+        text:"Wähle einen Faktor aus den Kästen und erkläre in einem eigenen Satz, warum er die Höhe des Lohns beeinflusst. Schreibe in ganzen Sätzen.",
+        placeholder:"Zum Beispiel: Gefährliche Arbeit wird oft besser bezahlt, weil …",
+        explain:"Gut begründet! Für höheren Lohn gibt es immer einen sachlichen Grund – zum Beispiel mehr Belastung, mehr Verantwortung, eine bessere Ausbildung oder eine gute Auftragslage." },
+      { section:"Merke", kind:"gapfill", typeIn:true, noBookHint:true, noSkip:true,
+        instruction:"Tippe die passenden Wörter in die Lücken.",
+        text:"Fasse zusammen: Wovon hängt die Höhe des Lohns ab?",
+        template:"Die Lohnhöhe hängt vor allem ab von der Art der %%, vom %% (Unternehmen), von der Markt- und Wirtschaftslage und vom %%.",
+        answers:["Arbeit","Betrieb","Arbeitnehmer"],
+        accept:[["arbeit"],["betrieb","unternehmen"],["arbeitnehmer","mitarbeiter","beschäftigten","beschaeftigten"]],
+        explain:"Die Höhe des Lohns oder Gehalts hängt insbesondere ab von der Art der Arbeit, vom Betrieb, von der Markt- und Wirtschaftslage und von der Person des Arbeitnehmers.",
+        popupText:"Wovon hängt die Lohnhöhe ab?",
+        popupBody:"Schreibe diesen Eintrag in dein Regelheft ab.¶Die Höhe des Lohns oder Gehalts hängt vor allem ab von:¶1. der Art der Arbeit (Anforderungen, Belastung, Verantwortung, Arbeitszeit),¶2. dem Betrieb (Branche, Größe, Ertragslage),¶3. der Markt- und Wirtschaftslage (Konjunktur, Nachfrage, Konkurrenz),¶4. dem Arbeitnehmer (Ausbildung, Qualifikation, Berufserfahrung)." }
+    ]
+  },
+  "wib-loehne-wer-verdient-mehr": {
+    title: "Wer verdient mehr – und warum?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 7 Minuten", locked: false,
+    questions: [
+      { section:"Wer verdient mehr?", kind:"pick-rows",
+        text:"Wer verdient wahrscheinlich mehr? Entscheide dich und überlege dir, welcher Faktor der Grund dafür ist.",
+        rows:[
+          { label:"Gefährliche Arbeit auf dem Dach oder Büroarbeit in derselben Firma?", options:["Arbeit auf dem Dach","Büroarbeit"], answer:0 },
+          { label:"KFZ-Mechatroniker in einer kleinen Werkstatt oder in einer großen Autofirma?", options:["kleine Werkstatt","große Autofirma"], answer:1 },
+          { label:"Fluglotse mit viel Verantwortung oder Hilfskraft ohne Ausbildung?", options:["Fluglotse","Hilfskraft"], answer:0 },
+          { label:"Facharbeiter in einer Krisenbranche oder in einer Branche mit vielen Aufträgen?", options:["Krisenbranche","viele Aufträge"], answer:1 }
+        ],
+        explain:"Mehr Lohn gibt es meist bei größerer Belastung (gefährliche Arbeit), in großen und ertragsstarken Betrieben, bei mehr Verantwortung und höherer Qualifikation sowie bei guter Auftrags- und Marktlage." }
+    ]
+  },
+  "wib-loehne-schaetzen": {
+    title: "Löhne schätzen: Wer verdient wie viel?",
+    subject: "wib", chapterSlug: "loehne-gehaelter", duration: "ca. 6 Minuten", locked: false,
+    questions: [
+      { section:"Schätzen", kind:"table-match",
+        text:"Schätze: Wie viel verdient man in diesen Berufen ungefähr im Monat (brutto, bei Vollzeit)? Ordne zu.",
+        columns:["Beruf","ungefährer Bruttolohn / Monat"],
+        rows:[
+          { label:"Friseur/in", accept:["s1"] },
+          { label:"KFZ-Mechatroniker/in", accept:["s2"] },
+          { label:"Dachdecker/in", accept:["s3"] },
+          { label:"Pflegefachkraft", accept:["s4"] },
+          { label:"Fluglotse/in", accept:["s5"] }
+        ],
+        chips:[
+          { id:"s1", label:"ca. 2.200 €" },
+          { id:"s2", label:"ca. 3.300 €" },
+          { id:"s3", label:"ca. 3.700 €" },
+          { id:"s4", label:"ca. 4.000 €" },
+          { id:"s5", label:"ca. 8.500 €" }
+        ],
+        explain:"Die Zahlen sind ungefähre Durchschnittswerte und schwanken je nach Betrieb, Region und Erfahrung stark. Die Unterschiede entstehen durch die Faktoren von vorhin: Ausbildung und Qualifikation, Verantwortung, Belastung und Branche. Ein Fluglotse braucht eine sehr anspruchsvolle Ausbildung und trägt große Verantwortung – deshalb der hohe Lohn." }
     ]
   },
   "prozentrechnung-wachstumsfaktoren": {
@@ -15355,6 +15532,54 @@ function viewWibChapter(slug){
     `;
   }
 
+  if (slug === "loehne-gehaelter"){
+    const rows = wibLoehneTopics.map((t, idx) => {
+      const set = t.practice ? exerciseSets[t.practice] : null;
+      const locked = isLocked(set, t.practice);
+      let progressHtml = "";
+      if (set && !locked){
+        const prog = exerciseProgress(t.practice);
+        const pct = prog ? Math.round(prog.correct / prog.total * 100) : 0;
+        const done = !!prog && prog.correct === prog.total;
+        progressHtml = `
+          <span class="topic-progress" title="${pct}% richtig gelöst">
+            <span class="topic-progress-bar"><span class="topic-progress-fill ${done ? "green" : "orange"}" style="width:${pct}%"></span></span>
+            <span class="topic-progress-pct num">${pct}%</span>
+          </span>
+        `;
+      }
+      let actionHtml = "";
+      if (t.practice && locked){
+        actionHtml = `<span class="pill pill-soon" title="Wird freigeschaltet, sobald wir im Unterricht so weit sind">bald</span>`;
+      } else if (set){
+        actionHtml = `<a class="practice-btn" href="#/uebung/${t.practice}">Jetzt üben</a>`;
+      } else {
+        actionHtml = `<span class="pill pill-soon" title="Die Übung dazu wird gerade vorbereitet">in Vorbereitung</span>`;
+      }
+      const pageHtml = t.page ? `<span class="topic-page num">S. ${t.page}</span>` : "";
+      return `
+        <div class="topic-row">
+          <span class="topic-nr num">${idx+1}.</span>
+          <span class="topic-tag tag-${t.tag}">${tagLabel(t.tag)}</span>
+          <span class="topic-name">${esc(t.label)}${t.added ? ` <span class="topic-date">· ${esc(t.added)}</span>` : ""}</span>
+          ${progressHtml}
+          ${pageHtml}
+          ${actionHtml}
+        </div>
+      `;
+    }).join("");
+    return h`
+      <a class="backlink" href="#/wib">← Zur Übersicht</a>
+      <div class="hero" style="padding-top:0;">
+        <span class="eyebrow">Kapitel ${c.nr}</span>
+        <h1>${esc(c.title)}</h1>
+        <p>Lies die Buchseiten und löse die Aufgaben der Reihe nach.</p>
+      </div>
+      <div class="section-label">Themen in diesem Kapitel</div>
+      <div class="topic-group">${rows}</div>
+    `;
+  }
+
   return h`
     <a class="backlink" href="#/wib">← Zur Übersicht</a>
     <div class="hero" style="padding-top:0;">
@@ -16911,6 +17136,19 @@ window.__startExercise = function(slug){
         if (picks.every((p, r) => p === q.rows[r].answer)){
           showSolution("correct");
           lockQuestion("correct", q.explain, "correct");
+        } else if (q.reshuffle){
+          /* Neu 27.11.2026 (Wunsch Manuel, gegen stures Durchklicken): beim falschen Versuch alle
+             Auswahlen zurücksetzen und die Optionen in jeder Reihe neu mischen (nur die DOM-Reihenfolge,
+             data-o bleibt gleich, daher stimmt die Antwortprüfung weiter). So müssen die Schüler erneut
+             lesen. Es wird weiterhin NICHT markiert, welche Reihe falsch war. */
+          for (let r = 0; r < picks.length; r++) picks[r] = -1;
+          btns.forEach(x => x.classList.remove("pr-selected"));
+          host.querySelectorAll(".pr-opts").forEach(opts => {
+            const kids = [...opts.children];
+            for (let a = kids.length - 1; a > 0; a--){ const bI = Math.floor(Math.random() * (a + 1)); [kids[a], kids[bI]] = [kids[bI], kids[a]]; }
+            kids.forEach(k => opts.appendChild(k));
+          });
+          tryAgainFeedback("Leider noch nicht alles richtig. Die Antworten wurden neu gemischt – lies noch einmal genau und ordne neu zu.");
         } else {
           tryAgainFeedback("Leider falsch – mindestens eine Angabe stimmt noch nicht.");
         }
